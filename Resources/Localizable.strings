@@ -1,0 +1,189 @@
+/*****************************************************************************
+ **
+ ** CocoaMSX: MSX Emulator for Mac OS X
+ ** http://www.cocoamsx.com
+ ** Copyright (C) 2012 Akop Karapetyan
+ **
+ ** This program is free software; you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation; either version 2 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program; if not, write to the Free Software
+ ** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ **
+ ******************************************************************************
+ */
+EjectCartridge = "Eject Cartridge";
+EjectMedia_f = "Eject %@";
+GameReaderCartridge = "Game Reader";
+JoyrexPsgCartridge = "Joyrex PSG Cartridge";
+SccCartridge = "SCC Cartridge";
+SccICartridge = "SCC-I Cartridge";
+EseSccCartridge = "Ese-SCC";
+IdeCartridge = "IDE";
+ScsiCartridge = "SCSI";
+NowindUsbController = "Nowind USB Disk Controller";
+FmPacCartridge = "FM-PAC Cartridge";
+PacCartridge = "PAC Cartridge";
+SonyHbi55Cartridge = "Sony HBI-55 Cartridge";
+PhilipsNms1210Interface = "Philips NMS1210 Serial Interface";
+ExternalRamCartridge = "External RAM";
+MegaRamCartridge = "MegaRAM";
+EseRamCartridge = "Ese-RAM";
+MegaFlashRom = "Mega Flash ROM";
+MegaFlashRomScc = "Mega Flash ROM SCC";
+Cart16kB = "16 kB";
+Cart32kB = "32 kB";
+Cart48kB = "48 kB";
+Cart64kB = "64 kB";
+Cart128kB = "128 kB";
+Cart256kB = "256 kB";
+Cart512kB = "512 kB";
+Cart768kB = "768 kB";
+Cart1Mb = "1 MB";
+Cart2Mb = "2 MB";
+Cart4Mb = "4 MB";
+SunriseCartridge = "Sunrise";
+BeerCartridge = "Beer";
+GideCartridge = "GIDE";
+MegaScsiCartridge = "MEGA-SCSI";
+WaveScsiCartridge = "WAVE-SCSI";
+GoudaScsiCartridge = "Gouda SCSI";
+MsxDos1Cartridge = "MSX DOS 1";
+MsxDos2Cartridge = "MSX DOS 2";
+InsertSpecialCartridge = "Insert cartridge:";
+Reset = "Reset";
+ShutDown = "Shut Down";
+StartUp = "Start Up";
+Pause = "Pause";
+Resume = "Resume";
+MsxIsOff = "MSX is off";
+MsxIsRunning = "MSX is running";
+MsxIsSuspended = "MSX is suspended";
+MsxIsPaused = "MSX is paused";
+MsxIsUnknown = "MSX state is unknown";
+EjectDisk = "Eject Disk";
+InsertCartridge = "Insert Cartridge";
+InsertDisk = "Insert Disk";
+InsertFolder = "Insert Folder";
+InsertCassette = "Insert Cassette";
+EjectCassette = "Eject Cassette";
+CasTypeAscii = "ASCII";
+CasTypeBinary = "Binary";
+CasTypeBasic = "BASIC";
+CasTypeOther = "Other";
+CasTime_f = "%dh %02dm %02ds";
+LoadSnapshot = "Load Snapshot";
+SaveSnapshot = "Save Snapshot";
+CaptureAudio = "Record Audio";
+RecordAudioEll = "Record Audio...";
+StopRecording = "Stop Recording";
+CaptureGameplay = "Record Gameplay";
+RecordGameplayEll = "Record Gameplay...";
+Fps_f = "FPS: %.02f";
+Video = "Video";
+VideoPrefs = "Video Preferences";
+General = "General";
+GeneralPrefs = "General Preferences";
+JoystickPort1 = "Joystick Port 1";
+JoystickPort2 = "Joystick Port 2";
+Keyboard = "Keyboard";
+NoDevice = "No Device";
+TwoButtonJoystick = "Two-Button Joystick";
+Mouse = "Mouse";
+Tetris2Dongle = "Tetris 2 Dongle";
+GunStick = "Gun Stick";
+MagicKey = "MagicKey Dongle";
+AsciiPlusLaser = "ASCII Plus-X Terminator Laser";
+ArkanoidPad = "Arkanoid Pad";
+KeyCursorLeft = "Cursor Left";
+KeyCursorUp = "Cursor Up";
+KeyCursorRight = "Cursor Right";
+KeyCursorDown = "Cursor Down";
+KeyF1 = "F1";
+KeyF2 = "F2";
+KeyF3 = "F3";
+KeyF4 = "F4";
+KeyF5 = "F5";
+KeyEscape = "Escape";
+KeyTab = "Tab";
+KeyA = "A";
+KeyB = "B";
+KeyC = "C";
+KeyD = "D";
+KeyE = "E";
+KeyF = "F";
+KeyG = "G";
+KeyH = "H";
+KeyI = "I";
+KeyJ = "J";
+KeyK = "K";
+KeyL = "L";
+KeyM = "M";
+KeyN = "N";
+KeyO = "O";
+KeyP = "P";
+KeyQ = "Q";
+KeyR = "R";
+KeyS = "S";
+KeyT = "T";
+KeyU = "U";
+KeyV = "V";
+KeyW = "W";
+KeyX = "X";
+KeyY = "Y";
+KeyZ = "Z";
+Key1 = "1";
+Key2 = "2";
+Key3 = "3";
+Key4 = "4";
+Key5 = "5";
+Key6 = "6";
+Key7 = "7";
+Key8 = "8";
+Key9 = "9";
+Key0 = "0";
+KeyStop = "Stop";
+KeyCls = "CLS";
+KeySelect = "Select";
+KeyInsert = "Insert";
+KeyDelete = "Delete";
+KeyBackspace = "Backspace";
+KeyReturn = "Return";
+KeySpace = "Space";
+KeyMinus = "-";
+KeyBackslash = "\\";
+KeyAt = "@";
+KeyLeftBracket = "[";
+KeyRightBracket = "]";
+KeyCaret = "^";
+KeySemicolon = ";";
+KeyColon = ":";
+KeyComma = ",";
+KeyPeriod = ".";
+KeySlash = "/";
+KeyUnderscore = "_";
+KeyPrint = "Print";
+KeyPause = "Pause";
+KeyUnassigned = "";
+KeyNumpad_f = "Numeric Pad: %@";
+KeyLeftShift = "Left Shift";
+KeyRightShift = "Right Shift";
+KeyCtrl = "Control";
+KeyCode = "Code";
+KeyGraph = "Graph";
+KeyJikkou = "Jikkou";
+KeyTorike = "Torike";
+KeyCapsLock = "Caps Lock";
+KeyMacLeftModifier_f = "Left %C";
+KeyMacRightModifier_f = "Right %C";
+SureYouWantToRestartTheMachine = "Restart the machine? You will lose all changes in your applications.";
+Yes = "Yes";
+No = "No";

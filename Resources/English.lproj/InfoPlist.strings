@@ -1,0 +1,4 @@
+/* Localized versions of Info.plist keys */
+
+CFBundleName = "CocoaMSX";
+NSHumanReadableCopyright = "2012 Akop Karapetyan\n2011 OS X Port by Ramones & Madonna Mk 2\n2003–2010 blueMSX by Daniel Vik & blueMSX Development Team";
