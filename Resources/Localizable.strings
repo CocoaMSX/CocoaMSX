@@ -187,3 +187,4 @@ KeyMacRightModifier_f = "Right %C";
 SureYouWantToRestartTheMachine = "Restart the machine? You will lose all changes in your applications.";
 Yes = "Yes";
 No = "No";
+SaveScreenshot = "Save Screenshot";

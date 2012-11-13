@@ -259,6 +259,34 @@ Video* videoCreate()
     return pVideo;
 }
 
+Video *videoCopy(const Video *original)
+{
+    Video* pVideo = (Video*)calloc(1, sizeof(Video));
+    
+    if (!pVideo)
+        return NULL;
+    
+    pVideo->palMode = original->palMode;
+    pVideo->scanLinesEnable = original->scanLinesEnable;
+    pVideo->scanLinesPct = original->scanLinesPct;
+    pVideo->colorSaturationEnable = original->colorSaturationEnable;
+    pVideo->colorSaturationWidth = original->colorSaturationWidth;
+    pVideo->gamma = original->gamma;
+    pVideo->saturation = original->saturation;
+    pVideo->brightness = original->brightness;
+    pVideo->contrast = original->contrast;
+    pVideo->deInterlace = original->deInterlace;
+    pVideo->invertRGB = original->invertRGB;
+    
+    // AK: If I'm not mistaken, tables are immutable (or at least being used as
+    //     such)
+    
+    pVideo->pRgbTable16 = original->pRgbTable16;
+    pVideo->pRgbTable32  = original->pRgbTable32;
+    
+    return pVideo;
+}
+
 void videoDestroy(Video* pVideo)
 {
     free(pVideo);
@@ -2319,7 +2347,35 @@ Video* videoCreate()
     return pVideo;
 }
 
-void videoDestroy(Video* pVideo) 
+Video *videoCopy(const Video *original)
+{
+    Video* pVideo = (Video*)calloc(1, sizeof(Video));
+    
+    if (!pVideo)
+        return NULL;
+    
+    pVideo->palMode = original->palMode;
+    pVideo->scanLinesEnable = original->scanLinesEnable;
+    pVideo->scanLinesPct = original->scanLinesPct;
+    pVideo->colorSaturationEnable = original->colorSaturationEnable;
+    pVideo->colorSaturationWidth = original->colorSaturationWidth;
+    pVideo->gamma = original->gamma;
+    pVideo->saturation = original->saturation;
+    pVideo->brightness = original->brightness;
+    pVideo->contrast = original->contrast;
+    pVideo->deInterlace = original->deInterlace;
+    pVideo->invertRGB = original->invertRGB;
+    
+    // AK: If I'm not mistaken, tables are immutable (or at least being used as
+    //     such)
+    
+    pVideo->pRgbTable16 = original->pRgbTable16;
+    pVideo->pRgbTable32  = original->pRgbTable32;
+    
+    return pVideo;
+}
+
+void videoDestroy(Video* pVideo)
 {
     free(pVideo);
 }

@@ -67,6 +67,10 @@
 - (NSString*)showOpenFileDialogWithTitle:(NSString*)title
                         allowedFileTypes:(NSArray*)allowedFileTypes
                          openInDirectory:(NSString*)initialDirectory;
+- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
+                        allowedFileTypes:(NSArray*)allowedFileTypes
+                         openInDirectory:(NSString*)initialDirectory
+                    canChooseDirectories:(BOOL)canChooseDirectories;
 
 - (NSString*)showSaveFileDialogWithTitle:(NSString*)title
                         allowedFileTypes:(NSArray*)allowedFileTypes;
@@ -81,7 +85,6 @@
                                       slot:(NSInteger)slot;
 
 - (void)insertDiskIntoSlot:(NSInteger)slot;
-- (void)insertFolderIntoSlot:(NSInteger)slot;
 - (void)ejectDiskFromSlot:(NSInteger)slot;
 - (BOOL)toggleEjectDiskMenuItemStatus:(NSMenuItem*)menuItem
                                  slot:(NSInteger)slot;
@@ -155,9 +158,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)awakeFromNib
 {
-    openRomFileTypes = [[NSArray arrayWithObjects:@"rom", nil] retain];
-    openDiskFileTypes = [[NSArray arrayWithObjects:@"dsk", nil] retain];
-    openCassetteFileTypes = [[NSArray arrayWithObjects:@"cas", nil] retain];
+    openRomFileTypes = [[NSArray arrayWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"col", @"sg", @"sc", @"zip", nil] retain];
+    openDiskFileTypes = [[NSArray arrayWithObjects:@"dsk", @"di1", @"di2", @"360", @"720", @"sf7", @"zip", nil] retain];
+    openCassetteFileTypes = [[NSArray arrayWithObjects:@"cas", @"zip", nil] retain];
     stateFileTypes = [[NSArray arrayWithObjects:@"sta", nil] retain];
     captureAudioTypes = [[NSArray arrayWithObjects:@"wav", nil] retain];
     captureGameplayTypes = [[NSArray arrayWithObjects:@"cap", nil] retain];
@@ -736,17 +739,30 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     return [self showOpenFileDialogWithTitle:title
                             allowedFileTypes:allowedFileTypes
-                             openInDirectory:nil];
+                             openInDirectory:nil
+                        canChooseDirectories:NO];
 }
 
 - (NSString*)showOpenFileDialogWithTitle:(NSString*)title
                         allowedFileTypes:(NSArray*)allowedFileTypes
                          openInDirectory:(NSString *)initialDirectory
 {
+    return [self showOpenFileDialogWithTitle:title
+                            allowedFileTypes:allowedFileTypes
+                             openInDirectory:initialDirectory
+                        canChooseDirectories:NO];
+}
+
+- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
+                        allowedFileTypes:(NSArray*)allowedFileTypes
+                         openInDirectory:(NSString *)initialDirectory
+                    canChooseDirectories:(BOOL)canChooseDirectories
+{
     NSOpenPanel* dialog = [NSOpenPanel openPanel];
     
     dialog.title = title;
     dialog.canChooseFiles = YES;
+    dialog.canChooseDirectories = canChooseDirectories;
     dialog.canCreateDirectories = YES;
     dialog.allowedFileTypes = allowedFileTypes;
     
@@ -890,30 +906,33 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     NSString *file = [self showOpenFileDialogWithTitle:NSLocalizedString(@"InsertDisk", nil)
                                       allowedFileTypes:openDiskFileTypes
-                                       openInDirectory:[CMPreferences preferences].diskDirectory];
+                                       openInDirectory:[CMPreferences preferences].diskDirectory
+                                  canChooseDirectories:YES];
     
     if (file)
     {
         emulatorSuspend();
         
-        insertDiskette(properties, slot, [file UTF8String], NULL, 0);
-        [CMPreferences preferences].diskDirectory = self.lastOpenSavePanelDirectory;
-        
-        emulatorResume();
-    }
-}
-
-- (void)insertFolderIntoSlot:(NSInteger)slot
-{
-    NSString *file = [self showOpenFolderDialogWithTitle:NSLocalizedString(@"InsertFolder", nil)];
-    
-    if (file)
-    {
+        BOOL isDirectory;
         const char *fileCstr = [file UTF8String];
         
-        emulatorSuspend();
-        strcpy(properties->media.disks[slot].directory, fileCstr);
-        insertDiskette(properties, slot, fileCstr, NULL, 0);
+        [[NSFileManager defaultManager] fileExistsAtPath:file isDirectory:&isDirectory];
+        
+        if (isDirectory)
+        {
+            // Insert directory
+            
+            strcpy(properties->media.disks[slot].directory, fileCstr);
+            insertDiskette(properties, slot, fileCstr, NULL, 0);
+        }
+        else
+        {
+            // Insert disk file
+            
+            insertDiskette(properties, slot, fileCstr, NULL, 0);
+            [CMPreferences preferences].diskDirectory = self.lastOpenSavePanelDirectory;
+        }
+        
         emulatorResume();
     }
 }
@@ -1020,16 +1039,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)insertDiskSlot2:(id)sender
 {
     [self insertDiskIntoSlot:1];
-}
-
-- (void)insertFolderSlot1:(id)sender
-{
-    [self insertFolderIntoSlot:0];
-}
-
-- (void)insertFolderSlot2:(id)sender
-{
-    [self insertFolderIntoSlot:1];
 }
 
 - (void)ejectDiskSlot1:(id)sender
@@ -1188,7 +1197,33 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (file)
     {
         boardSaveState([file UTF8String], 1);
+        
         [CMPreferences preferences].snapshotDirectory = self.lastOpenSavePanelDirectory;
+    }
+    
+    emulatorResume();
+}
+
+- (void)saveScreenshot:(id)sender
+{
+    if (!self.isInitialized || ![self isRunning])
+        return;
+    
+    emulatorSuspend();
+    
+    NSString *file = [self showSaveFileDialogWithTitle:NSLocalizedString(@"SaveScreenshot", nil)
+                                      allowedFileTypes:[NSArray arrayWithObjects:@"png", nil]];
+    
+    if (file)
+    {
+        NSImage *image = [screen captureScreen:YES];
+        if (image && [image representations].count > 0)
+        {
+            NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
+            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+            
+            [pngData writeToFile:file atomically:NO];
+        }
     }
     
     emulatorResume();
@@ -1482,6 +1517,11 @@ void archTrap(UInt8 value)
         else
             menuItem.title = NSLocalizedString(@"Pause", nil);
         
+        return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
+    }
+    else if ([item action] == @selector(saveScreenshot:))
+    {
+        NSInteger machineState = emulatorGetState();
         return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
     }
     else if ([item action] == @selector(recordAudio:))

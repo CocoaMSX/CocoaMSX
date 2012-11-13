@@ -42,5 +42,6 @@
 }
 
 - (CGFloat)framesPerSecond;
+- (NSImage *)captureScreen:(BOOL)large;
 
 @end

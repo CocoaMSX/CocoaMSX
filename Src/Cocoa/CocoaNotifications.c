@@ -28,16 +28,9 @@
 #include "ArchNotifications.h"
 #include <stdlib.h>
 
-void* archScreenCapture(ScreenCaptureType type, int* bitmapSize, int onlyBmp) { return NULL; }
-
 void archUpdateEmuDisplayConfig() {}
 
 void archDiskQuickChangeNotify() {}
-#if 0 // moved to bluemsxlite.c
-void archEmulationStartNotification() {}
-void archEmulationStopNotification() {}
-void archEmulationStartFailure() {}
-#endif
 
 void archQuit() {}
 

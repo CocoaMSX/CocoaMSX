@@ -24,7 +24,6 @@
 #include <time.h>
 
 #import "CMMsxDisplayView.h"
-
 #import "CMEmulatorController.h"
 #import "CMCocoaBuffer.h"
 #import "CMFrameCounter.h"
@@ -33,6 +32,7 @@
 #include "Properties.h"
 #include "VideoRender.h"
 #include "FrameBuffer.h"
+#include "ArchNotifications.h"
 
 #define WIDTH  320
 #define HEIGHT 240
@@ -300,7 +300,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     Video *video = emulator.video;
     FrameBuffer* frameBuffer = frameBufferFlipViewFrame(properties->emulation.syncMethod == P_EMU_SYNCTOVBLANKASYNC);
     
-    CMCocoaBuffer* currentScreen = screens[currentScreenIndex];
+    CMCocoaBuffer *currentScreen = screens[currentScreenIndex];
     
     char* dpyData = currentScreen->pixels;
     int width = currentScreen->actualWidth;
@@ -389,6 +389,95 @@ int archUpdateEmuDisplay(int syncMode)
 
 void archUpdateWindow()
 {
+}
+
+- (NSImage *)captureScreen:(BOOL)large
+{
+    NSInteger zoom = (large) ? 2 : 1;
+    NSInteger width = WIDTH * zoom;
+    NSInteger height = HEIGHT * zoom;
+    NSInteger pitch = width * sizeof(UInt32);
+    
+    UInt32 *rawBitmapBuffer = malloc(pitch * height);
+    if (!rawBitmapBuffer)
+        return nil;
+    
+    Video *copy = videoCopy(emulator.video);
+    if (!copy)
+    {
+        free(rawBitmapBuffer);
+        return nil;
+    }
+    
+    copy->palMode = VIDEO_PAL_FAST;
+    copy->scanLinesEnable = 0;
+    copy->colorSaturationEnable = 0;
+    
+    FrameBuffer *frameBuffer = frameBufferGetViewFrame();
+    if (frameBuffer == NULL || frameBuffer->maxWidth <= 0 || frameBuffer->lines <= 0)
+    {
+        free(rawBitmapBuffer);
+        videoDestroy(copy);
+        return nil;
+    }
+    
+    videoRender(copy, frameBuffer, 32, zoom, rawBitmapBuffer, 0, pitch, 0);
+    videoDestroy(copy);
+    
+    // Mirror the byte order
+    
+    for (int i = width * height - 1; i >= 0; i--)
+    {
+        UInt8 r = rawBitmapBuffer[i] & 0xff;
+        UInt8 g = (rawBitmapBuffer[i] & 0xff00) >> 8;
+        UInt8 b = (rawBitmapBuffer[i] & 0xff0000) >> 16;
+        
+        rawBitmapBuffer[i] = r | (g << 8) | (b << 16) | 0xff000000;
+    }
+    
+    // Create a bitmap representation
+    
+    NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:(unsigned char **)&rawBitmapBuffer
+                                                                     pixelsWide:frameBuffer->maxWidth * zoom
+                                                                     pixelsHigh:height
+                                                                  bitsPerSample:8
+                                                                samplesPerPixel:4
+                                                                       hasAlpha:YES
+                                                                       isPlanar:NO
+                                                                 colorSpaceName:NSCalibratedRGBColorSpace
+                                                                   bitmapFormat:NSAlphaNonpremultipliedBitmapFormat
+                                                                    bytesPerRow:pitch
+                                                                   bitsPerPixel:0] autorelease];
+    
+    NSImage *image = [[NSImage alloc] init];
+    [image addRepresentation:rep];
+    
+    free(rawBitmapBuffer);
+    
+    return [image autorelease];
+}
+
+void *archScreenCapture(ScreenCaptureType type, int *bitmapSize, int onlyBmp)
+{
+    void *bytes = NULL;
+    *bitmapSize = 0;
+    
+    @autoreleasepool
+    {
+        NSImage *image = [theEmulator.screen captureScreen:NO];
+        if (image && [image representations].count > 0)
+        {
+            NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
+            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+            
+            *bitmapSize = pngData.length;
+            bytes = malloc(*bitmapSize);
+            
+            memcpy(bytes, [pngData bytes], *bitmapSize);
+        }
+    }
+    
+    return bytes;
 }
 
 @end

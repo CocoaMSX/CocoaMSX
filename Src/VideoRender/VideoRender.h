@@ -70,6 +70,7 @@ struct Video {
 };
 
 Video* videoCreate();
+Video* videoCopy(const Video *original);
 
 void videoDestroy(Video* video);
 

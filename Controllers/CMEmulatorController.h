@@ -137,8 +137,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 // - Disks
 - (IBAction)insertDiskSlot1:(id)sender;
 - (IBAction)insertDiskSlot2:(id)sender;
-- (IBAction)insertFolderSlot1:(id)sender;
-- (IBAction)insertFolderSlot2:(id)sender;
 - (IBAction)ejectDiskSlot1:(id)sender;
 - (IBAction)ejectDiskSlot2:(id)sender;
 
@@ -167,6 +165,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)loadState:(id)sender;
 - (IBAction)saveState:(id)sender;
 
+- (IBAction)saveScreenshot:(id)sender;
 - (IBAction)recordAudio:(id)sender;
 - (IBAction)recordGameplay:(id)sender;
 
