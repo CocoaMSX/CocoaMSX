@@ -28,6 +28,7 @@
 
 @interface CMAppDelegate : NSObject <NSApplicationDelegate>
 
+@property (nonatomic, assign) BOOL applicationHasLoaded;
 @property (nonatomic, retain) CMEmulatorController *emulator;
 
 @end

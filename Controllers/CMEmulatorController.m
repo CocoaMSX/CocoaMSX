@@ -142,6 +142,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     [preferenceController release];
     
+    self.fileToLoadAtStartup = nil;
     self.lastOpenSavePanelDirectory = nil;
     self.cartChooser = nil;
     self.cassetteRepositioner = nil;
@@ -335,6 +336,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         if ([self isRunning])
             [self stop];
+        
+        if (self.fileToLoadAtStartup)
+        {
+            tryLaunchUnknownFile(self.properties, [self.fileToLoadAtStartup UTF8String], YES);
+            
+            self.fileToLoadAtStartup = nil;
+            return;
+        }
         
         emulatorStart(NULL);
     }
@@ -837,13 +846,30 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (file)
     {
-        emulatorSuspend();
-        
-        insertCartridge(properties, slot, [file UTF8String], NULL, ROM_UNKNOWN, 0);
         [CMPreferences preferences].cartridgeDirectory = self.lastOpenSavePanelDirectory;
-        
-        emulatorResume();
+        [self insertCartridge:file slot:slot];
     }
+}
+
+- (BOOL)insertCartridge:(NSString *)cartridge
+                   slot:(NSInteger)slot
+{
+    if (!self.isInitialized || ![[NSFileManager defaultManager] fileExistsAtPath:cartridge])
+        return NO;
+    
+    emulatorSuspend();
+    insertCartridge(properties, slot, [cartridge UTF8String], NULL, ROM_UNKNOWN, 0);
+    emulatorResume();
+    
+    return YES;
+}
+
+- (BOOL)insertUnknownMedia:(NSString *)media
+{
+    if (self.isRunning)
+        [self stop];
+    
+    return tryLaunchUnknownFile(self.properties, [media UTF8String], YES) != 0;
 }
 
 - (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot

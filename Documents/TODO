@@ -1,7 +1,6 @@
 !!! Fix function key support on the laptop - Fx keys aren't mappable
 
 * Inserting special cartridges doesn't work - try inserting FMPAC
-* Use the same dialog as Insert Disk to Insert Folder instead
 * Don't list special carts not found on the host system
 * Don't allow cassette changing while the machine is stopped. I'm currently
   making assumptions when repositioning cassette that this will not be the case

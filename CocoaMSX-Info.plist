@@ -4,6 +4,78 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>rom</string>
+				<string>ri</string>
+				<string>mx1</string>
+				<string>mx2</string>
+				<string>col</string>
+				<string>sg</string>
+				<string>sc</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string></string>
+			<key>CFBundleTypeName</key>
+			<string>CocoaMSX Cartridge</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.akop.cocoamsx.filetype.cartridge</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>dsk</string>
+				<string>di1</string>
+				<string>di2</string>
+				<string>360</string>
+				<string>720</string>
+				<string>sf7</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>CocoaMSX Disk</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.akop.cocoamsx.filetype.disk</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>cas</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>CocoaMSX Cassette</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.akop.cocoamsx.filetype.cassette</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>sta</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>CocoaMSX Snapshot</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.akop.cocoamsx.filetype.savestate</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -28,5 +100,91 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CocoaMSX Cartridge</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.akop.cocoamsx.filetype.cartridge</string>
+			<key>UTTypeReferenceURL</key>
+			<string></string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rom</string>
+					<string>ri</string>
+					<string>mx1</string>
+					<string>mx2</string>
+					<string>col</string>
+					<string>sg</string>
+					<string>sc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CocoaMSX Disk</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.akop.cocoamsx.filetype.disk</string>
+			<key>UTTypeReferenceURL</key>
+			<string></string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dsk</string>
+					<string>di1</string>
+					<string>di2</string>
+					<string>360</string>
+					<string>720</string>
+					<string>sf7</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CocoaMSX Cassette</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.akop.cocoamsx.filetype.cassette</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cas</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CocoaMSX Snapshot</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.akop.cocoamsx.filetype.savestate</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>sta</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

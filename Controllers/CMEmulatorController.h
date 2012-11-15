@@ -68,6 +68,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 @property (nonatomic, copy) NSString *fpsDisplay;
 
+@property (nonatomic, copy) NSString *fileToLoadAtStartup;
+
 @property (nonatomic, retain) CMSpecialCartChooserController *cartChooser;
 @property (nonatomic, retain) CMRepositionCassetteController *cassetteRepositioner;
 
@@ -90,6 +92,11 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (BOOL)isInFullScreenMode;
 
 - (void)updateFps:(CGFloat)fps;
+
+- (BOOL)insertCartridge:(NSString *)cartridge
+                   slot:(NSInteger)slot;
+
+- (BOOL)insertUnknownMedia:(NSString *)media;
 
 @property (nonatomic, assign) BOOL isInitialized;
 

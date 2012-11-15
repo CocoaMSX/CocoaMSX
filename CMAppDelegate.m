@@ -44,6 +44,11 @@
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
+- (void)awakeFromNib
+{
+    self.applicationHasLoaded = NO;
+}
+
 - (void)dealloc
 {
     self.emulator = nil;
@@ -192,12 +197,42 @@
 
 #pragma mark - NSApplicationDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename
 {
+#if DEBUG
+    NSLog(@"CMAppDelegate: openFile '%@'", filename);
+#endif
+    if (!self.emulator || ![[NSFileManager defaultManager] fileExistsAtPath:filename])
+        return NO;
+    
+    if (!self.applicationHasLoaded)
+    {
+        // Ask the emulator to load the file when initialization completes
+        self.emulator.fileToLoadAtStartup = filename;
+        return YES;
+    }
+    
+    // Load it now
+    return [self.emulator insertUnknownMedia:filename];
+}
+
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification
+{
+#if DEBUG
+    NSLog(@"CMAppDelegate: applicationWillFinishLaunching");
+#endif
     [self initializeResources];
     
     self.emulator = [CMEmulatorController emulator];
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+#if DEBUG
+    NSLog(@"CMAppDelegate: applicationDidFinishLaunching");
+#endif
     [self.emulator showWindow:self];
+    self.applicationHasLoaded = YES;
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
