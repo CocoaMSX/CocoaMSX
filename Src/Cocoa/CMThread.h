@@ -22,6 +22,20 @@
  */
 #import <Foundation/Foundation.h>
 
-@interface CMCocoaThread : NSObject
+typedef void (* CMThreadEntryPoint)();
+
+@class CMThreadArg;
+
+@interface CMThread : NSObject
+{
+    CMThreadArg     *arg;
+    pthread_attr_t  attr;
+    pthread_t       posixThreadID;
+}
+
+- (id)initWithEntryPoint:(CMThreadEntryPoint)entryPoint;
+- (void)start;
+- (void)join;
++ (void)sleepMilliseconds:(NSInteger)ms;
 
 @end

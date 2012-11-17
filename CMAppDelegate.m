@@ -199,9 +199,6 @@
 
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename
 {
-#if DEBUG
-    NSLog(@"CMAppDelegate: openFile '%@'", filename);
-#endif
     if (!self.emulator || ![[NSFileManager defaultManager] fileExistsAtPath:filename])
         return NO;
     
@@ -218,9 +215,6 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
-#if DEBUG
-    NSLog(@"CMAppDelegate: applicationWillFinishLaunching");
-#endif
     [self initializeResources];
     
     self.emulator = [CMEmulatorController emulator];
@@ -228,9 +222,6 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-#if DEBUG
-    NSLog(@"CMAppDelegate: applicationDidFinishLaunching");
-#endif
     [self.emulator showWindow:self];
     self.applicationHasLoaded = YES;
 }

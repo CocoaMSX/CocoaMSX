@@ -778,12 +778,15 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
 #ifdef NO_TIMERS
             while (timerCallback(NULL) == 0) emuExitFlag |= archPollEvent();
 #endif
-            archEventWait(emuSyncEvent, -1);
+            if (!emuExitFlag)
+                archEventWait(emuSyncEvent, -1);
+            
             if (((emuMaxSpeed || emuMaxEmuSpeed) && !emuExitFlag) || overflowCount > 0) {
 #ifdef NO_TIMERS
                 while (timerCallback(NULL) == 0) emuExitFlag |= archPollEvent();
 #endif
-                archEventWait(emuSyncEvent, -1);
+                if (!emuExitFlag)
+                    archEventWait(emuSyncEvent, -1);
             }
             overflowCount = 0;
         } while (!emuExitFlag && emuState != EMU_RUNNING);
