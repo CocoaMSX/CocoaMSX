@@ -112,6 +112,7 @@ KeyF2 = "F2";
 KeyF3 = "F3";
 KeyF4 = "F4";
 KeyF5 = "F5";
+KeyEsc = "ESC";
 KeyEscape = "Escape";
 KeyTab = "Tab";
 KeyA = "A";

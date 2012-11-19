@@ -313,11 +313,11 @@
 		FEA2BBBB16367C6E0014B233 /* SRRecorderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */; };
 		FEA2BBBC16367C6E0014B233 /* SRValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBB116367C6E0014B233 /* SRValidator.m */; };
 		FEA2BBBD16367C6E0014B233 /* SR_LeopardFramework-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FEA2BBB216367C6E0014B233 /* SR_LeopardFramework-Info.plist */; };
+		FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */; };
 		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
 		FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */; };
 		FEC7231915FF0E3400CB508C /* CMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC7231815FF0E3400CB508C /* CMPreferenceController.m */; };
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
-		FEC961CC162D38A900D8FB3E /* CMInputPeripheralTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC961CB162D38A900D8FB3E /* CMInputPeripheralTableCellView.m */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
 		FEEF38AF163C8310005F7DC8 /* CMKeyLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */; };
 		FEF40ED5160DB83B009170A9 /* CMCocoaBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */; };
@@ -980,14 +980,14 @@
 		FEA2BBB016367C6E0014B233 /* SRValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRValidator.h; sourceTree = "<group>"; };
 		FEA2BBB116367C6E0014B233 /* SRValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRValidator.m; sourceTree = "<group>"; };
 		FEA2BBB216367C6E0014B233 /* SR_LeopardFramework-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SR_LeopardFramework-Info.plist"; sourceTree = "<group>"; };
+		FEAABFB5165A113100934A94 /* CMMsxKeyboardMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMsxKeyboardMatrix.h; sourceTree = "<group>"; };
+		FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMsxKeyboardMatrix.m; sourceTree = "<group>"; };
 		FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MachineEditor.xib; sourceTree = "<group>"; };
 		FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineEditorController.h; sourceTree = "<group>"; };
 		FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineEditorController.m; sourceTree = "<group>"; };
 		FEC7231715FF0E3400CB508C /* CMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferenceController.h; sourceTree = "<group>"; };
 		FEC7231815FF0E3400CB508C /* CMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferenceController.m; sourceTree = "<group>"; };
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
-		FEC961CA162D38A900D8FB3E /* CMInputPeripheralTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputPeripheralTableCellView.h; sourceTree = "<group>"; };
-		FEC961CB162D38A900D8FB3E /* CMInputPeripheralTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputPeripheralTableCellView.m; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
 		FEEF38AD163C8310005F7DC8 /* CMKeyLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyLayout.h; sourceTree = "<group>"; };
 		FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyLayout.m; sourceTree = "<group>"; };
@@ -1845,8 +1845,8 @@
 			children = (
 				FEF40ED2160DB83B009170A9 /* CMMsxDisplayView.h */,
 				FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */,
-				FEC961CA162D38A900D8FB3E /* CMInputPeripheralTableCellView.h */,
-				FEC961CB162D38A900D8FB3E /* CMInputPeripheralTableCellView.m */,
+				FEAABFB5165A113100934A94 /* CMMsxKeyboardMatrix.h */,
+				FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2365,7 +2365,6 @@
 				6B5D287B161F60620081F586 /* Language.c in Sources */,
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
-				FEC961CC162D38A900D8FB3E /* CMInputPeripheralTableCellView.m in Sources */,
 				FEA2BBB816367C6E0014B233 /* SRCommon.m in Sources */,
 				FEA2BBB916367C6E0014B233 /* SRKeyCodeTransformer.m in Sources */,
 				FEA2BBBA16367C6E0014B233 /* SRRecorderCell.m in Sources */,
@@ -2378,6 +2377,7 @@
 				FEA01BF31656F1C2002794C6 /* CMEvent.m in Sources */,
 				FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */,
 				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
+				FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

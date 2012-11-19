@@ -23,7 +23,6 @@
 #import "CMPreferenceController.h"
 
 #import "CMEmulatorController.h"
-#import "CMInputPeripheralTableCellView.h"
 #import "CMCocoaJoystick.h"
 #import "CMKeyLayout.h"
 #import "CMPreferences.h"

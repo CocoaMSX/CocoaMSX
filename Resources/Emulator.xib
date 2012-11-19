@@ -543,15 +543,6 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
-								<object class="NSMenuItem" id="86318870">
-									<reference key="NSMenu" ref="466310130"/>
-									<string key="NSTitle">Triple Size</string>
-									<string key="NSKeyEquiv">3</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="229763992"/>
-									<reference key="NSMixedImage" ref="909111550"/>
-								</object>
 								<object class="NSMenuItem" id="567557776">
 									<reference key="NSMenu" ref="466310130"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -810,7 +801,6 @@
 							<int key="NSvFlags">295</int>
 							<string key="NSFrame">{{238, 7}, {165, 17}}</string>
 							<reference key="NSSuperview" ref="244130915"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1535</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="272522322">
@@ -997,14 +987,6 @@
 						<reference key="destination" ref="280434043"/>
 					</object>
 					<int key="connectionID">1205</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">tripleSize:</string>
-						<reference key="source" ref="1021"/>
-						<reference key="destination" ref="86318870"/>
-					</object>
-					<int key="connectionID">1206</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1497,7 +1479,6 @@
 							<reference ref="369411802"/>
 							<reference ref="280434043"/>
 							<reference ref="567557776"/>
-							<reference ref="86318870"/>
 							<reference ref="198832746"/>
 						</array>
 						<reference key="parent" ref="586577488"/>
@@ -1537,11 +1518,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">847</int>
 						<reference key="object" ref="567557776"/>
-						<reference key="parent" ref="466310130"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">851</int>
-						<reference key="object" ref="86318870"/>
 						<reference key="parent" ref="466310130"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -1961,7 +1937,6 @@
 				<string key="843.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="845.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="847.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="851.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="855.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="860.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="861.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

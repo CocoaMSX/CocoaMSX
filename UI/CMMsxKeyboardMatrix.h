@@ -22,8 +22,6 @@
  */
 #import <Cocoa/Cocoa.h>
 
-@interface CMInputPeripheralTableCellView : NSTableCellView
-
-@property (nonatomic, assign) IBOutlet NSTextField *currentMapping;
+@interface CMMsxKeyboardMatrix : NSView
 
 @end

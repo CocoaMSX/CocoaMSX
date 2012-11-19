@@ -83,7 +83,6 @@ void archEventSet(void *event)
 {
     [(CMEvent *)event set];
 }
-extern int emuExitFlag;
 
 void archEventWait(void *event, int timeout)
 {
