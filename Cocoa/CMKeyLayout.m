@@ -49,7 +49,6 @@
     {
         self.keyCode = [decoder decodeIntegerForKey:@"keyCode"];
         self.virtualCode = [(NSNumber*)[decoder decodeObjectForKey:@"virtualCode"] unsignedIntegerValue];
-        self.keyModifier = [(NSNumber*)[decoder decodeObjectForKey:@"keyModifier"] unsignedIntegerValue];
     }
     
     return self;
@@ -59,7 +58,6 @@
 {
     [encoder encodeInteger:self.keyCode forKey:@"keyCode"];
     [encoder encodeObject:[NSNumber numberWithUnsignedInteger:self.virtualCode] forKey:@"virtualCode"];
-    [encoder encodeObject:[NSNumber numberWithUnsignedInteger:self.keyModifier] forKey:@"keyModifier"];
 }
 
 + (CMKeyMapping *)virtualKey:(NSUInteger)virtualKey
@@ -67,7 +65,6 @@
     CMKeyMapping *key = [[CMKeyMapping alloc] init];
     
     key.keyCode = CMKeyNoCode;
-    key.keyModifier = CMKeyNoModifiers;
     key.virtualCode = virtualKey;
     
     return [key autorelease];
@@ -79,7 +76,6 @@
     
     copy.virtualCode = self.virtualCode;
     copy.keyCode = self.keyCode;
-    copy.keyModifier = self.keyModifier;
     
     return copy;
 }
@@ -296,23 +292,23 @@
 
 - (NSString *)physicalKeyName
 {
-    if ((self.keyModifier & CMLeftShiftKeyMask) == CMLeftShiftKeyMask)
+    if (self.keyCode == CMKeyLeftShift)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kShiftUnicode];
-    if ((self.keyModifier & CMRightShiftKeyMask) == CMRightShiftKeyMask)
+    if (self.keyCode == CMKeyRightShift)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kShiftUnicode];
-    if ((self.keyModifier & CMLeftAltKeyMask) == CMLeftAltKeyMask)
+    if (self.keyCode == CMKeyLeftAlt)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kOptionUnicode];
-    if ((self.keyModifier & CMRightAltKeyMask) == CMRightAltKeyMask)
+    if (self.keyCode == CMKeyRightAlt)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kOptionUnicode];
-    if ((self.keyModifier & CMLeftCommandKeyMask) == CMLeftCommandKeyMask)
+    if (self.keyCode == CMKeyLeftCommand)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kCommandUnicode];
-    if ((self.keyModifier & CMRightCommandKeyMask) == CMRightCommandKeyMask)
+    if (self.keyCode == CMKeyRightCommand)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kCommandUnicode];
-    if ((self.keyModifier & CMLeftControlKeyMask) == CMLeftControlKeyMask)
+    if (self.keyCode == CMKeyLeftControl)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kControlUnicode];
-    if ((self.keyModifier & CMRightControlKeyMask) == CMRightControlKeyMask)
+    if (self.keyCode == CMKeyRightControl)
         return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kControlUnicode];
-    if ((self.keyModifier & NSAlphaShiftKeyMask) == NSAlphaShiftKeyMask)
+    if (self.keyCode == CMKeyCapsLock)
         return CMLocalized(@"KeyCapsLock");
     
     if (self.keyCode == CMKeyNoCode)
@@ -365,15 +361,12 @@
 
 - (BOOL)isMapped
 {
-    return !(self.keyCode == CMKeyNoCode && self.keyModifier == CMKeyNoModifiers);
+    return self.keyCode != CMKeyNoCode;
 }
 
-- (BOOL)matchesEventCode:(NSEvent *)event;
+- (BOOL)matchesKeyCode:(NSInteger)keyCode
 {
-    if (self.keyModifier != CMKeyNoModifiers)
-        return NO; // Mapped to a modifier
-    
-    return self.keyCode != CMKeyNoCode && event.keyCode == self.keyCode;
+    return self.keyCode != CMKeyNoCode && keyCode == self.keyCode;
 }
 
 - (NSInteger)virtualKeyCategory
@@ -642,7 +635,6 @@
         CMKeyMapping *destination = [keys objectAtIndex:i];
         
         destination.keyCode = source.keyCode;
-        destination.keyModifier = source.keyModifier;
     }
 }
 
@@ -652,13 +644,6 @@
     CMKeyMapping *toMapping = [self findMappingOfVirtualKey:virtualKey];
     
     toMapping.keyCode = fromMapping.keyCode;
-    toMapping.keyModifier = fromMapping.keyModifier;
-}
-
-- (void)assignVirtualKey:(NSUInteger)virtualKey
-              toModifier:(NSUInteger)keyModifier
-{
-    [self findMappingOfVirtualKey:virtualKey].keyModifier = keyModifier;
 }
 
 - (void)assignVirtualKey:(NSUInteger)virtualKey
@@ -679,24 +664,6 @@
          {
              // Unassign existing assignment
              km.keyCode = CMKeyNoCode;
-             km.keyModifier = CMKeyNoModifiers;
-         }
-     }];
-}
-
-- (void)unassignAllMatchingPhysicalModifier:(NSUInteger)physicalModifier
-{
-    if (physicalModifier == CMKeyNoModifiers)
-        return;
-    
-    [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-     {
-         CMKeyMapping *km = obj;
-         if (km.keyModifier == physicalModifier)
-         {
-             // Unassign existing assignment
-             km.keyCode = CMKeyNoCode;
-             km.keyModifier = CMKeyNoModifiers;
          }
      }];
 }
@@ -704,22 +671,6 @@
 - (CMKeyMapping *)mappingAtIndex:(NSInteger)index
 {
     return [keys objectAtIndex:index];
-}
-
-- (CMKeyMapping *)findMappingOfPhysicalModifier:(NSUInteger)physicalModifier
-{
-    __block CMKeyMapping *foundMap = nil;
-    [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-     {
-         CMKeyMapping *map = obj;
-         if (map.keyModifier == physicalModifier)
-         {
-             foundMap = map;
-             *stop = YES;
-         }
-     }];
-    
-    return foundMap;
 }
 
 - (CMKeyMapping *)findMappingOfVirtualKey:(NSUInteger)virtualKey
@@ -738,14 +689,14 @@
     return foundMap;
 }
 
-- (CMKeyMapping *)findMappingOfEvent:(NSEvent *)event
+- (CMKeyMapping *)findMappingOfPhysicalKeyCode:(NSInteger)keyCode
 {
     __block CMKeyMapping *foundMap = nil;
     
     [keys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          CMKeyMapping *key = obj;
-         if ([key matchesEventCode:event])
+         if ([key matchesKeyCode:keyCode])
          {
              foundMap = key;
              *stop = YES;
@@ -760,14 +711,14 @@
     CMKeyLayout *defaultLayout = [[CMKeyLayout alloc] init];
     
     defaultLayout = [[CMKeyLayout alloc] init];
-    [defaultLayout assignVirtualKey:EC_LSHIFT toModifier:CMLeftShiftKeyMask];
-    [defaultLayout assignVirtualKey:EC_RSHIFT toModifier:CMRightShiftKeyMask];
-    [defaultLayout assignVirtualKey:EC_CTRL   toModifier:CMLeftControlKeyMask];
-    [defaultLayout assignVirtualKey:EC_GRAPH  toModifier:CMLeftAltKeyMask];
-    [defaultLayout assignVirtualKey:EC_CODE   toModifier:CMRightAltKeyMask];
+    [defaultLayout assignVirtualKey:EC_LSHIFT toCode:CMKeyLeftShift];
+    [defaultLayout assignVirtualKey:EC_RSHIFT toCode:CMKeyRightShift];
+    [defaultLayout assignVirtualKey:EC_CTRL   toCode:CMKeyLeftControl];
+    [defaultLayout assignVirtualKey:EC_GRAPH  toCode:CMKeyLeftAlt];
+    [defaultLayout assignVirtualKey:EC_CODE   toCode:CMKeyRightAlt];
     //[defaultLayout assignVirtualKey:EC_TORIKE toModifier:CMLeftCommandKeyMask];
     //[defaultLayout assignVirtualKey:EC_JIKKOU toModifier:CMRightCommandKeyMask];
-    [defaultLayout assignVirtualKey:EC_CAPS   toModifier:CMCapsLockKeyMask];
+    [defaultLayout assignVirtualKey:EC_CAPS   toCode:CMKeyCapsLock];
     
     [defaultLayout assignVirtualKey:EC_LEFT  toCode:CMKeyLeft];
     [defaultLayout assignVirtualKey:EC_UP    toCode:CMKeyUp];
@@ -853,7 +804,7 @@
     [defaultLayout assignVirtualKey:EC_COMMA   toCode:CMKeyComma];
     [defaultLayout assignVirtualKey:EC_PERIOD  toCode:CMKeyPeriod];
     [defaultLayout assignVirtualKey:EC_DIV     toCode:CMKeySlash];
-    [defaultLayout assignVirtualKey:EC_UNDSCRE toModifier:CMRightControlKeyMask];
+    [defaultLayout assignVirtualKey:EC_UNDSCRE toCode:CMKeyRightControl];
     
     return [defaultLayout autorelease];
 }   

@@ -77,6 +77,8 @@ enum {
 	kSRKeysF17 = 64,
 	kSRKeysF18 = 79,
 	kSRKeysF19 = 80,
+	kSRKeysCapsLock = 57,
+    kSRKeysFunction = 63,
 	kSRKeysSpace = 49,
 	kSRKeysDeleteLeft = 51,
 	kSRKeysDeleteRight = 117,
@@ -93,7 +95,15 @@ enum {
 	kSRKeysReturnR2L = 36,
 	kSRKeysReturn = 76,
 	kSRKeysTabRight = 48,
-	kSRKeysHelp = 114
+	kSRKeysHelp = 114,
+    kSRKeysLeftShift = 56,
+    kSRKeysRightShift = 60,
+    kSRKeysLeftControl = 59,
+    kSRKeysRightControl = 62,
+    kSRKeysLeftAlt = 58,
+    kSRKeysRightAlt = 61,
+    kSRKeysLeftCommand = 55,
+    kSRKeysRightCommand = 54,
 };
 
 #pragma mark -

@@ -27,6 +27,7 @@
 #import "CMKeyLayout.h"
 #import "CMPreferences.h"
 
+#import "SRRecorderTableCellView.h"
 #import "SRRecorderControl.h"
 
 #pragma mark - PreferenceController
@@ -34,7 +35,6 @@
 @interface CMPreferenceController ()
 
 - (void)sliderValueChanged:(id)sender;
-- (void)synchronizeShortcutRecorder;
 
 - (NSInteger)virtualPositionOfSlider:(NSSlider *)slider
                           usingTable:(NSArray *)table;
@@ -134,12 +134,8 @@
         [prefs setMachineConfiguration:[machineConfigurations objectAtIndex:0]];
     
     self.currentLayout = self.emulator.keyboard.currentLayout;
-    currentKeyMapIndex = -1;
     
-    shortcutRecorder.allowedFlags = (NSCommandKeyMask | NSAlternateKeyMask | NSControlKeyMask | NSShiftKeyMask);// | NSAlphaShiftKeyMask;
-    shortcutRecorder.useSingleKeyMode = YES;
-    
-    // These need to be synchronized when the window re-opens
+    // FIXME: These need to be synchronized when the window re-opens
     
     [emulationSpeedSlider setDoubleValue:[self physicalPositionOfSlider:emulationSpeedSlider
                                                             fromVirtual:prefs.emulationSpeedPercentage
@@ -175,25 +171,6 @@
 }
 
 #pragma mark - Methods
-
-- (void)synchronizeShortcutRecorder
-{
-    NSInteger selectedRow = keyboardTable.selectedRow;
-    
-    if (selectedRow > -1)
-    {
-        CMKeyMapping *km = [self.currentLayout mappingAtIndex:selectedRow];
-        [shortcutRecorder setEnabled:YES];
-        [shortcutRecorder setKeyCombo:SRMakeKeyCombo(km.keyCode,
-                                                     km.keyModifier)];
-    }
-    else
-    {
-        [shortcutRecorder setEnabled:NO];
-        [shortcutRecorder setKeyCombo:SRMakeKeyCombo(ShortcutRecorderEmptyCode,
-                                                     ShortcutRecorderEmptyFlags)];
-    }
-}
 
 - (NSInteger)virtualPositionOfSlider:(NSSlider *)slider
                           usingTable:(NSArray *)table
@@ -293,7 +270,6 @@
     [[CMPreferences preferences] setKeyboardLayout:self.currentLayout];
     
     [keyboardTable reloadData];
-    [self synchronizeShortcutRecorder];
     
 //    // TODO: get rid of this
 //    NSData *myEncodedObject = [NSKeyedArchiver archivedDataWithRootObject:[CMKeyLayout defaultLayout]];
@@ -364,10 +340,6 @@
     // Select first tab
     toolbar.selectedItemIdentifier = selectedIdentifier;
     [tabView selectTabViewItemWithIdentifier:toolbar.selectedItemIdentifier];
-    
-    [shortcutRecorder setEnabled:NO];
-    [shortcutRecorder setKeyCombo:SRMakeKeyCombo(ShortcutRecorderEmptyCode,
-                                                 ShortcutRecorderEmptyFlags)];
 }
 
 #pragma mark - NSTableViewDataSourceDelegate
@@ -380,57 +352,50 @@
     return 0;
 }
 
+#pragma mark - NSTableViewDelegate
+
 - (id)tableView:(NSTableView *)tableView
-objectValueForTableColumn:(NSTableColumn *)tableColumn
+viewForTableColumn:(NSTableColumn *)tableColumn
             row:(NSInteger)row
 {
+    NSTableCellView *cell = nil;
+    
     if (tableView == keyboardTable)
     {
         CMKeyMapping *keyMapping = [self.currentLayout mappingAtIndex:row];
+        
         if ([tableColumn.identifier isEqualToString:@"CMKeyLabelColumn"])
         {
-            return keyMapping.virtualKeyName;
+            cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
+            cell.textField.stringValue = keyMapping.virtualKeyName;
         }
-        else if ([tableColumn.identifier isEqualToString:@"CMKeyCurrentAssignmentColumn"])
+        else if ([tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
         {
-            NSString *keyName = keyMapping.physicalKeyName;
-            if (!keyName)
-                keyName = NSLocalizedString(@"KeyUnassigned", nil);
+            cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
+            SRRecorderControl *recorder = ((SRRecorderTableCellView *)cell).recorderControl;
             
-            return keyName;
+            recorder.delegate = self;
+            recorder.tag = row;
+            
+            [recorder setKeyCombo:SRMakeKeyCombo((keyMapping) ? keyMapping.keyCode : ShortcutRecorderEmptyCode,
+                                                 ShortcutRecorderEmptyFlags)];
         }
     }
     
-    return nil;
-}
-
-#pragma mark - NSTableViewDelegate
-
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
-{
-    if (aNotification.object == keyboardTable)
-    {
-        NSInteger selectedRow = keyboardTable.selectedRow;
-        
-        currentKeyMapIndex = selectedRow;
-        [self synchronizeShortcutRecorder];
-    }
+    return cell;
 }
 
 #pragma mark - SRRecorderDelegate
 
 - (void)shortcutRecorder:(SRRecorderControl *)aRecorder keyComboDidChange:(KeyCombo)newKeyCombo
 {
+    NSInteger currentKeyMapIndex = aRecorder.tag;
     if (currentKeyMapIndex > -1)
     {
         CMKeyMapping *km = [self.currentLayout mappingAtIndex:currentKeyMapIndex];
-        if (km.keyCode != newKeyCombo.code || km.keyModifier != newKeyCombo.flags)
+        if (km.keyCode != newKeyCombo.code)
         {
-            km.keyModifier = newKeyCombo.flags;
             km.keyCode = newKeyCombo.code;
-            
-            [keyboardTable reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:currentKeyMapIndex]
-                                     columnIndexes:[NSIndexSet indexSetWithIndex:1]];
             
             [[CMPreferences preferences] setKeyboardLayout:self.currentLayout];
         }

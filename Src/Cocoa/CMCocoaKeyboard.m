@@ -32,12 +32,15 @@
 // FIXME: this class needs to poll, and not just modify the virtual matrix
 //        whenever a key is pressed
 
+#define DEBUG_KEY_STATE
+
 #pragma mark - CocoaKeyboard
 
 @interface CMCocoaKeyboard ()
 
-- (void)updateModifiersWithFlags:(NSUInteger)flags;
 - (void)updateKeyboardState;
+- (void)handleKeyEvent:(NSInteger)keyCode
+                isDown:(BOOL)isDown;
 
 @end
 
@@ -50,6 +53,7 @@
         [self resetState];
         
         currentLayout = [[[CMPreferences preferences] keyboardLayout] retain];
+        isCommandDown = NO;
     }
     
     return self;
@@ -75,9 +79,7 @@
     NSLog(@"keyDown: %i", [event keyCode]);
 #endif
     
-    CMKeyMapping *key = [currentLayout findMappingOfEvent:event];
-    if (key && !inputEventGetState(key.virtualCode))
-        inputEventSet(key.virtualCode);
+    [self handleKeyEvent:event.keyCode isDown:YES];
 }
 
 - (void)keyUp:(NSEvent*)event
@@ -89,9 +91,7 @@
     NSLog(@"keyUp: %i", [event keyCode]);
 #endif
     
-    CMKeyMapping *key = [currentLayout findMappingOfEvent:event];
-    if (key && inputEventGetState(key.virtualCode))
-        inputEventUnset(key.virtualCode);
+    [self handleKeyEvent:event.keyCode isDown:NO];
 }
 
 - (void)flagsChanged:(NSEvent *)event
@@ -101,8 +101,44 @@
           event.keyCode, event.modifierFlags);
 #endif
     
-    if (((event.modifierFlags & NSCommandKeyMask) == NSCommandKeyMask) ||
-        isLCommandDown || isRCommandDown)
+    if (event.keyCode == CMKeyLeftShift)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMLeftShiftKeyMask) == CMLeftShiftKeyMask)];
+    else if (event.keyCode == CMKeyRightShift)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMRightShiftKeyMask) == CMRightShiftKeyMask)];
+    else if (event.keyCode == CMKeyLeftAlt)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMLeftAltKeyMask) == CMLeftAltKeyMask)];
+    else if (event.keyCode == CMKeyRightAlt)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMRightAltKeyMask) == CMRightAltKeyMask)];
+    else if (event.keyCode == CMKeyLeftControl)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMLeftControlKeyMask) == CMLeftControlKeyMask)];
+    else if (event.keyCode == CMKeyRightControl)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMRightControlKeyMask) == CMRightControlKeyMask)];
+    else if (event.keyCode == CMKeyLeftCommand)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMLeftCommandKeyMask) == CMLeftCommandKeyMask)];
+    else if (event.keyCode == CMKeyRightCommand)
+        [self handleKeyEvent:event.keyCode
+                      isDown:((event.modifierFlags & CMRightCommandKeyMask) == CMRightCommandKeyMask)];
+    else if (event.keyCode == CMKeyCapsLock)
+    {
+        // Caps Lock has no up/down - just toggle state
+        CMKeyMapping *key = [currentLayout findMappingOfPhysicalKeyCode:event.keyCode];
+        if (key)
+        {
+            if (!inputEventGetState(key.virtualCode))
+                inputEventSet(key.virtualCode);
+            else
+                inputEventUnset(key.virtualCode);
+        }
+    }
+    
+    if (((event.modifierFlags & NSCommandKeyMask) == NSCommandKeyMask) || isCommandDown)
     {
         // If Command is toggled while another key is down, releasing the
         // other key no longer generates a keyUp event, and the virtual key
@@ -113,7 +149,7 @@
             if (inputEventGetState(virtualKey))
             {
                 CMKeyMapping *mapping = [currentLayout findMappingOfVirtualKey:virtualKey];
-                if ((mapping.keyModifier & NSCommandKeyMask) != NSCommandKeyMask)
+                if (mapping.keyCode != CMKeyLeftCommand && mapping.keyCode != CMKeyRightCommand)
                 {
                     // Release the virtual key
                     inputEventUnset(virtualKey);
@@ -122,7 +158,8 @@
         }
     }
     
-    [self updateModifiersWithFlags:[event modifierFlags]];
+    isCommandDown = ((event.modifierFlags & NSCommandKeyMask) == NSCommandKeyMask);
+    
 }
 
 #pragma mark - Public methods
@@ -151,18 +188,6 @@
 - (void)resetState
 {
     inputEventReset();
-    
-    isRShiftDown = NO;
-    isLShiftDown = NO;
-    isLAltDown = NO;
-    isRAltDown = NO;
-    isLCommandDown = NO;
-    isRCommandDown = NO;
-    isLeftCtrlDown = NO;
-    isRightCtrlDown = NO;
-    isCapsLockOn = NO;
-    
-    [self updateModifiersWithFlags:[NSEvent modifierFlags]];
 }
 
 - (void)setEmulatorHasFocus:(BOOL)focus
@@ -180,121 +205,31 @@
 #if DEBUG
         NSLog(@"CMCocoaKeyboard: +Focus");
 #endif
-        // Emulator has gained focus - toggle Caps Lock
-        [self updateModifiersWithFlags:[NSEvent modifierFlags]];
     }
 }
 
 #pragma mark - Private methods
 
-- (void)updateKeyboardState
+- (void)handleKeyEvent:(NSInteger)keyCode
+                isDown:(BOOL)isDown
 {
-    // TODO: this is where we need to actually update the matrix
+    if (isDown)
+    {
+        CMKeyMapping *key = [currentLayout findMappingOfPhysicalKeyCode:keyCode];
+        if (key && !inputEventGetState(key.virtualCode))
+            inputEventSet(key.virtualCode);
+    }
+    else
+    {
+        CMKeyMapping *key = [currentLayout findMappingOfPhysicalKeyCode:keyCode];
+        if (key && inputEventGetState(key.virtualCode))
+            inputEventUnset(key.virtualCode);
+    }
 }
 
-- (void)updateModifiersWithFlags:(NSUInteger)flags
+- (void)updateKeyboardState
 {
-    CMKeyMapping *leftShiftMap = [currentLayout findMappingOfPhysicalModifier:CMLeftShiftKeyMask];
-    CMKeyMapping *rightShiftMap = [currentLayout findMappingOfPhysicalModifier:CMRightShiftKeyMask];
-    CMKeyMapping *leftAltMap = [currentLayout findMappingOfPhysicalModifier:CMLeftAltKeyMask];
-    CMKeyMapping *rightAltMap = [currentLayout findMappingOfPhysicalModifier:CMRightAltKeyMask];
-    CMKeyMapping *leftCommandMap = [currentLayout findMappingOfPhysicalModifier:CMLeftCommandKeyMask];
-    CMKeyMapping *rightCommandMap = [currentLayout findMappingOfPhysicalModifier:CMRightCommandKeyMask];
-    CMKeyMapping *leftCtrlMap = [currentLayout findMappingOfPhysicalModifier:CMLeftControlKeyMask];
-    CMKeyMapping *rightCtrlMap = [currentLayout findMappingOfPhysicalModifier:CMRightControlKeyMask];
-    CMKeyMapping *capsLockMap = [currentLayout findMappingOfPhysicalModifier:CMCapsLockKeyMask];
-    
-    BOOL isLShiftDownNow = (flags & CMLeftShiftKeyMask) == CMLeftShiftKeyMask ? YES : NO;
-    BOOL isRShiftDownNow = (flags & CMRightShiftKeyMask) == CMRightShiftKeyMask ? YES : NO;
-    BOOL isLAltDownNow = (flags & CMLeftAltKeyMask) == CMLeftAltKeyMask ? YES : NO;
-    BOOL isRAltDownNow = (flags & CMRightAltKeyMask) == CMRightAltKeyMask ? YES : NO;
-    BOOL isLCommandDownNow = (flags & CMLeftCommandKeyMask) == CMLeftCommandKeyMask ? YES : NO;
-    BOOL isRCommandDownNow = (flags & CMRightCommandKeyMask) == CMRightCommandKeyMask ? YES : NO;
-    BOOL isLeftCtrlDownNow =  (flags & CMLeftControlKeyMask) == CMLeftControlKeyMask ? YES : NO;
-    BOOL isRightCtrlDownNow =  (flags & CMRightControlKeyMask) == CMRightControlKeyMask ? YES : NO;
-    BOOL isCapsLockOnNow = (flags & CMCapsLockKeyMask) == CMCapsLockKeyMask ? YES : NO;
-    
-    if (isLShiftDown != isLShiftDownNow)
-    {
-        isLShiftDown = isLShiftDownNow;
-        if (isLShiftDownNow)
-            inputEventSet(leftShiftMap.virtualCode);
-        else
-            inputEventUnset(leftShiftMap.virtualCode);
-    }
-    
-    if (isRShiftDown != isRShiftDownNow)
-    {
-        isRShiftDown = isRShiftDownNow;
-        if (isRShiftDownNow)
-            inputEventSet(rightShiftMap.virtualCode);
-        else
-            inputEventUnset(rightShiftMap.virtualCode);
-    }
-    
-    if (isLeftCtrlDown != isLeftCtrlDownNow)
-    {
-        isLeftCtrlDown = isLeftCtrlDownNow;
-        if (isLeftCtrlDownNow)
-            inputEventSet(leftCtrlMap.virtualCode);
-        else
-            inputEventUnset(leftCtrlMap.virtualCode);
-    }
-    
-    if (isRightCtrlDown != isRightCtrlDownNow)
-    {
-        isRightCtrlDown = isRightCtrlDownNow;
-        if (isRightCtrlDownNow)
-            inputEventSet(rightCtrlMap.virtualCode);
-        else
-            inputEventUnset(rightCtrlMap.virtualCode);
-    }
-    
-    if (isLAltDown != isLAltDownNow)
-    {
-        isLAltDown = isLAltDownNow;
-        if (isLAltDownNow)
-            inputEventSet(leftAltMap.virtualCode);
-        else
-            inputEventUnset(leftAltMap.virtualCode);
-    }
-    
-    if (isRAltDown != isRAltDownNow)
-    {
-        isRAltDown = isRAltDownNow;
-        if (isRAltDownNow)
-            inputEventSet(rightAltMap.virtualCode);
-        else
-            inputEventUnset(rightAltMap.virtualCode);
-    }
-    
-    if (isLCommandDown != isLCommandDownNow)
-    {
-        isLCommandDown = isLCommandDownNow;
-        if (isLCommandDownNow)
-            inputEventSet(leftCommandMap.virtualCode);
-        else
-            inputEventUnset(leftCommandMap.virtualCode);
-    }
-    
-    if (isRCommandDown != isRCommandDownNow)
-    {
-        isRCommandDown = isRCommandDownNow;
-        if (isRCommandDownNow)
-            inputEventSet(rightCommandMap.virtualCode);
-        else
-            inputEventUnset(rightCommandMap.virtualCode);
-    }
-    
-    if (isCapsLockOn != isCapsLockOnNow)
-    {
-        // FIXME seems to toggle off by itself?
-        isCapsLockOn = isCapsLockOnNow;
-        if (isCapsLockOnNow)
-            inputEventSet(capsLockMap.virtualCode);
-        else
-            inputEventUnset(capsLockMap.virtualCode);
-    }
+    // FIXME: this is where we need to actually update the matrix
 }
 
 #pragma mark - BlueMSX Callbacks

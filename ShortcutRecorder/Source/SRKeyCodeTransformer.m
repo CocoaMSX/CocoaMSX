@@ -57,6 +57,25 @@ static NSArray              *padKeysArray        = nil;
 		@"F17", SRInt(64),
 		@"F18", SRInt(79),
 		@"F19", SRInt(80),
+        @"Caps Lock", SRInt(57),
+        
+        
+        @"F5", SRInt(96),
+        @"F6", SRInt(97),
+        @"F7", SRInt(98),
+        @"F8", SRInt(100),
+        @"F9", SRInt(101),
+        @"F10", SRInt(109),
+        @"F11", SRInt(103),
+        @"F12", SRInt(111),
+        @"F13", SRInt(105),
+        @"F14", SRInt(107),
+        @"F15", SRInt(113),
+        @"F16", SRInt(106),
+        @"F17", SRInt(64),
+        @"F18", SRInt(79),
+        @"F19", SRInt(80),
+        
 		SRLoc(@"Space"), SRInt(49),
 		SRChar(KeyboardDeleteLeftGlyph), SRInt(51),
 		SRChar(KeyboardDeleteRightGlyph), SRInt(117),
@@ -155,7 +174,25 @@ static NSArray              *padKeysArray        = nil;
 	NSString *unmappedString = [keyCodeToStringDict objectForKey: SRInt( keyCode )];
 	if ( unmappedString != nil ) return unmappedString;
 	
-	BOOL isPadKey = [padKeysArray containsObject: SRInt( keyCode )];	
+    // Specific modifier keys
+    if (keyCode == kSRKeysLeftShift)
+        return [NSString stringWithFormat:SRLoc(@"Left %C"), KeyboardShiftGlyph];
+    if (keyCode == kSRKeysRightShift)
+        return [NSString stringWithFormat:SRLoc(@"Right %C"), KeyboardShiftGlyph];
+    if (keyCode == kSRKeysLeftControl)
+        return [NSString stringWithFormat:SRLoc(@"Left %C"), KeyboardControlGlyph];
+    if (keyCode == kSRKeysRightControl)
+        return [NSString stringWithFormat:SRLoc(@"Right %C"), KeyboardControlGlyph];
+    if (keyCode == kSRKeysLeftAlt)
+        return [NSString stringWithFormat:SRLoc(@"Left %C"), KeyboardOptionGlyph];
+    if (keyCode == kSRKeysRightAlt)
+        return [NSString stringWithFormat:SRLoc(@"Right %C"), KeyboardOptionGlyph];
+    if (keyCode == kSRKeysLeftCommand)
+        return [NSString stringWithFormat:SRLoc(@"Left %C"), KeyboardCommandGlyph];
+    if (keyCode == kSRKeysRightCommand)
+        return [NSString stringWithFormat:SRLoc(@"Right %C"), KeyboardCommandGlyph];
+    
+	BOOL isPadKey = [padKeysArray containsObject: SRInt( keyCode )];
 	
 	OSStatus err;
 	TISInputSourceRef tisSource = TISCopyCurrentKeyboardInputSource();

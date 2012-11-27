@@ -36,7 +36,7 @@
 //---------------------------------------------------------- 
 // SRStringForKeyCode()
 //---------------------------------------------------------- 
-NSString * SRStringForKeyCode( NSInteger keyCode )
+NSString * SRStringForKeyCode(NSInteger keyCode)
 {
     static SRKeyCodeTransformer *keyCodeTransformer = nil;
     if ( !keyCodeTransformer )

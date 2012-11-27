@@ -27,16 +27,7 @@
 @interface CMCocoaKeyboard : NSObject
 {
     CMKeyLayout *currentLayout;
-    
-    BOOL isLShiftDown;
-    BOOL isRShiftDown;
-    BOOL isLAltDown;
-    BOOL isRAltDown;
-    BOOL isLCommandDown;
-    BOOL isRCommandDown;
-    BOOL isLeftCtrlDown;
-    BOOL isRightCtrlDown;
-    BOOL isCapsLockOn;
+    BOOL isCommandDown;
 }
 
 - (void)setEmulatorHasFocus:(BOOL)focus;

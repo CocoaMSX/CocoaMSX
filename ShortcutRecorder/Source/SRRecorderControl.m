@@ -134,19 +134,24 @@
 - (void)setFrameSize:(NSSize)newSize
 {
 	NSSize correctedSize = newSize;
-	correctedSize.height = SRMaxHeight;
-	if (correctedSize.width < SRMinWidth) correctedSize.width = SRMinWidth;
+    if (correctedSize.height < SRMinHeight)
+        correctedSize.height = SRMinHeight;
+    
+	if (correctedSize.width < SRMinWidth)
+        correctedSize.width = SRMinWidth;
 	
 	[super setFrameSize: correctedSize];
 }
 
 - (void)setFrame:(NSRect)frameRect
 {
-	NSRect correctedFrarme = frameRect;
-	correctedFrarme.size.height = SRMaxHeight;
-	if (correctedFrarme.size.width < SRMinWidth) correctedFrarme.size.width = SRMinWidth;
+	NSRect correctedFrame = frameRect;
+    if (correctedFrame.size.height < SRMinHeight)
+        correctedFrame.size.height = SRMinHeight;
+	if (correctedFrame.size.width < SRMinWidth)
+        correctedFrame.size.width = SRMinWidth;
 
-	[super setFrame: correctedFrarme];
+	[super setFrame: correctedFrame];
 }
 
 - (NSString *)keyChars {
@@ -224,6 +229,14 @@
     [SRCell setUseSingleKeyMode:singleKey];
 }
 
+- (BOOL)tableCellMode {
+    return [SRCell tableCellMode];
+}
+
+- (void)setTableCellMode:(BOOL)tableCellMode {
+    [SRCell setTableCellMode:tableCellMode];
+}
+
 - (BOOL)canCaptureGlobalHotKeys
 {
 	return [[self cell] canCaptureGlobalHotKeys];
@@ -290,18 +303,6 @@
 		return [NSDictionary class];
 
 	return [super valueClassForBinding:binding];
-}
-
-#pragma mark *** Autosave Control ***
-
-- (NSString *)autosaveName
-{
-	return [SRCell autosaveName];
-}
-
-- (void)setAutosaveName:(NSString *)aName
-{
-	[SRCell setAutosaveName: aName];
 }
 
 #pragma mark -

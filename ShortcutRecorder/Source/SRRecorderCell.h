@@ -12,10 +12,11 @@
 //      Jamie Kirkpatrick
 
 #import <Cocoa/Cocoa.h>
+
 #import "SRCommon.h"
 
 #define SRMinWidth 50
-#define SRMaxHeight 22
+#define SRMinHeight 17
 
 #define SRTransitionFPS 30.0f
 #define SRTransitionDuration 0.35f
@@ -37,11 +38,11 @@ typedef enum SRRecorderStyle SRRecorderStyle;
 @interface SRRecorderCell : NSActionCell <NSCoding>
 {	
 	NSGradient          *recordingGradient;
-	NSString            *autosaveName;
 	
 	BOOL                isRecording;
-	BOOL                mouseInsideTrackingArea;
+	BOOL                mouseInsideRemoveTrackingArea;
 	BOOL                mouseDown;
+    BOOL                isRowSelected; // for tableCellMode
 	
 	SRRecorderStyle		style;
 	
@@ -52,7 +53,6 @@ typedef enum SRRecorderStyle SRRecorderStyle;
 	BOOL				comboJustChanged;
 	
 	NSTrackingRectTag   removeTrackingRectTag;
-	NSTrackingRectTag   snapbackTrackingRectTag;
 	
 	KeyCombo            keyCombo;
 	BOOL				hasKeyChars;
@@ -64,6 +64,7 @@ typedef enum SRRecorderStyle SRRecorderStyle;
 	NSUInteger        recordingFlags;
 	
     BOOL                useSingleKeyMode;
+    BOOL                tableCellMode;
 	BOOL				allowsKeyOnly;
 	BOOL				escapeKeysRecord;
 	
@@ -111,6 +112,9 @@ typedef enum SRRecorderStyle SRRecorderStyle;
 - (BOOL)useSingleKeyMode;
 - (void)setUseSingleKeyMode:(BOOL)singleKey;
 
+- (BOOL)tableCellMode;
+- (void)setTableCellMode:(BOOL)mode;
+
 - (BOOL)allowsKeyOnly;
 - (void)setAllowsKeyOnly:(BOOL)nAllowsKeyOnly;
 - (void)setAllowsKeyOnly:(BOOL)nAllowsKeyOnly escapeKeysRecord:(BOOL)nEscapeKeysRecord;
@@ -122,11 +126,6 @@ typedef enum SRRecorderStyle SRRecorderStyle;
 
 - (KeyCombo)keyCombo;
 - (void)setKeyCombo:(KeyCombo)aKeyCombo;
-
-#pragma mark *** Autosave Control ***
-
-- (NSString *)autosaveName;
-- (void)setAutosaveName:(NSString *)aName;
 
 // Returns the displayed key combination if set
 - (NSString *)keyComboString;

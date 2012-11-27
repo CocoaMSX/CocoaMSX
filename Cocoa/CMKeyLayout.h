@@ -23,7 +23,6 @@
 #import <Foundation/Foundation.h>
 
 #define CMKeyNoCode      (-1)
-#define CMKeyNoModifiers 0
 
 #define CMKeyLeft           123
 #define CMKeyUp             126
@@ -108,6 +107,25 @@
 #define CMKeyPageDown       121
 #define CMKeyPageUp         116
 #define CMKeyPrintScreen    105
+#define CMKeyCapsLock       57
+#define CMKeyLeftShift      56
+#define CMKeyRightShift     60
+#define CMKeyLeftControl    59
+#define CMKeyRightControl   62
+#define CMKeyLeftAlt        58
+#define CMKeyRightAlt       61
+#define CMKeyLeftCommand    55
+#define CMKeyRightCommand   54
+#define CMKeyFunction       63
+
+#define CMKeyCategoryModifier    1
+#define CMKeyCategoryDirectional 2
+#define CMKeyCategoryFunction    3
+#define CMKeyCategoryAlpha       4
+#define CMKeyCategoryNumeric     5
+#define CMKeyCategoryNumericPad  6
+#define CMKeyCategorySpecial     7
+#define CMKeyCategorySymbols     8
 
 #define CMLeftShiftKeyMask    (NSShiftKeyMask | 0x2)
 #define CMRightShiftKeyMask   (NSShiftKeyMask | 0x4)
@@ -119,27 +137,17 @@
 #define CMRightCommandKeyMask (NSCommandKeyMask | 0x10)
 #define CMCapsLockKeyMask     NSAlphaShiftKeyMask
 
-#define CMKeyCategoryModifier    1
-#define CMKeyCategoryDirectional 2
-#define CMKeyCategoryFunction    3
-#define CMKeyCategoryAlpha       4
-#define CMKeyCategoryNumeric     5
-#define CMKeyCategoryNumericPad  6
-#define CMKeyCategorySpecial     7
-#define CMKeyCategorySymbols     8
-
 @interface CMKeyMapping : NSObject<NSCopying, NSCoding>
 
 @property (nonatomic, assign) NSUInteger virtualCode;
 @property (nonatomic, assign) NSInteger  keyCode;
-@property (nonatomic, assign) NSUInteger keyModifier;
 
 - (BOOL)isMapped;
 - (NSInteger)virtualKeyCategory;
 - (NSString *)virtualKeyName;
 - (NSString *)physicalKeyName;
 
-- (BOOL)matchesEventCode:(NSEvent *)event;
+- (BOOL)matchesKeyCode:(NSInteger)keyCode;
 
 @end
 
@@ -150,8 +158,7 @@
 
 - (CMKeyMapping *)mappingAtIndex:(NSInteger)index;
 - (CMKeyMapping *)findMappingOfVirtualKey:(NSUInteger)virtualKey;
-- (CMKeyMapping *)findMappingOfEvent:(NSEvent *)event;
-- (CMKeyMapping *)findMappingOfPhysicalModifier:(NSUInteger)physicalModifier;
+- (CMKeyMapping *)findMappingOfPhysicalKeyCode:(NSInteger)keyCode;
 
 - (NSArray *)keyMaps;
 
@@ -160,10 +167,7 @@
 - (void)loadLayout:(CMKeyLayout *)layout;
 
 - (void)unassignAllMatchingPhysicalCode:(NSInteger)physicalCode;
-- (void)unassignAllMatchingPhysicalModifier:(NSUInteger)physicalModifier;
 
-- (void)assignVirtualKey:(NSUInteger)virtualKey
-              toModifier:(NSUInteger)keyModifier;
 - (void)assignVirtualKey:(NSUInteger)virtualKey
                   toCode:(NSInteger)keyCode;
 - (void)assignVirtualKey:(NSUInteger)virtualKey

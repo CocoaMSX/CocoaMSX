@@ -302,22 +302,24 @@
 		FEA01BF31656F1C2002794C6 /* CMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BEE1656F1C2002794C6 /* CMEvent.m */; };
 		FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF01656F1C2002794C6 /* CMSemaphore.m */; };
 		FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF21656F1C2002794C6 /* CMThread.m */; };
-		FEA2BBB316367C6E0014B233 /* SRRemoveShortcut.tif in Resources */ = {isa = PBXBuildFile; fileRef = FEA2BB8716367C6E0014B233 /* SRRemoveShortcut.tif */; };
-		FEA2BBB416367C6E0014B233 /* SRRemoveShortcutPressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = FEA2BB8816367C6E0014B233 /* SRRemoveShortcutPressed.tif */; };
-		FEA2BBB516367C6E0014B233 /* SRRemoveShortcutRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = FEA2BB8916367C6E0014B233 /* SRRemoveShortcutRollover.tif */; };
-		FEA2BBB616367C6E0014B233 /* SRSnapback.tiff in Resources */ = {isa = PBXBuildFile; fileRef = FEA2BB8A16367C6E0014B233 /* SRSnapback.tiff */; };
 		FEA2BBB716367C6E0014B233 /* ShortcutRecorder.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA2BB8C16367C6E0014B233 /* ShortcutRecorder.strings */; };
 		FEA2BBB816367C6E0014B233 /* SRCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBA916367C6E0014B233 /* SRCommon.m */; };
 		FEA2BBB916367C6E0014B233 /* SRKeyCodeTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAB16367C6E0014B233 /* SRKeyCodeTransformer.m */; };
 		FEA2BBBA16367C6E0014B233 /* SRRecorderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAD16367C6E0014B233 /* SRRecorderCell.m */; };
 		FEA2BBBB16367C6E0014B233 /* SRRecorderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */; };
 		FEA2BBBC16367C6E0014B233 /* SRValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBB116367C6E0014B233 /* SRValidator.m */; };
-		FEA2BBBD16367C6E0014B233 /* SR_LeopardFramework-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FEA2BBB216367C6E0014B233 /* SR_LeopardFramework-Info.plist */; };
 		FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */; };
 		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
 		FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */; };
 		FEC7231915FF0E3400CB508C /* CMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC7231815FF0E3400CB508C /* CMPreferenceController.m */; };
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
+		FECF680A16642A6700C9C4F4 /* SRRemoveShortcut.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680416642A6700C9C4F4 /* SRRemoveShortcut.png */; };
+		FECF680B16642A6700C9C4F4 /* SRRemoveShortcut@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680516642A6700C9C4F4 /* SRRemoveShortcut@2x.png */; };
+		FECF680C16642A6700C9C4F4 /* SRRemoveShortcutPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680616642A6700C9C4F4 /* SRRemoveShortcutPressed.png */; };
+		FECF680D16642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680716642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png */; };
+		FECF680E16642A6700C9C4F4 /* SRRemoveShortcutRollover.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680816642A6700C9C4F4 /* SRRemoveShortcutRollover.png */; };
+		FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */; };
+		FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
 		FEEF38AF163C8310005F7DC8 /* CMKeyLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */; };
 		FEF40ED5160DB83B009170A9 /* CMCocoaBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */; };
@@ -939,10 +941,6 @@
 		FEA01BF11656F1C2002794C6 /* CMThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMThread.h; sourceTree = "<group>"; };
 		FEA01BF21656F1C2002794C6 /* CMThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMThread.m; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMCocoaTimer.h; sourceTree = "<group>"; };
-		FEA2BB8716367C6E0014B233 /* SRRemoveShortcut.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SRRemoveShortcut.tif; sourceTree = "<group>"; };
-		FEA2BB8816367C6E0014B233 /* SRRemoveShortcutPressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SRRemoveShortcutPressed.tif; sourceTree = "<group>"; };
-		FEA2BB8916367C6E0014B233 /* SRRemoveShortcutRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SRRemoveShortcutRollover.tif; sourceTree = "<group>"; };
-		FEA2BB8A16367C6E0014B233 /* SRSnapback.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SRSnapback.tiff; sourceTree = "<group>"; };
 		FEA2BB8D16367C6E0014B233 /* ca */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		FEA2BB8E16367C6E0014B233 /* cs */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		FEA2BB8F16367C6E0014B233 /* da */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
@@ -979,7 +977,6 @@
 		FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderControl.m; sourceTree = "<group>"; };
 		FEA2BBB016367C6E0014B233 /* SRValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRValidator.h; sourceTree = "<group>"; };
 		FEA2BBB116367C6E0014B233 /* SRValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRValidator.m; sourceTree = "<group>"; };
-		FEA2BBB216367C6E0014B233 /* SR_LeopardFramework-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SR_LeopardFramework-Info.plist"; sourceTree = "<group>"; };
 		FEAABFB5165A113100934A94 /* CMMsxKeyboardMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMsxKeyboardMatrix.h; sourceTree = "<group>"; };
 		FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMsxKeyboardMatrix.m; sourceTree = "<group>"; };
 		FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MachineEditor.xib; sourceTree = "<group>"; };
@@ -988,6 +985,14 @@
 		FEC7231715FF0E3400CB508C /* CMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferenceController.h; sourceTree = "<group>"; };
 		FEC7231815FF0E3400CB508C /* CMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferenceController.m; sourceTree = "<group>"; };
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
+		FECF680416642A6700C9C4F4 /* SRRemoveShortcut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcut.png; sourceTree = "<group>"; };
+		FECF680516642A6700C9C4F4 /* SRRemoveShortcut@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcut@2x.png"; sourceTree = "<group>"; };
+		FECF680616642A6700C9C4F4 /* SRRemoveShortcutPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcutPressed.png; sourceTree = "<group>"; };
+		FECF680716642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcutPressed@2x.png"; sourceTree = "<group>"; };
+		FECF680816642A6700C9C4F4 /* SRRemoveShortcutRollover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcutRollover.png; sourceTree = "<group>"; };
+		FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcutRollover@2x.png"; sourceTree = "<group>"; };
+		FECF681116642A7E00C9C4F4 /* SRRecorderTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderTableCellView.h; sourceTree = "<group>"; };
+		FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderTableCellView.m; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
 		FEEF38AD163C8310005F7DC8 /* CMKeyLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyLayout.h; sourceTree = "<group>"; };
 		FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyLayout.m; sourceTree = "<group>"; };
@@ -1858,7 +1863,6 @@
 				FEA2BB8B16367C6E0014B233 /* Localizations */,
 				FEA2BBA616367C6E0014B233 /* ShortcutRecorder.h */,
 				FEA2BBA716367C6E0014B233 /* Source */,
-				FEA2BBB216367C6E0014B233 /* SR_LeopardFramework-Info.plist */,
 			);
 			path = ShortcutRecorder;
 			sourceTree = "<group>";
@@ -1866,10 +1870,12 @@
 		FEA2BB8616367C6E0014B233 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				FEA2BB8716367C6E0014B233 /* SRRemoveShortcut.tif */,
-				FEA2BB8816367C6E0014B233 /* SRRemoveShortcutPressed.tif */,
-				FEA2BB8916367C6E0014B233 /* SRRemoveShortcutRollover.tif */,
-				FEA2BB8A16367C6E0014B233 /* SRSnapback.tiff */,
+				FECF680416642A6700C9C4F4 /* SRRemoveShortcut.png */,
+				FECF680516642A6700C9C4F4 /* SRRemoveShortcut@2x.png */,
+				FECF680616642A6700C9C4F4 /* SRRemoveShortcutPressed.png */,
+				FECF680716642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png */,
+				FECF680816642A6700C9C4F4 /* SRRemoveShortcutRollover.png */,
+				FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1893,6 +1899,8 @@
 				FEA2BBAD16367C6E0014B233 /* SRRecorderCell.m */,
 				FEA2BBAE16367C6E0014B233 /* SRRecorderControl.h */,
 				FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */,
+				FECF681116642A7E00C9C4F4 /* SRRecorderTableCellView.h */,
+				FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */,
 				FEA2BBB016367C6E0014B233 /* SRValidator.h */,
 				FEA2BBB116367C6E0014B233 /* SRValidator.m */,
 			);
@@ -2061,12 +2069,7 @@
 				FE20DB931632783200D44ADF /* README in Resources */,
 				FE20DB95163278AD00D44ADF /* license.txt in Resources */,
 				FE20DB971632845400D44ADF /* TODO in Resources */,
-				FEA2BBB316367C6E0014B233 /* SRRemoveShortcut.tif in Resources */,
-				FEA2BBB416367C6E0014B233 /* SRRemoveShortcutPressed.tif in Resources */,
-				FEA2BBB516367C6E0014B233 /* SRRemoveShortcutRollover.tif in Resources */,
-				FEA2BBB616367C6E0014B233 /* SRSnapback.tiff in Resources */,
 				FEA2BBB716367C6E0014B233 /* ShortcutRecorder.strings in Resources */,
-				FEA2BBBD16367C6E0014B233 /* SR_LeopardFramework-Info.plist in Resources */,
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
 				FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */,
 				6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */,
@@ -2077,6 +2080,12 @@
 				6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */,
 				6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */,
 				FE1A3631165623AC0083BA21 /* icon.icns in Resources */,
+				FECF680A16642A6700C9C4F4 /* SRRemoveShortcut.png in Resources */,
+				FECF680B16642A6700C9C4F4 /* SRRemoveShortcut@2x.png in Resources */,
+				FECF680C16642A6700C9C4F4 /* SRRemoveShortcutPressed.png in Resources */,
+				FECF680D16642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png in Resources */,
+				FECF680E16642A6700C9C4F4 /* SRRemoveShortcutRollover.png in Resources */,
+				FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2378,6 +2387,7 @@
 				FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */,
 				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
 				FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */,
+				FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

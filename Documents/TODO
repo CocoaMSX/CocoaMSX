@@ -1,4 +1,4 @@
-!!! Fix function key support on the laptop - Fx keys aren't mappable
+* Go over Caps Lock - is it being pressed/released correctly in the emulator?
 
 * Inserting special cartridges doesn't work - try inserting FMPAC
 * Don't list special carts not found on the host system

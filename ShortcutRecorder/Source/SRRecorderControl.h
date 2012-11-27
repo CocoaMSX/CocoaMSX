@@ -44,6 +44,9 @@
 - (BOOL)useSingleKeyMode;
 - (void)setUseSingleKeyMode:(BOOL)singleKey;
 
+- (BOOL)tableCellMode;
+- (void)setTableCellMode:(BOOL)tableCellMode;
+
 - (NSUInteger)requiredFlags;
 - (void)setRequiredFlags:(NSUInteger)flags;
 
@@ -52,11 +55,6 @@
 
 - (NSString *)keyChars;
 - (NSString *)keyCharsIgnoringModifiers;
-
-#pragma mark *** Autosave Control ***
-
-- (NSString *)autosaveName;
-- (void)setAutosaveName:(NSString *)aName;
 
 #pragma mark -
 

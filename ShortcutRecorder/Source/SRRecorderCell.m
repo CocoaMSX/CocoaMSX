@@ -29,12 +29,7 @@
 - (BOOL)_effectiveIsAnimating;
 - (BOOL)_supportsAnimation;
 
-- (NSString *)_defaultsKeyForAutosaveName:(NSString *)name;
-- (void)_saveKeyCombo;
-- (void)_loadKeyCombo;
-
 - (NSRect)_removeButtonRectForFrame:(NSRect)cellFrame;
-- (NSRect)_snapbackRectForFrame:(NSRect)cellFrame;
 
 - (NSUInteger)_filteredCocoaFlags:(NSUInteger)flags;
 - (NSUInteger)_filteredCocoaToCarbonFlags:(NSUInteger)cocoaFlags;
@@ -64,7 +59,6 @@
 	[keyChars release];
     
 	[recordingGradient release];
-	[autosaveName release];
 	
 	[cancelCharacterSet release];
 	
@@ -81,39 +75,29 @@
 	
 	[self _privateInit];
 
-	if ([aDecoder allowsKeyedCoding]) {
-		autosaveName = [[aDecoder decodeObjectForKey: @"autosaveName"] retain];
-		
-		keyCombo.code = [[aDecoder decodeObjectForKey: @"keyComboCode"] shortValue];
-		keyCombo.flags = [[aDecoder decodeObjectForKey: @"keyComboFlags"] unsignedIntegerValue];
-		
-		if ([aDecoder containsValueForKey:@"keyChars"]) {
-			hasKeyChars = YES;
-			keyChars = (NSString *)[aDecoder decodeObjectForKey: @"keyChars"];
-			keyCharsIgnoringModifiers = (NSString *)[aDecoder decodeObjectForKey: @"keyCharsIgnoringModifiers"];
-		}
+    keyCombo.code = [[aDecoder decodeObjectForKey: @"keyComboCode"] shortValue];
+    keyCombo.flags = [[aDecoder decodeObjectForKey: @"keyComboFlags"] unsignedIntegerValue];
+    
+    if ([aDecoder containsValueForKey:@"keyChars"]) {
+        hasKeyChars = YES;
+        keyChars = (NSString *)[aDecoder decodeObjectForKey: @"keyChars"];
+        keyCharsIgnoringModifiers = (NSString *)[aDecoder decodeObjectForKey: @"keyCharsIgnoringModifiers"];
+    }
 
-		allowedFlags = [[aDecoder decodeObjectForKey: @"allowedFlags"] unsignedIntegerValue];
-		requiredFlags = [[aDecoder decodeObjectForKey: @"requiredFlags"] unsignedIntegerValue];
-		
-		allowsKeyOnly = [[aDecoder decodeObjectForKey:@"allowsKeyOnly"] boolValue];
-		escapeKeysRecord = [[aDecoder decodeObjectForKey:@"escapeKeysRecord"] boolValue];
-		isAnimating = [[aDecoder decodeObjectForKey:@"isAnimating"] boolValue];
-		
-		style = [[aDecoder decodeObjectForKey:@"style"] shortValue];
-	} else {
-		autosaveName = [[aDecoder decodeObject] retain];
-		
-		keyCombo.code = [[aDecoder decodeObject] shortValue];
-		keyCombo.flags = [[aDecoder decodeObject] unsignedIntegerValue];
-		
-		allowedFlags = [[aDecoder decodeObject] unsignedIntegerValue];
-		requiredFlags = [[aDecoder decodeObject] unsignedIntegerValue];
-	}
+    allowedFlags = [[aDecoder decodeObjectForKey: @"allowedFlags"] unsignedIntegerValue];
+    requiredFlags = [[aDecoder decodeObjectForKey: @"requiredFlags"] unsignedIntegerValue];
+    
+    allowsKeyOnly = [[aDecoder decodeObjectForKey:@"allowsKeyOnly"] boolValue];
+    escapeKeysRecord = [[aDecoder decodeObjectForKey:@"escapeKeysRecord"] boolValue];
+    isAnimating = [[aDecoder decodeObjectForKey:@"isAnimating"] boolValue];
+    
+    style = [[aDecoder decodeObjectForKey:@"style"] shortValue];
+    
+    useSingleKeyMode = [[aDecoder decodeObjectForKey:@"useSingleKeyMode"] boolValue];
+    tableCellMode = [[aDecoder decodeObjectForKey:@"tableCellMode"] boolValue];
+    isRowSelected = [[aDecoder decodeObjectForKey:@"isRowSelected"] boolValue];
 	
 	allowedFlags |= NSFunctionKeyMask;
-
-	[self _loadKeyCombo];
 
 	return self;
 }
@@ -122,33 +106,26 @@
 {
 	[super encodeWithCoder: aCoder];
 	
-	if ([aCoder allowsKeyedCoding]) {
-		[aCoder encodeObject:[self autosaveName] forKey:@"autosaveName"];
-		[aCoder encodeObject:[NSNumber numberWithShort: keyCombo.code] forKey:@"keyComboCode"];
-		[aCoder encodeObject:[NSNumber numberWithUnsignedInteger:keyCombo.flags] forKey:@"keyComboFlags"];
-	
-		[aCoder encodeObject:[NSNumber numberWithUnsignedInteger:allowedFlags] forKey:@"allowedFlags"];
-		[aCoder encodeObject:[NSNumber numberWithUnsignedInteger:requiredFlags] forKey:@"requiredFlags"];
-		
-		if (hasKeyChars) {
-			[aCoder encodeObject:keyChars forKey:@"keyChars"];
-			[aCoder encodeObject:keyCharsIgnoringModifiers forKey:@"keyCharsIgnoringModifiers"];
-		}
-		
-		[aCoder encodeObject:[NSNumber numberWithBool: allowsKeyOnly] forKey:@"allowsKeyOnly"];
-		[aCoder encodeObject:[NSNumber numberWithBool: escapeKeysRecord] forKey:@"escapeKeysRecord"];
-		
-		[aCoder encodeObject:[NSNumber numberWithBool: isAnimating] forKey:@"isAnimating"];
-		[aCoder encodeObject:[NSNumber numberWithShort:style] forKey:@"style"];
-	} else {
-		// Unkeyed archiving and encoding is deprecated and unsupported. Use keyed archiving and encoding.
-		[aCoder encodeObject: [self autosaveName]];
-		[aCoder encodeObject: [NSNumber numberWithShort: keyCombo.code]];
-		[aCoder encodeObject: [NSNumber numberWithUnsignedInteger: keyCombo.flags]];
-		
-		[aCoder encodeObject: [NSNumber numberWithUnsignedInteger:allowedFlags]];
-		[aCoder encodeObject: [NSNumber numberWithUnsignedInteger:requiredFlags]];
-	}
+    [aCoder encodeObject:[NSNumber numberWithShort: keyCombo.code] forKey:@"keyComboCode"];
+    [aCoder encodeObject:[NSNumber numberWithUnsignedInteger:keyCombo.flags] forKey:@"keyComboFlags"];
+
+    [aCoder encodeObject:[NSNumber numberWithUnsignedInteger:allowedFlags] forKey:@"allowedFlags"];
+    [aCoder encodeObject:[NSNumber numberWithUnsignedInteger:requiredFlags] forKey:@"requiredFlags"];
+    
+    if (hasKeyChars) {
+        [aCoder encodeObject:keyChars forKey:@"keyChars"];
+        [aCoder encodeObject:keyCharsIgnoringModifiers forKey:@"keyCharsIgnoringModifiers"];
+    }
+    
+    [aCoder encodeObject:[NSNumber numberWithBool: allowsKeyOnly] forKey:@"allowsKeyOnly"];
+    [aCoder encodeObject:[NSNumber numberWithBool: escapeKeysRecord] forKey:@"escapeKeysRecord"];
+    
+    [aCoder encodeObject:[NSNumber numberWithBool:isAnimating] forKey:@"isAnimating"];
+    [aCoder encodeObject:[NSNumber numberWithShort:style] forKey:@"style"];
+    
+    [aCoder encodeObject:[NSNumber numberWithBool:useSingleKeyMode] forKey:@"useSingleKeyMode"];
+    [aCoder encodeObject:[NSNumber numberWithBool:tableCellMode] forKey:@"tableCellMode"];
+    [aCoder encodeObject:[NSNumber numberWithBool:isRowSelected] forKey:@"isRowSelected"];
 }
 
 - (id)copyWithZone:(NSZone *)zone
@@ -157,14 +134,12 @@
     cell = (SRRecorderCell *)[super copyWithZone: zone];
 	
 	cell->recordingGradient = [recordingGradient retain];
-	cell->autosaveName = [autosaveName retain];
-
+    
 	cell->isRecording = isRecording;
-	cell->mouseInsideTrackingArea = mouseInsideTrackingArea;
+	cell->mouseInsideRemoveTrackingArea = mouseInsideRemoveTrackingArea;
 	cell->mouseDown = mouseDown;
 
 	cell->removeTrackingRectTag = removeTrackingRectTag;
-	cell->snapbackTrackingRectTag = snapbackTrackingRectTag;
 
 	cell->keyCombo = keyCombo;
 
@@ -183,6 +158,10 @@
     
 	cell->delegate = delegate;
 	
+	cell->useSingleKeyMode = useSingleKeyMode;
+	cell->tableCellMode = tableCellMode;
+	cell->isRowSelected = isRowSelected;
+    
     return cell;
 }
 
@@ -225,34 +204,6 @@
 		NSRect whiteRect = cellFrame;
 		NSBezierPath *roundedRect;
 		
-	// Draw gradient when in recording mode
-		if (isRecording)
-		{
-			radius = NSHeight(cellFrame) / 2.0f;
-			roundedRect = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:radius yRadius:radius];
-			
-		// Fill background with gradient
-			[[NSGraphicsContext currentContext] saveGraphicsState];
-			[roundedRect addClip];
-			[recordingGradient drawInRect:cellFrame angle:90.0f];
-			[[NSGraphicsContext currentContext] restoreGraphicsState];
-			
-		// Highlight if inside or down
-			if (mouseInsideTrackingArea)
-			{
-				[[[NSColor blackColor] colorWithAlphaComponent: (mouseDown ? 0.4f : 0.2f)] set];
-				[roundedRect fill];
-			}
-			
-		// Draw snapback image
-			NSImage *snapBackArrow = SRResIndImage(@"SRSnapback");	
-			[snapBackArrow drawAtPoint:[self _snapbackRectForFrame: cellFrame].origin fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f];
-			
-		// Because of the gradient and snapback image, the white rounded rect will be smaller
-			whiteRect = NSInsetRect(cellFrame, 9.5f, 2.0f);
-			whiteRect.origin.x -= 7.5f;
-		}
-		
 	// Draw white rounded box
 		radius = NSHeight(whiteRect) / 2.0f;
 		roundedRect = [NSBezierPath bezierPathWithRoundedRect:whiteRect xRadius:radius yRadius:radius];
@@ -270,7 +221,7 @@
 		// If key combination is set and valid, draw remove image
 			if (![self _isEmpty] && [self isEnabled])
 			{
-				NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
+				NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideRemoveTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
 				NSImage *removeImage = SRResIndImage(removeImageName);
                 [removeImage drawAtPoint:[self _removeButtonRectForFrame: cellFrame].origin fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f];
 			}
@@ -297,16 +248,8 @@
 		// Recording, but no modifier keys down
 			if (![self _validModifierFlags: recordingFlags])
 			{
-				if (mouseInsideTrackingArea)
-				{
-				// Mouse over snapback
-					displayString = SRLoc(@"Use old shortcut");
-				}
-				else
-				{
 				// Mouse elsewhere
-					displayString = SRLoc(@"Type shortcut");
-				}
+                displayString = SRLoc(@"Type shortcut");
 			}
 			else
 			{
@@ -325,7 +268,8 @@
 		// Not recording...
 			if ([self _isEmpty])
 			{
-				displayString = SRLoc(@"Click to record shortcut");
+                if (!tableCellMode)
+                    displayString = SRLoc(@"Click to record shortcut");
 			}
 			else
 			{
@@ -337,7 +281,7 @@
 	// Calculate rect in which to draw the text in...
 		NSRect textRect = cellFrame;
 		textRect.size.width -= 6;
-		textRect.size.width -= ((!isRecording && [self _isEmpty]) ? 6 : (isRecording ? [self _snapbackRectForFrame: cellFrame].size.width : [self _removeButtonRectForFrame: cellFrame].size.width) + 6);
+		textRect.size.width -= ((!isRecording && [self _isEmpty]) ? 6 : (isRecording ? [self _removeButtonRectForFrame: cellFrame].size.width : 0) + 6);
 		textRect.origin.x += 6;
 		textRect.origin.y = -(NSMidY(cellFrame) - [displayString sizeWithAttributes: attributes].height/2);
 		
@@ -408,72 +352,52 @@
 		
 	// Draw white rounded box
 		radius = NSHeight(whiteRect) / 2.0f;
-		roundedRect = [NSBezierPath bezierPathWithRoundedRect:whiteRect xRadius:radius yRadius:radius];
+        if (tableCellMode)
+            roundedRect = [NSBezierPath bezierPathWithRect:whiteRect];
+        else
+            roundedRect = [NSBezierPath bezierPathWithRoundedRect:whiteRect xRadius:radius yRadius:radius];
+        
 		[[NSColor whiteColor] set];
 		[[NSGraphicsContext currentContext] saveGraphicsState];
-		[roundedRect fill];
+        
+        if (!tableCellMode || isRecording)
+            [roundedRect fill];
+        
 		[[NSColor windowFrameColor] set];
-		[roundedRect stroke];
+        
+        if (!tableCellMode)
+            [roundedRect stroke];
+        
 		[roundedRect addClip];
 		
-//	if (isVaguelyRecording) 
-		{
-			NSRect snapBackRect = SRAnimationOffsetRect([self _snapbackRectForFrame: cellFrame],cellFrame);
-//		NSLog(@"snapbackrect: %@; offset: %@", NSStringFromRect([self _snapbackRectForFrame: cellFrame]), NSStringFromRect(snapBackRect));
-			NSPoint correctedSnapBackOrigin = [viewportMovement transformPoint:snapBackRect.origin];
-			
-			NSRect correctedSnapBackRect = snapBackRect;
-//		correctedSnapBackRect.origin.y = NSMinY(whiteRect);
-			correctedSnapBackRect.size.height = NSHeight(whiteRect);
-			correctedSnapBackRect.size.width *= 1.3f;
-			correctedSnapBackRect.origin.y -= 5.0f;
-			correctedSnapBackRect.origin.x -= 1.5f;
-			
-			correctedSnapBackOrigin.x -= 0.5f;
-			
-			correctedSnapBackRect.origin = [viewportMovement transformPoint:correctedSnapBackRect.origin];
-			
-			NSBezierPath *snapBackButton = [NSBezierPath bezierPathWithRect:correctedSnapBackRect];
-			[[[[NSColor windowFrameColor] shadowWithLevel:0.2f] colorWithAlphaComponent:alphaRecording] set];
-			[snapBackButton stroke];
-//		NSLog(@"stroked along path of %@", NSStringFromRect(correctedSnapBackRect));
-
-			NSGradient *gradient = nil;
-			if (mouseDown && mouseInsideTrackingArea) {
-				gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:0.60f alpha:alphaRecording]
-														 endingColor:[NSColor colorWithCalibratedWhite:0.75f alpha:alphaRecording]];
-			}
-			else {
-				gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:0.75f alpha:alphaRecording]
-														 endingColor:[NSColor colorWithCalibratedWhite:0.90f alpha:alphaRecording]];
-			}
-			CGFloat insetAmount = -([snapBackButton lineWidth]/2.0f);
-			[gradient drawInRect:NSInsetRect(correctedSnapBackRect, insetAmount, insetAmount) angle:90.0f];
-			[gradient release];
-
-			/*
-		// Highlight if inside or down
-			 if (mouseInsideTrackingArea)
-			 {
-				 [[[NSColor blackColor] colorWithAlphaComponent: alphaRecording*(mouseDown ? 0.15 : 0.1)] set];
-				 [snapBackButton fill];
-			 }*/
-			
-		// Draw snapback image
-			NSImage *snapBackArrow = SRResIndImage(@"SRSnapback");
-            [snapBackArrow drawAtPoint:correctedSnapBackOrigin fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f*alphaRecording];
-		}
-		
-	// Draw border and remove badge if needed
+        // Draw border and remove badge if needed
 		/*	if (!isVaguelyRecording)
 		{
 			*/	
 		// If key combination is set and valid, draw remove image
-		if (![self _isEmpty] && [self isEnabled])
+		if (isVaguelyRecording && ![self _isEmpty] && [self isEnabled])
 		{
-			NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
+			NSRect removeRect = SRAnimationOffsetRect([self _removeButtonRectForFrame:cellFrame], cellFrame);
+			NSPoint correctedRemoveOrigin = [viewportMovement transformPoint:removeRect.origin];
+			
+			NSRect correctedRemoveRect = removeRect;
+			correctedRemoveRect.size.height = NSHeight(whiteRect);
+			correctedRemoveRect.size.width *= 1.3f;
+			correctedRemoveRect.origin.y -= 5.0f;
+			correctedRemoveRect.origin.x -= 1.5f;
+			
+			correctedRemoveOrigin.x -= 0.5f;
+			
+			correctedRemoveRect.origin = [viewportMovement transformPoint:removeRect.origin];
+            
+			NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideRemoveTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
+            
 			NSImage *removeImage = SRResIndImage(removeImageName);
-            [removeImage drawAtPoint:[viewportMovement transformPoint:([self _removeButtonRectForFrame: cellFrame].origin)] fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:alphaView];
+            [removeImage drawAtPoint:correctedRemoveRect.origin
+                            fromRect:NSZeroRect
+                           operation:NSCompositeSourceOver
+                            fraction:1.0f * alphaRecording];
+
 //NSLog(@"drew removeImage with alpha %f", alphaView);
 		}
 //	}
@@ -498,33 +422,36 @@
 		{
 	// Only the KeyCombo should be black and in a bigger font size
 			BOOL recordingOrEmpty = (isVaguelyRecording || [self _isEmpty]);
+            
+            NSColor *textColor;
+            if (!recordingOrEmpty)
+                textColor = [NSColor textColor];
+            else
+                textColor = [NSColor disabledControlTextColor];
+            
 			NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys: mpstyle, NSParagraphStyleAttributeName,
 				[NSFont systemFontOfSize: (recordingOrEmpty ? [NSFont labelFontSize] : [NSFont smallSystemFontSize])], NSFontAttributeName,
-				[(recordingOrEmpty ? [NSColor disabledControlTextColor] : [NSColor blackColor]) colorWithAlphaComponent:alphaRecordingText], NSForegroundColorAttributeName, 
+				[textColor colorWithAlphaComponent:alphaRecordingText], NSForegroundColorAttributeName,
 				nil];
 		// Recording, but no modifier keys down
 			if (![self _validModifierFlags: recordingFlags])
 			{
-				if (mouseInsideTrackingArea)
-				{
-				// Mouse over snapback
-					displayString = SRLoc(@"Use old shortcut");
-				}
-				else
-				{
 				// Mouse elsewhere
-					displayString = SRLoc(@"Type shortcut");
-				}
+                displayString = SRLoc(@"...");
 			}
 			else
 			{
+                if (useSingleKeyMode && self.keyComboString)
+                    displayString = self.keyComboString;
+                else
+
 			// Display currently pressed modifier keys
 				displayString = SRStringForCocoaModifierFlags( recordingFlags );
-				
+            
 			// Fall back on 'Type shortcut' if we don't have modifier flags to display; this will happen for the fn key depressed
 				if (![displayString length])
 				{
-					displayString = SRLoc(@"Type shortcut");
+					displayString = SRLoc(@"...");
 				}
 			}
 	// Calculate rect in which to draw the text in...
@@ -543,22 +470,28 @@
 		
 		{
 	// Only the KeyCombo should be black and in a bigger font size
-            NSFont *font = [NSFont systemFontOfSize:([self _isEmpty]
-                                                     ? [NSFont labelFontSize]
-                                                     : [NSFont smallSystemFontSize])];
-            NSColor *color = [([self _isEmpty]
-                               ? [NSColor disabledControlTextColor]
-                               : [NSColor blackColor]) colorWithAlphaComponent:alphaCombo];
+            NSFont *font = [NSFont systemFontOfSize:[NSFont labelFontSize]];
+            
+            NSColor *color;
+            if (tableCellMode && isRowSelected)
+                color = [NSColor controlHighlightColor];
+            else if ([self _isEmpty])
+                color = [NSColor disabledControlTextColor];
+            else
+                color = [NSColor textColor];
             
 			NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                         mpstyle, NSParagraphStyleAttributeName,
                                         font, NSFontAttributeName,
-                                        color, NSForegroundColorAttributeName,
+                                        [color colorWithAlphaComponent:alphaCombo], NSForegroundColorAttributeName,
                                         nil];
 		// Not recording...
 			if ([self _isEmpty])
 			{
-				displayString = SRLoc(@"Click to record shortcut");
+                if (!tableCellMode)
+                    displayString = SRLoc(@"Click to record shortcut");
+                else
+                    displayString = @"";
 			}
 			else
 			{
@@ -589,15 +522,24 @@
 		
     // draw a focus ring...?
 		
-		if ( [self showsFirstResponder] )
+		if ([self showsFirstResponder] && (!tableCellMode || isRecording))
 		{
-			[NSGraphicsContext saveGraphicsState];
-			NSSetFocusRingStyle(NSFocusRingOnly);
-			radius = NSHeight(cellFrame) / 2.0f;
-			[[NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:radius yRadius:radius] fill];
-			[NSGraphicsContext restoreGraphicsState];
+            if (tableCellMode)
+            {
+                [NSGraphicsContext saveGraphicsState];
+                NSSetFocusRingStyle(NSFocusRingOnly);
+                [[NSBezierPath bezierPathWithRect:cellFrame] fill];
+                [NSGraphicsContext restoreGraphicsState];
+            }
+            else
+            {
+                [NSGraphicsContext saveGraphicsState];
+                NSSetFocusRingStyle(NSFocusRingOnly);
+                radius = NSHeight(cellFrame) / 2.0f;
+                [[NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:radius yRadius:radius] fill];
+                [NSGraphicsContext restoreGraphicsState];
+            }
 		}
-		
 	}
 }
 
@@ -612,8 +554,8 @@
 	// We're not to be tracked if we're not enabled
 	if (![self isEnabled])
 	{
-		if (removeTrackingRectTag != 0) [controlView removeTrackingRect: removeTrackingRectTag];
-		if (snapbackTrackingRectTag != 0) [controlView removeTrackingRect: snapbackTrackingRectTag];
+		if (removeTrackingRectTag != 0)
+            [controlView removeTrackingRect: removeTrackingRectTag];
 		
 		return;
 	}
@@ -623,23 +565,19 @@
 	{
 		// Create and register tracking rect for the remove badge if shortcut is not empty
 		NSRect removeButtonRect = [self _removeButtonRectForFrame: cellFrame];
-		BOOL mouseInside = [controlView mouse:mouseLocation inRect:removeButtonRect];
+		BOOL mouseInsideRemove = [controlView mouse:mouseLocation
+                                             inRect:removeButtonRect];
 		
-		if (removeTrackingRectTag != 0) [controlView removeTrackingRect: removeTrackingRectTag];
-		removeTrackingRectTag = [controlView addTrackingRect:removeButtonRect owner:self userData:nil assumeInside:mouseInside];
+		if (removeTrackingRectTag != 0)
+            [controlView removeTrackingRect: removeTrackingRectTag];
+        
+		removeTrackingRectTag = [controlView addTrackingRect:removeButtonRect
+                                                       owner:self
+                                                    userData:nil
+                                                assumeInside:mouseInsideRemove];
 		
-		if (mouseInsideTrackingArea != mouseInside) mouseInsideTrackingArea = mouseInside;
-	}
-	else
-	{
-		// Create and register tracking rect for the snapback badge if we're in recording mode
-		NSRect snapbackRect = [self _snapbackRectForFrame: cellFrame];
-		BOOL mouseInside = [controlView mouse:mouseLocation inRect:snapbackRect];
-
-		if (snapbackTrackingRectTag != 0) [controlView removeTrackingRect: snapbackTrackingRectTag];
-		snapbackTrackingRectTag = [controlView addTrackingRect:snapbackRect owner:self userData:nil assumeInside:mouseInside];	
-		
-		if (mouseInsideTrackingArea != mouseInside) mouseInsideTrackingArea = mouseInside;
+		if (mouseInsideRemoveTrackingArea != mouseInsideRemove)
+            mouseInsideRemoveTrackingArea = mouseInsideRemove;
 	}
 }
 
@@ -649,7 +587,7 @@
 
 	if ([[view window] isKeyWindow] || [view acceptsFirstMouse: theEvent])
 	{
-		mouseInsideTrackingArea = YES;
+		mouseInsideRemoveTrackingArea = YES;
 		[view display];
 	}
 }
@@ -660,22 +598,28 @@
 	
 	if ([[view window] isKeyWindow] || [view acceptsFirstMouse: theEvent])
 	{
-		mouseInsideTrackingArea = NO;
+		mouseInsideRemoveTrackingArea = NO;
 		[view display];
 	}
 }
 
-- (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(SRRecorderControl *)controlView untilMouseUp:(BOOL)flag
-{		
+- (BOOL)trackMouse:(NSEvent *)theEvent
+            inRect:(NSRect)cellFrame
+            ofView:(SRRecorderControl *)controlView
+      untilMouseUp:(BOOL)flag
+{
 	NSEvent *currentEvent = theEvent;
 	NSPoint mouseLocation;
 	
-	NSRect trackingRect = (isRecording ? [self _snapbackRectForFrame: cellFrame] : [self _removeButtonRectForFrame: cellFrame]);
+	NSRect removeTrackingRect = [self _removeButtonRectForFrame:cellFrame];
+    
+//	NSRect trackingRect = (isRecording ? [self _snapbackRectForFrame: cellFrame] : [self _removeButtonRectForFrame: cellFrame]);
 	NSRect leftRect = cellFrame;
-
+    
 	// Determine the area without any badge
-	if (!NSEqualRects(trackingRect,NSZeroRect)) leftRect.size.width -= NSWidth(trackingRect) + 4;
-		
+	if (isRecording && !NSEqualRects(removeTrackingRect, NSZeroRect))
+        leftRect.size.width -= NSWidth(removeTrackingRect) + 4;
+    
 	do {
         mouseLocation = [controlView convertPoint: [currentEvent locationInWindow] fromView:nil];
 		
@@ -684,18 +628,19 @@
 			case NSLeftMouseDown:
 			{
 				// Check if mouse is over remove/snapback image
-				if ([controlView mouse:mouseLocation inRect:trackingRect])
+				if ([controlView mouse:mouseLocation inRect:removeTrackingRect])
 				{
 					mouseDown = YES;
-					[controlView setNeedsDisplayInRect: cellFrame];
+					[controlView setNeedsDisplayInRect:cellFrame];
 				}
 				
 				break;
 			}
 			case NSLeftMouseDragged:
-			{				
-				// Recheck if mouse is still over the image while dragging 
-				mouseInsideTrackingArea = [controlView mouse:mouseLocation inRect:trackingRect];
+			{
+				// Recheck if mouse is still over the image while dragging
+				mouseInsideRemoveTrackingArea = [controlView mouse:mouseLocation
+                                                            inRect:removeTrackingRect];
 				[controlView setNeedsDisplayInRect: cellFrame];
 				
 				break;
@@ -703,27 +648,42 @@
 			default: // NSLeftMouseUp
 			{
 				mouseDown = NO;
-				mouseInsideTrackingArea = [controlView mouse:mouseLocation inRect:trackingRect];
-
-				if (mouseInsideTrackingArea)
+				mouseInsideRemoveTrackingArea = [controlView mouse:mouseLocation
+                                                            inRect:removeTrackingRect];
+                
+				if (mouseInsideRemoveTrackingArea && isRecording)
 				{
-					if (isRecording)
-					{
-						// Mouse was over snapback, just redraw
-                        [self _endRecordingTransition];
-					}
-					else
-					{
-						// Mouse was over the remove image, reset all
-						[self setKeyCombo: SRMakeKeyCombo(ShortcutRecorderEmptyCode, ShortcutRecorderEmptyFlags)];
-					}
+                    // Mouse was over the remove image, reset all
+                    [self setKeyCombo:SRMakeKeyCombo(ShortcutRecorderEmptyCode, ShortcutRecorderEmptyFlags)];
+                    
+                    [self _endRecordingTransition];
 				}
 				else if ([controlView mouse:mouseLocation inRect:leftRect] && !isRecording)
 				{
-					if ([self isEnabled]) 
+					if (self.isEnabled)
 					{
-                        [self _startRecordingTransition];
+                        if (!tableCellMode || theEvent.clickCount > 1)
+                        {
+                            [self _startRecordingTransition];
+                        }
+                        else if (tableCellMode)
+                        {
+                            // Looks like the first click - select the appropriate
+                            // row in the NSTableView
+                            
+                            id tableView = [[[self.controlView superview] superview] superview];
+                            if ([tableView isKindOfClass:NSTableView.class])
+                            {
+                                NSPoint mouseRelativeToTableView = [tableView convertPoint:[theEvent locationInWindow] fromView:nil];
+                                
+                                NSInteger row = [tableView rowAtPoint:mouseRelativeToTableView];
+                                
+                                [tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:row]
+                                       byExtendingSelection:NO];
+                            }
+                        }
 					}
+                    
 					/* maybe beep if not editable?
 					 else
 					{
@@ -733,7 +693,8 @@
 				}
 				
 				// Any click inside will make us firstResponder
-				if ([self isEnabled]) [[controlView window] makeFirstResponder: controlView];
+				if ([self isEnabled])
+                    [[controlView window] makeFirstResponder: controlView];
 
 				// Reset tracking rects and redisplay
 				[self resetTrackingRects];
@@ -743,7 +704,10 @@
 			}
 		}
 		
-    } while ((currentEvent = [[controlView window] nextEventMatchingMask:(NSLeftMouseDraggedMask | NSLeftMouseUpMask) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:YES]));
+    } while ((currentEvent = [[controlView window] nextEventMatchingMask:(NSLeftMouseDraggedMask | NSLeftMouseUpMask)
+                                                               untilDate:[NSDate distantFuture]
+                                                                  inMode:NSEventTrackingRunLoopMode
+                                                                 dequeue:YES]));
 	
     return YES;
 }
@@ -762,11 +726,16 @@
 
 #pragma mark *** Responder Control ***
 
-- (BOOL) becomeFirstResponder;
+- (BOOL)becomeFirstResponder;
 {
     // reset tracking rects and redisplay
     [self resetTrackingRects];
-    [[self controlView] display];
+    
+    // AK: For some reason, the next line causes the table to render nothing but
+    // the focused cell when switching Preferences tabs. Disabling seems
+    // to not cause any issues
+    
+    // [[self controlView] display];
     
     return YES;
 }
@@ -778,7 +747,10 @@
 	}
     
     [self resetTrackingRects];
-    [[self controlView] display];
+    
+    // AK: See comment in becomeFirstResponder
+    // [[self controlView] display];
+    
     return YES;
 }
 
@@ -854,8 +826,6 @@
 							[delegate shortcutRecorderCell:self keyComboDidChange:keyCombo];
 						
 					// Save if needed
-						[self _saveKeyCombo];
-						
 						[self _setJustChanged];
 					}
 				} else {
@@ -894,16 +864,21 @@
 		recordingFlags = [self _filteredCocoaFlags: [theEvent modifierFlags]];
         
         if (useSingleKeyMode) {
-            keyCombo.flags = recordingFlags;
-            keyCombo.code = ShortcutRecorderEmptyCode;
+            BOOL validCombo = NO;
+            if (theEvent.keyCode != kSRKeysFunction) {
+                keyCombo.flags = ShortcutRecorderEmptyFlags;
+                keyCombo.code = theEvent.keyCode;
+                validCombo = YES;
+            }
             
-            if (delegate != nil && [delegate respondsToSelector: @selector(shortcutRecorderCell:keyComboDidChange:)])
-                [delegate shortcutRecorderCell:self keyComboDidChange:keyCombo];
-            
-            [self _saveKeyCombo];
-            [self _setJustChanged];
-            [self _endRecordingTransition];
-            [self resetTrackingRects];
+            if (validCombo) {
+                if (delegate != nil && [delegate respondsToSelector: @selector(shortcutRecorderCell:keyComboDidChange:)])
+                    [delegate shortcutRecorderCell:self keyComboDidChange:keyCombo];
+                
+                [self _setJustChanged];
+                [self _endRecordingTransition];
+                [self resetTrackingRects];
+            }
         }
         
 		[[self controlView] display];
@@ -936,9 +911,6 @@
 			// Notify delegate if keyCombo changed
 			if (delegate != nil && [delegate respondsToSelector: @selector(shortcutRecorderCell:keyComboDidChange:)])
 				[delegate shortcutRecorderCell:self keyComboDidChange:keyCombo];
-			
-			// Save if needed
-			[self _saveKeyCombo];
 		}
 	}
 	
@@ -974,6 +946,14 @@
     useSingleKeyMode = singleKey;
 }
 
+- (BOOL)tableCellMode {
+    return tableCellMode;
+}
+
+- (void)setTableCellMode:(BOOL)mode {
+    tableCellMode = mode;
+}
+
 - (NSUInteger)requiredFlags
 {
 	return requiredFlags;
@@ -998,9 +978,6 @@
 			// Notify delegate if keyCombo changed
 			if (delegate != nil && [delegate respondsToSelector: @selector(shortcutRecorderCell:keyComboDidChange:)])
 				[delegate shortcutRecorderCell:self keyComboDidChange:keyCombo];
-			
-			// Save if needed
-			[self _saveKeyCombo];
 		}
 	}
 	
@@ -1023,9 +1000,6 @@
 	if (delegate != nil && [delegate respondsToSelector: @selector(shortcutRecorderCell:keyComboDidChange:)])
 		[delegate shortcutRecorderCell:self keyComboDidChange:keyCombo];
 	
-	// Save if needed
-	[self _saveKeyCombo];
-	
 	[[self controlView] display];
 }
 
@@ -1037,22 +1011,6 @@
 - (void)setCanCaptureGlobalHotKeys:(BOOL)inState
 {
 	globalHotKeys = inState;
-}
-
-#pragma mark *** Autosave Control ***
-
-- (NSString *)autosaveName
-{
-	return autosaveName;
-}
-
-- (void)setAutosaveName:(NSString *)aName
-{
-	if (aName != autosaveName)
-	{
-		[autosaveName release];
-		autosaveName = [aName copy];
-	}
 }
 
 #pragma mark -
@@ -1115,8 +1073,6 @@
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	[notificationCenter addObserver:self selector:@selector(_createGradient) name:NSSystemColorsDidChangeNotification object:nil]; // recreate gradient if needed
 	[self _createGradient];
-
-	[self _loadKeyCombo];
 }
 
 - (void)_createGradient
@@ -1137,6 +1093,22 @@
 
 - (BOOL)_supportsAnimation {
 	return [[self class] styleSupportsAnimation:style];
+}
+
+- (void)setBackgroundStyle:(NSBackgroundStyle)bgStyle
+{
+    [super setBackgroundStyle:bgStyle];
+    
+    switch (bgStyle)
+    {
+    case NSBackgroundStyleDark:
+        isRowSelected = YES;
+        break;
+    default:
+    case NSBackgroundStyleLight:
+        isRowSelected = NO;
+        break;
+    }
 }
 
 - (void)_startRecordingTransition {
@@ -1191,7 +1163,7 @@
     isRecording = YES;
     
     // Reset recording flags and determine which are required
-    recordingFlags = [self _filteredCocoaFlags: ShortcutRecorderEmptyFlags];
+    recordingFlags = [self _filteredCocoaFlags:ShortcutRecorderEmptyFlags];
     
 /*	[self setFocusRingType:NSFocusRingTypeNone];
 	[[self controlView] setFocusRingType:NSFocusRingTypeNone];*/	
@@ -1200,8 +1172,9 @@
     // invalidate the focus ring rect...
     NSView *controlView = [self controlView];
     [controlView setKeyboardFocusRingNeedsDisplayInRect:[controlView bounds]];
-
-    if (globalHotKeys) hotKeyModeToken = PushSymbolicHotKeyMode(kHIHotKeyModeAllDisabled);
+    
+    if (globalHotKeys)
+        hotKeyModeToken = PushSymbolicHotKeyMode(kHIHotKeyModeAllDisabled);
 }
 
 - (void)_endRecording;
@@ -1220,98 +1193,38 @@
 	if (globalHotKeys) PopSymbolicHotKeyMode(hotKeyModeToken);
 }
 
-#pragma mark *** Autosave ***
-
-- (NSString *)_defaultsKeyForAutosaveName:(NSString *)name
-{
-	return [NSString stringWithFormat: @"ShortcutRecorder %@", name];
-}
-
-- (void)_saveKeyCombo
-{
-	NSString *defaultsKey = [self autosaveName];
-
-	if (defaultsKey != nil && [defaultsKey length])
-	{
-		id values = [[NSUserDefaultsController sharedUserDefaultsController] values];
-		
-		NSDictionary *defaultsValue = [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithShort: keyCombo.code], @"keyCode",
-			[NSNumber numberWithUnsignedInteger: keyCombo.flags], @"modifierFlags", // cocoa
-			[NSNumber numberWithUnsignedInteger:SRCocoaToCarbonFlags(keyCombo.flags)], @"modifiers", // carbon, for compatibility with PTKeyCombo
-			nil];
-		
-		if (hasKeyChars) {
-			
-			NSMutableDictionary *mutableDefaultsValue = [[defaultsValue mutableCopy] autorelease];
-			[mutableDefaultsValue setObject:keyChars forKey:@"keyChars"];
-			[mutableDefaultsValue setObject:keyCharsIgnoringModifiers forKey:@"keyCharsIgnoringModifiers"];
-			
-			defaultsValue = mutableDefaultsValue;
-		}
-		
-		[values setValue:defaultsValue forKey:[self _defaultsKeyForAutosaveName: defaultsKey]];
-	}
-}
-
-- (void)_loadKeyCombo
-{
-	NSString *defaultsKey = [self autosaveName];
-
-	if (defaultsKey != nil && [defaultsKey length])
-	{
-		id values = [[NSUserDefaultsController sharedUserDefaultsController] values];
-		NSDictionary *savedCombo = [values valueForKey: [self _defaultsKeyForAutosaveName: defaultsKey]];
-		
-		NSInteger keyCode = [[savedCombo valueForKey: @"keyCode"] shortValue];
-		NSUInteger flags;
-		if ((nil == [savedCombo valueForKey:@"modifierFlags"]) && (nil != [savedCombo valueForKey:@"modifiers"])) { // carbon, for compatibility with PTKeyCombo
-			flags = SRCarbonToCocoaFlags([[savedCombo valueForKey: @"modifiers"] unsignedIntegerValue]);
-		} else { // cocoa
-			flags = [[savedCombo valueForKey: @"modifierFlags"] unsignedIntegerValue];
-		}
-		
-		keyCombo.flags = [self _filteredCocoaFlags: flags];
-		keyCombo.code = keyCode;
-		
-		NSString *kc = [savedCombo valueForKey: @"keyChars"];
-		hasKeyChars = (nil != kc);
-		if (kc) {
-			keyCharsIgnoringModifiers = [[savedCombo valueForKey: @"keyCharsIgnoringModifiers"] retain];
-			keyChars = [kc retain];
-		}
-		
-		// Notify delegate
-		if (delegate != nil && [delegate respondsToSelector: @selector(shortcutRecorderCell:keyComboDidChange:)])
-			[delegate shortcutRecorderCell:self keyComboDidChange:keyCombo];
-		
-		[[self controlView] display];
-	}
-}
-
 #pragma mark *** Drawing Helpers ***
 
 - (NSRect)_removeButtonRectForFrame:(NSRect)cellFrame
 {	
-	if ([self _isEmpty] || ![self isEnabled]) return NSZeroRect;
+	if ([self _isEmpty] || ![self isEnabled])
+        return NSZeroRect;
 	
 	NSRect removeButtonRect;
 	NSImage *removeImage = SRResIndImage(@"SRRemoveShortcut");
 	
-	removeButtonRect.origin = NSMakePoint(NSMaxX(cellFrame) - [removeImage size].width - 4, (NSMaxY(cellFrame) - [removeImage size].height)/2);
+    CGFloat x = NSMaxX(cellFrame) - [removeImage size].width - 4;
+    CGFloat y = (NSMaxY(cellFrame) - [removeImage size].height) / 2;
+    
+	removeButtonRect.origin = NSMakePoint(x, y);
 	removeButtonRect.size = [removeImage size];
-
+    
 	return removeButtonRect;
 }
 
 - (NSRect)_snapbackRectForFrame:(NSRect)cellFrame
-{	
-//	if (!isRecording) return NSZeroRect;
-
+{
 	NSRect snapbackRect;
+    
 	NSImage *snapbackImage = SRResIndImage(@"SRSnapback");
+	NSImage *removeImage = SRResIndImage(@"SRRemoveShortcut");
 	
-	snapbackRect.origin = NSMakePoint(NSMaxX(cellFrame) - [snapbackImage size].width - 2, (NSMaxY(cellFrame) - [snapbackImage size].height)/2 + 1);
+    CGFloat removeX = NSMaxX(cellFrame) - [removeImage size].width - 4;
+    
+    CGFloat snapbackX = removeX - [snapbackImage size].width - 4;
+    CGFloat y = (NSMaxY(cellFrame) - [snapbackImage size].height) / 2 + 1;
+    
+	snapbackRect.origin = NSMakePoint(snapbackX, y);
 	snapbackRect.size = [snapbackImage size];
 
 	return snapbackRect;

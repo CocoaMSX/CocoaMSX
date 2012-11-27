@@ -34,7 +34,6 @@
     IBOutlet NSTabView *tabView;
     
     IBOutlet NSTableView *keyboardTable;
-    IBOutlet SRRecorderControl *shortcutRecorder;
     
     IBOutlet NSSlider *brightnessSlider;
     IBOutlet NSSlider *contrastSlider;
@@ -45,7 +44,6 @@
     IBOutlet NSSlider *emulationSpeedSlider;
     
     CMEmulatorController *_emulator;
-    NSInteger currentKeyMapIndex;
     NSArray *virtualEmulationSpeedRange;
 }
 
