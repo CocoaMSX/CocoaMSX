@@ -148,11 +148,11 @@
     NSMutableArray *definitions = nil;
     
     const NSInteger standardLeftMost = 18;
-    const NSInteger standardTopMost = 245;
     const NSInteger standardWidth = 40;
     const NSInteger standardHeight = 40;
     const NSInteger standardMargin = 4;
     NSInteger rightmostX;
+    NSInteger digitsY;
     
     if (layout == CMMsxKeyboardEuropean)
     {
@@ -163,70 +163,14 @@
         __block NSInteger y;
         NSArray *keySequence;
         
-        // Function et al.
-        
-        x = standardLeftMost;
-        y = standardTopMost;
-        
-        keySequence = [NSArray arrayWithObjects:
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"F1"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"F2"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"F3"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"F4"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"F5"],
-                       nil];
-        
-        [keySequence enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-        {
-            kd = obj;
-            
-            kd.location = NSMakePoint(x, y);
-            kd.size = NSMakeSize(55, standardHeight);
-            kd.fontSize = 9;
-            
-            x += kd.size.width + standardMargin;
-            
-            [definitions addObject:kd];
-        }];
-        
-        x += 70;
-        
-        keySequence = [NSArray arrayWithObjects:
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"SELECT"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"STOP"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"HOME"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"INS"],
-                       [CMMsxKeyDefinition keyDefinitionLabeled:@"DEL"],
-                       nil];
-        
-        [keySequence enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-        {
-            kd = obj;
-            
-            kd.location = NSMakePoint(x, y);
-            kd.size = NSMakeSize(55, standardHeight);
-            kd.fontSize = 9;
-            
-            x += kd.size.width + standardMargin;
-            
-            [definitions addObject:kd];
-        }];
-        
         // Digits
         
         x = standardLeftMost;
-        y -= standardHeight + standardMargin * 2;
-        
-        kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"ESC"
-                                             location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(standardWidth, standardHeight)
-                                             fontSize:9];
-        
-        x += kd.size.width + standardMargin;
-        
-        [definitions addObject:kd];
+        y = 245;
+        digitsY = y;
         
         keySequence = [NSArray arrayWithObjects:
+                       [CMMsxKeyDefinition keyDefinitionLabeled:@"ESC"],
                        [CMMsxKeyDefinition keyDefinitionLabeled:@"1"],
                        [CMMsxKeyDefinition keyDefinitionLabeled:@"2"],
                        [CMMsxKeyDefinition keyDefinitionLabeled:@"3"],
@@ -240,6 +184,7 @@
                        [CMMsxKeyDefinition keyDefinitionLabeled:@"-"],
                        [CMMsxKeyDefinition keyDefinitionLabeled:@"="],
                        [CMMsxKeyDefinition keyDefinitionLabeled:@"\\"],
+                       [CMMsxKeyDefinition keyDefinitionLabeled:@"BS"],
                        nil];
         
         [keySequence enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
@@ -248,20 +193,11 @@
             
             kd.location = NSMakePoint(x, y);
             kd.size = NSMakeSize(standardWidth, standardHeight);
-            kd.fontSize = 13;
             
             x += kd.size.width + standardMargin;
             
             [definitions addObject:kd];
         }];
-        
-        kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"BS"
-                                             location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(standardWidth, standardHeight)];
-        
-        x += kd.size.width + standardMargin;
-        
-        [definitions addObject:kd];
         
         rightmostX = x - standardMargin;
         
@@ -299,7 +235,6 @@
             
             kd.location = NSMakePoint(x, y);
             kd.size = NSMakeSize(standardWidth, standardHeight);
-            kd.fontSize = 13;
             
             x += kd.size.width + standardMargin;
             
@@ -340,7 +275,6 @@
             
             kd.location = NSMakePoint(x, y);
             kd.size = NSMakeSize(standardWidth, standardHeight);
-            kd.fontSize = 13;
             
             x += kd.size.width + standardMargin;
             
@@ -349,8 +283,7 @@
         
         kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"RETURN"
                                              location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(55, 84)
-                                             fontSize:9];
+                                                 size:NSMakeSize(55, 84)];
         
         x += kd.size.width + standardMargin;
         
@@ -389,7 +322,6 @@
             
             kd.location = NSMakePoint(x, y);
             kd.size = NSMakeSize(standardWidth, standardHeight);
-            kd.fontSize = 13;
             
             x += kd.size.width + standardMargin;
             
@@ -406,13 +338,13 @@
         
         // Spacebar et al.
         
-        x = standardLeftMost + 70;
+        x = 106;
         y -= standardHeight + standardMargin;
         
         kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"CAPS"
                                              location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(55, standardHeight)
-                                             fontSize:9];
+                                                 size:NSMakeSize(standardWidth, standardHeight)
+                                             fontSize:8];
         
         x += kd.size.width + standardMargin;
         
@@ -420,8 +352,8 @@
         
         kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"GRAPH"
                                              location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(55, standardHeight)
-                                             fontSize:9];
+                                                 size:NSMakeSize(standardWidth, standardHeight)
+                                             fontSize:8];
         
         x += kd.size.width + standardMargin;
         
@@ -437,8 +369,8 @@
         
         kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"CODE"
                                              location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(55, standardHeight)
-                                             fontSize:9];
+                                                 size:NSMakeSize(standardWidth, standardHeight)
+                                             fontSize:8];
         
         x += kd.size.width + standardMargin;
         
@@ -472,55 +404,24 @@
             kd = obj;
             
             x = numpadLeft + (idx % 4) * (standardWidth + standardMargin);
-            y = standardTopMost - (idx / 4) * (standardHeight + standardMargin);
+            y = digitsY - (idx / 4) * (standardHeight + standardMargin);
             
             kd.location = NSMakePoint(x, y);
             kd.size = NSMakeSize(standardWidth, standardHeight);
-            kd.fontSize = 13;
             
             [definitions addObject:kd];
         }];
         
         // Arrows
         
-        NSInteger lrHeight = standardHeight * 2 + standardMargin;
-        
         x = numpadLeft + 24;
-        y -= lrHeight + standardMargin * 4;
+        NSInteger lrHeight = standardHeight * 2 + standardMargin;
         
         kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"←"
                                              location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(standardWidth, lrHeight)
-                                             fontSize:13];
+                                                 size:NSMakeSize(standardWidth, lrHeight)];
         
         x += kd.size.width + standardMargin;
-        
-        [definitions addObject:kd];
-        
-        y += standardHeight + standardMargin;
-        
-        kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"↑"
-                                             location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(standardWidth, standardHeight)
-                                             fontSize:13];
-        
-        [definitions addObject:kd];
-        
-        y -= standardHeight + standardMargin;
-        
-        kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"↓"
-                                             location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(standardWidth, standardHeight)
-                                             fontSize:13];
-        
-        x += kd.size.width + standardMargin;
-        
-        [definitions addObject:kd];
-        
-        kd = [CMMsxKeyDefinition keyDefinitionLabeled:@"→"
-                                             location:NSMakePoint(x, y)
-                                                 size:NSMakeSize(standardWidth, lrHeight)
-                                             fontSize:13];
         
         [definitions addObject:kd];
     }

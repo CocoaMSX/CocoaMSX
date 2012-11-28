@@ -32,7 +32,7 @@
 // FIXME: this class needs to poll, and not just modify the virtual matrix
 //        whenever a key is pressed
 
-#define DEBUG_KEY_STATE
+//#define DEBUG_KEY_STATE
 
 #pragma mark - CocoaKeyboard
 

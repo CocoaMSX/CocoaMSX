@@ -25,15 +25,17 @@
 @class CMEmulatorController;
 @class CMJoyPortDevice;
 @class CMKeyLayout;
+@class CMKeyCategory;
 
 @class SRRecorderControl;
 
-@interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate>
+@interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
     IBOutlet NSToolbar *toolbar;
     IBOutlet NSTabView *tabView;
     
     IBOutlet NSTableView *keyboardTable;
+    IBOutlet NSOutlineView *keyboardLayoutEditor;
     
     IBOutlet NSSlider *brightnessSlider;
     IBOutlet NSSlider *contrastSlider;
@@ -42,6 +44,8 @@
     IBOutlet NSSlider *scanlineSlider;
     
     IBOutlet NSSlider *emulationSpeedSlider;
+    
+    NSMutableArray *keyCategories;
     
     CMEmulatorController *_emulator;
     NSArray *virtualEmulationSpeedRange;

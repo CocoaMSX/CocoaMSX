@@ -1067,7 +1067,7 @@
     useSingleKeyMode = NO;
 	
 	// These keys will cancel the recoding mode if not pressed with any modifier
-	cancelCharacterSet = [[NSSet alloc] initWithObjects: [NSNumber numberWithInteger:ShortcutRecorderEscapeKey], 
+	cancelCharacterSet = [[NSSet alloc] initWithObjects: [NSNumber numberWithInteger:ShortcutRecorderEscapeKey],
 		[NSNumber numberWithInteger:ShortcutRecorderBackspaceKey], [NSNumber numberWithInteger:ShortcutRecorderDeleteKey], nil];
 		
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];

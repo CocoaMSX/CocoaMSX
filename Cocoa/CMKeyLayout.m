@@ -369,6 +369,31 @@
     return self.keyCode != CMKeyNoCode && keyCode == self.keyCode;
 }
 
+- (NSString *)virtualKeyCategoryName
+{
+    switch ([self virtualKeyCategory])
+    {
+        case CMKeyCategoryModifier:
+            return NSLocalizedString(@"KeyCategoryModifier", nil);
+        case CMKeyCategoryDirectional:
+            return NSLocalizedString(@"KeyCategoryDirectional", nil);
+        case CMKeyCategoryFunction:
+            return NSLocalizedString(@"KeyCategoryFunction", nil);
+        case CMKeyCategoryAlpha:
+            return NSLocalizedString(@"KeyCategoryAlpha", nil);
+        case CMKeyCategoryNumeric:
+            return NSLocalizedString(@"KeyCategoryNumeric", nil);
+        case CMKeyCategoryNumericPad:
+            return NSLocalizedString(@"KeyCategoryNumericPad", nil);
+        case CMKeyCategorySpecial:
+            return NSLocalizedString(@"KeyCategorySpecial", nil);
+        case CMKeyCategorySymbols:
+            return NSLocalizedString(@"KeyCategorySymbols", nil);
+    }
+    
+    return nil;
+}
+
 - (NSInteger)virtualKeyCategory
 {
     switch (self.virtualCode)
@@ -378,8 +403,6 @@
         case EC_CTRL:
         case EC_GRAPH:
         case EC_CODE:
-        case EC_TORIKE:
-        case EC_JIKKOU:
         case EC_CAPS:
             return CMKeyCategoryModifier;
         case EC_LEFT:
@@ -460,6 +483,8 @@
         case EC_SPACE:
         case EC_PRINT:
         case EC_PAUSE:
+        case EC_TORIKE:
+        case EC_JIKKOU:
             return CMKeyCategorySpecial;
         case EC_NEG:
         case EC_BKSLASH:

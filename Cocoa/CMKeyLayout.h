@@ -144,6 +144,7 @@
 
 - (BOOL)isMapped;
 - (NSInteger)virtualKeyCategory;
+- (NSString *)virtualKeyCategoryName;
 - (NSString *)virtualKeyName;
 - (NSString *)physicalKeyName;
 
