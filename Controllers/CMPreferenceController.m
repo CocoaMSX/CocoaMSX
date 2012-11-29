@@ -363,7 +363,6 @@
     [self.currentLayout loadLayout:[[CMPreferences preferences] defaultLayout]];
     [[CMPreferences preferences] setKeyboardLayout:self.currentLayout];
     
-    [keyboardTable reloadData];
     [keyboardLayoutEditor reloadData];
     
 //    // TODO: get rid of this
@@ -547,7 +546,6 @@ viewForTableColumn:(NSTableColumn *)tableColumn
                     srCell.recorderControl = [[[SRRecorderControl alloc] initWithFrame:srCell.frame] autorelease];
                     
                     srCell.recorderControl.delegate = self;
-                    srCell.recorderControl.style = SRGreyStyle;
                     srCell.recorderControl.allowedFlags = 1966080;
                     srCell.recorderControl.useSingleKeyMode = YES;
                     srCell.recorderControl.tableCellMode = YES;

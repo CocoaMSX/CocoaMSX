@@ -27,7 +27,6 @@
 - (void)_endRecording;
 
 - (BOOL)_effectiveIsAnimating;
-- (BOOL)_supportsAnimation;
 
 - (NSRect)_removeButtonRectForFrame:(NSRect)cellFrame;
 
@@ -91,8 +90,6 @@
     escapeKeysRecord = [[aDecoder decodeObjectForKey:@"escapeKeysRecord"] boolValue];
     isAnimating = [[aDecoder decodeObjectForKey:@"isAnimating"] boolValue];
     
-    style = [[aDecoder decodeObjectForKey:@"style"] shortValue];
-    
     useSingleKeyMode = [[aDecoder decodeObjectForKey:@"useSingleKeyMode"] boolValue];
     tableCellMode = [[aDecoder decodeObjectForKey:@"tableCellMode"] boolValue];
     isRowSelected = [[aDecoder decodeObjectForKey:@"isRowSelected"] boolValue];
@@ -121,7 +118,6 @@
     [aCoder encodeObject:[NSNumber numberWithBool: escapeKeysRecord] forKey:@"escapeKeysRecord"];
     
     [aCoder encodeObject:[NSNumber numberWithBool:isAnimating] forKey:@"isAnimating"];
-    [aCoder encodeObject:[NSNumber numberWithShort:style] forKey:@"style"];
     
     [aCoder encodeObject:[NSNumber numberWithBool:useSingleKeyMode] forKey:@"useSingleKeyMode"];
     [aCoder encodeObject:[NSNumber numberWithBool:tableCellMode] forKey:@"tableCellMode"];
@@ -152,8 +148,6 @@
 	
 	cell->isAnimating = isAnimating;
 	
-	cell->style = style;
-
 	cell->cancelCharacterSet = [cancelCharacterSet retain];
     
 	cell->delegate = delegate;
@@ -167,10 +161,6 @@
 
 #pragma mark *** Drawing ***
 
-+ (BOOL)styleSupportsAnimation:(SRRecorderStyle)style {
-	return (style == SRGreyStyle);
-}
-
 - (BOOL)animates {
 	return isAnimating;
 }
@@ -179,368 +169,248 @@
 	isAnimating = an;
 }
 
-- (SRRecorderStyle)style {
-	return style;
-}
-
-- (void)setStyle:(SRRecorderStyle)nStyle {
-	switch (nStyle) {
-		case SRGreyStyle:
-			style = SRGreyStyle;
-			break;
-		case SRGradientBorderStyle:
-		default:
-			style = SRGradientBorderStyle;
-			break;
-	}
-}
-
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	CGFloat radius = 0;
 
-	if (style == SRGradientBorderStyle) {
-		
-		NSRect whiteRect = cellFrame;
-		NSBezierPath *roundedRect;
-		
-	// Draw white rounded box
-		radius = NSHeight(whiteRect) / 2.0f;
-		roundedRect = [NSBezierPath bezierPathWithRoundedRect:whiteRect xRadius:radius yRadius:radius];
-		[[NSGraphicsContext currentContext] saveGraphicsState];
-		[roundedRect addClip];
-		[[NSColor whiteColor] set];
-		[NSBezierPath fillRect: whiteRect];
-		
-	// Draw border and remove badge if needed
-		if (!isRecording)
-		{
-			[[NSColor windowFrameColor] set];
-			[roundedRect stroke];
-			
-		// If key combination is set and valid, draw remove image
-			if (![self _isEmpty] && [self isEnabled])
-			{
-				NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideRemoveTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
-				NSImage *removeImage = SRResIndImage(removeImageName);
-                [removeImage drawAtPoint:[self _removeButtonRectForFrame: cellFrame].origin fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f];
-			}
-		}
-		
-		[[NSGraphicsContext currentContext] restoreGraphicsState];
-		
-	// Draw text
-		NSMutableParagraphStyle *mpstyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-		[mpstyle setLineBreakMode: NSLineBreakByTruncatingTail];
-		[mpstyle setAlignment: NSCenterTextAlignment];
-		
-	// Only the KeyCombo should be black and in a bigger font size
-		BOOL recordingOrEmpty = (isRecording || [self _isEmpty]);
-		NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys: mpstyle, NSParagraphStyleAttributeName,
-			[NSFont systemFontOfSize: (recordingOrEmpty ? [NSFont labelFontSize] : [NSFont smallSystemFontSize])], NSFontAttributeName,
-			(recordingOrEmpty ? [NSColor disabledControlTextColor] : [NSColor blackColor]), NSForegroundColorAttributeName, 
-			nil];
-		
-		NSString *displayString;
-		
-		if (isRecording)
-		{
-		// Recording, but no modifier keys down
-			if (![self _validModifierFlags: recordingFlags])
-			{
-				// Mouse elsewhere
-                displayString = SRLoc(@"Type shortcut");
-			}
-			else
-			{
-			// Display currently pressed modifier keys
-				displayString = SRStringForCocoaModifierFlags( recordingFlags );
-				
-			// Fall back on 'Type shortcut' if we don't have modifier flags to display; this will happen for the fn key depressed
-				if (![displayString length])
-				{
-					displayString = SRLoc(@"Type shortcut");
-				}
-			}
-		}
-		else
-		{
-		// Not recording...
-			if ([self _isEmpty])
-			{
-                if (!tableCellMode)
-                    displayString = SRLoc(@"Click to record shortcut");
-			}
-			else
-			{
-			// Display current key combination
-				displayString = [self keyComboString];
-			}
-		}
-		
-	// Calculate rect in which to draw the text in...
-		NSRect textRect = cellFrame;
-		textRect.size.width -= 6;
-		textRect.size.width -= ((!isRecording && [self _isEmpty]) ? 6 : (isRecording ? [self _removeButtonRectForFrame: cellFrame].size.width : 0) + 6);
-		textRect.origin.x += 6;
-		textRect.origin.y = -(NSMidY(cellFrame) - [displayString sizeWithAttributes: attributes].height/2);
-		
-	// Finally draw it
-		[displayString drawInRect:textRect withAttributes:attributes];
-		
-    // draw a focus ring...?
-		if ( [self showsFirstResponder] )
-		{
-			[NSGraphicsContext saveGraphicsState];
-			NSSetFocusRingStyle(NSFocusRingOnly);
-			radius = NSHeight(cellFrame) / 2.0f;
-			[[NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:radius yRadius:radius] fill];
-			[NSGraphicsContext restoreGraphicsState];
-		}
-		
-	} else {
-		
-//	NSRect rawCellFrame = cellFrame;
-		cellFrame = NSInsetRect(cellFrame,0.5f,0.5f);
-		
-		NSRect whiteRect = cellFrame;
-		NSBezierPath *roundedRect;
-		
-		BOOL isVaguelyRecording = isRecording;
-		CGFloat xanim = 0.0f;
-		
-		if (isAnimatingNow) {
+    cellFrame = NSInsetRect(cellFrame,0.5f,0.5f);
+    
+    NSRect whiteRect = cellFrame;
+    NSBezierPath *roundedRect;
+    
+    BOOL isVaguelyRecording = isRecording;
+    CGFloat xanim = 0.0f;
+    
+    if (isAnimatingNow) {
 //		NSLog(@"tp: %f; xanim: %f", transitionProgress, xanim);
-			xanim = (SRAnimationEaseInOut(transitionProgress));
+        xanim = (SRAnimationEaseInOut(transitionProgress));
 //		NSLog(@"tp: %f; xanim: %f", transitionProgress, xanim);
-		}
-		
-		CGFloat alphaRecording = 1.0f; CGFloat alphaView = 1.0f;
-		if (isAnimatingNow && !isAnimatingTowardsRecording) { alphaRecording = 1.0f - xanim; alphaView = xanim; }
-		if (isAnimatingNow && isAnimatingTowardsRecording) { alphaView = 1.0f - xanim; alphaRecording = xanim; }
-		
-		if (isAnimatingNow) {
-			//NSLog(@"animation step: %f, effective: %f, alpha recording: %f, view: %f", transitionProgress, xanim, alphaRecording, alphaView);
-		}
-		
-		if (isAnimatingNow && isAnimatingTowardsRecording) {
-			isVaguelyRecording = YES;
-		}
-		
+    }
+    
+    CGFloat alphaRecording = 1.0f; CGFloat alphaView = 1.0f;
+    if (isAnimatingNow && !isAnimatingTowardsRecording) { alphaRecording = 1.0f - xanim; alphaView = xanim; }
+    if (isAnimatingNow && isAnimatingTowardsRecording) { alphaView = 1.0f - xanim; alphaRecording = xanim; }
+    
+    if (isAnimatingNow) {
+        //NSLog(@"animation step: %f, effective: %f, alpha recording: %f, view: %f", transitionProgress, xanim, alphaRecording, alphaView);
+    }
+    
+    if (isAnimatingNow && isAnimatingTowardsRecording) {
+        isVaguelyRecording = YES;
+    }
+    
 //	NSAffineTransform *transitionMovement = [NSAffineTransform transform];
-		NSAffineTransform *viewportMovement = [NSAffineTransform transform];
-	// Draw gradient when in recording mode
-		if (isVaguelyRecording)
-		{
-			if (isAnimatingNow) {
+    NSAffineTransform *viewportMovement = [NSAffineTransform transform];
+// Draw gradient when in recording mode
+    if (isVaguelyRecording)
+    {
+        if (isAnimatingNow) {
 //			[transitionMovement translateXBy:(isAnimatingTowardsRecording ? -(NSWidth(cellFrame)*(1.0-xanim)) : +(NSWidth(cellFrame)*xanim)) yBy:0.0];
-				if (SRAnimationAxisIsY) {
+            if (SRAnimationAxisIsY) {
 //				[viewportMovement translateXBy:0.0 yBy:(isAnimatingTowardsRecording ? -(NSHeight(cellFrame)*(xanim)) : -(NSHeight(cellFrame)*(1.0-xanim)))];
-					[viewportMovement translateXBy:0.0f yBy:(isAnimatingTowardsRecording ? NSHeight(cellFrame)*(xanim) : NSHeight(cellFrame)*(1.0f-xanim))];
-				} else {
-					[viewportMovement translateXBy:(isAnimatingTowardsRecording ? -(NSWidth(cellFrame)*(xanim)) : -(NSWidth(cellFrame)*(1.0f-xanim))) yBy:0.0f];
-				}
-			} else {
-				if (SRAnimationAxisIsY) {
-					[viewportMovement translateXBy:0.0f yBy:NSHeight(cellFrame)];				
-				} else {
-					[viewportMovement translateXBy:-(NSWidth(cellFrame)) yBy:0.0f];
-				}
-			}
-		}
-		
-		
-	// Draw white rounded box
-		radius = NSHeight(whiteRect) / 2.0f;
-        if (tableCellMode)
-            roundedRect = [NSBezierPath bezierPathWithRect:whiteRect];
-        else
-            roundedRect = [NSBezierPath bezierPathWithRoundedRect:whiteRect xRadius:radius yRadius:radius];
+                [viewportMovement translateXBy:0.0f yBy:(isAnimatingTowardsRecording ? NSHeight(cellFrame)*(xanim) : NSHeight(cellFrame)*(1.0f-xanim))];
+            } else {
+                [viewportMovement translateXBy:(isAnimatingTowardsRecording ? -(NSWidth(cellFrame)*(xanim)) : -(NSWidth(cellFrame)*(1.0f-xanim))) yBy:0.0f];
+            }
+        } else {
+            if (SRAnimationAxisIsY) {
+                [viewportMovement translateXBy:0.0f yBy:NSHeight(cellFrame)];				
+            } else {
+                [viewportMovement translateXBy:-(NSWidth(cellFrame)) yBy:0.0f];
+            }
+        }
+    }
+    
+    
+// Draw white rounded box
+    radius = NSHeight(whiteRect) / 2.0f;
+    if (tableCellMode)
+        roundedRect = [NSBezierPath bezierPathWithRect:whiteRect];
+    else
+        roundedRect = [NSBezierPath bezierPathWithRoundedRect:whiteRect xRadius:radius yRadius:radius];
+    
+    [[NSColor whiteColor] set];
+    [[NSGraphicsContext currentContext] saveGraphicsState];
+    
+    if (!tableCellMode || isRecording)
+        [roundedRect fill];
+    
+    [[NSColor windowFrameColor] set];
+    
+    if (!tableCellMode)
+        [roundedRect stroke];
+    
+    [roundedRect addClip];
+    
+    // Draw border and remove badge if needed
+    /*	if (!isVaguelyRecording)
+    {
+        */	
+    // If key combination is set and valid, draw remove image
+    if (isVaguelyRecording && ![self _isEmpty] && [self isEnabled])
+    {
+        NSRect removeRect = SRAnimationOffsetRect([self _removeButtonRectForFrame:cellFrame], cellFrame);
+        NSPoint correctedRemoveOrigin = [viewportMovement transformPoint:removeRect.origin];
         
-		[[NSColor whiteColor] set];
-		[[NSGraphicsContext currentContext] saveGraphicsState];
+        NSRect correctedRemoveRect = removeRect;
+        correctedRemoveRect.size.height = NSHeight(whiteRect);
+        correctedRemoveRect.size.width *= 1.3f;
+        correctedRemoveRect.origin.y -= 5.0f;
+        correctedRemoveRect.origin.x -= 1.5f;
         
-        if (!tableCellMode || isRecording)
-            [roundedRect fill];
+        correctedRemoveOrigin.x -= 0.5f;
         
-		[[NSColor windowFrameColor] set];
+        correctedRemoveRect.origin = [viewportMovement transformPoint:removeRect.origin];
         
-        if (!tableCellMode)
-            [roundedRect stroke];
+        NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideRemoveTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
         
-		[roundedRect addClip];
-		
-        // Draw border and remove badge if needed
-		/*	if (!isVaguelyRecording)
-		{
-			*/	
-		// If key combination is set and valid, draw remove image
-		if (isVaguelyRecording && ![self _isEmpty] && [self isEnabled])
-		{
-			NSRect removeRect = SRAnimationOffsetRect([self _removeButtonRectForFrame:cellFrame], cellFrame);
-			NSPoint correctedRemoveOrigin = [viewportMovement transformPoint:removeRect.origin];
-			
-			NSRect correctedRemoveRect = removeRect;
-			correctedRemoveRect.size.height = NSHeight(whiteRect);
-			correctedRemoveRect.size.width *= 1.3f;
-			correctedRemoveRect.origin.y -= 5.0f;
-			correctedRemoveRect.origin.x -= 1.5f;
-			
-			correctedRemoveOrigin.x -= 0.5f;
-			
-			correctedRemoveRect.origin = [viewportMovement transformPoint:removeRect.origin];
-            
-			NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideRemoveTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
-            
-			NSImage *removeImage = SRResIndImage(removeImageName);
-            [removeImage drawAtPoint:correctedRemoveRect.origin
-                            fromRect:NSZeroRect
-                           operation:NSCompositeSourceOver
-                            fraction:1.0f * alphaRecording];
+        NSImage *removeImage = [NSImage imageNamed:removeImageName];
+        [removeImage drawAtPoint:correctedRemoveRect.origin
+                        fromRect:NSZeroRect
+                       operation:NSCompositeSourceOver
+                        fraction:1.0f * alphaRecording];
 
 //NSLog(@"drew removeImage with alpha %f", alphaView);
-		}
+    }
 //	}
-		
-		
-		
-	// Draw text
-		NSMutableParagraphStyle *mpstyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-		[mpstyle setLineBreakMode: NSLineBreakByTruncatingTail];
-		[mpstyle setAlignment: NSCenterTextAlignment];
-		
-		CGFloat alphaCombo = alphaView;
-		CGFloat alphaRecordingText = alphaRecording;
-		if (comboJustChanged) {
-			alphaCombo = 1.0f;
-			alphaRecordingText = 0.0f;//(alphaRecordingText/2.0);
-		}
-		
-		
-		NSString *displayString;
-		
-		{
-	// Only the KeyCombo should be black and in a bigger font size
-			BOOL recordingOrEmpty = (isVaguelyRecording || [self _isEmpty]);
-            
-            NSColor *textColor;
-            if (!recordingOrEmpty)
-                textColor = [NSColor textColor];
+    
+    
+    
+// Draw text
+    NSMutableParagraphStyle *mpstyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+    [mpstyle setLineBreakMode: NSLineBreakByTruncatingTail];
+    [mpstyle setAlignment: NSCenterTextAlignment];
+    
+    CGFloat alphaCombo = alphaView;
+    CGFloat alphaRecordingText = alphaRecording;
+    if (comboJustChanged) {
+        alphaCombo = 1.0f;
+        alphaRecordingText = 0.0f;//(alphaRecordingText/2.0);
+    }
+    
+    
+    NSString *displayString;
+    
+    {
+// Only the KeyCombo should be black and in a bigger font size
+        BOOL recordingOrEmpty = (isVaguelyRecording || [self _isEmpty]);
+        
+        NSColor *textColor;
+        if (!recordingOrEmpty)
+            textColor = [NSColor textColor];
+        else
+            textColor = [NSColor disabledControlTextColor];
+        
+        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys: mpstyle, NSParagraphStyleAttributeName,
+            [NSFont systemFontOfSize:11.0], NSFontAttributeName,
+            [textColor colorWithAlphaComponent:alphaRecordingText], NSForegroundColorAttributeName,
+            nil];
+    // Recording, but no modifier keys down
+        if (![self _validModifierFlags: recordingFlags])
+        {
+            // Mouse elsewhere
+            displayString = SRLoc(@"...");
+        }
+        else
+        {
+            if (useSingleKeyMode && self.keyComboString)
+                displayString = self.keyComboString;
             else
-                textColor = [NSColor disabledControlTextColor];
-            
-			NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys: mpstyle, NSParagraphStyleAttributeName,
-				[NSFont systemFontOfSize: (recordingOrEmpty ? [NSFont labelFontSize] : [NSFont smallSystemFontSize])], NSFontAttributeName,
-				[textColor colorWithAlphaComponent:alphaRecordingText], NSForegroundColorAttributeName,
-				nil];
-		// Recording, but no modifier keys down
-			if (![self _validModifierFlags: recordingFlags])
-			{
-				// Mouse elsewhere
-                displayString = SRLoc(@"...");
-			}
-			else
-			{
-                if (useSingleKeyMode && self.keyComboString)
-                    displayString = self.keyComboString;
-                else
 
-			// Display currently pressed modifier keys
-				displayString = SRStringForCocoaModifierFlags( recordingFlags );
-            
-			// Fall back on 'Type shortcut' if we don't have modifier flags to display; this will happen for the fn key depressed
-				if (![displayString length])
-				{
-					displayString = SRLoc(@"...");
-				}
-			}
-	// Calculate rect in which to draw the text in...
-			NSRect textRect = SRAnimationOffsetRect(cellFrame,cellFrame);
-			//NSLog(@"draw record text in rect (preadjusted): %@", NSStringFromRect(textRect));
-			textRect.origin.y -= 3.0f;
-			textRect.origin = [viewportMovement transformPoint:textRect.origin];
-			//NSLog(@"draw record text in rect: %@", NSStringFromRect(textRect));
-			
-			
-			
-	// Finally draw it
-			[displayString drawInRect:textRect withAttributes:attributes];
-		}
-		
-		
-		{
-	// Only the KeyCombo should be black and in a bigger font size
-            NSFont *font = [NSFont systemFontOfSize:[NSFont labelFontSize]];
-            
-            NSColor *color;
-            if (tableCellMode && isRowSelected)
-                color = [NSColor controlHighlightColor];
-            else if ([self _isEmpty])
-                color = [NSColor disabledControlTextColor];
+        // Display currently pressed modifier keys
+            displayString = SRStringForCocoaModifierFlags( recordingFlags );
+        
+        // Fall back on 'Type shortcut' if we don't have modifier flags to display; this will happen for the fn key depressed
+            if (![displayString length])
+            {
+                displayString = SRLoc(@"...");
+            }
+        }
+// Calculate rect in which to draw the text in...
+        NSRect textRect = SRAnimationOffsetRect(cellFrame,cellFrame);
+        //NSLog(@"draw record text in rect (preadjusted): %@", NSStringFromRect(textRect));
+        textRect.origin = [viewportMovement transformPoint:textRect.origin];
+        //NSLog(@"draw record text in rect: %@", NSStringFromRect(textRect));
+        
+        
+        
+// Finally draw it
+        [displayString drawInRect:textRect withAttributes:attributes];
+    }
+    
+    
+    {
+// Only the KeyCombo should be black and in a bigger font size
+        NSFont *font = [NSFont systemFontOfSize:11.0];
+        
+        NSColor *color;
+        if (tableCellMode && isRowSelected)
+            color = [NSColor controlHighlightColor];
+        else if ([self _isEmpty])
+            color = [NSColor disabledControlTextColor];
+        else
+            color = [NSColor textColor];
+        
+        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    mpstyle, NSParagraphStyleAttributeName,
+                                    font, NSFontAttributeName,
+                                    [color colorWithAlphaComponent:alphaCombo], NSForegroundColorAttributeName,
+                                    nil];
+    // Not recording...
+        if ([self _isEmpty])
+        {
+            if (!tableCellMode)
+                displayString = SRLoc(@"Click to record shortcut");
             else
-                color = [NSColor textColor];
-            
-			NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        mpstyle, NSParagraphStyleAttributeName,
-                                        font, NSFontAttributeName,
-                                        [color colorWithAlphaComponent:alphaCombo], NSForegroundColorAttributeName,
-                                        nil];
-		// Not recording...
-			if ([self _isEmpty])
-			{
-                if (!tableCellMode)
-                    displayString = SRLoc(@"Click to record shortcut");
-                else
-                    displayString = @"";
-			}
-			else
-			{
-			// Display current key combination
-				displayString = [self keyComboString];
-			}
-	// Calculate rect in which to draw the text in...
-			NSRect textRect = cellFrame;
-			/*		textRect.size.width -= 6;
-			textRect.size.width -= (([self _removeButtonRectForFrame: cellFrame].size.width) + 6);
+                displayString = @"";
+        }
+        else
+        {
+        // Display current key combination
+            displayString = [self keyComboString];
+        }
+// Calculate rect in which to draw the text in...
+        NSRect textRect = cellFrame;
+        /*		textRect.size.width -= 6;
+        textRect.size.width -= (([self _removeButtonRectForFrame: cellFrame].size.width) + 6);
 //		textRect.origin.x += 6;*/
 //NSFont *f = [attributes objectForKey:NSFontAttributeName];
 //double lineHeight = [[[NSLayoutManager alloc] init] defaultLineHeightForFont:f];
 //		textRect.size.height = lineHeight;
-			if (!comboJustChanged) {
-				//NSLog(@"draw view text in rect (pre-adjusted): %@", NSStringFromRect(textRect));
-				textRect.origin = [viewportMovement transformPoint:textRect.origin];
-			}
-			textRect.origin.y = NSMinY(textRect)-3.0f;// - ((lineHeight/2.0)+([f descender]/2.0));
-				
-				//NSLog(@"draw view text in rect: %@", NSStringFromRect(textRect));
-				
-	// Finally draw it
-				[displayString drawInRect:textRect withAttributes:attributes];
-		}
-		
-		[[NSGraphicsContext currentContext] restoreGraphicsState];
-		
-    // draw a focus ring...?
-		
-		if ([self showsFirstResponder] && (!tableCellMode || isRecording))
-		{
-            if (tableCellMode)
-            {
-                [NSGraphicsContext saveGraphicsState];
-                NSSetFocusRingStyle(NSFocusRingOnly);
-                [[NSBezierPath bezierPathWithRect:cellFrame] fill];
-                [NSGraphicsContext restoreGraphicsState];
-            }
-            else
-            {
-                [NSGraphicsContext saveGraphicsState];
-                NSSetFocusRingStyle(NSFocusRingOnly);
-                radius = NSHeight(cellFrame) / 2.0f;
-                [[NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:radius yRadius:radius] fill];
-                [NSGraphicsContext restoreGraphicsState];
-            }
-		}
-	}
+        if (!comboJustChanged) {
+            //NSLog(@"draw view text in rect (pre-adjusted): %@", NSStringFromRect(textRect));
+            textRect.origin = [viewportMovement transformPoint:textRect.origin];
+        }
+        textRect.origin.y = NSMinY(textRect);// - ((lineHeight/2.0)+([f descender]/2.0));
+            
+            //NSLog(@"draw view text in rect: %@", NSStringFromRect(textRect));
+            
+// Finally draw it
+            [displayString drawInRect:textRect withAttributes:attributes];
+    }
+    
+    [[NSGraphicsContext currentContext] restoreGraphicsState];
+    
+// draw a focus ring...?
+    
+    if ([self showsFirstResponder] && (!tableCellMode || isRecording))
+    {
+        if (tableCellMode)
+        {
+            [NSGraphicsContext saveGraphicsState];
+            NSSetFocusRingStyle(NSFocusRingOnly);
+            [[NSBezierPath bezierPathWithRect:cellFrame] fill];
+            [NSGraphicsContext restoreGraphicsState];
+        }
+        else
+        {
+            [NSGraphicsContext saveGraphicsState];
+            NSSetFocusRingStyle(NSFocusRingOnly);
+            radius = NSHeight(cellFrame) / 2.0f;
+            [[NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:radius yRadius:radius] fill];
+            [NSGraphicsContext restoreGraphicsState];
+        }
+    }
 }
 
 #pragma mark *** Mouse Tracking ***
@@ -1088,11 +958,7 @@
 }
 
 - (BOOL)_effectiveIsAnimating {
-	return (isAnimating && [self _supportsAnimation]);
-}
-
-- (BOOL)_supportsAnimation {
-	return [[self class] styleSupportsAnimation:style];
+	return isAnimating;
 }
 
 - (void)setBackgroundStyle:(NSBackgroundStyle)bgStyle
@@ -1201,7 +1067,7 @@
         return NSZeroRect;
 	
 	NSRect removeButtonRect;
-	NSImage *removeImage = SRResIndImage(@"SRRemoveShortcut");
+	NSImage *removeImage = [NSImage imageNamed:@"SRRemoveShortcut"];
 	
     CGFloat x = NSMaxX(cellFrame) - [removeImage size].width - 4;
     CGFloat y = (NSMaxY(cellFrame) - [removeImage size].height) / 2;
@@ -1210,24 +1076,6 @@
 	removeButtonRect.size = [removeImage size];
     
 	return removeButtonRect;
-}
-
-- (NSRect)_snapbackRectForFrame:(NSRect)cellFrame
-{
-	NSRect snapbackRect;
-    
-	NSImage *snapbackImage = SRResIndImage(@"SRSnapback");
-	NSImage *removeImage = SRResIndImage(@"SRRemoveShortcut");
-	
-    CGFloat removeX = NSMaxX(cellFrame) - [removeImage size].width - 4;
-    
-    CGFloat snapbackX = removeX - [snapbackImage size].width - 4;
-    CGFloat y = (NSMaxY(cellFrame) - [snapbackImage size].height) / 2 + 1;
-    
-	snapbackRect.origin = NSMakePoint(snapbackX, y);
-	snapbackRect.size = [snapbackImage size];
-
-	return snapbackRect;
 }
 
 #pragma mark *** Filters ***

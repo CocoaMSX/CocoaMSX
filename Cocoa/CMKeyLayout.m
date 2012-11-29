@@ -33,10 +33,7 @@
 
 @interface CMKeyMapping ()
 
-+ (NSArray *)numpadKeyCodes;
 + (NSDictionary *)virtualKeyNames;
-+ (NSDictionary *)physicalKeyNames;
-
 + (CMKeyMapping *)virtualKey:(NSUInteger)virtualKey;
 
 @end
@@ -78,86 +75,6 @@
     copy.keyCode = self.keyCode;
     
     return copy;
-}
-
-+ (NSDictionary *)physicalKeyNames
-{
-    static NSDictionary *physicalKeyNames = nil;
-    
-    if (!physicalKeyNames)
-        physicalKeyNames = [[NSDictionary dictionaryWithObjectsAndKeys:
-                             @"F1",  [NSNumber numberWithInteger:122],
-                             @"F2",  [NSNumber numberWithInteger:120],
-                             @"F3",  [NSNumber numberWithInteger:99],
-                             @"F4",  [NSNumber numberWithInteger:118],
-                             @"F5",  [NSNumber numberWithInteger:96],
-                             @"F6",  [NSNumber numberWithInteger:97],
-                             @"F7",  [NSNumber numberWithInteger:98],
-                             @"F8",  [NSNumber numberWithInteger:100],
-                             @"F9",  [NSNumber numberWithInteger:101],
-                             @"F10", [NSNumber numberWithInteger:109],
-                             @"F11", [NSNumber numberWithInteger:103],
-                             @"F12", [NSNumber numberWithInteger:111],
-                             @"F13", [NSNumber numberWithInteger:105],
-                             @"F14", [NSNumber numberWithInteger:107],
-                             @"F15", [NSNumber numberWithInteger:113],
-                             @"F16", [NSNumber numberWithInteger:106],
-                             @"F17", [NSNumber numberWithInteger:64],
-                             @"F18", [NSNumber numberWithInteger:79],
-                             @"F19", [NSNumber numberWithInteger:80],
-                             
-                             NSLocalizedString(@"KeySpace", nil), [NSNumber numberWithInteger:49],
-                             
-                             // Glyphs
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x232b], [NSNumber numberWithInteger:51],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2326], [NSNumber numberWithInteger:117],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2327], [NSNumber numberWithInteger:71],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2190], [NSNumber numberWithInteger:123],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2192], [NSNumber numberWithInteger:124],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2191], [NSNumber numberWithInteger:126],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2193], [NSNumber numberWithInteger:125],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2198], [NSNumber numberWithInteger:119],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2196], [NSNumber numberWithInteger:115],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x238b], [NSNumber numberWithInteger:53],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x21df], [NSNumber numberWithInteger:121],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x21de], [NSNumber numberWithInteger:116],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x21a9], [NSNumber numberWithInteger:36],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x2305], [NSNumber numberWithInteger:76],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x21e5], [NSNumber numberWithInteger:48],
-                             [NSString stringWithFormat:@"%C", (unsigned short)0x003f], [NSNumber numberWithInteger:114],
-                             
-                             nil] retain];
-    
-    return physicalKeyNames;
-}
-
-+ (NSArray *)numpadKeyCodes
-{
-    static NSArray *numpadKeyCodes = nil;
-    
-    if (!numpadKeyCodes)
-        numpadKeyCodes = [[NSArray alloc] initWithObjects:
-                          
-                          [NSNumber numberWithInteger:65], // ,
-                          [NSNumber numberWithInteger:67], // *
-                          [NSNumber numberWithInteger:69], // +
-                          [NSNumber numberWithInteger:75], // /
-                          [NSNumber numberWithInteger:78], // -
-                          [NSNumber numberWithInteger:81], // =
-                          [NSNumber numberWithInteger:82], // 0
-                          [NSNumber numberWithInteger:83], // 1
-                          [NSNumber numberWithInteger:84], // 2
-                          [NSNumber numberWithInteger:85], // 3
-                          [NSNumber numberWithInteger:86], // 4
-                          [NSNumber numberWithInteger:87], // 5
-                          [NSNumber numberWithInteger:88], // 6
-                          [NSNumber numberWithInteger:89], // 7
-                          [NSNumber numberWithInteger:91], // 8
-                          [NSNumber numberWithInteger:92], // 9
-                          
-                          nil];
-    
-    return numpadKeyCodes;
 }
 
 + (NSDictionary *)virtualKeyNames
@@ -288,75 +205,6 @@
 - (NSString *)virtualKeyName
 {
     return [CMKeyMapping.virtualKeyNames objectForKey:CMIntAsNumber(self.virtualCode)];
-}
-
-- (NSString *)physicalKeyName
-{
-    if (self.keyCode == CMKeyLeftShift)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kShiftUnicode];
-    if (self.keyCode == CMKeyRightShift)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kShiftUnicode];
-    if (self.keyCode == CMKeyLeftAlt)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kOptionUnicode];
-    if (self.keyCode == CMKeyRightAlt)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kOptionUnicode];
-    if (self.keyCode == CMKeyLeftCommand)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kCommandUnicode];
-    if (self.keyCode == CMKeyRightCommand)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kCommandUnicode];
-    if (self.keyCode == CMKeyLeftControl)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacLeftModifier_f"), kControlUnicode];
-    if (self.keyCode == CMKeyRightControl)
-        return [NSString stringWithFormat:CMLocalized(@"KeyMacRightModifier_f"), kControlUnicode];
-    if (self.keyCode == CMKeyCapsLock)
-        return CMLocalized(@"KeyCapsLock");
-    
-    if (self.keyCode == CMKeyNoCode)
-        return nil;
-    
-    NSString *predefinedName = [[CMKeyMapping physicalKeyNames] objectForKey:[NSNumber numberWithInteger:self.keyCode]];
-    if (predefinedName)
-        return predefinedName;
-    
-    TISInputSourceRef tisSource = TISCopyCurrentKeyboardInputSource();
-    if (!tisSource)
-        return nil;
-    
-    CFDataRef layoutData = (CFDataRef)TISGetInputSourceProperty(tisSource, kTISPropertyUnicodeKeyLayoutData);
-    CFRelease(tisSource);
-    
-    // For non-Unicode layouts (e.g. Chinese, Japanese, Korean) get ASCII layout
-    if (!layoutData)
-    {
-        tisSource = TISCopyCurrentASCIICapableKeyboardInputSource();
-        layoutData = (CFDataRef)TISGetInputSourceProperty(tisSource, kTISPropertyUnicodeKeyLayoutData);
-        CFRelease(tisSource);
-    }
-    
-    if (!layoutData)
-        return nil;
-    
-    const UCKeyboardLayout *keyLayout = (const UCKeyboardLayout*)CFDataGetBytePtr(layoutData);
-    
-    UniCharCount length = 4;
-    UniCharCount realLength;
-    UniChar chars[4];
-    UInt32 keysDown = 0;
-    
-    OSStatus err = UCKeyTranslate(keyLayout, self.keyCode, kUCKeyActionDisplay, 0,
-                                  LMGetKbdType(), kUCKeyTranslateNoDeadKeysBit,
-                                  &keysDown, length, &realLength, chars);
-    
-    if (err != noErr)
-        return nil;
-    
-    NSString *keyLabel = [[NSString stringWithCharacters:chars length:1] uppercaseString];
-    
-    BOOL isNumpadKey = [CMKeyMapping.numpadKeyCodes containsObject:[NSNumber numberWithInteger:self.keyCode]];
-    if (isNumpadKey)
-        return [NSString stringWithFormat:CMLocalized(@"KeyNumpad_f"), keyLabel];
-    
-    return keyLabel;
 }
 
 - (BOOL)isMapped

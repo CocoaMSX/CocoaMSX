@@ -22,8 +22,6 @@
 #pragma mark *** Aesthetics ***
 - (BOOL)animates;
 - (void)setAnimates:(BOOL)an;
-- (SRRecorderStyle)style;
-- (void)setStyle:(SRRecorderStyle)nStyle;
 
 #pragma mark *** Delegate ***
 - (id)delegate;

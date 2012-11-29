@@ -34,8 +34,9 @@
     IBOutlet NSToolbar *toolbar;
     IBOutlet NSTabView *tabView;
     
-    IBOutlet NSTableView *keyboardTable;
     IBOutlet NSOutlineView *keyboardLayoutEditor;
+    IBOutlet NSOutlineView *joystickOneLayoutEditor;
+    IBOutlet NSOutlineView *joystickTwoLayoutEditor;
     
     IBOutlet NSSlider *brightnessSlider;
     IBOutlet NSSlider *contrastSlider;

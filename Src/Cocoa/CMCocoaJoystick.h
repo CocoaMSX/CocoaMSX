@@ -24,6 +24,7 @@
 
 @interface CMJoyPortDevice : NSObject
 
+@property (nonatomic, assign) BOOL isKeyConfigurable;
 @property (nonatomic, assign) NSInteger deviceId;
 @property (nonatomic, copy) NSString *name;
 

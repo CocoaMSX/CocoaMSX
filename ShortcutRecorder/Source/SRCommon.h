@@ -123,11 +123,6 @@ enum {
 #define SRLoc(key) SRLocalizedString(key, nil)
 #define SRLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, @"ShortcutRecorder", [NSBundle bundleForClass: [SRDummyClass class]], comment)
 
-// Image macros, for use in any bundle
-//#define SRImage(name) [[[NSImage alloc] initWithContentsOfFile: [[NSBundle bundleForClass: [self class]] pathForImageResource: name]] autorelease]
-#define SRResIndImage(name) [SRSharedImageProvider supportingImageWithName:name]
-#define SRImage(name) SRResIndImage(name)
-
 //#define SRCommonWriteDebugImagery
 
 // Macros for glyps
@@ -195,11 +190,4 @@ FOUNDATION_STATIC_INLINE BOOL SRIsSpecialKey(NSInteger keyCode) {
 
 @interface NSAlert( SRAdditions )
 + (NSAlert *) alertWithNonRecoverableError:(NSError *)error;
-@end
-
-#pragma mark -
-#pragma mark Image provider
-
-@interface SRSharedImageProvider : NSObject
-+ (NSImage *)supportingImageWithName:(NSString *)name;
 @end

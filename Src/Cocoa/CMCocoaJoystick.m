@@ -35,6 +35,7 @@
     
     device.name = NSLocalizedString(localizationKey, nil);
     device.deviceId = deviceId;
+    device.isKeyConfigurable = (deviceId == JOYSTICK_PORT_JOYSTICK);
     
     return [device autorelease];
 }

@@ -101,14 +101,6 @@
 	[SRCell setAnimates:an];
 }
 
-- (SRRecorderStyle)style {
-	return [SRCell style];
-}
-
-- (void)setStyle:(SRRecorderStyle)nStyle {
-	[SRCell setStyle:nStyle];
-}
-
 #pragma mark *** Interface Stuff ***
 
 

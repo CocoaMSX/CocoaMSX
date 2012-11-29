@@ -29,12 +29,6 @@
 
 @class SRRecorderControl, SRValidator;
 
-enum SRRecorderStyle {
-    SRGradientBorderStyle = 0,
-    SRGreyStyle = 1
-};
-typedef enum SRRecorderStyle SRRecorderStyle;
-
 @interface SRRecorderCell : NSActionCell <NSCoding>
 {	
 	NSGradient          *recordingGradient;
@@ -43,8 +37,6 @@ typedef enum SRRecorderStyle SRRecorderStyle;
 	BOOL                mouseInsideRemoveTrackingArea;
 	BOOL                mouseDown;
     BOOL                isRowSelected; // for tableCellMode
-	
-	SRRecorderStyle		style;
 	
 	BOOL				isAnimating;
 	CGFloat				transitionProgress;
@@ -81,12 +73,8 @@ typedef enum SRRecorderStyle SRRecorderStyle;
 
 #pragma mark *** Aesthetics ***
 
-+ (BOOL)styleSupportsAnimation:(SRRecorderStyle)style;
-
 - (BOOL)animates;
 - (void)setAnimates:(BOOL)an;
-- (SRRecorderStyle)style;
-- (void)setStyle:(SRRecorderStyle)nStyle;
 
 #pragma mark *** Delegate ***
 
