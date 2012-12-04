@@ -185,6 +185,14 @@ KeyTorike = "取消 (Torikeshi)";
 KeyCapsLock = "Caps Lock";
 KeyMacLeftModifier_f = "Left %C";
 KeyMacRightModifier_f = "Right %C";
+
+JoyButtonOne = "Button 1";
+JoyButtonTwo = "Button 2";
+JoyUp = "Up";
+JoyDown = "Down";
+JoyLeft = "Left";
+JoyRight = "Right";
+
 SureYouWantToRestartTheMachine = "Restart the machine? You will lose all changes in your applications.";
 Yes = "Yes";
 No = "No";

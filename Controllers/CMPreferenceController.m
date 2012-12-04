@@ -215,7 +215,7 @@
     [layout.keyMaps enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         CMKeyMapping *km = obj;
-        NSString *categoryName = km.virtualKeyCategoryName;
+        NSString *categoryName = km.categoryName;
         
         CMKeyCategory *kc = [categoryToKeyMap objectForKey:categoryName];
         
@@ -531,7 +531,7 @@ viewForTableColumn:(NSTableColumn *)tableColumn
                     [cell addSubview:cell.textField];
                 }
                 
-                cell.textField.stringValue = keyMapping.virtualKeyName;
+                cell.textField.stringValue = keyMapping.inputName;
             }
             else if ([tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
             {

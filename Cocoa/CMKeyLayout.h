@@ -22,6 +22,8 @@
  */
 #import <Foundation/Foundation.h>
 
+#import "CMInputMapping.h"
+
 #define CMKeyNoCode      (-1)
 
 #define CMKeyLeft           123
@@ -118,15 +120,6 @@
 #define CMKeyRightCommand   54
 #define CMKeyFunction       63
 
-#define CMKeyCategoryModifier    1
-#define CMKeyCategoryDirectional 2
-#define CMKeyCategoryFunction    3
-#define CMKeyCategoryAlpha       4
-#define CMKeyCategoryNumeric     5
-#define CMKeyCategoryNumericPad  6
-#define CMKeyCategorySpecial     7
-#define CMKeyCategorySymbols     8
-
 #define CMLeftShiftKeyMask    (NSShiftKeyMask | 0x2)
 #define CMRightShiftKeyMask   (NSShiftKeyMask | 0x4)
 #define CMLeftControlKeyMask  (NSControlKeyMask | 0x1)
@@ -137,15 +130,11 @@
 #define CMRightCommandKeyMask (NSCommandKeyMask | 0x10)
 #define CMCapsLockKeyMask     NSAlphaShiftKeyMask
 
-@interface CMKeyMapping : NSObject<NSCopying, NSCoding>
+@interface CMKeyMapping : CMInputMapping
 
-@property (nonatomic, assign) NSUInteger virtualCode;
-@property (nonatomic, assign) NSInteger  keyCode;
+@property (nonatomic, assign) NSInteger keyCode;
 
-- (BOOL)isMapped;
-- (NSInteger)virtualKeyCategory;
-- (NSString *)virtualKeyCategoryName;
-- (NSString *)virtualKeyName;
++ (CMKeyMapping *)keyMappingWithVirtualCode:(NSUInteger)virtualCode;
 
 - (BOOL)matchesKeyCode:(NSInteger)keyCode;
 

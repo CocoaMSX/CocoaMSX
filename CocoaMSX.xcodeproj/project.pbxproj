@@ -274,6 +274,8 @@
 		E99734791298B4B500766C90 /* R800Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733641298B4B500766C90 /* R800Debug.c */; };
 		E997347A1298B4B500766C90 /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
 		FE1A3631165623AC0083BA21 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FE1A3630165623AC0083BA21 /* icon.icns */; };
+		FE1B60251668382300B36238 /* CMInputMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1B60241668382300B36238 /* CMInputMapping.m */; };
+		FE1B602816683E7100B36238 /* CMJoystickLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1B602716683E7100B36238 /* CMJoystickLayout.m */; };
 		FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */; };
 		FE20DB911632783200D44ADF /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8E1632783200D44ADF /* AUTHORS */; };
 		FE20DB921632783200D44ADF /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8F1632783200D44ADF /* COPYING */; };
@@ -900,6 +902,10 @@
 		E99733661298B4B500766C90 /* R800SaveState.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = R800SaveState.c; sourceTree = "<group>"; };
 		E99733671298B4B500766C90 /* R800SaveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R800SaveState.h; sourceTree = "<group>"; };
 		FE1A3630165623AC0083BA21 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		FE1B60231668382200B36238 /* CMInputMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputMapping.h; sourceTree = "<group>"; };
+		FE1B60241668382300B36238 /* CMInputMapping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputMapping.m; sourceTree = "<group>"; };
+		FE1B602616683E7100B36238 /* CMJoystickLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMJoystickLayout.h; sourceTree = "<group>"; };
+		FE1B602716683E7100B36238 /* CMJoystickLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMJoystickLayout.m; sourceTree = "<group>"; };
 		FE1D58D5161D744800E70CF8 /* CMCocoaSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaSound.h; sourceTree = "<group>"; };
 		FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaSound.m; sourceTree = "<group>"; };
 		FE20DB8E1632783200D44ADF /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
@@ -1929,6 +1935,10 @@
 			children = (
 				FE99C538160E58FD00843DC8 /* CMFrameCounter.h */,
 				FE99C539160E58FD00843DC8 /* CMFrameCounter.m */,
+				FE1B60231668382200B36238 /* CMInputMapping.h */,
+				FE1B60241668382300B36238 /* CMInputMapping.m */,
+				FE1B602616683E7100B36238 /* CMJoystickLayout.h */,
+				FE1B602716683E7100B36238 /* CMJoystickLayout.m */,
 				FEEF38AD163C8310005F7DC8 /* CMKeyLayout.h */,
 				FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */,
 				FE2E19681640F19900BCFD53 /* CMNSString+FileManagement.h */,
@@ -2388,6 +2398,8 @@
 				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
 				FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */,
 				FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */,
+				FE1B60251668382300B36238 /* CMInputMapping.m in Sources */,
+				FE1B602816683E7100B36238 /* CMJoystickLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
