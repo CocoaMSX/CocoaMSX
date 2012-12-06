@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 
 @class CMKeyLayout;
+@class CMJoystickLayout;
 
 @interface CMPreferences : NSObject
 
@@ -36,6 +37,13 @@
 - (CMKeyLayout *)keyboardLayout;
 - (void)setKeyboardLayout:(CMKeyLayout *)layout;
 - (CMKeyLayout *)defaultLayout;
+
+- (CMJoystickLayout *)joystickOneLayout;
+- (void)setJoystickOneLayout:(CMJoystickLayout *)layout;
+- (CMJoystickLayout *)defaultJoystickOneLayout;
+- (CMJoystickLayout *)joystickTwoLayout;
+- (void)setJoystickTwoLayout:(CMJoystickLayout *)layout;
+- (CMJoystickLayout *)defaultJoystickTwoLayout;
 
 - (NSString *)appSupportDirectory;
 - (NSString *)audioCaptureDirectory;

@@ -205,3 +205,5 @@ KeyCategoryNumeric = "Numeric Keys";
 KeyCategoryNumericPad = "Numeric Pad";
 KeyCategorySpecial = "Special Keys";
 KeyCategorySymbols = "Symbol Keys";
+KeyCategoryJoystickDirectional = "Directions";
+KeyCategoryJoystickButtons = "Buttons";

@@ -22,7 +22,12 @@
  */
 #import "CMCocoaJoystick.h"
 
+#import "CMJoystickLayout.h"
+#import "CMPreferences.h"
+
 #include "JoystickPort.h"
+
+#include "InputEvent.h"
 
 #pragma mark - JoystickDevice
 
@@ -55,6 +60,10 @@
 {
     if ((self = [super init]))
     {
+        [self resetState];
+        
+        joystickOneLayout = [[[CMPreferences preferences] joystickOneLayout] retain];
+        joystickTwoLayout = [[[CMPreferences preferences] joystickTwoLayout] retain];
     }
     
     return self;
@@ -62,12 +71,30 @@
 
 - (void)dealloc
 {
+    [joystickOneLayout release];
+    [joystickTwoLayout release];
+    
     [super dealloc];
 }
 
 - (void)setEmulatorHasFocus:(BOOL)emulatorHasFocus
 {
     
+}
+
+- (CMJoystickLayout *)joystickOneLayout
+{
+    return joystickOneLayout;
+}
+
+- (CMJoystickLayout *)joystickTwoLayout
+{
+    return joystickTwoLayout;
+}
+
+- (void)resetState
+{
+    inputEventReset();
 }
 
 + (NSArray*)supportedDevices
@@ -94,9 +121,6 @@
 
 #pragma mark - BlueMSX Callbacks
 
-void archUpdateJoystick() { }
 UInt8 archJoystickGetState(int joystickNo) { return 0; }
-int archJoystickGetCount() { return 0; }
-char* archJoystickGetName(int index) { return ""; }
 
 @end

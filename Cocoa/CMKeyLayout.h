@@ -130,7 +130,7 @@
 #define CMRightCommandKeyMask (NSCommandKeyMask | 0x10)
 #define CMCapsLockKeyMask     NSAlphaShiftKeyMask
 
-@interface CMKeyMapping : CMInputMapping
+@interface CMKeyMapping : CMInputMapping<NSCopying>
 
 @property (nonatomic, assign) NSInteger keyCode;
 

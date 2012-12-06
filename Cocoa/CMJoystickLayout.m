@@ -80,7 +80,7 @@
 {
     if ((self = [self init]))
     {
-        [inputs addObjectsFromArray:[decoder decodeObjectForKey:@"keys"]];
+        [inputs addObjectsFromArray:[decoder decodeObjectForKey:@"inputs"]];
     }
     
     return self;

@@ -22,14 +22,16 @@
  */
 #import <Foundation/Foundation.h>
 
-#define CMKeyCategoryModifier    1
-#define CMKeyCategoryDirectional 2
-#define CMKeyCategoryFunction    3
-#define CMKeyCategoryAlpha       4
-#define CMKeyCategoryNumeric     5
-#define CMKeyCategoryNumericPad  6
-#define CMKeyCategorySpecial     7
-#define CMKeyCategorySymbols     8
+#define CMKeyCategoryModifier            1
+#define CMKeyCategoryDirectional         2
+#define CMKeyCategoryFunction            3
+#define CMKeyCategoryAlpha               4
+#define CMKeyCategoryNumeric             5
+#define CMKeyCategoryNumericPad          6
+#define CMKeyCategorySpecial             7
+#define CMKeyCategorySymbols             8
+#define CMKeyCategoryJoystickDirectional 9
+#define CMKeyCategoryJoystickButtons     10
 
 @interface CMInputMapping : NSObject<NSCopying, NSCoding>
 

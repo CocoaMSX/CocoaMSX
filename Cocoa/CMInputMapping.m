@@ -66,7 +66,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    CMInputMapping *copy = [[CMInputMapping allocWithZone:zone] init];
+    CMInputMapping *copy = [[[self class] allocWithZone:zone] init];
     
     copy.virtualCode = self.virtualCode;
     
@@ -325,6 +325,20 @@
         case EC_DIV:
         case EC_UNDSCRE:
             return CMKeyCategorySymbols;
+        case EC_JOY1_UP:
+        case EC_JOY1_DOWN:
+        case EC_JOY1_LEFT:
+        case EC_JOY1_RIGHT:
+        case EC_JOY2_UP:
+        case EC_JOY2_DOWN:
+        case EC_JOY2_LEFT:
+        case EC_JOY2_RIGHT:
+            return CMKeyCategoryJoystickDirectional;
+        case EC_JOY1_BUTTON1:
+        case EC_JOY1_BUTTON2:
+        case EC_JOY2_BUTTON1:
+        case EC_JOY2_BUTTON2:
+            return CMKeyCategoryJoystickButtons;
         default:
             return 0;
     }
@@ -350,6 +364,10 @@
             return NSLocalizedString(@"KeyCategorySpecial", nil);
         case CMKeyCategorySymbols:
             return NSLocalizedString(@"KeyCategorySymbols", nil);
+        case CMKeyCategoryJoystickDirectional:
+            return NSLocalizedString(@"KeyCategoryJoystickDirectional", nil);
+        case CMKeyCategoryJoystickButtons:
+            return NSLocalizedString(@"KeyCategoryJoystickButtons", nil);
     }
     
     return nil;

@@ -25,6 +25,7 @@
 @class CMEmulatorController;
 @class CMJoyPortDevice;
 @class CMKeyLayout;
+@class CMJoystickLayout;
 @class CMKeyCategory;
 
 @class SRRecorderControl;
@@ -47,12 +48,13 @@
     IBOutlet NSSlider *emulationSpeedSlider;
     
     NSMutableArray *keyCategories;
+    NSMutableArray *joystickOneCategories;
+    NSMutableArray *joystickTwoCategories;
     
     CMEmulatorController *_emulator;
     NSArray *virtualEmulationSpeedRange;
 }
 
-@property (nonatomic, retain) CMKeyLayout *currentLayout;
 @property (nonatomic, retain) CMEmulatorController *emulator;
 
 @property (nonatomic, assign) BOOL isSaturationEnabled;
@@ -71,6 +73,8 @@
 - (IBAction)joystickDeviceChanged:(id)sender;
 - (IBAction)revertVideoClicked:(id)sender;
 - (IBAction)revertKeyboardClicked:(id)sender;
+- (IBAction)revertJoystickOneClicked:(id)sender;
+- (IBAction)revertJoystickTwoClicked:(id)sender;
 
 - (IBAction)performColdRebootClicked:(id)sender;
 

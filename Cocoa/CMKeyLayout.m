@@ -219,10 +219,8 @@
 {
     for (int i = layout->keys.count - 1; i >= 0; i--)
     {
-        CMKeyMapping *keyCopy = [[layout->keys objectAtIndex:i] copy];
-        
-        [keys setObject:keyCopy atIndexedSubscript:i];
-        [keyCopy release];
+        CMKeyMapping *key = [layout->keys objectAtIndex:i];
+        [[keys objectAtIndex:i] setKeyCode:key.keyCode];
     }
 }
 
