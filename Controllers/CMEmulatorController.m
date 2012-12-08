@@ -27,9 +27,9 @@
 
 #import "CMEmulatorController.h"
 #import "CMSpecialCartChooserController.h"
-#import "CMPreferences.h"
-
 #import "CMMachineEditorController.h"
+
+#import "CMPreferences.h"
 
 #include "MsxTypes.h"
 #include "AudioMixer.h"
@@ -115,15 +115,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 #pragma mark - Initialization, Destruction
 
-+ (CMEmulatorController *)emulator
-{
-    return [[[CMEmulatorController alloc] init] autorelease];
-}
-
 - (id)init
 {
     if ((self = [super initWithWindowNibName:@"Emulator"]))
     {
+        deviceLayouts = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -152,6 +148,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [sound release];
     [joystick release];
     
+    [deviceLayouts release];
+    
     theEmulator = nil;
     
     [super dealloc];
@@ -165,6 +163,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
     stateFileTypes = [[NSArray arrayWithObjects:@"sta", nil] retain];
     captureAudioTypes = [[NSArray arrayWithObjects:@"wav", nil] retain];
     captureGameplayTypes = [[NSArray arrayWithObjects:@"cap", nil] retain];
+    
+    [deviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
+    [deviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
+    [deviceLayouts addObject:[[CMPreferences preferences] joystickTwoLayout]];
     
     keyboard = [[CMCocoaKeyboard alloc] init];
     mouse = [[CMCocoaMouse alloc] init];
@@ -363,6 +365,21 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self destroy];
     [self create];
     [self start];
+}
+
+- (CMInputDeviceLayout *)keyboardLayout
+{
+    return [deviceLayouts objectAtIndex:0];
+}
+
+- (CMInputDeviceLayout *)joystickOneLayout
+{
+    return [deviceLayouts objectAtIndex:1];
+}
+
+- (CMInputDeviceLayout *)joystickTwoLayout
+{
+    return [deviceLayouts objectAtIndex:2];
 }
 
 - (void)updateFps:(CGFloat)fps

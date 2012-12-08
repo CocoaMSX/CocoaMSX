@@ -22,7 +22,7 @@
  */
 #import <Foundation/Foundation.h>
 
-#import "CMInputMapping.h"
+#import "CMInputMethod.h"
 
 #define CMKeyNoCode      (-1)
 
@@ -130,36 +130,10 @@
 #define CMRightCommandKeyMask (NSCommandKeyMask | 0x10)
 #define CMCapsLockKeyMask     NSAlphaShiftKeyMask
 
-@interface CMKeyMapping : CMInputMapping<NSCopying>
+@interface CMKeyboardInput : CMInputMethod
+
++ (CMKeyboardInput *)keyboardInputWithKeyCode:(NSInteger)keyCode;
 
 @property (nonatomic, assign) NSInteger keyCode;
-
-+ (CMKeyMapping *)keyMappingWithVirtualCode:(NSUInteger)virtualCode;
-
-- (BOOL)matchesKeyCode:(NSInteger)keyCode;
-
-@end
-
-@interface CMKeyLayout : NSObject<NSCoding>
-{
-    NSMutableArray *keys;
-}
-
-- (CMKeyMapping *)mappingAtIndex:(NSInteger)index;
-- (CMKeyMapping *)findMappingOfVirtualKey:(NSUInteger)virtualKey;
-- (CMKeyMapping *)findMappingOfPhysicalKeyCode:(NSInteger)keyCode;
-
-- (NSArray *)keyMaps;
-
-+ (CMKeyLayout *)defaultLayout;
-
-- (void)loadLayout:(CMKeyLayout *)layout;
-
-- (void)unassignAllMatchingPhysicalCode:(NSInteger)physicalCode;
-
-- (void)assignVirtualKey:(NSUInteger)virtualKey
-                  toCode:(NSInteger)keyCode;
-- (void)assignVirtualKey:(NSUInteger)virtualKey
-             fromMapping:(CMKeyMapping *)fromMapping;
 
 @end

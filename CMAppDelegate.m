@@ -217,7 +217,7 @@
 {
     [self initializeResources];
     
-    self.emulator = [CMEmulatorController emulator];
+    self.emulator = [[[CMEmulatorController alloc] init] autorelease];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification

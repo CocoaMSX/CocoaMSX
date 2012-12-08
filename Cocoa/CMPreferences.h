@@ -22,8 +22,7 @@
  */
 #import <Foundation/Foundation.h>
 
-@class CMKeyLayout;
-@class CMJoystickLayout;
+@class CMInputDeviceLayout;
 
 @interface CMPreferences : NSObject
 
@@ -34,16 +33,16 @@
 - (NSInteger)screenHeight;
 - (void)setScreenHeight:(NSInteger)height;
 
-- (CMKeyLayout *)keyboardLayout;
-- (void)setKeyboardLayout:(CMKeyLayout *)layout;
-- (CMKeyLayout *)defaultLayout;
+- (CMInputDeviceLayout *)keyboardLayout;
+- (void)setKeyboardLayout:(CMInputDeviceLayout *)keyboardLayout;
+- (CMInputDeviceLayout *)joystickOneLayout;
+- (void)setJoystickOneLayout:(CMInputDeviceLayout *)joystickOneLayout;
+- (CMInputDeviceLayout *)joystickTwoLayout;
+- (void)setJoystickTwoLayout:(CMInputDeviceLayout *)joystickTwoLayout;
 
-- (CMJoystickLayout *)joystickOneLayout;
-- (void)setJoystickOneLayout:(CMJoystickLayout *)layout;
-- (CMJoystickLayout *)defaultJoystickOneLayout;
-- (CMJoystickLayout *)joystickTwoLayout;
-- (void)setJoystickTwoLayout:(CMJoystickLayout *)layout;
-- (CMJoystickLayout *)defaultJoystickTwoLayout;
+- (CMInputDeviceLayout *)defaultKeyboardLayout;
+- (CMInputDeviceLayout *)defaultJoystickOneLayout;
+- (CMInputDeviceLayout *)defaultJoystickTwoLayout;
 
 - (NSString *)appSupportDirectory;
 - (NSString *)audioCaptureDirectory;

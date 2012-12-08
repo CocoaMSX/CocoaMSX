@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */; };
 		6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B36CC441644806B00B5FDB7 /* MainMenu.xib */; };
 		6B5D2863161F44CC0081F586 /* CMCocoaKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */; };
 		6B5D2866161F4A920081F586 /* CMCocoaJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2865161F4A920081F586 /* CMCocoaJoystick.m */; };
@@ -274,8 +275,6 @@
 		E99734791298B4B500766C90 /* R800Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733641298B4B500766C90 /* R800Debug.c */; };
 		E997347A1298B4B500766C90 /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
 		FE1A3631165623AC0083BA21 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FE1A3630165623AC0083BA21 /* icon.icns */; };
-		FE1B60251668382300B36238 /* CMInputMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1B60241668382300B36238 /* CMInputMapping.m */; };
-		FE1B602816683E7100B36238 /* CMJoystickLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1B602716683E7100B36238 /* CMJoystickLayout.m */; };
 		FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */; };
 		FE20DB911632783200D44ADF /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8E1632783200D44ADF /* AUTHORS */; };
 		FE20DB921632783200D44ADF /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8F1632783200D44ADF /* COPYING */; };
@@ -311,6 +310,8 @@
 		FEA2BBBB16367C6E0014B233 /* SRRecorderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */; };
 		FEA2BBBC16367C6E0014B233 /* SRValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBB116367C6E0014B233 /* SRValidator.m */; };
 		FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */; };
+		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
+		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
 		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
 		FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */; };
 		FEC7231915FF0E3400CB508C /* CMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC7231815FF0E3400CB508C /* CMPreferenceController.m */; };
@@ -323,7 +324,6 @@
 		FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */; };
 		FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
-		FEEF38AF163C8310005F7DC8 /* CMKeyLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */; };
 		FEF40ED5160DB83B009170A9 /* CMCocoaBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */; };
 		FEF40ED6160DB83B009170A9 /* CocoaCdrom.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */; };
 		FEF40ED7160DB83B009170A9 /* CocoaDialog.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC8160DB83B009170A9 /* CocoaDialog.c */; };
@@ -346,6 +346,8 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		6B1631CC161FAE21009E6A55 /* LanguageStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguageStrings.h; sourceTree = "<group>"; };
+		6B1C25AA1672972F004DD618 /* CMKeyboardInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyboardInput.h; sourceTree = "<group>"; };
+		6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyboardInput.m; sourceTree = "<group>"; };
 		6B36CC441644806B00B5FDB7 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		6B5D2861161F44CC0081F586 /* CMCocoaKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaKeyboard.h; sourceTree = "<group>"; };
 		6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaKeyboard.m; sourceTree = "<group>"; };
@@ -902,10 +904,6 @@
 		E99733661298B4B500766C90 /* R800SaveState.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = R800SaveState.c; sourceTree = "<group>"; };
 		E99733671298B4B500766C90 /* R800SaveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R800SaveState.h; sourceTree = "<group>"; };
 		FE1A3630165623AC0083BA21 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
-		FE1B60231668382200B36238 /* CMInputMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputMapping.h; sourceTree = "<group>"; };
-		FE1B60241668382300B36238 /* CMInputMapping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputMapping.m; sourceTree = "<group>"; };
-		FE1B602616683E7100B36238 /* CMJoystickLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMJoystickLayout.h; sourceTree = "<group>"; };
-		FE1B602716683E7100B36238 /* CMJoystickLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMJoystickLayout.m; sourceTree = "<group>"; };
 		FE1D58D5161D744800E70CF8 /* CMCocoaSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaSound.h; sourceTree = "<group>"; };
 		FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaSound.m; sourceTree = "<group>"; };
 		FE20DB8E1632783200D44ADF /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
@@ -985,6 +983,10 @@
 		FEA2BBB116367C6E0014B233 /* SRValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRValidator.m; sourceTree = "<group>"; };
 		FEAABFB5165A113100934A94 /* CMMsxKeyboardMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMsxKeyboardMatrix.h; sourceTree = "<group>"; };
 		FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMsxKeyboardMatrix.m; sourceTree = "<group>"; };
+		FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputDeviceLayout.h; sourceTree = "<group>"; };
+		FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputDeviceLayout.m; sourceTree = "<group>"; };
+		FEAAF3F61672942600D371CD /* CMInputMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputMethod.h; sourceTree = "<group>"; };
+		FEAAF3F71672942700D371CD /* CMInputMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputMethod.m; sourceTree = "<group>"; };
 		FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MachineEditor.xib; sourceTree = "<group>"; };
 		FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineEditorController.h; sourceTree = "<group>"; };
 		FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineEditorController.m; sourceTree = "<group>"; };
@@ -1000,8 +1002,6 @@
 		FECF681116642A7E00C9C4F4 /* SRRecorderTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderTableCellView.h; sourceTree = "<group>"; };
 		FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderTableCellView.m; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
-		FEEF38AD163C8310005F7DC8 /* CMKeyLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyLayout.h; sourceTree = "<group>"; };
-		FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyLayout.m; sourceTree = "<group>"; };
 		FEF40EC5160DB83B009170A9 /* CMCocoaBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaBuffer.h; sourceTree = "<group>"; };
 		FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaBuffer.m; sourceTree = "<group>"; };
 		FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CocoaCdrom.c; sourceTree = "<group>"; };
@@ -1935,12 +1935,12 @@
 			children = (
 				FE99C538160E58FD00843DC8 /* CMFrameCounter.h */,
 				FE99C539160E58FD00843DC8 /* CMFrameCounter.m */,
-				FE1B60231668382200B36238 /* CMInputMapping.h */,
-				FE1B60241668382300B36238 /* CMInputMapping.m */,
-				FE1B602616683E7100B36238 /* CMJoystickLayout.h */,
-				FE1B602716683E7100B36238 /* CMJoystickLayout.m */,
-				FEEF38AD163C8310005F7DC8 /* CMKeyLayout.h */,
-				FEEF38AE163C8310005F7DC8 /* CMKeyLayout.m */,
+				FEAAF3F61672942600D371CD /* CMInputMethod.h */,
+				FEAAF3F71672942700D371CD /* CMInputMethod.m */,
+				FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */,
+				FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */,
+				6B1C25AA1672972F004DD618 /* CMKeyboardInput.h */,
+				6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */,
 				FE2E19681640F19900BCFD53 /* CMNSString+FileManagement.h */,
 				FE2E19691640F19900BCFD53 /* CMNSString+FileManagement.m */,
 				FE2E1961164085A000BCFD53 /* CMPreferences.h */,
@@ -2389,7 +2389,6 @@
 				FEA2BBBA16367C6E0014B233 /* SRRecorderCell.m in Sources */,
 				FEA2BBBB16367C6E0014B233 /* SRRecorderControl.m in Sources */,
 				FEA2BBBC16367C6E0014B233 /* SRValidator.m in Sources */,
-				FEEF38AF163C8310005F7DC8 /* CMKeyLayout.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
 				FE2E196A1640F19900BCFD53 /* CMNSString+FileManagement.m in Sources */,
 				FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */,
@@ -2398,8 +2397,9 @@
 				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
 				FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */,
 				FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */,
-				FE1B60251668382300B36238 /* CMInputMapping.m in Sources */,
-				FE1B602816683E7100B36238 /* CMJoystickLayout.m in Sources */,
+				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,
+				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,
+				6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

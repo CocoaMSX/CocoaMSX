@@ -24,9 +24,6 @@
 
 @class CMEmulatorController;
 @class CMJoyPortDevice;
-@class CMKeyLayout;
-@class CMJoystickLayout;
-@class CMKeyCategory;
 
 @class SRRecorderControl;
 

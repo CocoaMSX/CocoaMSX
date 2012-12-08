@@ -20,30 +20,39 @@
  **
  ******************************************************************************
  */
-#import <Foundation/Foundation.h>
+#import "CMInputMethod.h"
 
-#define CMKeyCategoryModifier            1
-#define CMKeyCategoryDirectional         2
-#define CMKeyCategoryFunction            3
-#define CMKeyCategoryAlpha               4
-#define CMKeyCategoryNumeric             5
-#define CMKeyCategoryNumericPad          6
-#define CMKeyCategorySpecial             7
-#define CMKeyCategorySymbols             8
-#define CMKeyCategoryJoystickDirectional 9
-#define CMKeyCategoryJoystickButtons     10
+@implementation CMInputMethod
 
-@interface CMInputMapping : NSObject<NSCopying, NSCoding>
+#pragma mark - NSCoding
 
-@property (nonatomic, assign) NSUInteger virtualCode;
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if ((self = [self init]))
+    {
+    }
+    
+    return self;
+}
 
-- (id)initWithVirtualCode:(NSUInteger)virtualCode;
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+}
 
-- (NSString *)inputName;
+#pragma mark - NSCopying
 
-- (NSInteger)category;
-- (NSString *)categoryName;
+- (id)copyWithZone:(NSZone *)zone
+{
+    CMInputMethod *copy = [[[self class] allocWithZone:zone] init];
+    
+    return copy;
+}
 
-- (BOOL)isMapped;
+#pragma mark - CMInputMethod
+
+- (BOOL)isEqualToInputMethod:(CMInputMethod *)inputMethod
+{
+    return NO;
+}
 
 @end

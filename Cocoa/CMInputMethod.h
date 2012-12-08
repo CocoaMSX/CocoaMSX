@@ -22,22 +22,8 @@
  */
 #import <Foundation/Foundation.h>
 
-@interface CMCocoaKeyboard : NSObject
-{
-    BOOL isCommandDown;
-}
+@interface CMInputMethod : NSObject<NSCopying, NSCoding>
 
-- (void)setEmulatorHasFocus:(BOOL)focus;
-
-- (void)keyDown:(NSEvent*)event;
-- (void)keyUp:(NSEvent*)event;
-- (void)flagsChanged:(NSEvent *)event;
-- (void)resetState;
-
-- (BOOL)areAnyKeysDown;
-- (void)releaseAllKeys;
-
-- (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode;
-- (NSString *)categoryNameForVirtualCode:(NSUInteger)virtualCode;
+- (BOOL)isEqualToInputMethod:(CMInputMethod *)inputMethod;
 
 @end

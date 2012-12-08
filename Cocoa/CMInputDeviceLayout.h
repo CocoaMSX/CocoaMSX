@@ -22,23 +22,25 @@
  */
 #import <Foundation/Foundation.h>
 
-#import "CMInputMapping.h"
+#import "CMInputMethod.h"
 
-@interface CMJoystickLayout : NSObject
+#define CMUnknownVirtualCode (-1)
+
+typedef void (^CMMappingEnumeratorBlock)(NSUInteger virtualCode, CMInputMethod *inputMethod, BOOL *stop);
+
+@interface CMInputDeviceLayout : NSObject<NSCoding>
 {
-    NSMutableArray *inputs;
+    NSMutableDictionary *inputs;
 }
 
-- (id)initLayoutForJoystickOnPort:(NSInteger)port;
+- (void)loadLayout:(CMInputDeviceLayout *)layout;
 
-+ (CMJoystickLayout *)defaultLayoutForJoystickOnPort:(NSInteger)port;
-- (void)loadLayout:(CMJoystickLayout *)layout;
+- (void)assignInputMethod:(CMInputMethod *)inputMethod
+            toVirtualCode:(NSUInteger)virtualCode;
 
-- (BOOL)assignVirtualCode:(NSUInteger)virtualCode
-                toKeyCode:(NSInteger)keyCode;
+- (CMInputMethod *)inputMethodForVirtualCode:(NSUInteger)virtualCode;
+- (NSInteger)virtualCodeForInputMethod:(CMInputMethod *)inputMethod;
 
-- (CMInputMapping *)findMappingOfVirtualCode:(NSUInteger)virtualCode;
-
-- (NSArray *)inputMaps;
+- (void)enumerateMappingsUsingBlock:(CMMappingEnumeratorBlock)block;
 
 @end

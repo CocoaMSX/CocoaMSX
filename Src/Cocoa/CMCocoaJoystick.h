@@ -22,8 +22,6 @@
  */
 #import <Foundation/Foundation.h>
 
-@class CMJoystickLayout;
-
 @interface CMJoyPortDevice : NSObject
 
 @property (nonatomic, assign) BOOL isKeyConfigurable;
@@ -34,14 +32,9 @@
 
 @interface CMCocoaJoystick : NSObject
 {
-    CMJoystickLayout *joystickOneLayout;
-    CMJoystickLayout *joystickTwoLayout;
 }
 
 - (void)setEmulatorHasFocus:(BOOL)emulatorHasFocus;
-
-- (CMJoystickLayout *)joystickOneLayout;
-- (CMJoystickLayout *)joystickTwoLayout;
 
 + (NSArray*)supportedDevices;
 

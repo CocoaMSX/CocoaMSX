@@ -22,13 +22,14 @@
  */
 #import "CMPreferences.h"
 
+#import "CMInputDeviceLayout.h"
+
 #import "CMNSString+FileManagement.h"
 
 NSString * const CMScreenWidthPrefKey = @"screenWidth";
 NSString * const CMScreenHeightPrefKey = @"screenHeight";
 
 NSString * const CMKeyboardLayoutPrefKey = @"keyboardLayout";
-
 NSString * const CMJoystickOneLayoutPrefKey = @"joystickOneLayout";
 NSString * const CMJoystickTwoLayoutPrefKey = @"joystickTwoLayout";
 
@@ -130,21 +131,45 @@ static CMPreferences *preferences = nil;
     [[NSUserDefaults standardUserDefaults] setInteger:height forKey:CMScreenHeightPrefKey];
 }
 
-#pragma mark - Keyboard
+#pragma mark - Input Devices
 
-- (CMKeyLayout *)keyboardLayout
+- (CMInputDeviceLayout *)keyboardLayout;
 {
     NSData *layoutData = [[NSUserDefaults standardUserDefaults] objectForKey:CMKeyboardLayoutPrefKey];
     return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
 }
 
-- (void)setKeyboardLayout:(CMKeyLayout *)layout
+- (void)setKeyboardLayout:(CMInputDeviceLayout *)keyboardLayout;
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:layout];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:keyboardLayout];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMKeyboardLayoutPrefKey];
 }
 
-- (CMKeyLayout *)defaultLayout
+- (CMInputDeviceLayout *)joystickOneLayout;
+{
+    NSData *layoutData = [[NSUserDefaults standardUserDefaults] objectForKey:CMJoystickOneLayoutPrefKey];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
+}
+
+- (void)setJoystickOneLayout:(CMInputDeviceLayout *)joystickOneLayout;
+{
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:joystickOneLayout];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMJoystickOneLayoutPrefKey];
+}
+
+- (CMInputDeviceLayout *)joystickTwoLayout;
+{
+    NSData *layoutData = [[NSUserDefaults standardUserDefaults] objectForKey:CMJoystickTwoLayoutPrefKey];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
+}
+
+- (void)setJoystickTwoLayout:(CMInputDeviceLayout *)joystickTwoLayout;
+{
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:joystickTwoLayout];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMJoystickTwoLayoutPrefKey];
+}
+
+- (CMInputDeviceLayout *)defaultKeyboardLayout;
 {
     NSString *bundleResourcePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
     NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:bundleResourcePath];
@@ -153,21 +178,7 @@ static CMPreferences *preferences = nil;
     return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
 }
 
-#pragma mark - Joystick
-
-- (CMJoystickLayout *)joystickOneLayout
-{
-    NSData *layoutData = [[NSUserDefaults standardUserDefaults] objectForKey:CMJoystickOneLayoutPrefKey];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
-}
-
-- (void)setJoystickOneLayout:(CMJoystickLayout *)layout
-{
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:layout];
-    [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMJoystickOneLayoutPrefKey];
-}
-
-- (CMJoystickLayout *)defaultJoystickOneLayout
+- (CMInputDeviceLayout *)defaultJoystickOneLayout;
 {
     NSString *bundleResourcePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
     NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:bundleResourcePath];
@@ -176,19 +187,7 @@ static CMPreferences *preferences = nil;
     return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
 }
 
-- (CMJoystickLayout *)joystickTwoLayout
-{
-    NSData *layoutData = [[NSUserDefaults standardUserDefaults] objectForKey:CMJoystickTwoLayoutPrefKey];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
-}
-
-- (void)setJoystickTwoLayout:(CMJoystickLayout *)layout
-{
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:layout];
-    [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMJoystickTwoLayoutPrefKey];
-}
-
-- (CMJoystickLayout *)defaultJoystickTwoLayout
+- (CMInputDeviceLayout *)defaultJoystickTwoLayout;
 {
     NSString *bundleResourcePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
     NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:bundleResourcePath];

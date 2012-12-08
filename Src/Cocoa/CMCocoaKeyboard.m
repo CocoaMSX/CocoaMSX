@@ -23,9 +23,12 @@
 #import <AppKit/NSEvent.h>
 
 #import "CMCocoaKeyboard.h"
-#import "CMEmulatorController.h"
-#import "CMKeyLayout.h"
+
+#import "CMKeyboardInput.h"
+#import "CMInputDeviceLayout.h"
 #import "CMPreferences.h"
+
+#import "CMEmulatorController.h"
 
 #include "InputEvent.h"
 
@@ -33,6 +36,10 @@
 //        whenever a key is pressed
 
 //#define DEBUG_KEY_STATE
+#define CMIntAsNumber(x) [NSNumber numberWithInteger:x]
+#define CMLoc(x)         NSLocalizedString(x, nil)
+
+static NSDictionary *virtualCodeNames = nil;
 
 #pragma mark - CocoaKeyboard
 
@@ -46,13 +53,143 @@
 
 @implementation CMCocoaKeyboard
 
++ (void)initialize
+{
+    virtualCodeNames = [[NSDictionary alloc] initWithObjectsAndKeys:
+                         
+                         // Modifiers
+                         CMLoc(@"KeyLeftShift"),  CMIntAsNumber(EC_LSHIFT),
+                         CMLoc(@"KeyRightShift"), CMIntAsNumber(EC_RSHIFT),
+                         CMLoc(@"KeyCtrl"),       CMIntAsNumber(EC_CTRL),
+                         CMLoc(@"KeyGraph"),      CMIntAsNumber(EC_GRAPH),
+                         CMLoc(@"KeyCode"),       CMIntAsNumber(EC_CODE),
+                         CMLoc(@"KeyTorike"),     CMIntAsNumber(EC_TORIKE),
+                         CMLoc(@"KeyJikkou"),     CMIntAsNumber(EC_JIKKOU),
+                         CMLoc(@"KeyCapsLock"),   CMIntAsNumber(EC_CAPS),
+                         
+                         // Directional
+                         CMLoc(@"KeyCursorLeft"),  CMIntAsNumber(EC_LEFT),
+                         CMLoc(@"KeyCursorUp"),    CMIntAsNumber(EC_UP),
+                         CMLoc(@"KeyCursorRight"), CMIntAsNumber(EC_RIGHT),
+                         CMLoc(@"KeyCursorDown"),  CMIntAsNumber(EC_DOWN),
+                         
+                         // Function
+                         @"F1", CMIntAsNumber(EC_F1),
+                         @"F2", CMIntAsNumber(EC_F2),
+                         @"F3", CMIntAsNumber(EC_F3),
+                         @"F4", CMIntAsNumber(EC_F4),
+                         @"F5", CMIntAsNumber(EC_F5),
+                         
+                         // Alpha
+                         @"A", CMIntAsNumber(EC_A),
+                         @"B", CMIntAsNumber(EC_B),
+                         @"C", CMIntAsNumber(EC_C),
+                         @"D", CMIntAsNumber(EC_D),
+                         @"E", CMIntAsNumber(EC_E),
+                         @"F", CMIntAsNumber(EC_F),
+                         @"G", CMIntAsNumber(EC_G),
+                         @"H", CMIntAsNumber(EC_H),
+                         @"I", CMIntAsNumber(EC_I),
+                         @"J", CMIntAsNumber(EC_J),
+                         @"K", CMIntAsNumber(EC_K),
+                         @"L", CMIntAsNumber(EC_L),
+                         @"M", CMIntAsNumber(EC_M),
+                         @"N", CMIntAsNumber(EC_N),
+                         @"O", CMIntAsNumber(EC_O),
+                         @"P", CMIntAsNumber(EC_P),
+                         @"Q", CMIntAsNumber(EC_Q),
+                         @"R", CMIntAsNumber(EC_R),
+                         @"S", CMIntAsNumber(EC_S),
+                         @"T", CMIntAsNumber(EC_T),
+                         @"U", CMIntAsNumber(EC_U),
+                         @"V", CMIntAsNumber(EC_V),
+                         @"W", CMIntAsNumber(EC_W),
+                         @"X", CMIntAsNumber(EC_X),
+                         @"Y", CMIntAsNumber(EC_Y),
+                         @"Z", CMIntAsNumber(EC_Z),
+                         
+                         // Numbers
+                         @"0", CMIntAsNumber(EC_0),
+                         @"1", CMIntAsNumber(EC_1),
+                         @"2", CMIntAsNumber(EC_2),
+                         @"3", CMIntAsNumber(EC_3),
+                         @"4", CMIntAsNumber(EC_4),
+                         @"5", CMIntAsNumber(EC_5),
+                         @"6", CMIntAsNumber(EC_6),
+                         @"7", CMIntAsNumber(EC_7),
+                         @"8", CMIntAsNumber(EC_8),
+                         @"9", CMIntAsNumber(EC_9),
+                         
+                         // Numpad
+                         @"*", CMIntAsNumber(EC_NUMMUL),
+                         @"+", CMIntAsNumber(EC_NUMADD),
+                         @"/", CMIntAsNumber(EC_NUMDIV),
+                         @"-", CMIntAsNumber(EC_NUMSUB),
+                         @".", CMIntAsNumber(EC_NUMPER),
+                         @",", CMIntAsNumber(EC_NUMCOM),
+                         @"0", CMIntAsNumber(EC_NUM0),
+                         @"1", CMIntAsNumber(EC_NUM1),
+                         @"2", CMIntAsNumber(EC_NUM2),
+                         @"3", CMIntAsNumber(EC_NUM3),
+                         @"4", CMIntAsNumber(EC_NUM4),
+                         @"5", CMIntAsNumber(EC_NUM5),
+                         @"6", CMIntAsNumber(EC_NUM6),
+                         @"7", CMIntAsNumber(EC_NUM7),
+                         @"8", CMIntAsNumber(EC_NUM8),
+                         @"9", CMIntAsNumber(EC_NUM9),
+                        
+                         // Symbols
+                         @"-", CMIntAsNumber(EC_NEG),
+                         @"\\", CMIntAsNumber(EC_BKSLASH),
+                         @"@", CMIntAsNumber(EC_AT),
+                         @"[", CMIntAsNumber(EC_LBRACK),
+                         @"]", CMIntAsNumber(EC_RBRACK),
+                         @"^", CMIntAsNumber(EC_CIRCFLX),
+                         @";", CMIntAsNumber(EC_SEMICOL),
+                         @":", CMIntAsNumber(EC_COLON),
+                         @",", CMIntAsNumber(EC_COMMA),
+                         @".", CMIntAsNumber(EC_PERIOD),
+                         @"/", CMIntAsNumber(EC_DIV),
+                         @"_", CMIntAsNumber(EC_UNDSCRE),
+                        
+                         // Special
+                         CMLoc(@"KeyEscape"),    CMIntAsNumber(EC_ESC),
+                         CMLoc(@"KeyTab"),       CMIntAsNumber(EC_TAB),
+                         CMLoc(@"KeyStop"),      CMIntAsNumber(EC_STOP),
+                         CMLoc(@"KeyCls"),       CMIntAsNumber(EC_CLS),
+                         CMLoc(@"KeySelect"),    CMIntAsNumber(EC_SELECT),
+                         CMLoc(@"KeyInsert"),    CMIntAsNumber(EC_INS),
+                         CMLoc(@"KeyDelete"),    CMIntAsNumber(EC_DEL),
+                         CMLoc(@"KeyBackspace"), CMIntAsNumber(EC_BKSPACE),
+                         CMLoc(@"KeyReturn"),    CMIntAsNumber(EC_RETURN),
+                         CMLoc(@"KeySpace"),     CMIntAsNumber(EC_SPACE),
+                         CMLoc(@"KeyPrint"),     CMIntAsNumber(EC_PRINT),
+                         CMLoc(@"KeyPause"),     CMIntAsNumber(EC_PAUSE),
+                         
+                         // Joystick
+                         CMLoc(@"JoyButtonOne"), CMIntAsNumber(EC_JOY1_BUTTON1),
+                         CMLoc(@"JoyButtonTwo"), CMIntAsNumber(EC_JOY1_BUTTON2),
+                         CMLoc(@"JoyUp"),        CMIntAsNumber(EC_JOY1_UP),
+                         CMLoc(@"JoyDown"),      CMIntAsNumber(EC_JOY1_DOWN),
+                         CMLoc(@"JoyLeft"),      CMIntAsNumber(EC_JOY1_LEFT),
+                         CMLoc(@"JoyRight"),     CMIntAsNumber(EC_JOY1_RIGHT),
+                         
+                         CMLoc(@"JoyButtonOne"), CMIntAsNumber(EC_JOY2_BUTTON1),
+                         CMLoc(@"JoyButtonTwo"), CMIntAsNumber(EC_JOY2_BUTTON2),
+                         CMLoc(@"JoyUp"),        CMIntAsNumber(EC_JOY2_UP),
+                         CMLoc(@"JoyDown"),      CMIntAsNumber(EC_JOY2_DOWN),
+                         CMLoc(@"JoyLeft"),      CMIntAsNumber(EC_JOY2_LEFT),
+                         CMLoc(@"JoyRight"),     CMIntAsNumber(EC_JOY2_RIGHT),
+                         
+                         nil];
+}
+
 - (id)init
 {
     if ((self = [super init]))
     {
         [self resetState];
         
-        currentLayout = [[[CMPreferences preferences] keyboardLayout] retain];
         isCommandDown = NO;
     }
     
@@ -62,8 +199,6 @@
 - (void)dealloc
 {
     self.emulatorHasFocus = NO;
-    
-    [currentLayout release];
     
     [super dealloc];
 }
@@ -128,13 +263,15 @@
     else if (event.keyCode == CMKeyCapsLock)
     {
         // Caps Lock has no up/down - just toggle state
-        CMKeyMapping *key = [currentLayout findMappingOfPhysicalKeyCode:event.keyCode];
-        if (key)
+        CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:event.keyCode];
+        NSInteger virtualCode = [theEmulator.keyboardLayout virtualCodeForInputMethod:input];
+        
+        if (virtualCode != CMUnknownVirtualCode)
         {
-            if (!inputEventGetState(key.virtualCode))
-                inputEventSet(key.virtualCode);
+            if (!inputEventGetState(virtualCode))
+                inputEventSet(virtualCode);
             else
-                inputEventUnset(key.virtualCode);
+                inputEventUnset(virtualCode);
         }
     }
     
@@ -144,15 +281,19 @@
         // other key no longer generates a keyUp event, and the virtual key
         // 'sticks'. Release all other virtual keys if Command is pressed.
         
-        for (int virtualKey = 0; virtualKey < EC_KEYCOUNT; virtualKey++)
+        for (NSUInteger virtualKey = 0; virtualKey < EC_KEYCOUNT; virtualKey++)
         {
             if (inputEventGetState(virtualKey))
             {
-                CMKeyMapping *mapping = [currentLayout findMappingOfVirtualKey:virtualKey];
-                if (mapping.keyCode != CMKeyLeftCommand && mapping.keyCode != CMKeyRightCommand)
+                CMInputMethod *input = [theEmulator.keyboardLayout inputMethodForVirtualCode:virtualKey];
+                if ([input isKindOfClass:[CMKeyboardInput class]])
                 {
-                    // Release the virtual key
-                    inputEventUnset(virtualKey);
+                    CMKeyboardInput *keyInput = (CMKeyboardInput *)input;
+                    if (keyInput.keyCode == CMKeyRightCommand)
+                    {
+                        // Release the virtual key
+                        inputEventUnset(virtualKey);
+                    }
                 }
             }
         }
@@ -171,18 +312,13 @@
             inputEventUnset(virtualKey);
 }
 
-- (BOOL)isAnyKeyDown
+- (BOOL)areAnyKeysDown
 {
     for (int virtualKey = 0; virtualKey < EC_KEYCOUNT; virtualKey++)
         if (inputEventGetState(virtualKey))
             return YES;
     
     return NO;
-}
-
-- (CMKeyLayout *)currentLayout
-{
-    return currentLayout;
 }
 
 - (void)resetState
@@ -208,22 +344,155 @@
     }
 }
 
+- (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode
+{
+    return [virtualCodeNames objectForKey:CMIntAsNumber(virtualCode)];
+}
+
+- (NSString *)categoryNameForVirtualCode:(NSUInteger)virtualCode
+{
+    switch (virtualCode)
+    {
+        case EC_LSHIFT:
+        case EC_RSHIFT:
+        case EC_CTRL:
+        case EC_GRAPH:
+        case EC_CODE:
+        case EC_CAPS:
+            return CMLoc(@"KeyCategoryModifier");
+        case EC_LEFT:
+        case EC_UP:
+        case EC_RIGHT:
+        case EC_DOWN:
+            return CMLoc(@"KeyCategoryDirectional");
+        case EC_F1:
+        case EC_F2:
+        case EC_F3:
+        case EC_F4:
+        case EC_F5:
+            return CMLoc(@"KeyCategoryFunction");
+        case EC_A:
+        case EC_B:
+        case EC_C:
+        case EC_D:
+        case EC_E:
+        case EC_F:
+        case EC_G:
+        case EC_H:
+        case EC_I:
+        case EC_J:
+        case EC_K:
+        case EC_L:
+        case EC_M:
+        case EC_N:
+        case EC_O:
+        case EC_P:
+        case EC_Q:
+        case EC_R:
+        case EC_S:
+        case EC_T:
+        case EC_U:
+        case EC_V:
+        case EC_W:
+        case EC_X:
+        case EC_Y:
+        case EC_Z:
+            return CMLoc(@"KeyCategoryAlpha");
+        case EC_0:
+        case EC_1:
+        case EC_2:
+        case EC_3:
+        case EC_4:
+        case EC_5:
+        case EC_6:
+        case EC_7:
+        case EC_8:
+        case EC_9:
+            return CMLoc(@"KeyCategoryNumeric");
+        case EC_NUMMUL:
+        case EC_NUMADD:
+        case EC_NUMDIV:
+        case EC_NUMSUB:
+        case EC_NUMPER:
+        case EC_NUMCOM:
+        case EC_NUM0:
+        case EC_NUM1:
+        case EC_NUM2:
+        case EC_NUM3:
+        case EC_NUM4:
+        case EC_NUM5:
+        case EC_NUM6:
+        case EC_NUM7:
+        case EC_NUM8:
+        case EC_NUM9:
+            return CMLoc(@"KeyCategoryNumericPad");
+        case EC_ESC:
+        case EC_TAB:
+        case EC_STOP:
+        case EC_CLS:
+        case EC_SELECT:
+        case EC_INS:
+        case EC_DEL:
+        case EC_BKSPACE:
+        case EC_RETURN:
+        case EC_SPACE:
+        case EC_PRINT:
+        case EC_PAUSE:
+        case EC_TORIKE:
+        case EC_JIKKOU:
+            return CMLoc(@"KeyCategorySpecial");
+        case EC_NEG:
+        case EC_BKSLASH:
+        case EC_AT:
+        case EC_LBRACK:
+        case EC_RBRACK:
+        case EC_CIRCFLX:
+        case EC_SEMICOL:
+        case EC_COLON:
+        case EC_COMMA:
+        case EC_PERIOD:
+        case EC_DIV:
+        case EC_UNDSCRE:
+            return CMLoc(@"KeyCategorySymbols");
+        case EC_JOY1_UP:
+        case EC_JOY1_DOWN:
+        case EC_JOY1_LEFT:
+        case EC_JOY1_RIGHT:
+        case EC_JOY2_UP:
+        case EC_JOY2_DOWN:
+        case EC_JOY2_LEFT:
+        case EC_JOY2_RIGHT:
+            return CMLoc(@"KeyCategoryJoystickDirectional");
+        case EC_JOY1_BUTTON1:
+        case EC_JOY1_BUTTON2:
+        case EC_JOY2_BUTTON1:
+        case EC_JOY2_BUTTON2:
+            return CMLoc(@"KeyCategoryJoystickButtons");
+    }
+    
+    return nil;
+}
+
 #pragma mark - Private methods
 
 - (void)handleKeyEvent:(NSInteger)keyCode
                 isDown:(BOOL)isDown
 {
-    if (isDown)
+    CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:keyCode];
+    NSInteger virtualCode = [theEmulator.keyboardLayout virtualCodeForInputMethod:input];
+    
+    if (virtualCode != CMUnknownVirtualCode)
     {
-        CMKeyMapping *key = [currentLayout findMappingOfPhysicalKeyCode:keyCode];
-        if (key && !inputEventGetState(key.virtualCode))
-            inputEventSet(key.virtualCode);
-    }
-    else
-    {
-        CMKeyMapping *key = [currentLayout findMappingOfPhysicalKeyCode:keyCode];
-        if (key && inputEventGetState(key.virtualCode))
-            inputEventUnset(key.virtualCode);
+        if (isDown)
+        {
+            if (!inputEventGetState(virtualCode))
+                inputEventSet(virtualCode);
+        }
+        else
+        {
+            if (inputEventGetState(virtualCode))
+                inputEventUnset(virtualCode);
+        }
     }
 }
 
@@ -245,13 +514,5 @@ void archPollInput()
 }
 
 void archKeyboardSetSelectedKey(int keyCode) {}
-char* archGetSelectedKey() { return ""; }
-char* archGetMappedKey() { return ""; }
-
-int archKeyboardIsKeyConfigured(int msxKeyCode) { return 0; }
-int archKeyboardIsKeySelected(int msxKeyCode) { return 0; }
-char* archKeyconfigSelectedKeyTitle() { return ""; }
-char* archKeyconfigMappedToTitle() { return ""; }
-char* archKeyconfigMappingSchemeTitle() { return ""; }
 
 @end

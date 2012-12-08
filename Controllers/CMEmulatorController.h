@@ -31,6 +31,7 @@
 #import "CMCocoaMouse.h"
 #import "CMCocoaSound.h"
 #import "CMCocoaJoystick.h"
+#import "CMInputDeviceLayout.h"
 
 #include "Properties.h"
 #include "VideoRender.h"
@@ -53,6 +54,8 @@ NSString * const CMKeyboardLayoutPrefKey;
     CMPreferenceController *preferenceController;
     CMMachineEditorController *machineEditorController;
     
+    NSMutableArray *deviceLayouts;
+    
     NSArray *openRomFileTypes;
     NSArray *openDiskFileTypes;
     NSArray *openCassetteFileTypes;
@@ -73,8 +76,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property (nonatomic, retain) CMSpecialCartChooserController *cartChooser;
 @property (nonatomic, retain) CMRepositionCassetteController *cassetteRepositioner;
 
-+ (CMEmulatorController *)emulator;
-
 - (Properties *)properties;
 - (Video *)video;
 
@@ -83,6 +84,10 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (CMCocoaSound *)sound;
 - (CMCocoaJoystick *)joystick;
 - (CMMsxDisplayView *)screen;
+
+- (CMInputDeviceLayout *)keyboardLayout;
+- (CMInputDeviceLayout *)joystickOneLayout;
+- (CMInputDeviceLayout *)joystickTwoLayout;
 
 - (void)start;
 - (void)stop;

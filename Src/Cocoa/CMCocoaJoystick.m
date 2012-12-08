@@ -22,7 +22,6 @@
  */
 #import "CMCocoaJoystick.h"
 
-#import "CMJoystickLayout.h"
 #import "CMPreferences.h"
 
 #include "JoystickPort.h"
@@ -61,9 +60,6 @@
     if ((self = [super init]))
     {
         [self resetState];
-        
-        joystickOneLayout = [[[CMPreferences preferences] joystickOneLayout] retain];
-        joystickTwoLayout = [[[CMPreferences preferences] joystickTwoLayout] retain];
     }
     
     return self;
@@ -71,25 +67,12 @@
 
 - (void)dealloc
 {
-    [joystickOneLayout release];
-    [joystickTwoLayout release];
-    
     [super dealloc];
 }
 
 - (void)setEmulatorHasFocus:(BOOL)emulatorHasFocus
 {
     
-}
-
-- (CMJoystickLayout *)joystickOneLayout
-{
-    return joystickOneLayout;
-}
-
-- (CMJoystickLayout *)joystickTwoLayout
-{
-    return joystickTwoLayout;
 }
 
 - (void)resetState
