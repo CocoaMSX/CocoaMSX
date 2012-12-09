@@ -22,6 +22,16 @@
  */
 #import <Foundation/Foundation.h>
 
+#define CMKeyCategoryCharacters    1
+#define CMKeyCategorySymbols       2
+#define CMKeyCategorySpecial       3
+#define CMKeyCategoryModifier      4
+#define CMKeyCategoryFunction      5
+#define CMKeyCategoryDirectional   6
+#define CMKeyCategoryNumericPad    7
+#define CMKeyCategoryJoyDirections 8
+#define CMKeyCategoryJoyButtons    9
+
 @interface CMCocoaKeyboard : NSObject
 {
     BOOL isCommandDown;
@@ -38,6 +48,7 @@
 - (void)releaseAllKeys;
 
 - (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode;
-- (NSString *)categoryNameForVirtualCode:(NSUInteger)virtualCode;
+- (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode;
+- (NSString *)nameForCategory:(NSInteger)category;
 
 @end

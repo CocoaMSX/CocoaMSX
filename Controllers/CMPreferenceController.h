@@ -25,8 +25,6 @@
 @class CMEmulatorController;
 @class CMJoyPortDevice;
 
-@class SRRecorderControl;
-
 @interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
     IBOutlet NSToolbar *toolbar;

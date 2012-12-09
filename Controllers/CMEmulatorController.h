@@ -54,7 +54,7 @@ NSString * const CMKeyboardLayoutPrefKey;
     CMPreferenceController *preferenceController;
     CMMachineEditorController *machineEditorController;
     
-    NSMutableArray *deviceLayouts;
+    NSMutableArray *inputDeviceLayouts;
     
     NSArray *openRomFileTypes;
     NSArray *openDiskFileTypes;
@@ -88,6 +88,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (CMInputDeviceLayout *)keyboardLayout;
 - (CMInputDeviceLayout *)joystickOneLayout;
 - (CMInputDeviceLayout *)joystickTwoLayout;
+
+- (NSArray *)inputDeviceLayouts;
 
 - (void)start;
 - (void)stop;

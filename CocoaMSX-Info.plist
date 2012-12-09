@@ -18,7 +18,7 @@
 				<string>sc</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string></string>
+			<string>CartridgeDocument</string>
 			<key>CFBundleTypeName</key>
 			<string>CocoaMSX Cartridge</string>
 			<key>CFBundleTypeRole</key>
@@ -109,6 +109,8 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>CocoaMSX Cartridge</string>
+			<key>UTTypeIconFile</key>
+			<string>CartridgeDocument</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.akop.cocoamsx.filetype.cartridge</string>
 			<key>UTTypeReferenceURL</key>

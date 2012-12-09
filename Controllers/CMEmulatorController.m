@@ -119,7 +119,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     if ((self = [super initWithWindowNibName:@"Emulator"]))
     {
-        deviceLayouts = [[NSMutableArray alloc] init];
+        inputDeviceLayouts = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -148,7 +148,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [sound release];
     [joystick release];
     
-    [deviceLayouts release];
+    [inputDeviceLayouts release];
     
     theEmulator = nil;
     
@@ -164,9 +164,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     captureAudioTypes = [[NSArray arrayWithObjects:@"wav", nil] retain];
     captureGameplayTypes = [[NSArray arrayWithObjects:@"cap", nil] retain];
     
-    [deviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
-    [deviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
-    [deviceLayouts addObject:[[CMPreferences preferences] joystickTwoLayout]];
+    [inputDeviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
+    [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
+    [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickTwoLayout]];
     
     keyboard = [[CMCocoaKeyboard alloc] init];
     mouse = [[CMCocoaMouse alloc] init];
@@ -369,17 +369,22 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (CMInputDeviceLayout *)keyboardLayout
 {
-    return [deviceLayouts objectAtIndex:0];
+    return [inputDeviceLayouts objectAtIndex:0];
 }
 
 - (CMInputDeviceLayout *)joystickOneLayout
 {
-    return [deviceLayouts objectAtIndex:1];
+    return [inputDeviceLayouts objectAtIndex:1];
 }
 
 - (CMInputDeviceLayout *)joystickTwoLayout
 {
-    return [deviceLayouts objectAtIndex:2];
+    return [inputDeviceLayouts objectAtIndex:2];
+}
+
+- (NSArray *)inputDeviceLayouts
+{
+    return inputDeviceLayouts;
 }
 
 - (void)updateFps:(CGFloat)fps

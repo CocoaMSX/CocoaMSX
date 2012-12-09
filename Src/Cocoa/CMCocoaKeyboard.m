@@ -107,8 +107,6 @@ static NSDictionary *virtualCodeNames = nil;
                          @"X", CMIntAsNumber(EC_X),
                          @"Y", CMIntAsNumber(EC_Y),
                          @"Z", CMIntAsNumber(EC_Z),
-                         
-                         // Numbers
                          @"0", CMIntAsNumber(EC_0),
                          @"1", CMIntAsNumber(EC_1),
                          @"2", CMIntAsNumber(EC_2),
@@ -118,6 +116,19 @@ static NSDictionary *virtualCodeNames = nil;
                          @"6", CMIntAsNumber(EC_6),
                          @"7", CMIntAsNumber(EC_7),
                          @"8", CMIntAsNumber(EC_8),
+                         @"-", CMIntAsNumber(EC_NEG),
+                         @"\\", CMIntAsNumber(EC_BKSLASH),
+                         @"@", CMIntAsNumber(EC_AT),
+                         @"[", CMIntAsNumber(EC_LBRACK),
+                         @"]", CMIntAsNumber(EC_RBRACK),
+                         @"^", CMIntAsNumber(EC_CIRCFLX),
+                         @";", CMIntAsNumber(EC_SEMICOL),
+                         @":", CMIntAsNumber(EC_COLON),
+                         @",", CMIntAsNumber(EC_COMMA),
+                         @".", CMIntAsNumber(EC_PERIOD),
+                         @"/", CMIntAsNumber(EC_DIV),
+                         @"_", CMIntAsNumber(EC_UNDSCRE),
+                         
                          @"9", CMIntAsNumber(EC_9),
                          
                          // Numpad
@@ -137,20 +148,6 @@ static NSDictionary *virtualCodeNames = nil;
                          @"7", CMIntAsNumber(EC_NUM7),
                          @"8", CMIntAsNumber(EC_NUM8),
                          @"9", CMIntAsNumber(EC_NUM9),
-                        
-                         // Symbols
-                         @"-", CMIntAsNumber(EC_NEG),
-                         @"\\", CMIntAsNumber(EC_BKSLASH),
-                         @"@", CMIntAsNumber(EC_AT),
-                         @"[", CMIntAsNumber(EC_LBRACK),
-                         @"]", CMIntAsNumber(EC_RBRACK),
-                         @"^", CMIntAsNumber(EC_CIRCFLX),
-                         @";", CMIntAsNumber(EC_SEMICOL),
-                         @":", CMIntAsNumber(EC_COLON),
-                         @",", CMIntAsNumber(EC_COMMA),
-                         @".", CMIntAsNumber(EC_PERIOD),
-                         @"/", CMIntAsNumber(EC_DIV),
-                         @"_", CMIntAsNumber(EC_UNDSCRE),
                         
                          // Special
                          CMLoc(@"KeyEscape"),    CMIntAsNumber(EC_ESC),
@@ -349,7 +346,7 @@ static NSDictionary *virtualCodeNames = nil;
     return [virtualCodeNames objectForKey:CMIntAsNumber(virtualCode)];
 }
 
-- (NSString *)categoryNameForVirtualCode:(NSUInteger)virtualCode
+- (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode
 {
     switch (virtualCode)
     {
@@ -359,18 +356,18 @@ static NSDictionary *virtualCodeNames = nil;
         case EC_GRAPH:
         case EC_CODE:
         case EC_CAPS:
-            return CMLoc(@"KeyCategoryModifier");
+            return CMKeyCategoryModifier;
         case EC_LEFT:
         case EC_UP:
         case EC_RIGHT:
         case EC_DOWN:
-            return CMLoc(@"KeyCategoryDirectional");
+            return CMKeyCategoryDirectional;
         case EC_F1:
         case EC_F2:
         case EC_F3:
         case EC_F4:
         case EC_F5:
-            return CMLoc(@"KeyCategoryFunction");
+            return CMKeyCategoryFunction;
         case EC_A:
         case EC_B:
         case EC_C:
@@ -397,7 +394,6 @@ static NSDictionary *virtualCodeNames = nil;
         case EC_X:
         case EC_Y:
         case EC_Z:
-            return CMLoc(@"KeyCategoryAlpha");
         case EC_0:
         case EC_1:
         case EC_2:
@@ -408,7 +404,20 @@ static NSDictionary *virtualCodeNames = nil;
         case EC_7:
         case EC_8:
         case EC_9:
-            return CMLoc(@"KeyCategoryNumeric");
+            return CMKeyCategoryCharacters;
+        case EC_NEG:
+        case EC_BKSLASH:
+        case EC_AT:
+        case EC_LBRACK:
+        case EC_RBRACK:
+        case EC_CIRCFLX:
+        case EC_SEMICOL:
+        case EC_COLON:
+        case EC_COMMA:
+        case EC_PERIOD:
+        case EC_DIV:
+        case EC_UNDSCRE:
+            return CMKeyCategorySymbols;
         case EC_NUMMUL:
         case EC_NUMADD:
         case EC_NUMDIV:
@@ -425,7 +434,7 @@ static NSDictionary *virtualCodeNames = nil;
         case EC_NUM7:
         case EC_NUM8:
         case EC_NUM9:
-            return CMLoc(@"KeyCategoryNumericPad");
+            return CMKeyCategoryNumericPad;
         case EC_ESC:
         case EC_TAB:
         case EC_STOP:
@@ -440,20 +449,7 @@ static NSDictionary *virtualCodeNames = nil;
         case EC_PAUSE:
         case EC_TORIKE:
         case EC_JIKKOU:
-            return CMLoc(@"KeyCategorySpecial");
-        case EC_NEG:
-        case EC_BKSLASH:
-        case EC_AT:
-        case EC_LBRACK:
-        case EC_RBRACK:
-        case EC_CIRCFLX:
-        case EC_SEMICOL:
-        case EC_COLON:
-        case EC_COMMA:
-        case EC_PERIOD:
-        case EC_DIV:
-        case EC_UNDSCRE:
-            return CMLoc(@"KeyCategorySymbols");
+            return CMKeyCategorySpecial;
         case EC_JOY1_UP:
         case EC_JOY1_DOWN:
         case EC_JOY1_LEFT:
@@ -462,12 +458,39 @@ static NSDictionary *virtualCodeNames = nil;
         case EC_JOY2_DOWN:
         case EC_JOY2_LEFT:
         case EC_JOY2_RIGHT:
-            return CMLoc(@"KeyCategoryJoystickDirectional");
+            return CMKeyCategoryJoyDirections;
         case EC_JOY1_BUTTON1:
         case EC_JOY1_BUTTON2:
         case EC_JOY2_BUTTON1:
         case EC_JOY2_BUTTON2:
-            return CMLoc(@"KeyCategoryJoystickButtons");
+            return CMKeyCategoryJoyButtons;
+        default:
+            return 0;
+    }
+}
+
+- (NSString *)nameForCategory:(NSInteger)category
+{
+    switch (category)
+    {
+        case CMKeyCategoryModifier:
+            return NSLocalizedString(@"KeyCategoryModifier", nil);
+        case CMKeyCategoryDirectional:
+            return NSLocalizedString(@"KeyCategoryDirectional", nil);
+        case CMKeyCategoryFunction:
+            return NSLocalizedString(@"KeyCategoryFunction", nil);
+        case CMKeyCategoryCharacters:
+            return NSLocalizedString(@"KeyCategoryCharacters", nil);
+        case CMKeyCategorySymbols:
+            return NSLocalizedString(@"KeyCategorySymbols", nil);
+        case CMKeyCategoryNumericPad:
+            return NSLocalizedString(@"KeyCategoryNumericPad", nil);
+        case CMKeyCategorySpecial:
+            return NSLocalizedString(@"KeyCategorySpecial", nil);
+        case CMKeyCategoryJoyButtons:
+            return NSLocalizedString(@"KeyCategoryJoystickButtons", nil);
+        case CMKeyCategoryJoyDirections:
+            return NSLocalizedString(@"KeyCategoryJoystickDirectional", nil);
     }
     
     return nil;
@@ -479,21 +502,26 @@ static NSDictionary *virtualCodeNames = nil;
                 isDown:(BOOL)isDown
 {
     CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:keyCode];
-    NSInteger virtualCode = [theEmulator.keyboardLayout virtualCodeForInputMethod:input];
     
-    if (virtualCode != CMUnknownVirtualCode)
+    [theEmulator.inputDeviceLayouts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
-        if (isDown)
+        CMInputDeviceLayout *layout = obj;
+        NSInteger virtualCode = [layout virtualCodeForInputMethod:input];
+        
+        if (virtualCode != CMUnknownVirtualCode)
         {
-            if (!inputEventGetState(virtualCode))
-                inputEventSet(virtualCode);
+            if (isDown)
+            {
+                if (!inputEventGetState(virtualCode))
+                    inputEventSet(virtualCode);
+            }
+            else
+            {
+                if (inputEventGetState(virtualCode))
+                    inputEventUnset(virtualCode);
+            }
         }
-        else
-        {
-            if (inputEventGetState(virtualCode))
-                inputEventUnset(virtualCode);
-        }
-    }
+    }];
 }
 
 - (void)updateKeyboardState

@@ -324,6 +324,7 @@
 		FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */; };
 		FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
+		FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEE801571674ACD000695F38 /* CartridgeDocument.icns */; };
 		FEF40ED5160DB83B009170A9 /* CMCocoaBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */; };
 		FEF40ED6160DB83B009170A9 /* CocoaCdrom.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */; };
 		FEF40ED7160DB83B009170A9 /* CocoaDialog.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC8160DB83B009170A9 /* CocoaDialog.c */; };
@@ -1002,6 +1003,7 @@
 		FECF681116642A7E00C9C4F4 /* SRRecorderTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderTableCellView.h; sourceTree = "<group>"; };
 		FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderTableCellView.m; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
+		FEE801571674ACD000695F38 /* CartridgeDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CartridgeDocument.icns; sourceTree = "<group>"; };
 		FEF40EC5160DB83B009170A9 /* CMCocoaBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaBuffer.h; sourceTree = "<group>"; };
 		FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaBuffer.m; sourceTree = "<group>"; };
 		FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CocoaCdrom.c; sourceTree = "<group>"; };
@@ -1128,6 +1130,7 @@
 		6BCA755D164D7D09002CA211 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
 				6BCA755E164D7D09002CA211 /* toolbar-audio.png */,
 				6BCA755F164D7D09002CA211 /* toolbar-audio@2x.png */,
 				6BCA7560164D7D09002CA211 /* toolbar-input.png */,
@@ -2096,6 +2099,7 @@
 				FECF680D16642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png in Resources */,
 				FECF680E16642A6700C9C4F4 /* SRRemoveShortcutRollover.png in Resources */,
 				FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */,
+				FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

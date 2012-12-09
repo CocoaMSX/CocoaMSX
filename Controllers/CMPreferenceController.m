@@ -67,10 +67,11 @@
     NSMutableArray *items;
 }
 
+@property (nonatomic, copy) NSNumber *category;
 @property (nonatomic, copy) NSString *title;
 
 - (NSMutableArray *)items;
-- (void)sortItemsUsingEmulator:(CMEmulatorController *)emulator;
+- (void)sortItems;
 
 @end
 
@@ -94,19 +95,18 @@
 - (void)dealloc
 {
     self.title = nil;
+    self.category = nil;
+    
     [items release];
     
     [super dealloc];
 }
 
-- (void)sortItemsUsingEmulator:(CMEmulatorController *)emulator
+- (void)sortItems
 {
     NSArray *sortedItems = [items sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
     {
-        NSString *first = [emulator.keyboard inputNameForVirtualCode:[(NSNumber *)a integerValue]];
-        NSString *second = [emulator.keyboard inputNameForVirtualCode:[(NSNumber *)b integerValue]];
-        
-        return [first compare:second];
+        return [a compare:b];
     }];
     
     [items removeAllObjects];
@@ -127,6 +127,8 @@
                        fromVirtual:(NSInteger)virtualPosition
                         usingTable:(NSArray *)table;
 - (CMInputDeviceLayout *)inputDeviceLayoutFromOutlineView:(NSOutlineView *)outlineView;
+- (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
+                             withLayout:(CMInputDeviceLayout *)layout;
 
 @end
 
@@ -229,63 +231,16 @@
                                                             fromVirtual:prefs.emulationSpeedPercentage
                                                              usingTable:virtualEmulationSpeedRange]];
     
-    NSMutableDictionary *categoryToKeyMap = [NSMutableDictionary dictionary];
-    
-    [self.emulator.keyboardLayout enumerateMappingsUsingBlock:^(NSUInteger virtualCode, CMInputMethod *inputMethod, BOOL *stop)
-    {
-        NSString *categoryName = [self.emulator.keyboard categoryNameForVirtualCode:virtualCode];
-        
-        CMKeyCategory *kc = [categoryToKeyMap objectForKey:categoryName];
-        
-        if (!kc)
-        {
-            kc = [[[CMKeyCategory alloc] init] autorelease];
-            [categoryToKeyMap setObject:kc forKey:categoryName];
-            
-            kc.title = categoryName;
-            
-            [keyCategories addObject:kc];
-        }
-        
-        [kc.items addObject:[NSNumber numberWithInteger:virtualCode]];
-    }];
-    
-    [keyCategories enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        CMKeyCategory *keyCategory = obj;
-        [keyCategory sortItemsUsingEmulator:self.emulator];
-    }];
+    [self initializeInputDeviceCategories:keyCategories
+                               withLayout:self.emulator.keyboardLayout];
+    [self initializeInputDeviceCategories:joystickOneCategories
+                               withLayout:self.emulator.joystickOneLayout];
+    [self initializeInputDeviceCategories:joystickTwoCategories
+                               withLayout:self.emulator.joystickTwoLayout];
     
     [keyboardLayoutEditor expandItem:nil expandChildren:YES];
-    
-    [categoryToKeyMap removeAllObjects];
-    
-    [self.emulator.joystickOneLayout enumerateMappingsUsingBlock:^(NSUInteger virtualCode, CMInputMethod *inputMethod, BOOL *stop)
-    {
-        NSString *categoryName = [self.emulator.keyboard categoryNameForVirtualCode:virtualCode];
-        
-        CMKeyCategory *kc = [categoryToKeyMap objectForKey:categoryName];
-        
-        if (!kc)
-        {
-            kc = [[[CMKeyCategory alloc] init] autorelease];
-            [categoryToKeyMap setObject:kc forKey:categoryName];
-            
-            kc.title = categoryName;
-            
-            [joystickOneCategories addObject:kc];
-        }
-        
-        [kc.items addObject:[NSNumber numberWithInteger:virtualCode]];
-    }];
-    
-    [joystickOneCategories enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        CMKeyCategory *keyCategory = obj;
-        [keyCategory sortItemsUsingEmulator:self.emulator];
-    }];
-    
     [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
+    [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
 }
 
 - (void)dealloc
@@ -303,6 +258,50 @@
     [virtualEmulationSpeedRange release];
     
     [super dealloc];
+}
+
+- (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
+                             withLayout:(CMInputDeviceLayout *)layout
+{
+    NSMutableDictionary *categoryToKeyMap = [NSMutableDictionary dictionary];
+    NSMutableArray *unsortedCategories = [NSMutableArray array];
+    
+    [layout enumerateMappingsUsingBlock:^(NSUInteger virtualCode, CMInputMethod *inputMethod, BOOL *stop)
+    {
+        NSNumber *category = [NSNumber numberWithInteger:[self.emulator.keyboard categoryForVirtualCode:virtualCode]];
+        
+        CMKeyCategory *kc = [categoryToKeyMap objectForKey:category];
+        
+        if (!kc)
+        {
+            kc = [[[CMKeyCategory alloc] init] autorelease];
+            [categoryToKeyMap setObject:kc forKey:category];
+            
+            kc.category = category;
+            kc.title = [self.emulator.keyboard nameForCategory:[category integerValue]];
+            
+            [unsortedCategories addObject:kc];
+        }
+        
+        [kc.items addObject:[NSNumber numberWithInteger:virtualCode]];
+    }];
+    
+    [unsortedCategories enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        CMKeyCategory *keyCategory = obj;
+        [keyCategory sortItems];
+    }];
+    
+    NSArray *sortedCategories = [unsortedCategories sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
+                                {
+                                    CMKeyCategory *first = a;
+                                    CMKeyCategory *second = b;
+                                    
+                                    return [first.category compare:second.category];
+                                }];
+    
+    [categoryArray removeAllObjects];
+    [categoryArray addObjectsFromArray:sortedCategories];
 }
 
 #pragma mark - Properties
@@ -377,9 +376,6 @@
 - (CMInputDeviceLayout *)inputDeviceLayoutFromOutlineView:(NSOutlineView *)outlineView
 {
     CMInputDeviceLayout *layout = nil;
-    
-    if (!outlineView)
-        return nil; // FIXME: remove this after adding j2layout
     
     if (outlineView == keyboardLayoutEditor)
         layout = self.emulator.keyboardLayout;
@@ -631,6 +627,7 @@ viewForTableColumn:(NSTableColumn *)tableColumn
             {
                 NSRect cellFrame = NSMakeRect(0, 0, tableColumn.width, outlineView.rowHeight);
                 
+                
                 cell = [[[NSTableCellView alloc] initWithFrame:cellFrame] autorelease];
                 cell.identifier = tableColumn.identifier;
                 cell.textField = [[[NSTextField alloc] initWithFrame:cell.frame] autorelease];
@@ -719,7 +716,13 @@ viewForTableColumn:(NSTableColumn *)tableColumn
         if (![newMethod isEqualToInputMethod:currentMethod])
         {
             [layout assignInputMethod:newMethod toVirtualCode:virtualCode];
-            [preferences setKeyboardLayout:layout];
+            
+            if (layout == self.emulator.keyboardLayout)
+                [preferences setKeyboardLayout:layout];
+            else if (layout == self.emulator.joystickOneLayout)
+                [preferences setJoystickOneLayout:layout];
+            else if (layout == self.emulator.joystickTwoLayout)
+                [preferences setJoystickTwoLayout:layout];
         }
     }
 }
