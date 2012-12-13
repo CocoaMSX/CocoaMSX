@@ -38,6 +38,8 @@
 				<string>720</string>
 				<string>sf7</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>DiskDocument</string>
 			<key>CFBundleTypeName</key>
 			<string>CocoaMSX Disk</string>
 			<key>CFBundleTypeRole</key>
@@ -52,6 +54,8 @@
 			<array>
 				<string>cas</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>CassetteDocument</string>
 			<key>CFBundleTypeName</key>
 			<string>CocoaMSX Cassette</string>
 			<key>CFBundleTypeRole</key>
