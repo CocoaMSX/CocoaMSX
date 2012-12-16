@@ -70,6 +70,7 @@
 - (IBAction)revertKeyboardClicked:(id)sender;
 - (IBAction)revertJoystickOneClicked:(id)sender;
 - (IBAction)revertJoystickTwoClicked:(id)sender;
+- (IBAction)showMachinesInFinder:(id)sender;
 
 - (IBAction)performColdRebootClicked:(id)sender;
 

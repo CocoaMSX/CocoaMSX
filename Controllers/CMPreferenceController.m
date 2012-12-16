@@ -508,6 +508,14 @@
     [CMPreferences preferences].emulationSpeedPercentage = percentage;
 }
 
+- (void)showMachinesInFinder:(id)sender
+{
+    CMPreferences *prefs = [CMPreferences preferences];
+    NSURL *machinesUrl = [NSURL fileURLWithPath:prefs.machineDirectory];
+    
+    [[NSWorkspace sharedWorkspace] openURL:machinesUrl];
+}
+
 #pragma mark - NSWindowController
 
 - (void)windowDidLoad
