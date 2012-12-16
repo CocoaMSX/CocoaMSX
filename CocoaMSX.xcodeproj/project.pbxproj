@@ -275,6 +275,11 @@
 		E99734791298B4B500766C90 /* R800Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733641298B4B500766C90 /* R800Debug.c */; };
 		E997347A1298B4B500766C90 /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
 		FE1A3631165623AC0083BA21 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FE1A3630165623AC0083BA21 /* icon.icns */; };
+		FE1C134F167DCF8900CE2B6B /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE1C134E167DCF8900CE2B6B /* About.xib */; };
+		FE1C1356167DD08E00CE2B6B /* CMAboutController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1C1355167DD08E00CE2B6B /* CMAboutController.m */; };
+		FE1C1358167DE0D200CE2B6B /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = FE1C1357167DE0D200CE2B6B /* Documents */; };
+		FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FE1C135A167DE41800CE2B6B /* AppIcon.png */; };
+		FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE1C135B167DE41800CE2B6B /* AppIcon@2x.png */; };
 		FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */; };
 		FE20DB911632783200D44ADF /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8E1632783200D44ADF /* AUTHORS */; };
 		FE20DB921632783200D44ADF /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8F1632783200D44ADF /* COPYING */; };
@@ -907,6 +912,12 @@
 		E99733661298B4B500766C90 /* R800SaveState.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = R800SaveState.c; sourceTree = "<group>"; };
 		E99733671298B4B500766C90 /* R800SaveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R800SaveState.h; sourceTree = "<group>"; };
 		FE1A3630165623AC0083BA21 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		FE1C134E167DCF8900CE2B6B /* About.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = About.xib; sourceTree = "<group>"; };
+		FE1C1354167DD08E00CE2B6B /* CMAboutController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMAboutController.h; sourceTree = "<group>"; };
+		FE1C1355167DD08E00CE2B6B /* CMAboutController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMAboutController.m; sourceTree = "<group>"; };
+		FE1C1357167DE0D200CE2B6B /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Documents; sourceTree = "<group>"; };
+		FE1C135A167DE41800CE2B6B /* AppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIcon.png; sourceTree = "<group>"; };
+		FE1C135B167DE41800CE2B6B /* AppIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon@2x.png"; sourceTree = "<group>"; };
 		FE1D58D5161D744800E70CF8 /* CMCocoaSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaSound.h; sourceTree = "<group>"; };
 		FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaSound.m; sourceTree = "<group>"; };
 		FE20DB8E1632783200D44ADF /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
@@ -1095,12 +1106,15 @@
 			isa = PBXGroup;
 			children = (
 				6BCA755D164D7D09002CA211 /* Icons */,
+				FE1C1359167DE41800CE2B6B /* Images */,
 				FED34F3C163F320D002FCC89 /* Defaults.plist */,
 				FEFB43B916321F2F00EAE462 /* CocoaMSX-Info.plist */,
+				FE1C1357167DE0D200CE2B6B /* Documents */,
 				FE2CEB551622A50500E58F9A /* Databases */,
 				FE2CEB571622A50500E58F9A /* Machines */,
 				FEA01B361620C7720066FDD8 /* Localizable.strings */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				FE1C134E167DCF8900CE2B6B /* About.xib */,
 				FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */,
 				FE42836215FE857400ED7CB9 /* Emulator.xib */,
 				FEC7232115FF133700CB508C /* Preferences.xib */,
@@ -1839,6 +1853,15 @@
 			path = Z80;
 			sourceTree = "<group>";
 		};
+		FE1C1359167DE41800CE2B6B /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				FE1C135A167DE41800CE2B6B /* AppIcon.png */,
+				FE1C135B167DE41800CE2B6B /* AppIcon@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		FE20DB8D1632776500D44ADF /* Documents */ = {
 			isa = PBXGroup;
 			children = (
@@ -1925,6 +1948,8 @@
 		FEC7231515FF0DD900CB508C /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				FE1C1354167DD08E00CE2B6B /* CMAboutController.h */,
+				FE1C1355167DD08E00CE2B6B /* CMAboutController.m */,
 				FE9C6A25161A446B00513A6D /* CMEmulatorController.h */,
 				FE9C6A26161A446B00513A6D /* CMEmulatorController.m */,
 				FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */,
@@ -2108,6 +2133,10 @@
 				FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */,
 				FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */,
 				FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */,
+				FE1C134F167DCF8900CE2B6B /* About.xib in Resources */,
+				FE1C1358167DE0D200CE2B6B /* Documents in Resources */,
+				FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */,
+				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2412,6 +2441,7 @@
 				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,
 				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,
 				6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */,
+				FE1C1356167DD08E00CE2B6B /* CMAboutController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

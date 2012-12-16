@@ -38,6 +38,7 @@
 
 NSString * const CMKeyboardLayoutPrefKey;
 
+@class CMAboutController;
 @class CMMachineEditorController;
 
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate>
@@ -51,8 +52,11 @@ NSString * const CMKeyboardLayoutPrefKey;
     CMCocoaSound *sound;
     CMCocoaJoystick *joystick;
     
+    CMAboutController *aboutController;
     CMPreferenceController *preferenceController;
     CMMachineEditorController *machineEditorController;
+    CMSpecialCartChooserController *cartChooser;
+    CMRepositionCassetteController *cassetteRepositioner;
     
     NSMutableArray *inputDeviceLayouts;
     
@@ -72,9 +76,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property (nonatomic, copy) NSString *fpsDisplay;
 
 @property (nonatomic, copy) NSString *fileToLoadAtStartup;
-
-@property (nonatomic, retain) CMSpecialCartChooserController *cartChooser;
-@property (nonatomic, retain) CMRepositionCassetteController *cassetteRepositioner;
 
 - (Properties *)properties;
 - (Video *)video;
@@ -133,6 +134,10 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 + (NSArray *)machineConfigurations;
 - (NSString *)currentMachineConfiguration;
+
+// Apple menu
+
+- (IBAction)openAbout:(id)sender;
 
 // File menu
 

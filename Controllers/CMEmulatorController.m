@@ -25,6 +25,7 @@
 
 #import "CMAppDelegate.h"
 
+#import "CMAboutController.h"
 #import "CMEmulatorController.h"
 #import "CMSpecialCartChooserController.h"
 #import "CMMachineEditorController.h"
@@ -136,12 +137,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [captureAudioTypes release];
     [captureGameplayTypes release];
     
+    [machineEditorController release];
+    [aboutController release];
+    [cartChooser release];
+    [cassetteRepositioner release];
     [preferenceController release];
     
     self.fileToLoadAtStartup = nil;
     self.lastOpenSavePanelDirectory = nil;
-    self.cartChooser = nil;
-    self.cassetteRepositioner = nil;
     
     [keyboard release];
     [mouse release];
@@ -172,9 +175,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     mouse = [[CMCocoaMouse alloc] init];
     sound = [[CMCocoaSound alloc] init];
     joystick = [[CMCocoaJoystick alloc] init];
-    
-    self.cartChooser = nil;
-    self.cassetteRepositioner = nil;
     
     theEmulator = self; // FIXME
     
@@ -899,10 +899,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    self.cartChooser = [[CMSpecialCartChooserController alloc] init];
-    self.cartChooser.delegate = self;
+    [cartChooser release];
+    cartChooser = [[CMSpecialCartChooserController alloc] init];
+    cartChooser.delegate = self;
     
-    [self.cartChooser showSheetForWindow:self.window cartridgeSlot:slot];
+    [cartChooser showSheetForWindow:self.window cartridgeSlot:slot];
 }
 
 - (void)ejectCartridgeFromSlot:(NSInteger)slot
@@ -1030,6 +1031,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 #pragma mark - IBActions
 
+- (void)openAbout:(id)sender
+{
+    if (!aboutController)
+        aboutController = [[CMAboutController alloc] init];
+    
+    [aboutController showWindow:self];
+}
+
 - (void)openPreferences:(id)sender
 {
     if (!self.isInitialized)
@@ -1156,10 +1165,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized || !(*properties->media.tapes[0].fileName))
         return;
     
-    self.cassetteRepositioner = [[CMRepositionCassetteController alloc] init];
-    self.cassetteRepositioner.delegate = self;
+    [cassetteRepositioner release];
+    cassetteRepositioner = [[CMRepositionCassetteController alloc] init];
+    cassetteRepositioner.delegate = self;
     
-    [self.cassetteRepositioner showSheetForWindow:self.window];
+    [cassetteRepositioner showSheetForWindow:self.window];
 }
 
 // MSX menu
