@@ -52,7 +52,11 @@
 {
     [super windowDidLoad];
     
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString* version = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    
+    versionNumber.stringValue = [NSString stringWithFormat:CMLoc(@"VersionAbout"),
+                                 version];
 }
 
 #pragma mark - Actions

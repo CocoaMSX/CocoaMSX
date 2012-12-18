@@ -37,7 +37,7 @@
 {
     CMJoyPortDevice *device = [[CMJoyPortDevice alloc] init];
     
-    device.name = NSLocalizedString(localizationKey, nil);
+    device.name = CMLoc(localizationKey);
     device.deviceId = deviceId;
     device.isKeyConfigurable = (deviceId == JOYSTICK_PORT_JOYSTICK);
     

@@ -473,10 +473,10 @@
 
 - (void)performColdRebootClicked:(id)sender
 {
-    NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"SureYouWantToRestartTheMachine", nil)
-                                     defaultButton:NSLocalizedString(@"No", nil)
+    NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"SureYouWantToRestartTheMachine")
+                                     defaultButton:CMLoc(@"No")
                                    alternateButton:nil
-                                       otherButton:NSLocalizedString(@"Yes", nil)
+                                       otherButton:CMLoc(@"Yes")
                          informativeTextWithFormat:@""];
     
     [alert beginSheetModalForWindow:self.window
@@ -665,7 +665,10 @@ viewForTableColumn:(NSTableColumn *)tableColumn
                 srCell.recorderControl = [[[SRRecorderControl alloc] initWithFrame:srCell.frame] autorelease];
                 
                 srCell.recorderControl.delegate = self;
-                srCell.recorderControl.allowedFlags = 1966080;
+                srCell.recorderControl.allowedFlags = SRLeftShiftMask | SRRightShiftMask
+                    | SRLeftAlternateMask | SRRightAlternateMask
+                    | SRLeftControlKeyMask | SRRightControlKeyMask;
+                
                 srCell.recorderControl.useSingleKeyMode = YES;
                 srCell.recorderControl.tableCellMode = YES;
                 

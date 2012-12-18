@@ -53,7 +53,7 @@
         children = [[NSMutableArray alloc] init];
         
         if (localizationKey)
-            displayName = [NSLocalizedString(localizationKey, nil) retain];
+            displayName = [CMLoc(localizationKey) retain];
     }
     
     return self;

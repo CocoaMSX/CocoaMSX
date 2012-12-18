@@ -390,10 +390,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)updateFps:(CGFloat)fps
 {
     if (emulatorGetState() == EMU_PAUSED)
-        self.fpsDisplay = NSLocalizedString(@"MsxIsPaused", nil);
+        self.fpsDisplay = CMLoc(@"MsxIsPaused");
     else
-        self.fpsDisplay = [NSString stringWithFormat:NSLocalizedString(@"Fps_f", nil),
-                           fps];
+        self.fpsDisplay = [NSString stringWithFormat:CMLoc(@"Fps_f"), fps];
 }
 
 - (void)setFdcTimingDisabled:(BOOL)fdcTimingDisabled
@@ -862,7 +861,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:NSLocalizedString(@"InsertCartridge", nil)
+    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"InsertCartridge")
                                       allowedFileTypes:openRomFileTypes
                                        openInDirectory:[CMPreferences preferences].cartridgeDirectory];
     
@@ -938,13 +937,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         if (displayName)
         {
-            menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"EjectMedia_f", nil),
+            menuItem.title = [NSString stringWithFormat:CMLoc(@"EjectMedia_f"),
                               displayName];
             return YES;
         }
     }
     
-    menuItem.title = NSLocalizedString(@"EjectCartridge", nil);
+    menuItem.title = CMLoc(@"EjectCartridge");
     return NO;
 }
 
@@ -953,7 +952,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:NSLocalizedString(@"InsertDisk", nil)
+    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
                                       allowedFileTypes:openDiskFileTypes
                                        openInDirectory:[CMPreferences preferences].diskDirectory
                                   canChooseDirectories:YES];
@@ -1000,13 +999,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         if (displayName)
         {
-            menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"EjectMedia_f", nil),
+            menuItem.title = [NSString stringWithFormat:CMLoc(@"EjectMedia_f"),
                               displayName];
             return YES;
         }
     }
     
-    menuItem.title = NSLocalizedString(@"EjectDisk", nil);
+    menuItem.title = CMLoc(@"EjectDisk");
     return NO;
 }
 
@@ -1018,14 +1017,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         if (displayName)
         {
-            menuItem.title = [NSString stringWithFormat:NSLocalizedString(@"EjectMedia_f", nil),
+            menuItem.title = [NSString stringWithFormat:CMLoc(@"EjectMedia_f"),
                               displayName];
             
             return YES;
         }
     }
     
-    menuItem.title = NSLocalizedString(@"EjectCassette", nil);
+    menuItem.title = CMLoc(@"EjectCassette");
     return NO;
 }
 
@@ -1119,7 +1118,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:NSLocalizedString(@"InsertCassette", nil)
+    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"InsertCassette")
                                       allowedFileTypes:openCassetteFileTypes
                                        openInDirectory:[CMPreferences preferences].cassetteDirectory];
     
@@ -1223,7 +1222,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (emulatorState != EMU_RUNNING && emulatorState != EMU_PAUSED)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:NSLocalizedString(@"LoadSnapshot", nil)
+    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"LoadSnapshot")
                                       allowedFileTypes:stateFileTypes
                                        openInDirectory:[CMPreferences preferences].snapshotDirectory];
     
@@ -1248,7 +1247,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    NSString *file = [self showSaveFileDialogWithTitle:NSLocalizedString(@"SaveSnapshot", nil)
+    NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"SaveSnapshot")
                                       allowedFileTypes:stateFileTypes
                                        openInDirectory:[CMPreferences preferences].snapshotDirectory];
     
@@ -1269,7 +1268,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    NSString *file = [self showSaveFileDialogWithTitle:NSLocalizedString(@"SaveScreenshot", nil)
+    NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"SaveScreenshot")
                                       allowedFileTypes:[NSArray arrayWithObjects:@"png", nil]];
     
     if (file)
@@ -1298,7 +1297,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         emulatorSuspend();
         
-        NSString *file = [self showSaveFileDialogWithTitle:NSLocalizedString(@"CaptureAudio", nil)
+        NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"CaptureAudio")
                                           allowedFileTypes:captureAudioTypes
                                            openInDirectory:[CMPreferences preferences].audioCaptureDirectory];
         
@@ -1321,7 +1320,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (!boardCaptureIsRecording())
     {
-        NSString *file = [self showSaveFileDialogWithTitle:NSLocalizedString(@"CaptureGameplay", nil)
+        NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"CaptureGameplay")
                                           allowedFileTypes:captureGameplayTypes
                                            openInDirectory:[CMPreferences preferences].videoCaptureDirectory];
         
@@ -1542,15 +1541,15 @@ void archTrap(UInt8 value)
         NSInteger machineState = emulatorGetState();
         
         if (machineState == EMU_RUNNING)
-            menuItem.title = NSLocalizedString(@"MsxIsRunning", nil);
+            menuItem.title = CMLoc(@"MsxIsRunning");
         else if (machineState == EMU_PAUSED)
-            menuItem.title = NSLocalizedString(@"MsxIsPaused", nil);
+            menuItem.title = CMLoc(@"MsxIsPaused");
         else if (machineState == EMU_SUSPENDED)
-            menuItem.title = NSLocalizedString(@"MsxIsSuspended", nil);
+            menuItem.title = CMLoc(@"MsxIsSuspended");
         else if (machineState == EMU_STOPPED)
-            menuItem.title = NSLocalizedString(@"MsxIsOff", nil);
+            menuItem.title = CMLoc(@"MsxIsOff");
         else
-            menuItem.title = NSLocalizedString(@"MsxIsUnknown", nil);
+            menuItem.title = CMLoc(@"MsxIsUnknown");
         
         return NO; // always disabled
     }
@@ -1562,18 +1561,18 @@ void archTrap(UInt8 value)
     else if ([item action] == @selector(shutDownMsx:))
     {
         if ([self isRunning])
-            menuItem.title = NSLocalizedString(@"ShutDown", nil);
+            menuItem.title = CMLoc(@"ShutDown");
         else
-            menuItem.title = NSLocalizedString(@"StartUp", nil);
+            menuItem.title = CMLoc(@"StartUp");
     }
     else if ([item action] == @selector(pauseMsx:))
     {
         NSInteger machineState = emulatorGetState();
         
         if (machineState == EMU_PAUSED)
-            menuItem.title = NSLocalizedString(@"Resume", nil);
+            menuItem.title = CMLoc(@"Resume");
         else
-            menuItem.title = NSLocalizedString(@"Pause", nil);
+            menuItem.title = CMLoc(@"Pause");
         
         return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
     }
@@ -1585,18 +1584,18 @@ void archTrap(UInt8 value)
     else if ([item action] == @selector(recordAudio:))
     {
         if (!mixerIsLogging(mixer))
-            menuItem.title = NSLocalizedString(@"RecordAudioEll", nil);
+            menuItem.title = CMLoc(@"RecordAudioEll");
         else
-            menuItem.title = NSLocalizedString(@"StopRecording", nil);
+            menuItem.title = CMLoc(@"StopRecording");
         
         return [self isRunning];
     }
     else if ([item action] == @selector(recordGameplay:))
     {
         if (!boardCaptureIsRecording())
-            menuItem.title = NSLocalizedString(@"RecordGameplayEll", nil);
+            menuItem.title = CMLoc(@"RecordGameplayEll");
         else
-            menuItem.title = NSLocalizedString(@"StopRecording", nil);
+            menuItem.title = CMLoc(@"StopRecording");
         
         return [self isRunning];
     }

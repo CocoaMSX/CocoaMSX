@@ -735,7 +735,10 @@
         
         if (useSingleKeyMode) {
             BOOL validCombo = NO;
-            if (theEvent.keyCode != kSRKeysFunction) {
+            if (theEvent.keyCode != kSRKeysFunction
+                && theEvent.keyCode != kSRKeysLeftCommand
+                && theEvent.keyCode != kSRKeysRightCommand)
+            {
                 keyCombo.flags = ShortcutRecorderEmptyFlags;
                 keyCombo.code = theEvent.keyCode;
                 validCombo = YES;

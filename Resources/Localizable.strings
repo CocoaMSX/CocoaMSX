@@ -153,3 +153,4 @@ KeyCategoryJoystickDirectional = "Directions";
 KeyCategoryJoystickButtons = "Buttons";
 KeyCategoryCharacters = "Alphanumeric Keys";
 KeyCategorySymbols = "Symbol Keys";
+VersionAbout = "Version %@";

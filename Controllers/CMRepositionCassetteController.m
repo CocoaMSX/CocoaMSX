@@ -42,10 +42,10 @@
 - (id)initWithContent:(const TapeContent*)tapeContent
 {
     NSArray *types = [NSArray arrayWithObjects:
-                      NSLocalizedString(@"CasTypeAscii", nil),
-                      NSLocalizedString(@"CasTypeBinary", nil),
-                      NSLocalizedString(@"CasTypeBasic", nil),
-                      NSLocalizedString(@"CasTypeOther", nil), nil];
+                      CMLoc(@"CasTypeAscii"),
+                      CMLoc(@"CasTypeBinary"),
+                      CMLoc(@"CasTypeBasic"),
+                      CMLoc(@"CasTypeOther"), nil];
     
     if ((self = [super init]))
     {
@@ -53,7 +53,7 @@
         filename = [[NSString alloc] initWithCString:tapeContent->fileName
                                             encoding:NSASCIIStringEncoding];
         posTime = tapeContent->pos;
-        posTimeReadable = [[NSString stringWithFormat:NSLocalizedString(@"CasTime_f", nil),
+        posTimeReadable = [[NSString stringWithFormat:CMLoc(@"CasTime_f"),
                     posTime / 3600,
                     (posTime / 60) % 60,
                     posTime % 60] retain];

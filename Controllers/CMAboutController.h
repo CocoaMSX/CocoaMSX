@@ -28,6 +28,7 @@
 
 @interface CMAboutController : NSWindowController<NSWindowDelegate>
 {
+    IBOutlet NSTextField *versionNumber;
 }
 
 - (IBAction)showLicense:(id)sender;

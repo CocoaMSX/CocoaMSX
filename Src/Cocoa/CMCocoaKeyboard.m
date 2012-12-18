@@ -37,7 +37,6 @@
 
 //#define DEBUG_KEY_STATE
 #define CMIntAsNumber(x) [NSNumber numberWithInteger:x]
-#define CMLoc(x)         NSLocalizedString(x, nil)
 
 static NSDictionary *virtualCodeNames = nil;
 
@@ -474,23 +473,23 @@ static NSDictionary *virtualCodeNames = nil;
     switch (category)
     {
         case CMKeyCategoryModifier:
-            return NSLocalizedString(@"KeyCategoryModifier", nil);
+            return CMLoc(@"KeyCategoryModifier");
         case CMKeyCategoryDirectional:
-            return NSLocalizedString(@"KeyCategoryDirectional", nil);
+            return CMLoc(@"KeyCategoryDirectional");
         case CMKeyCategoryFunction:
-            return NSLocalizedString(@"KeyCategoryFunction", nil);
+            return CMLoc(@"KeyCategoryFunction");
         case CMKeyCategoryCharacters:
-            return NSLocalizedString(@"KeyCategoryCharacters", nil);
+            return CMLoc(@"KeyCategoryCharacters");
         case CMKeyCategorySymbols:
-            return NSLocalizedString(@"KeyCategorySymbols", nil);
+            return CMLoc(@"KeyCategorySymbols");
         case CMKeyCategoryNumericPad:
-            return NSLocalizedString(@"KeyCategoryNumericPad", nil);
+            return CMLoc(@"KeyCategoryNumericPad");
         case CMKeyCategorySpecial:
-            return NSLocalizedString(@"KeyCategorySpecial", nil);
+            return CMLoc(@"KeyCategorySpecial");
         case CMKeyCategoryJoyButtons:
-            return NSLocalizedString(@"KeyCategoryJoystickButtons", nil);
+            return CMLoc(@"KeyCategoryJoystickButtons");
         case CMKeyCategoryJoyDirections:
-            return NSLocalizedString(@"KeyCategoryJoystickDirectional", nil);
+            return CMLoc(@"KeyCategoryJoystickDirectional");
     }
     
     return nil;
