@@ -339,6 +339,12 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
             sprintf(expandedPath, "%s/%s", machinesDir, slotName + 9);
             strcpy(slotName, expandedPath);
         }
+        
+#ifdef __APPLE__
+        // On OS X, replace all backslashes with slashes
+        for (char *ch = slotName; *ch; ch++)
+            if (*ch == '\\') *ch = '/';
+#endif
     }
 
     machine->slotInfoCount = i;

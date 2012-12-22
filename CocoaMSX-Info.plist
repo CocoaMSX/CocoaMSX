@@ -13,9 +13,6 @@
 				<string>ri</string>
 				<string>mx1</string>
 				<string>mx2</string>
-				<string>col</string>
-				<string>sg</string>
-				<string>sc</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>CartridgeDocument</string>
@@ -70,6 +67,8 @@
 			<array>
 				<string>sta</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>SnapshotDocument</string>
 			<key>CFBundleTypeName</key>
 			<string>CocoaMSX Snapshot</string>
 			<key>CFBundleTypeRole</key>

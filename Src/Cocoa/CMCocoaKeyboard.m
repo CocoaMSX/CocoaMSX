@@ -185,8 +185,6 @@ static NSDictionary *virtualCodeNames = nil;
     if ((self = [super init]))
     {
         [self resetState];
-        
-        isCommandDown = NO;
     }
     
     return self;
@@ -271,41 +269,21 @@ static NSDictionary *virtualCodeNames = nil;
         }
     }
     
-    if (((event.modifierFlags & NSCommandKeyMask) == NSCommandKeyMask) || isCommandDown)
+    if (event.keyCode == CMKeyLeftCommand || event.keyCode == CMKeyRightCommand)
     {
         // If Command is toggled while another key is down, releasing the
         // other key no longer generates a keyUp event, and the virtual key
-        // 'sticks'. Release all other virtual keys if Command is pressed.
+        // 'sticks'. Release all virtual keys if Command is pressed.
         
-        for (NSUInteger virtualKey = 0; virtualKey < EC_KEYCOUNT; virtualKey++)
-        {
-            if (inputEventGetState(virtualKey))
-            {
-                CMInputMethod *input = [theEmulator.keyboardLayout inputMethodForVirtualCode:virtualKey];
-                if ([input isKindOfClass:[CMKeyboardInput class]])
-                {
-                    CMKeyboardInput *keyInput = (CMKeyboardInput *)input;
-                    if (keyInput.keyCode == CMKeyRightCommand)
-                    {
-                        // Release the virtual key
-                        inputEventUnset(virtualKey);
-                    }
-                }
-            }
-        }
+        [self releaseAllKeys];
     }
-    
-    isCommandDown = ((event.modifierFlags & NSCommandKeyMask) == NSCommandKeyMask);
-    
 }
 
 #pragma mark - Public methods
 
 - (void)releaseAllKeys
 {
-    for (int virtualKey = 0; virtualKey < EC_KEYCOUNT; virtualKey++)
-        if (inputEventGetState(virtualKey))
-            inputEventUnset(virtualKey);
+    inputEventReset();
 }
 
 - (BOOL)areAnyKeysDown
@@ -319,7 +297,7 @@ static NSDictionary *virtualCodeNames = nil;
 
 - (void)resetState
 {
-    inputEventReset();
+    [self releaseAllKeys];
 }
 
 - (void)setEmulatorHasFocus:(BOOL)focus

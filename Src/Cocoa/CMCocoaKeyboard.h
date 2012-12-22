@@ -34,7 +34,6 @@
 
 @interface CMCocoaKeyboard : NSObject
 {
-    BOOL isCommandDown;
 }
 
 - (void)setEmulatorHasFocus:(BOOL)focus;

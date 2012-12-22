@@ -309,6 +309,7 @@
 		FEA01BF31656F1C2002794C6 /* CMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BEE1656F1C2002794C6 /* CMEvent.m */; };
 		FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF01656F1C2002794C6 /* CMSemaphore.m */; };
 		FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF21656F1C2002794C6 /* CMThread.m */; };
+		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA2BBB816367C6E0014B233 /* SRCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBA916367C6E0014B233 /* SRCommon.m */; };
 		FEA2BBB916367C6E0014B233 /* SRKeyCodeTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAB16367C6E0014B233 /* SRKeyCodeTransformer.m */; };
 		FEA2BBBA16367C6E0014B233 /* SRRecorderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAD16367C6E0014B233 /* SRRecorderCell.m */; };
@@ -960,6 +961,7 @@
 		FEA01BF11656F1C2002794C6 /* CMThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMThread.h; sourceTree = "<group>"; };
 		FEA01BF21656F1C2002794C6 /* CMThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMThread.m; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMCocoaTimer.h; sourceTree = "<group>"; };
+		FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SnapshotDocument.icns; sourceTree = "<group>"; };
 		FEA2BBA616367C6E0014B233 /* ShortcutRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShortcutRecorder.h; sourceTree = "<group>"; };
 		FEA2BBA816367C6E0014B233 /* SRCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRCommon.h; sourceTree = "<group>"; };
 		FEA2BBA916367C6E0014B233 /* SRCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRCommon.m; sourceTree = "<group>"; };
@@ -1125,6 +1127,7 @@
 		6BCA755D164D7D09002CA211 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */,
 				FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */,
 				FEA4548C1679B65300AAECB7 /* DiskDocument.icns */,
 				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
@@ -2113,6 +2116,7 @@
 				FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */,
 				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
 				FE2B026F167F121900159D33 /* ShortcutRecorder.strings in Resources */,
+				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

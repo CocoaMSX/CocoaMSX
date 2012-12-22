@@ -622,8 +622,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     char **machineNames = machineGetAvailable(1);
     while (*machineNames != NULL)
     {
-        [machineConfigurations addObject:[NSString stringWithCString:*machineNames
-                                                            encoding:NSUTF8StringEncoding]];
+        NSString *machineName =  [NSString stringWithCString:*machineNames
+                                                    encoding:NSUTF8StringEncoding];
+        [machineConfigurations addObject:machineName];
         
         machineNames++;
     }
@@ -1473,8 +1474,22 @@ void archTrap(UInt8 value)
 #endif
     
     emulatorSuspend();
-    insertCartridge(self.properties, slot, romName, NULL, romType, 0);
+    int success = insertCartridge(self.properties, slot, romName, NULL, romType, 0);
     emulatorResume();
+    
+    if (!success)
+    {
+        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"CouldNotLoadCartridge")
+                                         defaultButton:CMLoc(@"OK")
+                                       alternateButton:nil
+                                           otherButton:nil
+                             informativeTextWithFormat:@""];
+        
+        [alert beginSheetModalForWindow:self.window
+                          modalDelegate:self
+                         didEndSelector:nil
+                            contextInfo:nil];
+    }
 }
 
 #pragma mark - CassetteRepositionDelegate

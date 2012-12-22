@@ -154,3 +154,6 @@ KeyCategoryJoystickButtons = "Buttons";
 KeyCategoryCharacters = "Alphanumeric Keys";
 KeyCategorySymbols = "Symbol Keys";
 VersionAbout = "Version %@";
+Error = "Error";
+CouldNotLoadCartridge = "Could not load cartridge";
+OK = "OK";
