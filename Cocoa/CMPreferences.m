@@ -26,28 +26,30 @@
 
 #import "CMNSString+FileManagement.h"
 
-NSString * const CMScreenWidthPrefKey = @"screenWidth";
-NSString * const CMScreenHeightPrefKey = @"screenHeight";
+static NSString * const CMScreenWidthPrefKey = @"screenWidth";
+static NSString * const CMScreenHeightPrefKey = @"screenHeight";
 
-NSString * const CMKeyboardLayoutPrefKey = @"keyboardLayout";
-NSString * const CMJoystickOneLayoutPrefKey = @"joystickOneLayout";
-NSString * const CMJoystickTwoLayoutPrefKey = @"joystickTwoLayout";
+static NSString * const CMKeyboardLayoutPrefKey = @"msxKeyboardLayout";
+static NSString * const CMJoystickOneLayoutPrefKey = @"msxJoystickOneLayout";
+static NSString * const CMJoystickTwoLayoutPrefKey = @"msxJoystickTwoLayout";
 
-NSString * const CMAudioCaptureDirectoryKey = @"audioCaptureDirectory";
-NSString * const CMVideoCaptureDirectoryKey = @"videoCaptureDirectory";
-NSString * const CMQuickSaveDirectoryKey = @"quickSaveDirectory";
-NSString * const CMSramDirectoryKey = @"sramDirectory";
-NSString * const CMCassetteDataDirectoryKey = @"cassetteDataDirectory";
-NSString * const CMDatabaseDirectoryKey = @"databaseDirectory";
-NSString * const CMMachineDirectoryKey = @"machineDirectory";
-NSString * const CMSnapshotDirectoryKey = @"snapshotDirectory";
-NSString * const CMMachineConfigurationKey = @"machineConfiguration";
-NSString * const CMVdpSyncModeKey = @"vdpSyncMode";
-NSString * const CMEmulationSpeedPercentageKey = @"emulationSpeedPercentage";
+static NSString * const CMAudioCaptureDirectoryKey = @"audioCaptureDirectory";
+static NSString * const CMVideoCaptureDirectoryKey = @"videoCaptureDirectory";
+static NSString * const CMQuickSaveDirectoryKey = @"quickSaveDirectory";
+static NSString * const CMSramDirectoryKey = @"sramDirectory";
+static NSString * const CMCassetteDataDirectoryKey = @"cassetteDataDirectory";
+static NSString * const CMDatabaseDirectoryKey = @"databaseDirectory";
+static NSString * const CMMachineDirectoryKey = @"machineDirectory";
+static NSString * const CMSnapshotDirectoryKey = @"snapshotDirectory";
+static NSString * const CMMachineConfigurationKey = @"machineConfiguration";
+static NSString * const CMVdpSyncModeKey = @"vdpSyncMode";
+static NSString * const CMEmulationSpeedPercentageKey = @"emulationSpeedPercentage";
 
-NSString * const CMCassetteDirectoryKey = @"cassetteDirectory";
-NSString * const CMCartridgeDirectoryKey = @"cartridgeDirectory";
-NSString * const CMDiskDirectoryKey = @"diskDirectory";
+static NSString * const CMCassetteDirectoryKey = @"cassetteDirectory";
+static NSString * const CMCartridgeDirectoryKey = @"cartridgeDirectory";
+static NSString * const CMDiskDirectoryKey = @"diskDirectory";
+
+static NSString * const CMSnapshotIconStyle = @"snapshotIconStyle";
 
 @interface CMPreferences ()
 
@@ -408,6 +410,17 @@ static CMPreferences *preferences = nil;
 - (NSString *)diskDirectory
 {
     return [[NSUserDefaults standardUserDefaults] stringForKey:CMDiskDirectoryKey];
+}
+
+- (NSInteger)snapshotIconStyle
+{
+    return [[NSUserDefaults standardUserDefaults] integerForKey:CMSnapshotIconStyle];
+}
+
+- (void)setSnapshotIconStyle:(NSInteger)iconStyle
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:iconStyle
+                                              forKey:CMSnapshotIconStyle];
 }
 
 @end

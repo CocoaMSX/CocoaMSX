@@ -437,7 +437,7 @@ void archUpdateWindow()
     
     // Create a bitmap representation
     
-    NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:(unsigned char **)&rawBitmapBuffer
+    NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
                                                                      pixelsWide:frameBuffer->maxWidth * zoom
                                                                      pixelsHigh:height
                                                                   bitsPerSample:8
@@ -449,7 +449,11 @@ void archUpdateWindow()
                                                                     bytesPerRow:pitch
                                                                    bitsPerPixel:0] autorelease];
     
-    NSImage *image = [[NSImage alloc] init];
+    // Copy contents of bitmap to NSBitmapImageRep
+    
+    memcpy([rep bitmapData], rawBitmapBuffer, pitch * height);
+    
+    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
     [image addRepresentation:rep];
     
     free(rawBitmapBuffer);

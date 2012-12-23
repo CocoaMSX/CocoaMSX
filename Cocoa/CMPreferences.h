@@ -26,6 +26,10 @@
 
 @interface CMPreferences : NSObject
 
+#define CMSnapshotIconStyleNone      0
+#define CMSnapshotIconStyleScreen    1
+#define CMSnapshotIconStyleFilmstrip 2
+
 + (CMPreferences *)preferences;
 
 - (NSInteger)screenWidth;
@@ -86,5 +90,8 @@
 - (NSString *)cartridgeDirectory;
 - (void)setDiskDirectory:(NSString *)directory;
 - (NSString *)diskDirectory;
+
+- (void)setSnapshotIconStyle:(NSInteger)iconStyle;
+- (NSInteger)snapshotIconStyle;
 
 @end

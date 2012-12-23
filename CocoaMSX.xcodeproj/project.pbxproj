@@ -331,6 +331,7 @@
 		FECF680E16642A6700C9C4F4 /* SRRemoveShortcutRollover.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680816642A6700C9C4F4 /* SRRemoveShortcutRollover.png */; };
 		FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */; };
 		FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */; };
+		FED154BE168714910043C7E5 /* filmstrip.png in Resources */ = {isa = PBXBuildFile; fileRef = FED154BD168714910043C7E5 /* filmstrip.png */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
 		FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEE801571674ACD000695F38 /* CartridgeDocument.icns */; };
 		FEF40ED5160DB83B009170A9 /* CMCocoaBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */; };
@@ -995,6 +996,7 @@
 		FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcutRollover@2x.png"; sourceTree = "<group>"; };
 		FECF681116642A7E00C9C4F4 /* SRRecorderTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderTableCellView.h; sourceTree = "<group>"; };
 		FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderTableCellView.m; sourceTree = "<group>"; };
+		FED154BD168714910043C7E5 /* filmstrip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filmstrip.png; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
 		FEE801571674ACD000695F38 /* CartridgeDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CartridgeDocument.icns; sourceTree = "<group>"; };
 		FEF40EC5160DB83B009170A9 /* CMCocoaBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaBuffer.h; sourceTree = "<group>"; };
@@ -1836,6 +1838,7 @@
 		FE1C1359167DE41800CE2B6B /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				FED154BD168714910043C7E5 /* filmstrip.png */,
 				FE1C135A167DE41800CE2B6B /* AppIcon.png */,
 				FE1C135B167DE41800CE2B6B /* AppIcon@2x.png */,
 			);
@@ -2117,6 +2120,7 @@
 				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
 				FE2B026F167F121900159D33 /* ShortcutRecorder.strings in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
+				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

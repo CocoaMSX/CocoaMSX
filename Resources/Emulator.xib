@@ -200,6 +200,7 @@
 											</object>
 											<object class="NSMenuItem" id="635997685">
 												<reference key="NSMenu" ref="862489159"/>
+												<bool key="NSIsHidden">YES</bool>
 												<string key="NSTitle">Insert Special...</string>
 												<string key="NSKeyEquiv"/>
 												<int key="NSMnemonicLoc">2147483647</int>
@@ -266,6 +267,7 @@
 											</object>
 											<object class="NSMenuItem" id="502973258">
 												<reference key="NSMenu" ref="223383797"/>
+												<bool key="NSIsHidden">YES</bool>
 												<string key="NSTitle">Insert Special...</string>
 												<string key="NSKeyEquiv"/>
 												<int key="NSMnemonicLoc">2147483647</int>

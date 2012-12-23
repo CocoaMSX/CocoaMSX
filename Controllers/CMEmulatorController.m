@@ -1256,7 +1256,57 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         boardSaveState([file UTF8String], 1);
         
-        [CMPreferences preferences].snapshotDirectory = self.lastOpenSavePanelDirectory;
+        CMPreferences *preferences = [CMPreferences preferences];
+        preferences.snapshotDirectory = self.lastOpenSavePanelDirectory;
+        
+        if (preferences.snapshotIconStyle != CMSnapshotIconStyleNone)
+        {
+            NSImage *screenshot = [screen captureScreen:YES];
+            
+            if (screenshot)
+            {
+                NSImage *icon = nil;
+                
+                if (preferences.snapshotIconStyle == CMSnapshotIconStyleFilmstrip)
+                {
+                    CGFloat iconDim = 512;
+                    CGFloat insetSize = 360;
+                    
+                    icon = [NSImage imageNamed:@"filmstrip"];
+                    [icon setSize:NSMakeSize(iconDim, iconDim)];
+                    
+                    [icon lockFocus];
+                    
+                    [screenshot drawAtPoint:NSMakePoint(76, 73)
+                                   fromRect:NSMakeRect((screenshot.size.width - insetSize) / 2.0,
+                                                       (screenshot.size.height - insetSize) / 2.0,
+                                                       insetSize, insetSize)
+                                  operation:NSCompositeSourceOver
+                                   fraction:1.0];
+                    
+                    [icon unlockFocus];
+                }
+                else if (preferences.snapshotIconStyle == CMSnapshotIconStyleScreen)
+                {
+                    CGFloat iconDim = 420;
+                    
+                    icon = [[[NSImage alloc] initWithSize:NSMakeSize(iconDim, iconDim)] autorelease];
+                    
+                    [icon lockFocus];
+                    
+                    [screenshot drawAtPoint:NSZeroPoint
+                                   fromRect:NSMakeRect((screenshot.size.width - iconDim) / 2.0,
+                                                       (screenshot.size.height - iconDim) / 2.0,
+                                                       iconDim, iconDim)
+                                  operation:NSCompositeSourceOver
+                                   fraction:1.0];
+                    
+                    [icon unlockFocus];
+                }
+                
+                [[NSWorkspace sharedWorkspace] setIcon:icon forFile:file options:NSExcludeQuickDrawElementsIconCreationOption];
+            }
+        }
     }
     
     emulatorResume();
@@ -1474,22 +1524,8 @@ void archTrap(UInt8 value)
 #endif
     
     emulatorSuspend();
-    int success = insertCartridge(self.properties, slot, romName, NULL, romType, 0);
+    insertCartridge(self.properties, slot, romName, NULL, romType, 0);
     emulatorResume();
-    
-    if (!success)
-    {
-        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"CouldNotLoadCartridge")
-                                         defaultButton:CMLoc(@"OK")
-                                       alternateButton:nil
-                                           otherButton:nil
-                             informativeTextWithFormat:@""];
-        
-        [alert beginSheetModalForWindow:self.window
-                          modalDelegate:self
-                         didEndSelector:nil
-                            contextInfo:nil];
-    }
 }
 
 #pragma mark - CassetteRepositionDelegate

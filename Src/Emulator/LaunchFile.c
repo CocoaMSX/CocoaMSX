@@ -155,23 +155,24 @@ int insertCartridge(Properties* properties, int drive, const char* fname, const 
         int size;
         char* buf = (char*)romLoad(filename, isZip ? romName : NULL, &size);
         char prettyRomName[256];
-
-        if (buf != NULL) {
-            MediaType* mediaType  = mediaDbGuessRom(buf, size);
+        
+        if (!buf)
+            return 0;
+        
+        MediaType* mediaType  = mediaDbGuessRom(buf, size);
 //            RomType    chkRomType = mediaDbGetRomType(mediaType);
-            strcpy(prettyRomName, mediaDbGetPrettyString(mediaType));
-            free(buf);
-            
-            if (prettyRomName[0] != 0) {
-                setExtendedRomName(drive, prettyRomName);
-            }
-            else {
-                setExtendedRomName(drive, stripPathExt(isZip ? romName : filename));
-            }
+        strcpy(prettyRomName, mediaDbGetPrettyString(mediaType));
+        free(buf);
+        
+        if (prettyRomName[0] != 0) {
+            setExtendedRomName(drive, prettyRomName);
+        }
+        else {
+            setExtendedRomName(drive, stripPathExt(isZip ? romName : filename));
+        }
 
-            if (romType == ROM_UNKNOWN) {
+        if (romType == ROM_UNKNOWN) {
 //                romType = chkRomType;
-            }
         }
     }
 
