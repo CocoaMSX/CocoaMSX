@@ -494,28 +494,30 @@ int machineIsValid(const char* machineName, int checkRoms)
     if (machine == NULL) {
         return 0;
     }
-
-    if (!checkRoms) {
-        return 1;
-    }
-
-    for (i = 0; i < machine->slotInfoCount; i++) {
-        if (strlen(machine->slotInfo[i].name) || 
-            strlen(machine->slotInfo[i].inZipName))
-        {        
-            FILE* file = fopen(machine->slotInfo[i].name, "r");
-            if (file == NULL) {
-                if (success) {
-//                    printf("\n%s: Cant find rom:\n", machineName);
+    
+    if (checkRoms) {
+#ifdef MSX_ONLY
+        if ((machine->board.type & BOARD_MASK) != BOARD_MSX)
+            success = 0;
+#endif
+        for (i = 0; i < machine->slotInfoCount; i++) {
+            if (strlen(machine->slotInfo[i].name) ||
+                strlen(machine->slotInfo[i].inZipName))
+            {        
+                FILE* file = fopen(machine->slotInfo[i].name, "r");
+                if (file == NULL) {
+                    if (success) {
+    //                    printf("\n%s: Cant find rom:\n", machineName);
+                    }
+    //                printf("     %s\n", machine->slotInfo[i].name);
+                    success = 0;
+                    continue;
                 }
-//                printf("     %s\n", machine->slotInfo[i].name);
-                success = 0;
-                continue;
+                fclose(file);
             }
-            fclose(file);
         }
     }
-
+    
     free(machine);
 
     return success;

@@ -157,3 +157,15 @@ VersionAbout = "Version %@";
 Error = "Error";
 CouldNotLoadCartridge = "Could not load cartridge";
 OK = "OK";
+
+MsxKeyLayoutArabic = "Arabic";
+MsxKeyLayoutBrazilian = "Brazilian";
+MsxKeyLayoutEstonian = "Estonian";
+MsxKeyLayoutEuropean = "European";
+MsxKeyLayoutFrench = "French";
+MsxKeyLayoutGerman = "German";
+MsxKeyLayoutJapanese = "Japanese";
+MsxKeyLayoutKorean = "Korean";
+MsxKeyLayoutRussian = "Russian";
+MsxKeyLayoutSpanish = "Spanish";
+MsxKeyLayoutSwedish = "Swedish";

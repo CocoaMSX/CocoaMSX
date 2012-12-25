@@ -32,15 +32,51 @@
 
 #include "InputEvent.h"
 
+#pragma mark - CMMsxKeyInfo
+
+#define CMIntAsNumber(x) [NSNumber numberWithInteger:x]
+#define CMMakeMsxKeyInfo(d, s) \
+    [CMMsxKeyInfo keyInfoWithDefaultStateLabel:d shiftedStateLabel:s]
+
+@interface CMMsxKeyInfo : NSObject
+
+@property (nonatomic, copy) NSString *defaultStateLabel;
+@property (nonatomic, copy) NSString *shiftedStateLabel;
+
+@end
+
+@implementation CMMsxKeyInfo
+
++ (CMMsxKeyInfo *)keyInfoWithDefaultStateLabel:(NSString *)defaultStateLabel
+                             shiftedStateLabel:(NSString *)shiftedStateLabel
+{
+    CMMsxKeyInfo *info = [[CMMsxKeyInfo alloc] init];
+    
+    info.defaultStateLabel = defaultStateLabel;
+    info.shiftedStateLabel = shiftedStateLabel;
+    
+    return [info autorelease];
+}
+
+- (void)dealloc
+{
+    self.defaultStateLabel = nil;
+    self.shiftedStateLabel = nil;
+    
+    [super dealloc];
+}
+
+@end
+
 // FIXME: this class needs to poll, and not just modify the virtual matrix
 //        whenever a key is pressed
 
 //#define DEBUG_KEY_STATE
-#define CMIntAsNumber(x) [NSNumber numberWithInteger:x]
 
-static NSDictionary *virtualCodeNames = nil;
+#pragma mark - CMCocoaKeyboard
 
-#pragma mark - CocoaKeyboard
+static NSDictionary *staticLayout = nil;
+static NSMutableDictionary *typewriterLayouts = nil;
 
 @interface CMCocoaKeyboard ()
 
@@ -54,129 +90,495 @@ static NSDictionary *virtualCodeNames = nil;
 
 + (void)initialize
 {
-    virtualCodeNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         
-                         // Modifiers
-                         CMLoc(@"KeyLeftShift"),  CMIntAsNumber(EC_LSHIFT),
-                         CMLoc(@"KeyRightShift"), CMIntAsNumber(EC_RSHIFT),
-                         CMLoc(@"KeyCtrl"),       CMIntAsNumber(EC_CTRL),
-                         CMLoc(@"KeyGraph"),      CMIntAsNumber(EC_GRAPH),
-                         CMLoc(@"KeyCode"),       CMIntAsNumber(EC_CODE),
-                         CMLoc(@"KeyTorike"),     CMIntAsNumber(EC_TORIKE),
-                         CMLoc(@"KeyJikkou"),     CMIntAsNumber(EC_JIKKOU),
-                         CMLoc(@"KeyCapsLock"),   CMIntAsNumber(EC_CAPS),
-                         
-                         // Directional
-                         CMLoc(@"KeyCursorLeft"),  CMIntAsNumber(EC_LEFT),
-                         CMLoc(@"KeyCursorUp"),    CMIntAsNumber(EC_UP),
-                         CMLoc(@"KeyCursorRight"), CMIntAsNumber(EC_RIGHT),
-                         CMLoc(@"KeyCursorDown"),  CMIntAsNumber(EC_DOWN),
-                         
-                         // Function
-                         @"F1", CMIntAsNumber(EC_F1),
-                         @"F2", CMIntAsNumber(EC_F2),
-                         @"F3", CMIntAsNumber(EC_F3),
-                         @"F4", CMIntAsNumber(EC_F4),
-                         @"F5", CMIntAsNumber(EC_F5),
-                         
-                         // Alpha
-                         @"A", CMIntAsNumber(EC_A),
-                         @"B", CMIntAsNumber(EC_B),
-                         @"C", CMIntAsNumber(EC_C),
-                         @"D", CMIntAsNumber(EC_D),
-                         @"E", CMIntAsNumber(EC_E),
-                         @"F", CMIntAsNumber(EC_F),
-                         @"G", CMIntAsNumber(EC_G),
-                         @"H", CMIntAsNumber(EC_H),
-                         @"I", CMIntAsNumber(EC_I),
-                         @"J", CMIntAsNumber(EC_J),
-                         @"K", CMIntAsNumber(EC_K),
-                         @"L", CMIntAsNumber(EC_L),
-                         @"M", CMIntAsNumber(EC_M),
-                         @"N", CMIntAsNumber(EC_N),
-                         @"O", CMIntAsNumber(EC_O),
-                         @"P", CMIntAsNumber(EC_P),
-                         @"Q", CMIntAsNumber(EC_Q),
-                         @"R", CMIntAsNumber(EC_R),
-                         @"S", CMIntAsNumber(EC_S),
-                         @"T", CMIntAsNumber(EC_T),
-                         @"U", CMIntAsNumber(EC_U),
-                         @"V", CMIntAsNumber(EC_V),
-                         @"W", CMIntAsNumber(EC_W),
-                         @"X", CMIntAsNumber(EC_X),
-                         @"Y", CMIntAsNumber(EC_Y),
-                         @"Z", CMIntAsNumber(EC_Z),
-                         @"0", CMIntAsNumber(EC_0),
-                         @"1", CMIntAsNumber(EC_1),
-                         @"2", CMIntAsNumber(EC_2),
-                         @"3", CMIntAsNumber(EC_3),
-                         @"4", CMIntAsNumber(EC_4),
-                         @"5", CMIntAsNumber(EC_5),
-                         @"6", CMIntAsNumber(EC_6),
-                         @"7", CMIntAsNumber(EC_7),
-                         @"8", CMIntAsNumber(EC_8),
-                         @"-", CMIntAsNumber(EC_NEG),
-                         @"\\", CMIntAsNumber(EC_BKSLASH),
-                         @"@", CMIntAsNumber(EC_AT),
-                         @"[", CMIntAsNumber(EC_LBRACK),
-                         @"]", CMIntAsNumber(EC_RBRACK),
-                         @"^", CMIntAsNumber(EC_CIRCFLX),
-                         @";", CMIntAsNumber(EC_SEMICOL),
-                         @":", CMIntAsNumber(EC_COLON),
-                         @",", CMIntAsNumber(EC_COMMA),
-                         @".", CMIntAsNumber(EC_PERIOD),
-                         @"/", CMIntAsNumber(EC_DIV),
-                         @"_", CMIntAsNumber(EC_UNDSCRE),
-                         
-                         @"9", CMIntAsNumber(EC_9),
-                         
-                         // Numpad
-                         @"*", CMIntAsNumber(EC_NUMMUL),
-                         @"+", CMIntAsNumber(EC_NUMADD),
-                         @"/", CMIntAsNumber(EC_NUMDIV),
-                         @"-", CMIntAsNumber(EC_NUMSUB),
-                         @".", CMIntAsNumber(EC_NUMPER),
-                         @",", CMIntAsNumber(EC_NUMCOM),
-                         @"0", CMIntAsNumber(EC_NUM0),
-                         @"1", CMIntAsNumber(EC_NUM1),
-                         @"2", CMIntAsNumber(EC_NUM2),
-                         @"3", CMIntAsNumber(EC_NUM3),
-                         @"4", CMIntAsNumber(EC_NUM4),
-                         @"5", CMIntAsNumber(EC_NUM5),
-                         @"6", CMIntAsNumber(EC_NUM6),
-                         @"7", CMIntAsNumber(EC_NUM7),
-                         @"8", CMIntAsNumber(EC_NUM8),
-                         @"9", CMIntAsNumber(EC_NUM9),
-                        
-                         // Special
-                         CMLoc(@"KeyEscape"),    CMIntAsNumber(EC_ESC),
-                         CMLoc(@"KeyTab"),       CMIntAsNumber(EC_TAB),
-                         CMLoc(@"KeyStop"),      CMIntAsNumber(EC_STOP),
-                         CMLoc(@"KeyCls"),       CMIntAsNumber(EC_CLS),
-                         CMLoc(@"KeySelect"),    CMIntAsNumber(EC_SELECT),
-                         CMLoc(@"KeyInsert"),    CMIntAsNumber(EC_INS),
-                         CMLoc(@"KeyDelete"),    CMIntAsNumber(EC_DEL),
-                         CMLoc(@"KeyBackspace"), CMIntAsNumber(EC_BKSPACE),
-                         CMLoc(@"KeyReturn"),    CMIntAsNumber(EC_RETURN),
-                         CMLoc(@"KeySpace"),     CMIntAsNumber(EC_SPACE),
-                         CMLoc(@"KeyPrint"),     CMIntAsNumber(EC_PRINT),
-                         CMLoc(@"KeyPause"),     CMIntAsNumber(EC_PAUSE),
-                         
-                         // Joystick
-                         CMLoc(@"JoyButtonOne"), CMIntAsNumber(EC_JOY1_BUTTON1),
-                         CMLoc(@"JoyButtonTwo"), CMIntAsNumber(EC_JOY1_BUTTON2),
-                         CMLoc(@"JoyUp"),        CMIntAsNumber(EC_JOY1_UP),
-                         CMLoc(@"JoyDown"),      CMIntAsNumber(EC_JOY1_DOWN),
-                         CMLoc(@"JoyLeft"),      CMIntAsNumber(EC_JOY1_LEFT),
-                         CMLoc(@"JoyRight"),     CMIntAsNumber(EC_JOY1_RIGHT),
-                         
-                         CMLoc(@"JoyButtonOne"), CMIntAsNumber(EC_JOY2_BUTTON1),
-                         CMLoc(@"JoyButtonTwo"), CMIntAsNumber(EC_JOY2_BUTTON2),
-                         CMLoc(@"JoyUp"),        CMIntAsNumber(EC_JOY2_UP),
-                         CMLoc(@"JoyDown"),      CMIntAsNumber(EC_JOY2_DOWN),
-                         CMLoc(@"JoyLeft"),      CMIntAsNumber(EC_JOY2_LEFT),
-                         CMLoc(@"JoyRight"),     CMIntAsNumber(EC_JOY2_RIGHT),
-                         
+    staticLayout = [[NSDictionary alloc] initWithObjectsAndKeys:
+                    CMLoc(@"KeyLeftShift"),  CMIntAsNumber(EC_LSHIFT),
+                    CMLoc(@"KeyRightShift"), CMIntAsNumber(EC_RSHIFT),
+                    CMLoc(@"KeyCtrl"),       CMIntAsNumber(EC_CTRL),
+                    CMLoc(@"KeyGraph"),      CMIntAsNumber(EC_GRAPH),
+                    CMLoc(@"KeyCode"),       CMIntAsNumber(EC_CODE),
+                    CMLoc(@"KeyTorike"),     CMIntAsNumber(EC_TORIKE),
+                    CMLoc(@"KeyJikkou"),     CMIntAsNumber(EC_JIKKOU),
+                    CMLoc(@"KeyCapsLock"),   CMIntAsNumber(EC_CAPS),
+                    
+                    CMLoc(@"KeyCursorLeft"),  CMIntAsNumber(EC_LEFT),
+                    CMLoc(@"KeyCursorUp"),    CMIntAsNumber(EC_UP),
+                    CMLoc(@"KeyCursorRight"), CMIntAsNumber(EC_RIGHT),
+                    CMLoc(@"KeyCursorDown"),  CMIntAsNumber(EC_DOWN),
+                    
+                    @"F1", CMIntAsNumber(EC_F1),
+                    @"F2", CMIntAsNumber(EC_F2),
+                    @"F3", CMIntAsNumber(EC_F3),
+                    @"F4", CMIntAsNumber(EC_F4),
+                    @"F5", CMIntAsNumber(EC_F5),
+                    
+                    @"*", CMIntAsNumber(EC_NUMMUL),
+                    @"+", CMIntAsNumber(EC_NUMADD),
+                    @"/", CMIntAsNumber(EC_NUMDIV),
+                    @"-", CMIntAsNumber(EC_NUMSUB),
+                    @".", CMIntAsNumber(EC_NUMPER),
+                    @",", CMIntAsNumber(EC_NUMCOM),
+                    @"0", CMIntAsNumber(EC_NUM0),
+                    @"1", CMIntAsNumber(EC_NUM1),
+                    @"2", CMIntAsNumber(EC_NUM2),
+                    @"3", CMIntAsNumber(EC_NUM3),
+                    @"4", CMIntAsNumber(EC_NUM4),
+                    @"5", CMIntAsNumber(EC_NUM5),
+                    @"6", CMIntAsNumber(EC_NUM6),
+                    @"7", CMIntAsNumber(EC_NUM7),
+                    @"8", CMIntAsNumber(EC_NUM8),
+                    @"9", CMIntAsNumber(EC_NUM9),
+                    
+                    CMLoc(@"KeyEscape"),    CMIntAsNumber(EC_ESC),
+                    CMLoc(@"KeyTab"),       CMIntAsNumber(EC_TAB),
+                    CMLoc(@"KeyStop"),      CMIntAsNumber(EC_STOP),
+                    CMLoc(@"KeyCls"),       CMIntAsNumber(EC_CLS),
+                    CMLoc(@"KeySelect"),    CMIntAsNumber(EC_SELECT),
+                    CMLoc(@"KeyInsert"),    CMIntAsNumber(EC_INS),
+                    CMLoc(@"KeyDelete"),    CMIntAsNumber(EC_DEL),
+                    CMLoc(@"KeyBackspace"), CMIntAsNumber(EC_BKSPACE),
+                    CMLoc(@"KeyReturn"),    CMIntAsNumber(EC_RETURN),
+                    CMLoc(@"KeySpace"),     CMIntAsNumber(EC_SPACE),
+                    CMLoc(@"KeyPrint"),     CMIntAsNumber(EC_PRINT),
+                    CMLoc(@"KeyPause"),     CMIntAsNumber(EC_PAUSE),
+                    
+                    CMLoc(@"JoyButtonOne"), CMIntAsNumber(EC_JOY1_BUTTON1),
+                    CMLoc(@"JoyButtonTwo"), CMIntAsNumber(EC_JOY1_BUTTON2),
+                    CMLoc(@"JoyUp"),        CMIntAsNumber(EC_JOY1_UP),
+                    CMLoc(@"JoyDown"),      CMIntAsNumber(EC_JOY1_DOWN),
+                    CMLoc(@"JoyLeft"),      CMIntAsNumber(EC_JOY1_LEFT),
+                    CMLoc(@"JoyRight"),     CMIntAsNumber(EC_JOY1_RIGHT),
+                    
+                    CMLoc(@"JoyButtonOne"), CMIntAsNumber(EC_JOY2_BUTTON1),
+                    CMLoc(@"JoyButtonTwo"), CMIntAsNumber(EC_JOY2_BUTTON2),
+                    CMLoc(@"JoyUp"),        CMIntAsNumber(EC_JOY2_UP),
+                    CMLoc(@"JoyDown"),      CMIntAsNumber(EC_JOY2_DOWN),
+                    CMLoc(@"JoyLeft"),      CMIntAsNumber(EC_JOY2_LEFT),
+                    CMLoc(@"JoyRight"),     CMIntAsNumber(EC_JOY2_RIGHT),
+                    
+                    nil];
+    
+    NSMutableDictionary *euroLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       CMMakeMsxKeyInfo(@"`", @"~"), CMIntAsNumber(EC_RBRACK),
+                                       CMMakeMsxKeyInfo(@"1", @"!"), CMIntAsNumber(EC_1),
+                                       CMMakeMsxKeyInfo(@"2", @"@"), CMIntAsNumber(EC_2),
+                                       CMMakeMsxKeyInfo(@"3", @"#"), CMIntAsNumber(EC_3),
+                                       CMMakeMsxKeyInfo(@"4", @"$"), CMIntAsNumber(EC_4),
+                                       CMMakeMsxKeyInfo(@"5", @"%"), CMIntAsNumber(EC_5),
+                                       CMMakeMsxKeyInfo(@"6", @"^"), CMIntAsNumber(EC_6),
+                                       CMMakeMsxKeyInfo(@"7", @"&"), CMIntAsNumber(EC_7),
+                                       CMMakeMsxKeyInfo(@"8", @"*"), CMIntAsNumber(EC_8),
+                                       CMMakeMsxKeyInfo(@"9", @"("), CMIntAsNumber(EC_9),
+                                       CMMakeMsxKeyInfo(@"0", @")"), CMIntAsNumber(EC_0),
+                                       CMMakeMsxKeyInfo(@"-", @"_"), CMIntAsNumber(EC_NEG),
+                                       CMMakeMsxKeyInfo(@"=", @"+"), CMIntAsNumber(EC_CIRCFLX),
+                                       
+                                       CMMakeMsxKeyInfo(@"q", @"Q"), CMIntAsNumber(EC_Q),
+                                       CMMakeMsxKeyInfo(@"w", @"W"), CMIntAsNumber(EC_W),
+                                       CMMakeMsxKeyInfo(@"e", @"E"), CMIntAsNumber(EC_E),
+                                       CMMakeMsxKeyInfo(@"r", @"R"), CMIntAsNumber(EC_R),
+                                       CMMakeMsxKeyInfo(@"t", @"T"), CMIntAsNumber(EC_T),
+                                       CMMakeMsxKeyInfo(@"y", @"Y"), CMIntAsNumber(EC_Y),
+                                       CMMakeMsxKeyInfo(@"u", @"U"), CMIntAsNumber(EC_U),
+                                       CMMakeMsxKeyInfo(@"i", @"I"), CMIntAsNumber(EC_I),
+                                       CMMakeMsxKeyInfo(@"o", @"O"), CMIntAsNumber(EC_O),
+                                       CMMakeMsxKeyInfo(@"p", @"P"), CMIntAsNumber(EC_P),
+                                       CMMakeMsxKeyInfo(@"[", @"{"), CMIntAsNumber(EC_AT),
+                                       CMMakeMsxKeyInfo(@"]", @"}"), CMIntAsNumber(EC_LBRACK),
+                                       
+                                       CMMakeMsxKeyInfo(@"a", @"A"), CMIntAsNumber(EC_A),
+                                       CMMakeMsxKeyInfo(@"s", @"S"), CMIntAsNumber(EC_S),
+                                       CMMakeMsxKeyInfo(@"d", @"D"), CMIntAsNumber(EC_D),
+                                       CMMakeMsxKeyInfo(@"f", @"F"), CMIntAsNumber(EC_F),
+                                       CMMakeMsxKeyInfo(@"g", @"G"), CMIntAsNumber(EC_G),
+                                       CMMakeMsxKeyInfo(@"h", @"H"), CMIntAsNumber(EC_H),
+                                       CMMakeMsxKeyInfo(@"j", @"J"), CMIntAsNumber(EC_J),
+                                       CMMakeMsxKeyInfo(@"k", @"K"), CMIntAsNumber(EC_K),
+                                       CMMakeMsxKeyInfo(@"l", @"L"), CMIntAsNumber(EC_L),
+                                       CMMakeMsxKeyInfo(@";", @":"), CMIntAsNumber(EC_SEMICOL),
+                                       CMMakeMsxKeyInfo(@"'", @"\""), CMIntAsNumber(EC_COLON),
+                                       CMMakeMsxKeyInfo(@"\\", @"|"), CMIntAsNumber(EC_BKSLASH),
+                                       
+                                       CMMakeMsxKeyInfo(@"z", @"Z"), CMIntAsNumber(EC_Z),
+                                       CMMakeMsxKeyInfo(@"x", @"X"), CMIntAsNumber(EC_X),
+                                       CMMakeMsxKeyInfo(@"c", @"C"), CMIntAsNumber(EC_C),
+                                       CMMakeMsxKeyInfo(@"v", @"V"), CMIntAsNumber(EC_V),
+                                       CMMakeMsxKeyInfo(@"b", @"B"), CMIntAsNumber(EC_B),
+                                       CMMakeMsxKeyInfo(@"n", @"N"), CMIntAsNumber(EC_N),
+                                       CMMakeMsxKeyInfo(@"m", @"M"), CMIntAsNumber(EC_M),
+                                       CMMakeMsxKeyInfo(@",", @"<"), CMIntAsNumber(EC_COMMA),
+                                       CMMakeMsxKeyInfo(@".", @">"), CMIntAsNumber(EC_PERIOD),
+                                       CMMakeMsxKeyInfo(@"/", @"?"), CMIntAsNumber(EC_DIV),
+                                       CMMakeMsxKeyInfo(@"`", @"'"), CMIntAsNumber(EC_UNDSCRE),
+                                       
+                                       nil];
+    
+    NSMutableDictionary *brazilianLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                            CMMakeMsxKeyInfo(@"ç", @"Ç"), CMIntAsNumber(EC_RBRACK),
+                                            CMMakeMsxKeyInfo(@"1", @"!"), CMIntAsNumber(EC_1),
+                                            CMMakeMsxKeyInfo(@"2", @"\""), CMIntAsNumber(EC_2),
+                                            CMMakeMsxKeyInfo(@"3", @"#"), CMIntAsNumber(EC_3),
+                                            CMMakeMsxKeyInfo(@"4", @"$"), CMIntAsNumber(EC_4),
+                                            CMMakeMsxKeyInfo(@"5", @"%"), CMIntAsNumber(EC_5),
+                                            CMMakeMsxKeyInfo(@"6", @"^"), CMIntAsNumber(EC_6),
+                                            CMMakeMsxKeyInfo(@"7", @"&"), CMIntAsNumber(EC_7),
+                                            CMMakeMsxKeyInfo(@"8", @"'"), CMIntAsNumber(EC_8),
+                                            CMMakeMsxKeyInfo(@"9", @"("), CMIntAsNumber(EC_9),
+                                            CMMakeMsxKeyInfo(@"0", @")"), CMIntAsNumber(EC_0),
+                                            CMMakeMsxKeyInfo(@"-", @"_"), CMIntAsNumber(EC_NEG),
+                                            CMMakeMsxKeyInfo(@"=", @"+"), CMIntAsNumber(EC_CIRCFLX),
+                                            
+                                            CMMakeMsxKeyInfo(@"q", @"Q"), CMIntAsNumber(EC_Q),
+                                            CMMakeMsxKeyInfo(@"w", @"W"), CMIntAsNumber(EC_W),
+                                            CMMakeMsxKeyInfo(@"e", @"E"), CMIntAsNumber(EC_E),
+                                            CMMakeMsxKeyInfo(@"r", @"R"), CMIntAsNumber(EC_R),
+                                            CMMakeMsxKeyInfo(@"t", @"T"), CMIntAsNumber(EC_T),
+                                            CMMakeMsxKeyInfo(@"y", @"Y"), CMIntAsNumber(EC_Y),
+                                            CMMakeMsxKeyInfo(@"u", @"U"), CMIntAsNumber(EC_U),
+                                            CMMakeMsxKeyInfo(@"i", @"I"), CMIntAsNumber(EC_I),
+                                            CMMakeMsxKeyInfo(@"o", @"O"), CMIntAsNumber(EC_O),
+                                            CMMakeMsxKeyInfo(@"p", @"P"), CMIntAsNumber(EC_P),
+                                            CMMakeMsxKeyInfo(@"'", @"`"), CMIntAsNumber(EC_AT),
+                                            CMMakeMsxKeyInfo(@"[", @"]"), CMIntAsNumber(EC_LBRACK),
+                                            
+                                            CMMakeMsxKeyInfo(@"a", @"A"), CMIntAsNumber(EC_A),
+                                            CMMakeMsxKeyInfo(@"s", @"S"), CMIntAsNumber(EC_S),
+                                            CMMakeMsxKeyInfo(@"d", @"D"), CMIntAsNumber(EC_D),
+                                            CMMakeMsxKeyInfo(@"f", @"F"), CMIntAsNumber(EC_F),
+                                            CMMakeMsxKeyInfo(@"g", @"G"), CMIntAsNumber(EC_G),
+                                            CMMakeMsxKeyInfo(@"h", @"H"), CMIntAsNumber(EC_H),
+                                            CMMakeMsxKeyInfo(@"j", @"J"), CMIntAsNumber(EC_J),
+                                            CMMakeMsxKeyInfo(@"k", @"K"), CMIntAsNumber(EC_K),
+                                            CMMakeMsxKeyInfo(@"l", @"L"), CMIntAsNumber(EC_L),
+                                            CMMakeMsxKeyInfo(@"~", @"^"), CMIntAsNumber(EC_SEMICOL),
+                                            CMMakeMsxKeyInfo(@"*", @"@"), CMIntAsNumber(EC_COLON),
+                                            CMMakeMsxKeyInfo(@"{", @"}"), CMIntAsNumber(EC_BKSLASH),
+                                            
+                                            CMMakeMsxKeyInfo(@"z", @"Z"), CMIntAsNumber(EC_Z),
+                                            CMMakeMsxKeyInfo(@"x", @"X"), CMIntAsNumber(EC_X),
+                                            CMMakeMsxKeyInfo(@"c", @"C"), CMIntAsNumber(EC_C),
+                                            CMMakeMsxKeyInfo(@"v", @"V"), CMIntAsNumber(EC_V),
+                                            CMMakeMsxKeyInfo(@"b", @"B"), CMIntAsNumber(EC_B),
+                                            CMMakeMsxKeyInfo(@"n", @"N"), CMIntAsNumber(EC_N),
+                                            CMMakeMsxKeyInfo(@"m", @"M"), CMIntAsNumber(EC_M),
+                                            CMMakeMsxKeyInfo(@",", @"<"), CMIntAsNumber(EC_COMMA),
+                                            CMMakeMsxKeyInfo(@".", @">"), CMIntAsNumber(EC_PERIOD),
+                                            CMMakeMsxKeyInfo(@";", @":"), CMIntAsNumber(EC_DIV),
+                                            CMMakeMsxKeyInfo(@"/", @"?"), CMIntAsNumber(EC_UNDSCRE),
+                                            
+                                            nil];
+    
+    NSMutableDictionary *estonianLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                           CMMakeMsxKeyInfo(@"^", @"~"), CMIntAsNumber(EC_RBRACK),
+                                           CMMakeMsxKeyInfo(@"1", @"!"), CMIntAsNumber(EC_1),
+                                           CMMakeMsxKeyInfo(@"2", @"\""), CMIntAsNumber(EC_2),
+                                           CMMakeMsxKeyInfo(@"3", @"#"), CMIntAsNumber(EC_3),
+                                           CMMakeMsxKeyInfo(@"4", @"$"), CMIntAsNumber(EC_4),
+                                           CMMakeMsxKeyInfo(@"5", @"%"), CMIntAsNumber(EC_5),
+                                           CMMakeMsxKeyInfo(@"6", @"&"), CMIntAsNumber(EC_6),
+                                           CMMakeMsxKeyInfo(@"7", @"/"), CMIntAsNumber(EC_7),
+                                           CMMakeMsxKeyInfo(@"8", @"("), CMIntAsNumber(EC_8),
+                                           CMMakeMsxKeyInfo(@"9", @")"), CMIntAsNumber(EC_9),
+                                           CMMakeMsxKeyInfo(@"0", @"="), CMIntAsNumber(EC_0),
+                                           CMMakeMsxKeyInfo(@"+", @"?"), CMIntAsNumber(EC_NEG),
+                                           CMMakeMsxKeyInfo(@"'", @"`"), CMIntAsNumber(EC_CIRCFLX),
+                                           
+                                           CMMakeMsxKeyInfo(@"q", @"Q"), CMIntAsNumber(EC_Q),
+                                           CMMakeMsxKeyInfo(@"w", @"W"), CMIntAsNumber(EC_W),
+                                           CMMakeMsxKeyInfo(@"e", @"E"), CMIntAsNumber(EC_E),
+                                           CMMakeMsxKeyInfo(@"r", @"R"), CMIntAsNumber(EC_R),
+                                           CMMakeMsxKeyInfo(@"t", @"T"), CMIntAsNumber(EC_T),
+                                           CMMakeMsxKeyInfo(@"y", @"Y"), CMIntAsNumber(EC_Y),
+                                           CMMakeMsxKeyInfo(@"u", @"U"), CMIntAsNumber(EC_U),
+                                           CMMakeMsxKeyInfo(@"i", @"I"), CMIntAsNumber(EC_I),
+                                           CMMakeMsxKeyInfo(@"o", @"O"), CMIntAsNumber(EC_O),
+                                           CMMakeMsxKeyInfo(@"p", @"P"), CMIntAsNumber(EC_P),
+                                           CMMakeMsxKeyInfo(@"[", @"{"), CMIntAsNumber(EC_AT),
+                                           CMMakeMsxKeyInfo(@"]", @"}"), CMIntAsNumber(EC_LBRACK),
+                                           
+                                           CMMakeMsxKeyInfo(@"a", @"A"), CMIntAsNumber(EC_A),
+                                           CMMakeMsxKeyInfo(@"s", @"S"), CMIntAsNumber(EC_S),
+                                           CMMakeMsxKeyInfo(@"d", @"D"), CMIntAsNumber(EC_D),
+                                           CMMakeMsxKeyInfo(@"f", @"F"), CMIntAsNumber(EC_F),
+                                           CMMakeMsxKeyInfo(@"g", @"G"), CMIntAsNumber(EC_G),
+                                           CMMakeMsxKeyInfo(@"h", @"H"), CMIntAsNumber(EC_H),
+                                           CMMakeMsxKeyInfo(@"j", @"J"), CMIntAsNumber(EC_J),
+                                           CMMakeMsxKeyInfo(@"k", @"K"), CMIntAsNumber(EC_K),
+                                           CMMakeMsxKeyInfo(@"l", @"L"), CMIntAsNumber(EC_L),
+                                           CMMakeMsxKeyInfo(@"\\", @"|"), CMIntAsNumber(EC_SEMICOL),
+                                           CMMakeMsxKeyInfo(@"<", @">"), CMIntAsNumber(EC_COLON),
+                                           CMMakeMsxKeyInfo(@"'", @"*"), CMIntAsNumber(EC_BKSLASH),
+                                           
+                                           CMMakeMsxKeyInfo(@"z", @"Z"), CMIntAsNumber(EC_Z),
+                                           CMMakeMsxKeyInfo(@"x", @"X"), CMIntAsNumber(EC_X),
+                                           CMMakeMsxKeyInfo(@"c", @"C"), CMIntAsNumber(EC_C),
+                                           CMMakeMsxKeyInfo(@"v", @"V"), CMIntAsNumber(EC_V),
+                                           CMMakeMsxKeyInfo(@"b", @"B"), CMIntAsNumber(EC_B),
+                                           CMMakeMsxKeyInfo(@"n", @"N"), CMIntAsNumber(EC_N),
+                                           CMMakeMsxKeyInfo(@"m", @"M"), CMIntAsNumber(EC_M),
+                                           CMMakeMsxKeyInfo(@",", @";"), CMIntAsNumber(EC_COMMA),
+                                           CMMakeMsxKeyInfo(@".", @":"), CMIntAsNumber(EC_PERIOD),
+                                           CMMakeMsxKeyInfo(@"-", @"_"), CMIntAsNumber(EC_DIV),
+                                           CMMakeMsxKeyInfo(@" ", @" "), CMIntAsNumber(EC_UNDSCRE), // None
+                                           
+                                           nil];
+    
+    NSMutableDictionary *frenchLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                         CMMakeMsxKeyInfo(@"#", @"£"), CMIntAsNumber(EC_RBRACK),
+                                         CMMakeMsxKeyInfo(@"&", @"1"), CMIntAsNumber(EC_1),
+                                         CMMakeMsxKeyInfo(@"é", @"2"), CMIntAsNumber(EC_2),
+                                         CMMakeMsxKeyInfo(@"\"", @"3"), CMIntAsNumber(EC_3),
+                                         CMMakeMsxKeyInfo(@"'", @"4"), CMIntAsNumber(EC_4),
+                                         CMMakeMsxKeyInfo(@"(", @"5"), CMIntAsNumber(EC_5),
+                                         CMMakeMsxKeyInfo(@"§", @"6"), CMIntAsNumber(EC_6),
+                                         CMMakeMsxKeyInfo(@"è", @"7"), CMIntAsNumber(EC_7),
+                                         CMMakeMsxKeyInfo(@"!", @"8"), CMIntAsNumber(EC_8),
+                                         CMMakeMsxKeyInfo(@"ç", @"9"), CMIntAsNumber(EC_9),
+                                         CMMakeMsxKeyInfo(@"à", @"0"), CMIntAsNumber(EC_0),
+                                         CMMakeMsxKeyInfo(@")", @"º"), CMIntAsNumber(EC_NEG),
+                                         CMMakeMsxKeyInfo(@"-", @"_"), CMIntAsNumber(EC_CIRCFLX),
+                                         
+                                         CMMakeMsxKeyInfo(@"a", @"A"), CMIntAsNumber(EC_Q),
+                                         CMMakeMsxKeyInfo(@"z", @"Z"), CMIntAsNumber(EC_W),
+                                         CMMakeMsxKeyInfo(@"e", @"E"), CMIntAsNumber(EC_E),
+                                         CMMakeMsxKeyInfo(@"r", @"R"), CMIntAsNumber(EC_R),
+                                         CMMakeMsxKeyInfo(@"t", @"T"), CMIntAsNumber(EC_T),
+                                         CMMakeMsxKeyInfo(@"y", @"Y"), CMIntAsNumber(EC_Y),
+                                         CMMakeMsxKeyInfo(@"u", @"U"), CMIntAsNumber(EC_U),
+                                         CMMakeMsxKeyInfo(@"i", @"I"), CMIntAsNumber(EC_I),
+                                         CMMakeMsxKeyInfo(@"o", @"O"), CMIntAsNumber(EC_O),
+                                         CMMakeMsxKeyInfo(@"p", @"P"), CMIntAsNumber(EC_P),
+                                         CMMakeMsxKeyInfo(@"`", @"'"), CMIntAsNumber(EC_AT),
+                                         CMMakeMsxKeyInfo(@"$", @"*"), CMIntAsNumber(EC_LBRACK),
+                                         
+                                         CMMakeMsxKeyInfo(@"q", @"Q"), CMIntAsNumber(EC_A),
+                                         CMMakeMsxKeyInfo(@"s", @"S"), CMIntAsNumber(EC_S),
+                                         CMMakeMsxKeyInfo(@"d", @"D"), CMIntAsNumber(EC_D),
+                                         CMMakeMsxKeyInfo(@"f", @"F"), CMIntAsNumber(EC_F),
+                                         CMMakeMsxKeyInfo(@"g", @"G"), CMIntAsNumber(EC_G),
+                                         CMMakeMsxKeyInfo(@"h", @"H"), CMIntAsNumber(EC_H),
+                                         CMMakeMsxKeyInfo(@"j", @"J"), CMIntAsNumber(EC_J),
+                                         CMMakeMsxKeyInfo(@"k", @"K"), CMIntAsNumber(EC_K),
+                                         CMMakeMsxKeyInfo(@"l", @"L"), CMIntAsNumber(EC_L),
+                                         CMMakeMsxKeyInfo(@"m", @"M"), CMIntAsNumber(EC_SEMICOL),
+                                         CMMakeMsxKeyInfo(@"ù", @"%"), CMIntAsNumber(EC_COLON),
+                                         CMMakeMsxKeyInfo(@"<", @">"), CMIntAsNumber(EC_BKSLASH),
+                                         
+                                         CMMakeMsxKeyInfo(@"w", @"W"), CMIntAsNumber(EC_Z),
+                                         CMMakeMsxKeyInfo(@"x", @"X"), CMIntAsNumber(EC_X),
+                                         CMMakeMsxKeyInfo(@"c", @"C"), CMIntAsNumber(EC_C),
+                                         CMMakeMsxKeyInfo(@"v", @"V"), CMIntAsNumber(EC_V),
+                                         CMMakeMsxKeyInfo(@"b", @"B"), CMIntAsNumber(EC_B),
+                                         CMMakeMsxKeyInfo(@"n", @"N"), CMIntAsNumber(EC_N),
+                                         CMMakeMsxKeyInfo(@",", @"?"), CMIntAsNumber(EC_M),
+                                         CMMakeMsxKeyInfo(@";", @"."), CMIntAsNumber(EC_COMMA),
+                                         CMMakeMsxKeyInfo(@":", @"/"), CMIntAsNumber(EC_PERIOD),
+                                         CMMakeMsxKeyInfo(@"=", @"+"), CMIntAsNumber(EC_DIV),
+                                         CMMakeMsxKeyInfo(@" ", @" "), CMIntAsNumber(EC_UNDSCRE), // None
+                                         
+                                         nil];
+    
+    NSMutableDictionary *germanLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                         CMMakeMsxKeyInfo(@"#", @"^"), CMIntAsNumber(EC_RBRACK),
+                                         CMMakeMsxKeyInfo(@"1", @"!"), CMIntAsNumber(EC_1),
+                                         CMMakeMsxKeyInfo(@"2", @"\""), CMIntAsNumber(EC_2),
+                                         CMMakeMsxKeyInfo(@"3", @"§"), CMIntAsNumber(EC_3),
+                                         CMMakeMsxKeyInfo(@"4", @"$"), CMIntAsNumber(EC_4),
+                                         CMMakeMsxKeyInfo(@"5", @"%"), CMIntAsNumber(EC_5),
+                                         CMMakeMsxKeyInfo(@"6", @"&"), CMIntAsNumber(EC_6),
+                                         CMMakeMsxKeyInfo(@"7", @"/"), CMIntAsNumber(EC_7),
+                                         CMMakeMsxKeyInfo(@"8", @"("), CMIntAsNumber(EC_8),
+                                         CMMakeMsxKeyInfo(@"9", @")"), CMIntAsNumber(EC_9),
+                                         CMMakeMsxKeyInfo(@"0", @"="), CMIntAsNumber(EC_0),
+                                         CMMakeMsxKeyInfo(@"ß", @"?"), CMIntAsNumber(EC_NEG),
+                                         CMMakeMsxKeyInfo(@"'", @"`"), CMIntAsNumber(EC_CIRCFLX),
+                                         
+                                         CMMakeMsxKeyInfo(@"q", @"Q"), CMIntAsNumber(EC_Q),
+                                         CMMakeMsxKeyInfo(@"w", @"W"), CMIntAsNumber(EC_W),
+                                         CMMakeMsxKeyInfo(@"e", @"E"), CMIntAsNumber(EC_E),
+                                         CMMakeMsxKeyInfo(@"r", @"R"), CMIntAsNumber(EC_R),
+                                         CMMakeMsxKeyInfo(@"t", @"T"), CMIntAsNumber(EC_T),
+                                         CMMakeMsxKeyInfo(@"z", @"Z"), CMIntAsNumber(EC_Y),
+                                         CMMakeMsxKeyInfo(@"u", @"U"), CMIntAsNumber(EC_U),
+                                         CMMakeMsxKeyInfo(@"i", @"I"), CMIntAsNumber(EC_I),
+                                         CMMakeMsxKeyInfo(@"o", @"O"), CMIntAsNumber(EC_O),
+                                         CMMakeMsxKeyInfo(@"p", @"P"), CMIntAsNumber(EC_P),
+                                         CMMakeMsxKeyInfo(@"ü", @"Ü"), CMIntAsNumber(EC_AT),
+                                         CMMakeMsxKeyInfo(@"+", @"*"), CMIntAsNumber(EC_LBRACK),
+                                         
+                                         CMMakeMsxKeyInfo(@"a", @"A"), CMIntAsNumber(EC_A),
+                                         CMMakeMsxKeyInfo(@"s", @"S"), CMIntAsNumber(EC_S),
+                                         CMMakeMsxKeyInfo(@"d", @"D"), CMIntAsNumber(EC_D),
+                                         CMMakeMsxKeyInfo(@"f", @"F"), CMIntAsNumber(EC_F),
+                                         CMMakeMsxKeyInfo(@"g", @"G"), CMIntAsNumber(EC_G),
+                                         CMMakeMsxKeyInfo(@"h", @"H"), CMIntAsNumber(EC_H),
+                                         CMMakeMsxKeyInfo(@"j", @"J"), CMIntAsNumber(EC_J),
+                                         CMMakeMsxKeyInfo(@"k", @"K"), CMIntAsNumber(EC_K),
+                                         CMMakeMsxKeyInfo(@"l", @"L"), CMIntAsNumber(EC_L),
+                                         CMMakeMsxKeyInfo(@"ö", @"Ö"), CMIntAsNumber(EC_SEMICOL),
+                                         CMMakeMsxKeyInfo(@"ä", @"Ä"), CMIntAsNumber(EC_COLON),
+                                         CMMakeMsxKeyInfo(@"<", @">"), CMIntAsNumber(EC_BKSLASH),
+                                         
+                                         CMMakeMsxKeyInfo(@"y", @"Y"), CMIntAsNumber(EC_Z),
+                                         CMMakeMsxKeyInfo(@"x", @"X"), CMIntAsNumber(EC_X),
+                                         CMMakeMsxKeyInfo(@"c", @"C"), CMIntAsNumber(EC_C),
+                                         CMMakeMsxKeyInfo(@"v", @"V"), CMIntAsNumber(EC_V),
+                                         CMMakeMsxKeyInfo(@"b", @"B"), CMIntAsNumber(EC_B),
+                                         CMMakeMsxKeyInfo(@"n", @"N"), CMIntAsNumber(EC_N),
+                                         CMMakeMsxKeyInfo(@"m", @"M"), CMIntAsNumber(EC_M),
+                                         CMMakeMsxKeyInfo(@",", @";"), CMIntAsNumber(EC_COMMA),
+                                         CMMakeMsxKeyInfo(@".", @":"), CMIntAsNumber(EC_PERIOD),
+                                         CMMakeMsxKeyInfo(@"-", @"_"), CMIntAsNumber(EC_DIV),
+                                         CMMakeMsxKeyInfo(@" ", @" "), CMIntAsNumber(EC_UNDSCRE), // None
+                                         
+                                         nil];
+    
+    NSMutableDictionary *japaneseLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                           CMMakeMsxKeyInfo(@"]", @"}"), CMIntAsNumber(EC_RBRACK),
+                                           CMMakeMsxKeyInfo(@"1", @"!"), CMIntAsNumber(EC_1),
+                                           CMMakeMsxKeyInfo(@"2", @"\""), CMIntAsNumber(EC_2),
+                                           CMMakeMsxKeyInfo(@"3", @"#"), CMIntAsNumber(EC_3),
+                                           CMMakeMsxKeyInfo(@"4", @"$"), CMIntAsNumber(EC_4),
+                                           CMMakeMsxKeyInfo(@"5", @"%"), CMIntAsNumber(EC_5),
+                                           CMMakeMsxKeyInfo(@"6", @"&"), CMIntAsNumber(EC_6),
+                                           CMMakeMsxKeyInfo(@"7", @"'"), CMIntAsNumber(EC_7),
+                                           CMMakeMsxKeyInfo(@"8", @"("), CMIntAsNumber(EC_8),
+                                           CMMakeMsxKeyInfo(@"9", @")"), CMIntAsNumber(EC_9),
+                                           CMMakeMsxKeyInfo(@"0", @" "), CMIntAsNumber(EC_0),
+                                           CMMakeMsxKeyInfo(@"-", @"="), CMIntAsNumber(EC_NEG),
+                                           CMMakeMsxKeyInfo(@"^", @"~"), CMIntAsNumber(EC_CIRCFLX),
+                                           
+                                           CMMakeMsxKeyInfo(@"q", @"Q"), CMIntAsNumber(EC_Q),
+                                           CMMakeMsxKeyInfo(@"w", @"W"), CMIntAsNumber(EC_W),
+                                           CMMakeMsxKeyInfo(@"e", @"E"), CMIntAsNumber(EC_E),
+                                           CMMakeMsxKeyInfo(@"r", @"R"), CMIntAsNumber(EC_R),
+                                           CMMakeMsxKeyInfo(@"t", @"T"), CMIntAsNumber(EC_T),
+                                           CMMakeMsxKeyInfo(@"y", @"Y"), CMIntAsNumber(EC_Y),
+                                           CMMakeMsxKeyInfo(@"u", @"U"), CMIntAsNumber(EC_U),
+                                           CMMakeMsxKeyInfo(@"i", @"I"), CMIntAsNumber(EC_I),
+                                           CMMakeMsxKeyInfo(@"o", @"O"), CMIntAsNumber(EC_O),
+                                           CMMakeMsxKeyInfo(@"p", @"P"), CMIntAsNumber(EC_P),
+                                           CMMakeMsxKeyInfo(@"@", @"`"), CMIntAsNumber(EC_AT),
+                                           CMMakeMsxKeyInfo(@"[", @"{"), CMIntAsNumber(EC_LBRACK),
+                                           
+                                           CMMakeMsxKeyInfo(@"a", @"A"), CMIntAsNumber(EC_A),
+                                           CMMakeMsxKeyInfo(@"s", @"S"), CMIntAsNumber(EC_S),
+                                           CMMakeMsxKeyInfo(@"d", @"D"), CMIntAsNumber(EC_D),
+                                           CMMakeMsxKeyInfo(@"f", @"F"), CMIntAsNumber(EC_F),
+                                           CMMakeMsxKeyInfo(@"g", @"G"), CMIntAsNumber(EC_G),
+                                           CMMakeMsxKeyInfo(@"h", @"H"), CMIntAsNumber(EC_H),
+                                           CMMakeMsxKeyInfo(@"j", @"J"), CMIntAsNumber(EC_J),
+                                           CMMakeMsxKeyInfo(@"k", @"K"), CMIntAsNumber(EC_K),
+                                           CMMakeMsxKeyInfo(@"l", @"L"), CMIntAsNumber(EC_L),
+                                           CMMakeMsxKeyInfo(@";", @"+"), CMIntAsNumber(EC_SEMICOL),
+                                           CMMakeMsxKeyInfo(@":", @"*"), CMIntAsNumber(EC_COLON),
+                                           CMMakeMsxKeyInfo(@"¥", @"|"), CMIntAsNumber(EC_BKSLASH),
+                                           
+                                           CMMakeMsxKeyInfo(@"z", @"Z"), CMIntAsNumber(EC_Z),
+                                           CMMakeMsxKeyInfo(@"x", @"X"), CMIntAsNumber(EC_X),
+                                           CMMakeMsxKeyInfo(@"c", @"C"), CMIntAsNumber(EC_C),
+                                           CMMakeMsxKeyInfo(@"v", @"V"), CMIntAsNumber(EC_V),
+                                           CMMakeMsxKeyInfo(@"b", @"B"), CMIntAsNumber(EC_B),
+                                           CMMakeMsxKeyInfo(@"n", @"N"), CMIntAsNumber(EC_N),
+                                           CMMakeMsxKeyInfo(@"m", @"M"), CMIntAsNumber(EC_M),
+                                           CMMakeMsxKeyInfo(@",", @"<"), CMIntAsNumber(EC_COMMA),
+                                           CMMakeMsxKeyInfo(@".", @">"), CMIntAsNumber(EC_PERIOD),
+                                           CMMakeMsxKeyInfo(@"/", @"?"), CMIntAsNumber(EC_DIV),
+                                           CMMakeMsxKeyInfo(@" ", @"_"), CMIntAsNumber(EC_UNDSCRE),
+                                           
+                                           nil];
+    
+    // Korean is the same as Japanese, except for the currency symbol
+    
+    NSMutableDictionary *koreanLayout = [[japaneseLayout mutableCopy] autorelease];
+    [koreanLayout setObject:CMMakeMsxKeyInfo(@"￦", @"|") forKey:CMIntAsNumber(EC_BKSLASH)];
+    
+    NSMutableDictionary *russianLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                          CMMakeMsxKeyInfo(@">", @"."), CMIntAsNumber(EC_RBRACK),
+                                          CMMakeMsxKeyInfo(@"+", @";"), CMIntAsNumber(EC_1),
+                                          CMMakeMsxKeyInfo(@"!", @"1"), CMIntAsNumber(EC_2),
+                                          CMMakeMsxKeyInfo(@"\"", @"2"), CMIntAsNumber(EC_3),
+                                          CMMakeMsxKeyInfo(@"#", @"3"), CMIntAsNumber(EC_4),
+                                          CMMakeMsxKeyInfo(@"Ȣ", @"4"), CMIntAsNumber(EC_5),
+                                          CMMakeMsxKeyInfo(@"%", @"5"), CMIntAsNumber(EC_6),
+                                          CMMakeMsxKeyInfo(@"&", @"6"), CMIntAsNumber(EC_7),
+                                          CMMakeMsxKeyInfo(@"'", @"7"), CMIntAsNumber(EC_8),
+                                          CMMakeMsxKeyInfo(@"(", @"8"), CMIntAsNumber(EC_9),
+                                          CMMakeMsxKeyInfo(@")", @"9"), CMIntAsNumber(EC_0),
+                                          CMMakeMsxKeyInfo(@"$", @"0"), CMIntAsNumber(EC_NEG),
+                                          CMMakeMsxKeyInfo(@"=", @"_"), CMIntAsNumber(EC_CIRCFLX),
+                                          
+                                          CMMakeMsxKeyInfo(@"j", @"J"), CMIntAsNumber(EC_Q),
+                                          CMMakeMsxKeyInfo(@"c", @"C"), CMIntAsNumber(EC_W),
+                                          CMMakeMsxKeyInfo(@"u", @"U"), CMIntAsNumber(EC_E),
+                                          CMMakeMsxKeyInfo(@"k", @"K"), CMIntAsNumber(EC_R),
+                                          CMMakeMsxKeyInfo(@"e", @"E"), CMIntAsNumber(EC_T),
+                                          CMMakeMsxKeyInfo(@"n", @"N"), CMIntAsNumber(EC_Y),
+                                          CMMakeMsxKeyInfo(@"g", @"G"), CMIntAsNumber(EC_U),
+                                          CMMakeMsxKeyInfo(@"[", @"{"), CMIntAsNumber(EC_I),
+                                          CMMakeMsxKeyInfo(@"]", @"}"), CMIntAsNumber(EC_O),
+                                          CMMakeMsxKeyInfo(@"z", @"Z"), CMIntAsNumber(EC_P),
+                                          CMMakeMsxKeyInfo(@"h", @"H"), CMIntAsNumber(EC_AT),
+                                          CMMakeMsxKeyInfo(@"*", @":"), CMIntAsNumber(EC_LBRACK),
+                                          
+                                          CMMakeMsxKeyInfo(@"f", @"F"), CMIntAsNumber(EC_A),
+                                          CMMakeMsxKeyInfo(@"y", @"Y"), CMIntAsNumber(EC_S),
+                                          CMMakeMsxKeyInfo(@"w", @"W"), CMIntAsNumber(EC_D),
+                                          CMMakeMsxKeyInfo(@"a", @"A"), CMIntAsNumber(EC_F),
+                                          CMMakeMsxKeyInfo(@"p", @"P"), CMIntAsNumber(EC_G),
+                                          CMMakeMsxKeyInfo(@"r", @"R"), CMIntAsNumber(EC_H),
+                                          CMMakeMsxKeyInfo(@"o", @"O"), CMIntAsNumber(EC_J),
+                                          CMMakeMsxKeyInfo(@"l", @"L"), CMIntAsNumber(EC_K),
+                                          CMMakeMsxKeyInfo(@"d", @"D"), CMIntAsNumber(EC_L),
+                                          CMMakeMsxKeyInfo(@"v", @"V"), CMIntAsNumber(EC_SEMICOL),
+                                          CMMakeMsxKeyInfo(@"\\", @"\\"), CMIntAsNumber(EC_COLON),
+                                          CMMakeMsxKeyInfo(@"-", @"^"), CMIntAsNumber(EC_BKSLASH),
+                                          
+                                          CMMakeMsxKeyInfo(@"q", @"Q"), CMIntAsNumber(EC_Z),
+                                          CMMakeMsxKeyInfo(@"|", @"~"), CMIntAsNumber(EC_X),
+                                          CMMakeMsxKeyInfo(@"s", @"S"), CMIntAsNumber(EC_C),
+                                          CMMakeMsxKeyInfo(@"m", @"M"), CMIntAsNumber(EC_V),
+                                          CMMakeMsxKeyInfo(@"i", @"I"), CMIntAsNumber(EC_B),
+                                          CMMakeMsxKeyInfo(@"t", @"T"), CMIntAsNumber(EC_N),
+                                          CMMakeMsxKeyInfo(@"x", @"X"), CMIntAsNumber(EC_M),
+                                          CMMakeMsxKeyInfo(@"b", @"B"), CMIntAsNumber(EC_COMMA),
+                                          CMMakeMsxKeyInfo(@"@", @" "), CMIntAsNumber(EC_PERIOD),
+                                          CMMakeMsxKeyInfo(@"<", @","), CMIntAsNumber(EC_DIV),
+                                          CMMakeMsxKeyInfo(@"?", @"/"), CMIntAsNumber(EC_UNDSCRE),
+                                          
+                                          nil];
+    
+    // Spanish is mostly the same as European
+    
+    NSMutableDictionary *spanishLayout = [[euroLayout mutableCopy] autorelease];
+    [spanishLayout setObject:CMMakeMsxKeyInfo(@";", @":") forKey:CMIntAsNumber(EC_RBRACK)];
+    [spanishLayout setObject:CMMakeMsxKeyInfo(@"ñ", @"Ñ") forKey:CMIntAsNumber(EC_SEMICOL)];
+    [spanishLayout setObject:CMMakeMsxKeyInfo(@"'", @"~") forKey:CMIntAsNumber(EC_SEMICOL)];
+    
+    // Swedish is mostly the same as German
+    
+    NSMutableDictionary *swedishLayout = [[germanLayout mutableCopy] autorelease];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"'", @"*") forKey:CMIntAsNumber(EC_RBRACK)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"3", @"#") forKey:CMIntAsNumber(EC_3)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"+", @"?") forKey:CMIntAsNumber(EC_NEG)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"é", @"É") forKey:CMIntAsNumber(EC_CIRCFLX)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"y", @"Y") forKey:CMIntAsNumber(EC_Y)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"å", @"Å") forKey:CMIntAsNumber(EC_AT)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"ü", @"Ü") forKey:CMIntAsNumber(EC_LBRACK)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"z", @"Z") forKey:CMIntAsNumber(EC_Z)];
+    [swedishLayout setObject:CMMakeMsxKeyInfo(@"'", @"`") forKey:CMIntAsNumber(EC_UNDSCRE)];
+    
+    typewriterLayouts = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                         euroLayout, CMIntAsNumber(CMKeyLayoutArabic),
+                         brazilianLayout, CMIntAsNumber(CMKeyLayoutBrazilian),
+                         estonianLayout, CMIntAsNumber(CMKeyLayoutEstonian),
+                         frenchLayout, CMIntAsNumber(CMKeyLayoutFrench),
+                         germanLayout, CMIntAsNumber(CMKeyLayoutGerman),
+                         euroLayout, CMIntAsNumber(CMKeyLayoutEuropean),
+                         japaneseLayout, CMIntAsNumber(CMKeyLayoutJapanese),
+                         koreanLayout, CMIntAsNumber(CMKeyLayoutKorean),
+                         russianLayout, CMIntAsNumber(CMKeyLayoutRussian),
+                         spanishLayout, CMIntAsNumber(CMKeyLayoutSpanish),
+                         swedishLayout, CMIntAsNumber(CMKeyLayoutSwedish),
                          nil];
 }
 
@@ -319,8 +721,23 @@ static NSDictionary *virtualCodeNames = nil;
 }
 
 - (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode
+                             layoutId:(NSInteger)layoutId
 {
-    return [virtualCodeNames objectForKey:CMIntAsNumber(virtualCode)];
+    // Check the list of static keys
+    NSString *staticKeyLabel = [staticLayout objectForKey:CMIntAsNumber(virtualCode)];
+    if (staticKeyLabel)
+        return staticKeyLabel;
+    
+    // Check the typewriter keys
+    NSMutableDictionary *layout = [typewriterLayouts objectForKey:CMIntAsNumber(layoutId)];
+    if (layout)
+    {
+        CMMsxKeyInfo *keyInfo = [layout objectForKey:CMIntAsNumber(virtualCode)];
+        if (keyInfo)
+            return keyInfo.defaultStateLabel;
+    }
+    
+    return nil;
 }
 
 - (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode

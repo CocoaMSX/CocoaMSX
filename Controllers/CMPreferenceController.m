@@ -60,6 +60,37 @@
 
 @end
 
+#pragma mark - CMMsxKeyLayout
+
+@interface CMMsxKeyLayout : NSObject
+
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, assign) NSInteger layoutId;
+
+@end
+
+@implementation CMMsxKeyLayout
+
++ (CMMsxKeyLayout *)msxKeyLayoutNamed:(NSString *)name
+                           layoutId:(NSInteger)layoutId
+{
+    CMMsxKeyLayout *layout = [[CMMsxKeyLayout alloc] init];
+    
+    layout.name = name;
+    layout.layoutId = layoutId;
+    
+    return [layout autorelease];
+}
+
+- (void)dealloc
+{
+    self.name = nil;
+    
+    [super dealloc];
+}
+
+@end
+
 #pragma mark - KeyCategory
 
 @interface CMKeyCategory : NSObject
@@ -142,11 +173,14 @@
 {
     if ((self = [super initWithWindowNibName:@"Preferences"]))
     {
+        self.emulator = emulator;
+        
         keyCategories = [[NSMutableArray alloc] init];
         joystickOneCategories = [[NSMutableArray alloc] init];
         joystickTwoCategories = [[NSMutableArray alloc] init];
+        msxKeyboardLayouts = [[NSMutableArray alloc] init];
         
-        self.emulator = emulator;
+        self.machineConfigurations = [NSMutableArray array];
     }
     
     return self;
@@ -155,6 +189,28 @@
 - (void)awakeFromNib
 {
     CMPreferences *prefs = [CMPreferences preferences];
+    
+    // MSX Keyboard layouts
+    
+    CMMsxKeyLayout *euroLayout = [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutEuropean")
+                                                          layoutId:CMKeyLayoutEuropean];
+    
+    NSMutableArray *msxKeyboardLayoutProxy = [self mutableArrayValueForKey:@"msxKeyboardLayouts"];
+    [msxKeyboardLayoutProxy addObjectsFromArray:[NSArray arrayWithObjects:
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutArabic") layoutId:CMKeyLayoutArabic],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutBrazilian") layoutId:CMKeyLayoutBrazilian],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutEstonian") layoutId:CMKeyLayoutEstonian],
+                                                 euroLayout,
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutFrench") layoutId:CMKeyLayoutFrench],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutGerman") layoutId:CMKeyLayoutGerman],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutJapanese") layoutId:CMKeyLayoutJapanese],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutKorean") layoutId:CMKeyLayoutKorean],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutRussian") layoutId:CMKeyLayoutRussian],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutSpanish") layoutId:CMKeyLayoutSpanish],
+                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutSwedish") layoutId:CMKeyLayoutSwedish],
+                                                 nil]];
+    
+    // Initialize sliders
     
     NSArray *sliders = [NSArray arrayWithObjects:
                         brightnessSlider,
@@ -204,7 +260,6 @@
     
     // Machine configurations
     
-    self.machineConfigurations = [NSMutableArray array];
     NSMutableArray *machineConfigurationsProxy = [self mutableArrayValueForKey:@"machineConfigurations"];
     NSArray *machineConfigurations = [CMEmulatorController machineConfigurations];
     
@@ -238,6 +293,8 @@
     [self initializeInputDeviceCategories:joystickTwoCategories
                                withLayout:self.emulator.joystickTwoLayout];
     
+    [arrayController setSelectedObjects:[NSArray arrayWithObject:euroLayout]];
+    
     [keyboardLayoutEditor expandItem:nil expandChildren:YES];
     [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
     [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
@@ -254,6 +311,7 @@
     [keyCategories release];
     [joystickOneCategories release];
     [joystickTwoCategories release];
+    [msxKeyboardLayouts release];
     
     [virtualEmulationSpeedRange release];
     
@@ -528,6 +586,20 @@
     [tabView selectTabViewItemWithIdentifier:toolbar.selectedItemIdentifier];
 }
 
+#pragma mark - NSTableViewDelegate
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    NSArray *selected = [arrayController selectedObjects];
+    if (selected.count > 0)
+    {
+        CMMsxKeyLayout *selectedLayout = [selected objectAtIndex:0];
+        selectedMsxKeyboardLayoutId = selectedLayout.layoutId;
+        
+        [keyboardLayoutEditor reloadData];
+    }
+}
+
 #pragma mark - NSOutlineViewDataSourceDelegate
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
@@ -635,7 +707,6 @@ viewForTableColumn:(NSTableColumn *)tableColumn
             {
                 NSRect cellFrame = NSMakeRect(0, 0, tableColumn.width, outlineView.rowHeight);
                 
-                
                 cell = [[[NSTableCellView alloc] initWithFrame:cellFrame] autorelease];
                 cell.identifier = tableColumn.identifier;
                 cell.textField = [[[NSTextField alloc] initWithFrame:cell.frame] autorelease];
@@ -650,7 +721,8 @@ viewForTableColumn:(NSTableColumn *)tableColumn
                 [cell addSubview:cell.textField];
             }
             
-            cell.textField.stringValue = [self.emulator.keyboard inputNameForVirtualCode:virtualCode];
+            cell.textField.stringValue = [self.emulator.keyboard inputNameForVirtualCode:virtualCode
+                                                                                layoutId:selectedMsxKeyboardLayoutId];
         }
         else if ([tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
         {

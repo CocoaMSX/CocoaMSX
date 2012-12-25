@@ -2463,9 +2463,9 @@
 					"-DNO_ASM",
 					"-DNO_FILE_HISTORY",
 					"-DNO_EMBEDDED_SAMPLES",
-					"-DUSE_SDL",
 					"-DENABLE_OPENGL",
 					"-DLSB_FIRST",
+					"-DMSX_ONLY",
 				);
 				PRODUCT_NAME = CocoaMSX;
 			};
@@ -2489,9 +2489,9 @@
 					"-DNO_ASM",
 					"-DNO_FILE_HISTORY",
 					"-DNO_EMBEDDED_SAMPLES",
-					"-DUSE_SDL",
 					"-DENABLE_OPENGL",
 					"-DLSB_FIRST",
+					"-DMSX_ONLY",
 				);
 				PRODUCT_NAME = CocoaMSX;
 			};
@@ -2522,7 +2522,6 @@
 					"-DNO_ASM",
 					"-DNO_FILE_HISTORY",
 					"-DNO_EMBEDDED_SAMPLES",
-					"-DUSE_SDL",
 					"-DENABLE_OPENGL",
 				);
 				OTHER_CPLUSPLUSFLAGS = (
@@ -2558,7 +2557,6 @@
 					"-DNO_ASM",
 					"-DNO_FILE_HISTORY",
 					"-DNO_EMBEDDED_SAMPLES",
-					"-DUSE_SDL",
 					"-DENABLE_OPENGL",
 				);
 				OTHER_CPLUSPLUSFLAGS = (

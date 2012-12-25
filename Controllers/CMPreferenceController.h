@@ -24,8 +24,9 @@
 
 @class CMEmulatorController;
 @class CMJoyPortDevice;
+@class CMMsxKeyLayout;
 
-@interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate>
+@interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDelegate>
 {
     IBOutlet NSToolbar *toolbar;
     IBOutlet NSTabView *tabView;
@@ -45,9 +46,13 @@
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
+    NSMutableArray *msxKeyboardLayouts;
+    
+    IBOutlet NSArrayController *arrayController;
     
     CMEmulatorController *_emulator;
     NSArray *virtualEmulationSpeedRange;
+    NSInteger selectedMsxKeyboardLayoutId;
 }
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
