@@ -1,3 +1,5 @@
+Code:
+
 CocoaMSX is being developed by Akop Karapetyan (dev@akop.org)
   http://cocoamsx.com/
   http://www.akop.org/
@@ -20,6 +22,13 @@ contributors
   http://www.libsdl.org
   Licensed under GNU LGPL
 
+CocoaMSX uses MGScopeBar by Matt Gemmell
+  http://mattgemmell.com
+  Licensed under a BSD-like license with attribution; see 
+  "MGScopeBar License.rtf" for more information
+
+Graphics:
+
 CocoaMSX Coffee Cup icon by User:Peewack, Wikimedia Commons
   http://commons.wikimedia.org/wiki/File:Cup-o-cofee-simple.svg
   Licensed under Creative Commons Attribution-Share Alike 2.0 Generic
@@ -27,8 +36,3 @@ CocoaMSX Coffee Cup icon by User:Peewack, Wikimedia Commons
 CocoaMSX uses icons from the Tango project
   http://tango.freedesktop.org/
   Public Domain
-
-Matt Gemmell: MGScopeBar
-  http://mattgemmell.com
-  BSD-based license with attribution; see MGScopeBar License.rtf for more 
-  information
