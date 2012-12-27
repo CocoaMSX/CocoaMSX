@@ -1,18 +1,34 @@
-Akop Karapetyan: CocoaMSX
-  dev@akop.org
-  http://www.cocoamsx.com
+CocoaMSX is being developed by Akop Karapetyan (dev@akop.org)
+  http://cocoamsx.com/
+  http://www.akop.org/
+  Licensed under GNU GPL v3; see LICENSE for full information
 
-Ramones & Madonna Mk 2: aquaMSX
+CocoaMSX is based on aquaMSX by Ramones & Madonna Mk 2
   http://code.google.com/p/aquamsx/
+  Licensed under GNU GPL v3
 
-Daniel Vik & blueMSX Development Team: blueMSX
+CocoaMSX is based on blueMSX by Daniel Vik & blueMSX Development Team
   http://www.bluemsx.com/
+  Licensed under GNU GPL v2
 
-Shortcut Recorder contributors: ShortcutRecorder
+CocoaMSX uses a modified version of ShortcutRecorder by various contributors
   http://wafflesoftware.net/shortcut/
+  Licensed under BSD License
 
-Sam Lantinga and SDL contributors: sound engine
+CocoaMSX contains sound engine code from the SDL library by Sam Lantinga and
+contributors
   http://www.libsdl.org
+  Licensed under GNU LGPL
 
-User:Peewack: Coffee cup icon
+CocoaMSX Coffee Cup icon by User:Peewack, Wikimedia Commons
   http://commons.wikimedia.org/wiki/File:Cup-o-cofee-simple.svg
+  Licensed under Creative Commons Attribution-Share Alike 2.0 Generic
+
+CocoaMSX uses icons from the Tango project
+  http://tango.freedesktop.org/
+  Public Domain
+
+Matt Gemmell: MGScopeBar
+  http://mattgemmell.com
+  BSD-based license with attribution; see MGScopeBar License.rtf for more 
+  information

@@ -151,8 +151,11 @@ KeyCategoryNumericPad = "Numeric Pad";
 KeyCategorySpecial = "Special Keys";
 KeyCategoryJoystickDirectional = "Directions";
 KeyCategoryJoystickButtons = "Buttons";
-KeyCategoryCharacters = "Alphanumeric Keys";
-KeyCategorySymbols = "Symbol Keys";
+KeyCategoryTypewriterRowOne = "Typewriter Keys, Row 1";
+KeyCategoryTypewriterRowTwo = "Typewriter Keys, Row 2";
+KeyCategoryTypewriterRowThree = "Typewriter Keys, Row 3";
+KeyCategoryTypewriterRowFour = "Typewriter Keys, Row 4";
+
 VersionAbout = "Version %@";
 Error = "Error";
 CouldNotLoadCartridge = "Could not load cartridge";
@@ -169,3 +172,7 @@ MsxKeyLayoutKorean = "Korean";
 MsxKeyLayoutRussian = "Russian";
 MsxKeyLayoutSpanish = "Spanish";
 MsxKeyLayoutSwedish = "Swedish";
+KeyLayoutRegion = "Layout";
+
+KeyStateNormal = "Normal";
+KeyStateShifted = "Shifted";

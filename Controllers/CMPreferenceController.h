@@ -22,14 +22,18 @@
  */
 #import <Cocoa/Cocoa.h>
 
+#import "MGScopeBarDelegateProtocol.h"
+
 @class CMEmulatorController;
 @class CMJoyPortDevice;
 @class CMMsxKeyLayout;
+@class MGScopeBar;
 
-@interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDelegate>
+@interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDelegate, MGScopeBarDelegate>
 {
     IBOutlet NSToolbar *toolbar;
     IBOutlet NSTabView *tabView;
+    IBOutlet MGScopeBar *scopeBar;
     
     IBOutlet NSOutlineView *keyboardLayoutEditor;
     IBOutlet NSOutlineView *joystickOneLayoutEditor;
@@ -46,13 +50,12 @@
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
-    NSMutableArray *msxKeyboardLayouts;
-    
-    IBOutlet NSArrayController *arrayController;
     
     CMEmulatorController *_emulator;
     NSArray *virtualEmulationSpeedRange;
-    NSInteger selectedMsxKeyboardLayoutId;
+    
+    NSInteger selectedKeyboardRegion;
+    NSInteger selectedKeyboardShiftState;
 }
 
 @property (nonatomic, retain) CMEmulatorController *emulator;

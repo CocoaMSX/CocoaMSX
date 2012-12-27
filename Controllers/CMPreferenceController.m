@@ -31,6 +31,8 @@
 #import "SRRecorderTableCellView.h"
 #import "SRRecorderControl.h"
 
+#import "MGScopeBar.h"
+
 #include "InputEvent.h"
 
 #pragma mark - CMOutlineHeaderRowView
@@ -56,37 +58,6 @@
     
     [gradient drawInRect:NSInsetRect(self.bounds, 0, 1) angle:90.0f];
     [[NSGraphicsContext currentContext] restoreGraphicsState];
-}
-
-@end
-
-#pragma mark - CMMsxKeyLayout
-
-@interface CMMsxKeyLayout : NSObject
-
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, assign) NSInteger layoutId;
-
-@end
-
-@implementation CMMsxKeyLayout
-
-+ (CMMsxKeyLayout *)msxKeyLayoutNamed:(NSString *)name
-                           layoutId:(NSInteger)layoutId
-{
-    CMMsxKeyLayout *layout = [[CMMsxKeyLayout alloc] init];
-    
-    layout.name = name;
-    layout.layoutId = layoutId;
-    
-    return [layout autorelease];
-}
-
-- (void)dealloc
-{
-    self.name = nil;
-    
-    [super dealloc];
 }
 
 @end
@@ -137,7 +108,8 @@
 {
     NSArray *sortedItems = [items sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
     {
-        return [a compare:b];
+        return [CMCocoaKeyboard compareKeysByOrderOfAppearance:a
+                                                    keyCodeTwo:b];
     }];
     
     [items removeAllObjects];
@@ -147,6 +119,9 @@
 @end
 
 #pragma mark - PreferenceController
+
+#define SCOPEBAR_GROUP_SHIFTED 0
+#define SCOPEBAR_GROUP_REGIONS 1
 
 @interface CMPreferenceController ()
 
@@ -178,7 +153,6 @@
         keyCategories = [[NSMutableArray alloc] init];
         joystickOneCategories = [[NSMutableArray alloc] init];
         joystickTwoCategories = [[NSMutableArray alloc] init];
-        msxKeyboardLayouts = [[NSMutableArray alloc] init];
         
         self.machineConfigurations = [NSMutableArray array];
     }
@@ -189,26 +163,6 @@
 - (void)awakeFromNib
 {
     CMPreferences *prefs = [CMPreferences preferences];
-    
-    // MSX Keyboard layouts
-    
-    CMMsxKeyLayout *euroLayout = [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutEuropean")
-                                                          layoutId:CMKeyLayoutEuropean];
-    
-    NSMutableArray *msxKeyboardLayoutProxy = [self mutableArrayValueForKey:@"msxKeyboardLayouts"];
-    [msxKeyboardLayoutProxy addObjectsFromArray:[NSArray arrayWithObjects:
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutArabic") layoutId:CMKeyLayoutArabic],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutBrazilian") layoutId:CMKeyLayoutBrazilian],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutEstonian") layoutId:CMKeyLayoutEstonian],
-                                                 euroLayout,
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutFrench") layoutId:CMKeyLayoutFrench],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutGerman") layoutId:CMKeyLayoutGerman],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutJapanese") layoutId:CMKeyLayoutJapanese],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutKorean") layoutId:CMKeyLayoutKorean],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutRussian") layoutId:CMKeyLayoutRussian],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutSpanish") layoutId:CMKeyLayoutSpanish],
-                                                 [CMMsxKeyLayout msxKeyLayoutNamed:CMLoc(@"MsxKeyLayoutSwedish") layoutId:CMKeyLayoutSwedish],
-                                                 nil]];
     
     // Initialize sliders
     
@@ -293,7 +247,8 @@
     [self initializeInputDeviceCategories:joystickTwoCategories
                                withLayout:self.emulator.joystickTwoLayout];
     
-    [arrayController setSelectedObjects:[NSArray arrayWithObject:euroLayout]];
+    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
+    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
     
     [keyboardLayoutEditor expandItem:nil expandChildren:YES];
     [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
@@ -311,7 +266,6 @@
     [keyCategories release];
     [joystickOneCategories release];
     [joystickTwoCategories release];
-    [msxKeyboardLayouts release];
     
     [virtualEmulationSpeedRange release];
     
@@ -586,20 +540,6 @@
     [tabView selectTabViewItemWithIdentifier:toolbar.selectedItemIdentifier];
 }
 
-#pragma mark - NSTableViewDelegate
-
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
-{
-    NSArray *selected = [arrayController selectedObjects];
-    if (selected.count > 0)
-    {
-        CMMsxKeyLayout *selectedLayout = [selected objectAtIndex:0];
-        selectedMsxKeyboardLayoutId = selectedLayout.layoutId;
-        
-        [keyboardLayoutEditor reloadData];
-    }
-}
-
 #pragma mark - NSOutlineViewDataSourceDelegate
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
@@ -722,7 +662,8 @@ viewForTableColumn:(NSTableColumn *)tableColumn
             }
             
             cell.textField.stringValue = [self.emulator.keyboard inputNameForVirtualCode:virtualCode
-                                                                                layoutId:selectedMsxKeyboardLayoutId];
+                                                                              shiftState:selectedKeyboardShiftState
+                                                                                layoutId:selectedKeyboardRegion];
         }
         else if ([tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
         {
@@ -807,6 +748,119 @@ viewForTableColumn:(NSTableColumn *)tableColumn
             else if (layout == self.emulator.joystickTwoLayout)
                 [preferences setJoystickTwoLayout:layout];
         }
+    }
+}
+
+#pragma mark MGScopeBarDelegate
+
+- (int)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar
+{
+    return 2;
+}
+
+- (NSArray *)scopeBar:(MGScopeBar *)theScopeBar itemIdentifiersForGroup:(int)groupNumber
+{
+    if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+    {
+        return [NSArray arrayWithObjects:
+                CMMakeNumber(CMKeyShiftStateNormal),
+                CMMakeNumber(CMKeyShiftStateShifted),
+                
+                nil];
+    }
+    else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+    {
+        return [NSArray arrayWithObjects:
+                CMMakeNumber(CMKeyLayoutArabic),
+                CMMakeNumber(CMKeyLayoutBrazilian),
+                CMMakeNumber(CMKeyLayoutEstonian),
+                CMMakeNumber(CMKeyLayoutEuropean),
+                CMMakeNumber(CMKeyLayoutFrench),
+                CMMakeNumber(CMKeyLayoutGerman),
+                CMMakeNumber(CMKeyLayoutJapanese),
+                CMMakeNumber(CMKeyLayoutKorean),
+                CMMakeNumber(CMKeyLayoutRussian),
+                CMMakeNumber(CMKeyLayoutSpanish),
+                CMMakeNumber(CMKeyLayoutSwedish),
+                
+                nil];
+    }
+    
+    return nil;
+}
+
+- (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber // return nil or an empty string for no label.
+{
+    if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+    {
+        return CMLoc(@"KeyLayoutRegion");
+    }
+    
+    return nil;
+}
+
+- (MGScopeBarGroupSelectionMode)scopeBar:(MGScopeBar *)theScopeBar selectionModeForGroup:(int)groupNumber
+{
+    return MGRadioSelectionMode;
+}
+
+- (NSString *)scopeBar:(MGScopeBar *)theScopeBar titleOfItem:(id)identifier inGroup:(int)groupNumber
+{
+    if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+    {
+        NSNumber *shiftState = identifier;
+        
+        if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateNormal)])
+            return CMLoc(@"KeyStateNormal");
+        if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateShifted)])
+            return CMLoc(@"KeyStateShifted");
+    }
+    else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+    {
+        NSNumber *layoutId = identifier;
+        
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutArabic)])
+            return CMLoc(@"MsxKeyLayoutArabic");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutBrazilian)])
+            return CMLoc(@"MsxKeyLayoutBrazilian");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEstonian)])
+            return CMLoc(@"MsxKeyLayoutEstonian");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEuropean)])
+            return CMLoc(@"MsxKeyLayoutEuropean");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutFrench)])
+            return CMLoc(@"MsxKeyLayoutFrench");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutGerman)])
+            return CMLoc(@"MsxKeyLayoutGerman");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutJapanese)])
+            return CMLoc(@"MsxKeyLayoutJapanese");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutKorean)])
+            return CMLoc(@"MsxKeyLayoutKorean");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutRussian)])
+            return CMLoc(@"MsxKeyLayoutRussian");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSpanish)])
+            return CMLoc(@"MsxKeyLayoutSpanish");
+        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSwedish)])
+            return CMLoc(@"MsxKeyLayoutSwedish");
+    }
+    
+    return nil;
+}
+
+- (void)scopeBar:(MGScopeBar *)theScopeBar selectedStateChanged:(BOOL)selected forItem:(id)identifier inGroup:(int)groupNumber
+{
+    if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+    {
+        NSNumber *shiftState = identifier;
+        selectedKeyboardShiftState = [shiftState integerValue];
+        
+        [keyboardLayoutEditor reloadData];
+    }
+    else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+    {
+        NSNumber *layoutId = identifier;
+        selectedKeyboardRegion = [layoutId integerValue];
+        
+        [keyboardLayoutEditor reloadData];
     }
 }
 

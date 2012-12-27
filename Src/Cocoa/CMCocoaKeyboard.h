@@ -34,15 +34,20 @@
 #define CMKeyLayoutSpanish   0x10
 #define CMKeyLayoutSwedish   0x11
 
-#define CMKeyCategoryCharacters    1
-#define CMKeyCategorySymbols       2
-#define CMKeyCategorySpecial       3
-#define CMKeyCategoryModifier      4
-#define CMKeyCategoryFunction      5
-#define CMKeyCategoryDirectional   6
-#define CMKeyCategoryNumericPad    7
-#define CMKeyCategoryJoyDirections 8
-#define CMKeyCategoryJoyButtons    9
+#define CMKeyCategoryTypewriterRowOne   1
+#define CMKeyCategoryTypewriterRowTwo   2
+#define CMKeyCategoryTypewriterRowThree 3
+#define CMKeyCategoryTypewriterRowFour  4
+#define CMKeyCategorySpecial            5
+#define CMKeyCategoryModifier           6
+#define CMKeyCategoryFunction           7
+#define CMKeyCategoryDirectional        8
+#define CMKeyCategoryNumericPad         9
+#define CMKeyCategoryJoyDirections     10
+#define CMKeyCategoryJoyButtons        11
+
+#define CMKeyShiftStateNormal  0
+#define CMKeyShiftStateShifted 1
 
 @interface CMCocoaKeyboard : NSObject
 {
@@ -59,8 +64,11 @@
 - (void)releaseAllKeys;
 
 - (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode
+                           shiftState:(NSInteger)shiftState
                              layoutId:(NSInteger)layoutId;
 - (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode;
 - (NSString *)nameForCategory:(NSInteger)category;
++ (NSInteger)compareKeysByOrderOfAppearance:(NSNumber *)one
+                                 keyCodeTwo:(NSNumber *)two;
 
 @end

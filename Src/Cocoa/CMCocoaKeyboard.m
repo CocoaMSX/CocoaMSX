@@ -75,6 +75,7 @@
 
 #pragma mark - CMCocoaKeyboard
 
+static NSArray *orderOfAppearance = nil;
 static NSDictionary *staticLayout = nil;
 static NSMutableDictionary *typewriterLayouts = nil;
 
@@ -90,6 +91,115 @@ static NSMutableDictionary *typewriterLayouts = nil;
 
 + (void)initialize
 {
+    orderOfAppearance = [[NSArray alloc] initWithObjects:
+                         CMIntAsNumber(EC_RBRACK),
+                         CMIntAsNumber(EC_1),
+                         CMIntAsNumber(EC_2),
+                         CMIntAsNumber(EC_3),
+                         CMIntAsNumber(EC_4),
+                         CMIntAsNumber(EC_5),
+                         CMIntAsNumber(EC_6),
+                         CMIntAsNumber(EC_7),
+                         CMIntAsNumber(EC_8),
+                         CMIntAsNumber(EC_9),
+                         CMIntAsNumber(EC_0),
+                         CMIntAsNumber(EC_NEG),
+                         CMIntAsNumber(EC_CIRCFLX),
+                         CMIntAsNumber(EC_Q),
+                         CMIntAsNumber(EC_W),
+                         CMIntAsNumber(EC_E),
+                         CMIntAsNumber(EC_R),
+                         CMIntAsNumber(EC_T),
+                         CMIntAsNumber(EC_Y),
+                         CMIntAsNumber(EC_U),
+                         CMIntAsNumber(EC_I),
+                         CMIntAsNumber(EC_O),
+                         CMIntAsNumber(EC_P),
+                         CMIntAsNumber(EC_AT),
+                         CMIntAsNumber(EC_LBRACK),
+                         CMIntAsNumber(EC_A),
+                         CMIntAsNumber(EC_S),
+                         CMIntAsNumber(EC_D),
+                         CMIntAsNumber(EC_F),
+                         CMIntAsNumber(EC_G),
+                         CMIntAsNumber(EC_H),
+                         CMIntAsNumber(EC_J),
+                         CMIntAsNumber(EC_K),
+                         CMIntAsNumber(EC_L),
+                         CMIntAsNumber(EC_SEMICOL),
+                         CMIntAsNumber(EC_COLON),
+                         CMIntAsNumber(EC_BKSLASH),
+                         CMIntAsNumber(EC_Z),
+                         CMIntAsNumber(EC_X),
+                         CMIntAsNumber(EC_C),
+                         CMIntAsNumber(EC_V),
+                         CMIntAsNumber(EC_B),
+                         CMIntAsNumber(EC_N),
+                         CMIntAsNumber(EC_M),
+                         CMIntAsNumber(EC_COMMA),
+                         CMIntAsNumber(EC_PERIOD),
+                         CMIntAsNumber(EC_DIV),
+                         CMIntAsNumber(EC_UNDSCRE),
+                         CMIntAsNumber(EC_LSHIFT),
+                         CMIntAsNumber(EC_RSHIFT),
+                         CMIntAsNumber(EC_CTRL),
+                         CMIntAsNumber(EC_GRAPH),
+                         CMIntAsNumber(EC_CODE),
+                         CMIntAsNumber(EC_CAPS),
+                         CMIntAsNumber(EC_LEFT),
+                         CMIntAsNumber(EC_UP),
+                         CMIntAsNumber(EC_RIGHT),
+                         CMIntAsNumber(EC_DOWN),
+                         CMIntAsNumber(EC_F1),
+                         CMIntAsNumber(EC_F2),
+                         CMIntAsNumber(EC_F3),
+                         CMIntAsNumber(EC_F4),
+                         CMIntAsNumber(EC_F5),
+                         CMIntAsNumber(EC_NUM0),
+                         CMIntAsNumber(EC_NUM1),
+                         CMIntAsNumber(EC_NUM2),
+                         CMIntAsNumber(EC_NUM3),
+                         CMIntAsNumber(EC_NUM4),
+                         CMIntAsNumber(EC_NUM5),
+                         CMIntAsNumber(EC_NUM6),
+                         CMIntAsNumber(EC_NUM7),
+                         CMIntAsNumber(EC_NUM8),
+                         CMIntAsNumber(EC_NUM9),
+                         CMIntAsNumber(EC_NUMDIV),
+                         CMIntAsNumber(EC_NUMMUL),
+                         CMIntAsNumber(EC_NUMSUB),
+                         CMIntAsNumber(EC_NUMADD),
+                         CMIntAsNumber(EC_NUMPER),
+                         CMIntAsNumber(EC_NUMCOM),
+                         CMIntAsNumber(EC_ESC),
+                         CMIntAsNumber(EC_TAB),
+                         CMIntAsNumber(EC_STOP),
+                         CMIntAsNumber(EC_CLS),
+                         CMIntAsNumber(EC_SELECT),
+                         CMIntAsNumber(EC_INS),
+                         CMIntAsNumber(EC_DEL),
+                         CMIntAsNumber(EC_BKSPACE),
+                         CMIntAsNumber(EC_RETURN),
+                         CMIntAsNumber(EC_SPACE),
+                         CMIntAsNumber(EC_PRINT),
+                         CMIntAsNumber(EC_PAUSE),
+                         CMIntAsNumber(EC_TORIKE),
+                         CMIntAsNumber(EC_JIKKOU),
+                         CMIntAsNumber(EC_JOY1_UP),
+                         CMIntAsNumber(EC_JOY1_DOWN),
+                         CMIntAsNumber(EC_JOY1_LEFT),
+                         CMIntAsNumber(EC_JOY1_RIGHT),
+                         CMIntAsNumber(EC_JOY2_UP),
+                         CMIntAsNumber(EC_JOY2_DOWN),
+                         CMIntAsNumber(EC_JOY2_LEFT),
+                         CMIntAsNumber(EC_JOY2_RIGHT),
+                         CMIntAsNumber(EC_JOY1_BUTTON1),
+                         CMIntAsNumber(EC_JOY1_BUTTON2),
+                         CMIntAsNumber(EC_JOY2_BUTTON1),
+                         CMIntAsNumber(EC_JOY2_BUTTON2),
+                         
+                         nil];
+    
     staticLayout = [[NSDictionary alloc] initWithObjectsAndKeys:
                     CMLoc(@"KeyLeftShift"),  CMIntAsNumber(EC_LSHIFT),
                     CMLoc(@"KeyRightShift"), CMIntAsNumber(EC_RSHIFT),
@@ -721,6 +831,7 @@ static NSMutableDictionary *typewriterLayouts = nil;
 }
 
 - (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode
+                           shiftState:(NSInteger)shiftState
                              layoutId:(NSInteger)layoutId
 {
     // Check the list of static keys
@@ -734,16 +845,87 @@ static NSMutableDictionary *typewriterLayouts = nil;
     {
         CMMsxKeyInfo *keyInfo = [layout objectForKey:CMIntAsNumber(virtualCode)];
         if (keyInfo)
-            return keyInfo.defaultStateLabel;
+        {
+            if (shiftState == CMKeyShiftStateNormal)
+                return keyInfo.defaultStateLabel;
+            else if (shiftState == CMKeyShiftStateShifted)
+                return keyInfo.shiftedStateLabel;
+        }
     }
     
     return nil;
+}
+
++ (NSInteger)compareKeysByOrderOfAppearance:(NSNumber *)one
+                                 keyCodeTwo:(NSNumber *)two
+{
+    NSInteger index1 = [orderOfAppearance indexOfObject:one];
+    NSInteger index2 = [orderOfAppearance indexOfObject:two];
+    
+    if (index1 < index2)
+        return NSOrderedAscending;
+    else if (index1 > index2)
+        return NSOrderedDescending;
+    else
+        return NSOrderedSame;
 }
 
 - (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode
 {
     switch (virtualCode)
     {
+        case EC_RBRACK:
+        case EC_1:
+        case EC_2:
+        case EC_3:
+        case EC_4:
+        case EC_5:
+        case EC_6:
+        case EC_7:
+        case EC_8:
+        case EC_9:
+        case EC_0:
+        case EC_NEG:
+        case EC_CIRCFLX:
+            return CMKeyCategoryTypewriterRowOne;
+        case EC_Q:
+        case EC_W:
+        case EC_E:
+        case EC_R:
+        case EC_T:
+        case EC_Y:
+        case EC_U:
+        case EC_I:
+        case EC_O:
+        case EC_P:
+        case EC_AT:
+        case EC_LBRACK:
+            return CMKeyCategoryTypewriterRowTwo;
+        case EC_A:
+        case EC_S:
+        case EC_D:
+        case EC_F:
+        case EC_G:
+        case EC_H:
+        case EC_J:
+        case EC_K:
+        case EC_L:
+        case EC_SEMICOL:
+        case EC_COLON:
+        case EC_BKSLASH:
+            return CMKeyCategoryTypewriterRowThree;
+        case EC_Z:
+        case EC_X:
+        case EC_C:
+        case EC_V:
+        case EC_B:
+        case EC_N:
+        case EC_M:
+        case EC_COMMA:
+        case EC_PERIOD:
+        case EC_DIV:
+        case EC_UNDSCRE:
+            return CMKeyCategoryTypewriterRowFour;
         case EC_LSHIFT:
         case EC_RSHIFT:
         case EC_CTRL:
@@ -762,56 +944,6 @@ static NSMutableDictionary *typewriterLayouts = nil;
         case EC_F4:
         case EC_F5:
             return CMKeyCategoryFunction;
-        case EC_A:
-        case EC_B:
-        case EC_C:
-        case EC_D:
-        case EC_E:
-        case EC_F:
-        case EC_G:
-        case EC_H:
-        case EC_I:
-        case EC_J:
-        case EC_K:
-        case EC_L:
-        case EC_M:
-        case EC_N:
-        case EC_O:
-        case EC_P:
-        case EC_Q:
-        case EC_R:
-        case EC_S:
-        case EC_T:
-        case EC_U:
-        case EC_V:
-        case EC_W:
-        case EC_X:
-        case EC_Y:
-        case EC_Z:
-        case EC_0:
-        case EC_1:
-        case EC_2:
-        case EC_3:
-        case EC_4:
-        case EC_5:
-        case EC_6:
-        case EC_7:
-        case EC_8:
-        case EC_9:
-            return CMKeyCategoryCharacters;
-        case EC_NEG:
-        case EC_BKSLASH:
-        case EC_AT:
-        case EC_LBRACK:
-        case EC_RBRACK:
-        case EC_CIRCFLX:
-        case EC_SEMICOL:
-        case EC_COLON:
-        case EC_COMMA:
-        case EC_PERIOD:
-        case EC_DIV:
-        case EC_UNDSCRE:
-            return CMKeyCategorySymbols;
         case EC_NUMMUL:
         case EC_NUMADD:
         case EC_NUMDIV:
@@ -873,10 +1005,14 @@ static NSMutableDictionary *typewriterLayouts = nil;
             return CMLoc(@"KeyCategoryDirectional");
         case CMKeyCategoryFunction:
             return CMLoc(@"KeyCategoryFunction");
-        case CMKeyCategoryCharacters:
-            return CMLoc(@"KeyCategoryCharacters");
-        case CMKeyCategorySymbols:
-            return CMLoc(@"KeyCategorySymbols");
+        case CMKeyCategoryTypewriterRowOne:
+            return CMLoc(@"KeyCategoryTypewriterRowOne");
+        case CMKeyCategoryTypewriterRowTwo:
+            return CMLoc(@"KeyCategoryTypewriterRowTwo");
+        case CMKeyCategoryTypewriterRowThree:
+            return CMLoc(@"KeyCategoryTypewriterRowThree");
+        case CMKeyCategoryTypewriterRowFour:
+            return CMLoc(@"KeyCategoryTypewriterRowFour");
         case CMKeyCategoryNumericPad:
             return CMLoc(@"KeyCategoryNumericPad");
         case CMKeyCategorySpecial:

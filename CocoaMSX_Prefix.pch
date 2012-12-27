@@ -7,3 +7,4 @@
 #endif
 
 #define CMLoc(x) NSLocalizedString(x, nil)
+#define CMMakeNumber(x) [NSNumber numberWithInteger:x]

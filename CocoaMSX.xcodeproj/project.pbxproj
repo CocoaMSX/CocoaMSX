@@ -284,7 +284,7 @@
 		FE20DB911632783200D44ADF /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8E1632783200D44ADF /* AUTHORS */; };
 		FE20DB921632783200D44ADF /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8F1632783200D44ADF /* COPYING */; };
 		FE20DB931632783200D44ADF /* README in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB901632783200D44ADF /* README */; };
-		FE20DB95163278AD00D44ADF /* license.txt in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB94163278AD00D44ADF /* license.txt */; };
+		FE20DB95163278AD00D44ADF /* blueMSX License.txt in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB94163278AD00D44ADF /* blueMSX License.txt */; };
 		FE20DB971632845400D44ADF /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB961632845400D44ADF /* TODO */; };
 		FE23EAAE1636679C00AC98BF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE23EAAC1636670500AC98BF /* Carbon.framework */; };
 		FE2A2BD916240966000CCAE4 /* RepositionCassette.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */; };
@@ -297,6 +297,10 @@
 		FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE42836215FE857400ED7CB9 /* Emulator.xib */; };
 		FE42836A15FE8DF300ED7CB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42836915FE8DF300ED7CB9 /* main.m */; };
 		FE42CF80160EBF9B00D06E1D /* CMCocoaTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */; };
+		FE5458C2168C182A0002FA46 /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */; };
+		FE5458C3168C182A0002FA46 /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BF168C182A0002FA46 /* MGScopeBar.m */; };
+		FE5458C4168C182A0002FA46 /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = FE5458C1168C182A0002FA46 /* ReadMe.txt */; };
+		FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */; };
 		FE89754D1614038D00F07D76 /* CMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE89754C1614038D00F07D76 /* CMAppDelegate.m */; };
 		FE99C53A160E58FE00843DC8 /* CMFrameCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE99C539160E58FD00843DC8 /* CMFrameCounter.m */; };
 		FE99C53D160E634200843DC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE99C53C160E634100843DC8 /* QuartzCore.framework */; };
@@ -925,7 +929,7 @@
 		FE20DB8E1632783200D44ADF /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		FE20DB8F1632783200D44ADF /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
 		FE20DB901632783200D44ADF /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		FE20DB94163278AD00D44ADF /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
+		FE20DB94163278AD00D44ADF /* blueMSX License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "blueMSX License.txt"; sourceTree = "<group>"; };
 		FE20DB961632845400D44ADF /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		FE23EAAC1636670500AC98BF /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RepositionCassette.xib; sourceTree = "<group>"; };
@@ -941,6 +945,13 @@
 		FE42836215FE857400ED7CB9 /* Emulator.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Emulator.xib; sourceTree = "<group>"; };
 		FE42836915FE8DF300ED7CB9 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaTimer.m; sourceTree = "<group>"; };
+		FE5458BC168C182A0002FA46 /* MGRecessedPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGRecessedPopUpButtonCell.h; sourceTree = "<group>"; };
+		FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGRecessedPopUpButtonCell.m; sourceTree = "<group>"; };
+		FE5458BE168C182A0002FA46 /* MGScopeBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar.h; sourceTree = "<group>"; };
+		FE5458BF168C182A0002FA46 /* MGScopeBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGScopeBar.m; sourceTree = "<group>"; };
+		FE5458C0168C182A0002FA46 /* MGScopeBarDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBarDelegateProtocol.h; sourceTree = "<group>"; };
+		FE5458C1168C182A0002FA46 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "MGScopeBar License.rtf"; sourceTree = "<group>"; };
 		FE89754B1614038D00F07D76 /* CMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMAppDelegate.h; sourceTree = "<group>"; };
 		FE89754C1614038D00F07D76 /* CMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMAppDelegate.m; sourceTree = "<group>"; };
 		FE99C538160E58FD00843DC8 /* CMFrameCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMFrameCounter.h; sourceTree = "<group>"; };
@@ -1072,6 +1083,7 @@
 				FEC7231515FF0DD900CB508C /* Controllers */,
 				E997310D1298B4B300766C90 /* Src */,
 				FEA2BB8516367C6E0014B233 /* ShortcutRecorder */,
+				FE5458B9168C17910002FA46 /* ThirdParty */,
 				FE9C6A29161AA39F00513A6D /* UI */,
 				FE4F9C04161CDE9400A53567 /* Supporting Files */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -1848,7 +1860,8 @@
 		FE20DB8D1632776500D44ADF /* Documents */ = {
 			isa = PBXGroup;
 			children = (
-				FE20DB94163278AD00D44ADF /* license.txt */,
+				FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */,
+				FE20DB94163278AD00D44ADF /* blueMSX License.txt */,
 				FE20DB8E1632783200D44ADF /* AUTHORS */,
 				FE20DB8F1632783200D44ADF /* COPYING */,
 				FE20DB901632783200D44ADF /* README */,
@@ -1864,6 +1877,27 @@
 				FE42836915FE8DF300ED7CB9 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FE5458B9168C17910002FA46 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				FE5458BB168C17FE0002FA46 /* MGScopeBar */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		FE5458BB168C17FE0002FA46 /* MGScopeBar */ = {
+			isa = PBXGroup;
+			children = (
+				FE5458BC168C182A0002FA46 /* MGRecessedPopUpButtonCell.h */,
+				FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */,
+				FE5458BE168C182A0002FA46 /* MGScopeBar.h */,
+				FE5458BF168C182A0002FA46 /* MGScopeBar.m */,
+				FE5458C0168C182A0002FA46 /* MGScopeBarDelegateProtocol.h */,
+				FE5458C1168C182A0002FA46 /* ReadMe.txt */,
+			);
+			name = MGScopeBar;
 			sourceTree = "<group>";
 		};
 		FE9C6A29161AA39F00513A6D /* UI */ = {
@@ -2093,7 +2127,7 @@
 				FE20DB911632783200D44ADF /* AUTHORS in Resources */,
 				FE20DB921632783200D44ADF /* COPYING in Resources */,
 				FE20DB931632783200D44ADF /* README in Resources */,
-				FE20DB95163278AD00D44ADF /* license.txt in Resources */,
+				FE20DB95163278AD00D44ADF /* blueMSX License.txt in Resources */,
 				FE20DB971632845400D44ADF /* TODO in Resources */,
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
 				FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */,
@@ -2121,6 +2155,8 @@
 				FE2B026F167F121900159D33 /* ShortcutRecorder.strings in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
+				FE5458C4168C182A0002FA46 /* ReadMe.txt in Resources */,
+				FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2426,6 +2462,8 @@
 				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,
 				6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */,
 				FE1C1356167DD08E00CE2B6B /* CMAboutController.m in Sources */,
+				FE5458C2168C182A0002FA46 /* MGRecessedPopUpButtonCell.m in Sources */,
+				FE5458C3168C182A0002FA46 /* MGScopeBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
