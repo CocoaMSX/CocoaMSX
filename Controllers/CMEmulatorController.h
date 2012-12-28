@@ -96,6 +96,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (void)stop;
 - (void)performColdReboot;
 - (BOOL)isRunning;
+- (NSInteger)machineState;
 
 - (BOOL)isInFullScreenMode;
 
@@ -173,7 +174,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 // View menu
 - (IBAction)normalSize:(id)sender;
 - (IBAction)doubleSize:(id)sender;
-- (IBAction)tripleSize:(id)sender;
 
 // MSX menu
 - (IBAction)statusMsx:(id)sender;

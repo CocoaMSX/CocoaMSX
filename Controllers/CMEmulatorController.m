@@ -670,6 +670,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
 }
 
+- (NSInteger)machineState
+{
+    return emulatorGetState();
+}
+
 - (CMCocoaKeyboard *)keyboard
 {
     return keyboard;
@@ -1288,7 +1293,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                 }
                 else if (preferences.snapshotIconStyle == CMSnapshotIconStyleScreen)
                 {
-                    CGFloat iconDim = 420;
+                    CGFloat iconDim = MIN(screenshot.size.width, screenshot.size.height);
                     
                     icon = [[[NSImage alloc] initWithSize:NSMakeSize(iconDim, iconDim)] autorelease];
                     
@@ -1414,11 +1419,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)doubleSize:(id)sender
 {
     [self zoomWindowBy:2.0];
-}
-
-- (void)tripleSize:(id)sender
-{
-    [self zoomWindowBy:3.0];
 }
 
 #pragma mark - blueMSX implementations - emulation
@@ -1547,50 +1547,66 @@ void archTrap(UInt8 value)
 {
     NSMenuItem *menuItem = (NSMenuItem*)item;
     
-    if ([item action] == @selector(toggleCartAutoReset:))
+    NSInteger machineState = [self machineState];
+    BOOL isRunning = [self isRunning];
+    
+    if (item.action == @selector(toggleCartAutoReset:))
+    {
         menuItem.state = (properties->cartridge.autoReset) ? NSOnState : NSOffState;
-    else if ([item action] == @selector(ejectCartridgeSlot1:))
+        return isRunning;
+    }
+    else if (item.action == @selector(insertCartridgeSlot1:) ||
+             item.action == @selector(insertCartridgeSlot2:) ||
+             item.action == @selector(insertDiskSlot1:) ||
+             item.action == @selector(insertDiskSlot2:) ||
+             item.action == @selector(insertCassette:))
+    {
+        return isRunning;
+    }
+    else if (item.action == @selector(ejectCartridgeSlot1:))
         return [self toggleEjectCartridgeMenuItemStatus:menuItem slot:0];
-    else if ([item action] == @selector(ejectCartridgeSlot2:))
+    else if (item.action == @selector(ejectCartridgeSlot2:))
         return [self toggleEjectCartridgeMenuItemStatus:menuItem slot:1];
-    else if ([item action] == @selector(toggleDiskAutoReset:))
+    else if (item.action == @selector(toggleDiskAutoReset:))
+    {
         menuItem.state = (properties->diskdrive.autostartA) ? NSOnState : NSOffState;
-    else if ([item action] == @selector(ejectDiskSlot1:))
+        return isRunning;
+    }
+    else if (item.action == @selector(ejectDiskSlot1:))
         return [self toggleEjectDiskMenuItemStatus:menuItem slot:0];
-    else if ([item action] == @selector(ejectDiskSlot2:))
+    else if (item.action == @selector(ejectDiskSlot2:))
         return [self toggleEjectDiskMenuItemStatus:menuItem slot:1];
-    else if ([item action] == @selector(ejectCassette:))
+    else if (item.action == @selector(ejectCassette:))
         return [self toggleEjectCassetteMenuItemStatus:menuItem];
-    else if ([item action] == @selector(toggleCassetteAutoRewind:))
+    else if (item.action == @selector(toggleCassetteAutoRewind:))
+    {
         menuItem.state = (properties->cassette.rewindAfterInsert) ? NSOnState : NSOffState;
-    else if ([item action] == @selector(toggleCassetteWriteProtect:))
+        return isRunning;
+    }
+    else if (item.action == @selector(toggleCassetteWriteProtect:))
+    {
         menuItem.state = (properties->cassette.readOnly) ? NSOnState : NSOffState;
-    else if ([item action] == @selector(rewindCassette:))
+        return isRunning;
+    }
+    else if (item.action == @selector(rewindCassette:))
         return (*properties->media.tapes[0].fileName) ? NSOnState : NSOffState;
-    else if ([item action] == @selector(repositionCassette:))
+    else if (item.action == @selector(repositionCassette:))
         return (*properties->media.tapes[0].fileName) ? NSOnState : NSOffState;
-    else if ([item action] == @selector(normalSize:) ||
-             [item action] == @selector(doubleSize:) ||
-             [item action] == @selector(tripleSize:))
+    else if (item.action == @selector(normalSize:) ||
+             item.action == @selector(doubleSize:))
     {
         return ![self isInFullScreenMode];
     }
-    else if ([item action] == @selector(loadState:))
+    else if (item.action == @selector(loadState:))
     {
-        NSInteger machineState = emulatorGetState();
-        
-        return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
+        return isRunning;
     }
-    else if ([item action] == @selector(saveState:))
+    else if (item.action == @selector(saveState:))
     {
-        NSInteger machineState = emulatorGetState();
-        
-        return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
+        return isRunning;
     }
-    else if ([item action] == @selector(statusMsx:))
+    else if (item.action == @selector(statusMsx:))
     {
-        NSInteger machineState = emulatorGetState();
-        
         if (machineState == EMU_RUNNING)
             menuItem.title = CMLoc(@"MsxIsRunning");
         else if (machineState == EMU_PAUSED)
@@ -1604,51 +1620,48 @@ void archTrap(UInt8 value)
         
         return NO; // always disabled
     }
-    else if ([item action] == @selector(resetMsx:))
+    else if (item.action == @selector(resetMsx:))
     {
         // Resetting while paused leads to some odd behavior
-        return (emulatorGetState() == EMU_RUNNING);
+        return (machineState == EMU_RUNNING);
     }
-    else if ([item action] == @selector(shutDownMsx:))
+    else if (item.action == @selector(shutDownMsx:))
     {
-        if ([self isRunning])
+        if (isRunning)
             menuItem.title = CMLoc(@"ShutDown");
         else
             menuItem.title = CMLoc(@"StartUp");
     }
-    else if ([item action] == @selector(pauseMsx:))
+    else if (item.action == @selector(pauseMsx:))
     {
-        NSInteger machineState = emulatorGetState();
-        
         if (machineState == EMU_PAUSED)
             menuItem.title = CMLoc(@"Resume");
         else
             menuItem.title = CMLoc(@"Pause");
         
-        return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
+        return isRunning;
     }
-    else if ([item action] == @selector(saveScreenshot:))
+    else if (item.action == @selector(saveScreenshot:))
     {
-        NSInteger machineState = emulatorGetState();
-        return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
+        return isRunning;
     }
-    else if ([item action] == @selector(recordAudio:))
+    else if (item.action == @selector(recordAudio:))
     {
         if (!mixerIsLogging(mixer))
             menuItem.title = CMLoc(@"RecordAudioEll");
         else
             menuItem.title = CMLoc(@"StopRecording");
         
-        return [self isRunning];
+        return isRunning;
     }
-    else if ([item action] == @selector(recordGameplay:))
+    else if (item.action == @selector(recordGameplay:))
     {
         if (!boardCaptureIsRecording())
             menuItem.title = CMLoc(@"RecordGameplayEll");
         else
             menuItem.title = CMLoc(@"StopRecording");
         
-        return [self isRunning];
+        return isRunning;
     }
     
     return menuItem.isEnabled;

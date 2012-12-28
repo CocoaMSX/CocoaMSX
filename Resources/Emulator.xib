@@ -186,6 +186,7 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 									<string key="NSAction">submenuAction:</string>
+									<int key="NSTag">1001</int>
 									<object class="NSMenu" key="NSSubmenu" id="862489159">
 										<string key="NSTitle">Cartridge Slot 1</string>
 										<array class="NSMutableArray" key="NSMenuItems">
@@ -217,24 +218,6 @@
 												<reference key="NSOnImage" ref="229763992"/>
 												<reference key="NSMixedImage" ref="909111550"/>
 											</object>
-											<object class="NSMenuItem" id="984692985">
-												<reference key="NSMenu" ref="862489159"/>
-												<string key="NSTitle">Reset After Insertion/Ejection</string>
-												<string key="NSKeyEquiv"/>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="229763992"/>
-												<reference key="NSMixedImage" ref="909111550"/>
-											</object>
-											<object class="NSMenuItem" id="902275305">
-												<reference key="NSMenu" ref="862489159"/>
-												<bool key="NSIsDisabled">YES</bool>
-												<bool key="NSIsSeparator">YES</bool>
-												<string key="NSTitle"/>
-												<string key="NSKeyEquiv"/>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="229763992"/>
-												<reference key="NSMixedImage" ref="909111550"/>
-											</object>
 											<object class="NSMenuItem" id="839476118">
 												<reference key="NSMenu" ref="862489159"/>
 												<string key="NSTitle">Eject Cartridge</string>
@@ -254,6 +237,7 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 									<string key="NSAction">submenuAction:</string>
+									<int key="NSTag">1002</int>
 									<object class="NSMenu" key="NSSubmenu" id="223383797">
 										<string key="NSTitle">Cartridge Slot 2</string>
 										<array class="NSMutableArray" key="NSMenuItems">
@@ -295,6 +279,14 @@
 										</array>
 									</object>
 								</object>
+								<object class="NSMenuItem" id="984692985">
+									<reference key="NSMenu" ref="720053764"/>
+									<string key="NSTitle">Reset After Insertion/Ejection</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
 								<object class="NSMenuItem" id="425164168">
 									<reference key="NSMenu" ref="720053764"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -313,6 +305,7 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 									<string key="NSAction">submenuAction:</string>
+									<int key="NSTag">1003</int>
 									<object class="NSMenu" key="NSSubmenu" id="462436288">
 										<string key="NSTitle">Drive A:</string>
 										<array class="NSMutableArray" key="NSMenuItems">
@@ -371,6 +364,7 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 									<string key="NSAction">submenuAction:</string>
+									<int key="NSTag">1004</int>
 									<object class="NSMenu" key="NSSubmenu" id="606750779">
 										<string key="NSTitle">Drive B:</string>
 										<array class="NSMutableArray" key="NSMenuItems">
@@ -421,6 +415,7 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 									<string key="NSAction">submenuAction:</string>
+									<int key="NSTag">1005</int>
 									<object class="NSMenu" key="NSSubmenu" id="338656449">
 										<string key="NSTitle">Cassette</string>
 										<array class="NSMutableArray" key="NSMenuItems">
@@ -1059,14 +1054,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleCartAutoReset:</string>
-						<reference key="source" ref="1021"/>
-						<reference key="destination" ref="984692985"/>
-					</object>
-					<int key="connectionID">1218</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleDiskAutoReset:</string>
 						<reference key="source" ref="1021"/>
 						<reference key="destination" ref="290450906"/>
@@ -1128,6 +1115,14 @@
 						<reference key="destination" ref="238522557"/>
 					</object>
 					<int key="connectionID">1234</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleCartAutoReset:</string>
+						<reference key="source" ref="1021"/>
+						<reference key="destination" ref="984692985"/>
+					</object>
+					<int key="connectionID">1218</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1326,6 +1321,7 @@
 							<reference ref="1010469920"/>
 							<reference ref="1007693744"/>
 							<reference ref="722190558"/>
+							<reference ref="984692985"/>
 						</array>
 						<reference key="parent" ref="379814623"/>
 					</object>
@@ -1546,8 +1542,6 @@
 							<reference ref="1060244674"/>
 							<reference ref="839476118"/>
 							<reference ref="635997685"/>
-							<reference ref="984692985"/>
-							<reference ref="902275305"/>
 						</array>
 						<reference key="parent" ref="588272385"/>
 					</object>
@@ -1749,16 +1743,6 @@
 						<reference key="parent" ref="462436288"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">862</int>
-						<reference key="object" ref="984692985"/>
-						<reference key="parent" ref="862489159"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1009</int>
-						<reference key="object" ref="902275305"/>
-						<reference key="parent" ref="862489159"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">1016</int>
 						<reference key="object" ref="1007693744"/>
 						<array class="NSMutableArray" key="children">
@@ -1874,6 +1858,11 @@
 						<reference key="object" ref="536615486"/>
 						<reference key="parent" ref="590065759"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">862</int>
+						<reference key="object" ref="984692985"/>
+						<reference key="parent" ref="720053764"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1881,7 +1870,6 @@
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="-3.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1008.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1009.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1016.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1017.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1018.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2021,7 +2009,6 @@
 						<string key="toggleCassetteAutoRewind:">id</string>
 						<string key="toggleCassetteWriteProtect:">id</string>
 						<string key="toggleDiskAutoReset:">id</string>
-						<string key="tripleSize:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="doubleSize:">
@@ -2150,10 +2137,6 @@
 						</object>
 						<object class="IBActionInfo" key="toggleDiskAutoReset:">
 							<string key="name">toggleDiskAutoReset:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="tripleSize:">
-							<string key="name">tripleSize:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
