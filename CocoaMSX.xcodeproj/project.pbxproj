@@ -294,6 +294,18 @@
 		FE2CEB5A1622A50500E58F9A /* Machines in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB571622A50500E58F9A /* Machines */; };
 		FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E1962164085A000BCFD53 /* CMPreferences.m */; };
 		FE2E196A1640F19900BCFD53 /* CMNSString+FileManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E19691640F19900BCFD53 /* CMNSString+FileManagement.m */; };
+		FE36C390168EC64500723CFA /* SRRemoveShortcut.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37B168EC64500723CFA /* SRRemoveShortcut.png */; };
+		FE36C391168EC64500723CFA /* SRRemoveShortcut@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37C168EC64500723CFA /* SRRemoveShortcut@2x.png */; };
+		FE36C392168EC64500723CFA /* SRRemoveShortcutPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37D168EC64500723CFA /* SRRemoveShortcutPressed.png */; };
+		FE36C393168EC64500723CFA /* SRRemoveShortcutPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37E168EC64500723CFA /* SRRemoveShortcutPressed@2x.png */; };
+		FE36C394168EC64500723CFA /* SRRemoveShortcutRollover.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37F168EC64500723CFA /* SRRemoveShortcutRollover.png */; };
+		FE36C395168EC64500723CFA /* SRRemoveShortcutRollover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C380168EC64500723CFA /* SRRemoveShortcutRollover@2x.png */; };
+		FE36C396168EC64500723CFA /* SRCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = FE36C385168EC64500723CFA /* SRCommon.m */; };
+		FE36C397168EC64500723CFA /* SRKeyCodeTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE36C387168EC64500723CFA /* SRKeyCodeTransformer.m */; };
+		FE36C398168EC64500723CFA /* SRRecorderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE36C389168EC64500723CFA /* SRRecorderCell.m */; };
+		FE36C399168EC64500723CFA /* SRRecorderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FE36C38B168EC64500723CFA /* SRRecorderControl.m */; };
+		FE36C39A168EC64500723CFA /* SRRecorderTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE36C38D168EC64500723CFA /* SRRecorderTableCellView.m */; };
+		FE36C39B168EC64500723CFA /* SRValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FE36C38F168EC64500723CFA /* SRValidator.m */; };
 		FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE42836215FE857400ED7CB9 /* Emulator.xib */; };
 		FE42836A15FE8DF300ED7CB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42836915FE8DF300ED7CB9 /* main.m */; };
 		FE42CF80160EBF9B00D06E1D /* CMCocoaTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */; };
@@ -314,11 +326,6 @@
 		FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF01656F1C2002794C6 /* CMSemaphore.m */; };
 		FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF21656F1C2002794C6 /* CMThread.m */; };
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
-		FEA2BBB816367C6E0014B233 /* SRCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBA916367C6E0014B233 /* SRCommon.m */; };
-		FEA2BBB916367C6E0014B233 /* SRKeyCodeTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAB16367C6E0014B233 /* SRKeyCodeTransformer.m */; };
-		FEA2BBBA16367C6E0014B233 /* SRRecorderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAD16367C6E0014B233 /* SRRecorderCell.m */; };
-		FEA2BBBB16367C6E0014B233 /* SRRecorderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */; };
-		FEA2BBBC16367C6E0014B233 /* SRValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA2BBB116367C6E0014B233 /* SRValidator.m */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
 		FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */; };
@@ -328,13 +335,6 @@
 		FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */; };
 		FEC7231915FF0E3400CB508C /* CMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC7231815FF0E3400CB508C /* CMPreferenceController.m */; };
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
-		FECF680A16642A6700C9C4F4 /* SRRemoveShortcut.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680416642A6700C9C4F4 /* SRRemoveShortcut.png */; };
-		FECF680B16642A6700C9C4F4 /* SRRemoveShortcut@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680516642A6700C9C4F4 /* SRRemoveShortcut@2x.png */; };
-		FECF680C16642A6700C9C4F4 /* SRRemoveShortcutPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680616642A6700C9C4F4 /* SRRemoveShortcutPressed.png */; };
-		FECF680D16642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680716642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png */; };
-		FECF680E16642A6700C9C4F4 /* SRRemoveShortcutRollover.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680816642A6700C9C4F4 /* SRRemoveShortcutRollover.png */; };
-		FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */; };
-		FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */; };
 		FED154BE168714910043C7E5 /* filmstrip.png in Resources */ = {isa = PBXBuildFile; fileRef = FED154BD168714910043C7E5 /* filmstrip.png */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
 		FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEE801571674ACD000695F38 /* CartridgeDocument.icns */; };
@@ -942,6 +942,25 @@
 		FE2E1962164085A000BCFD53 /* CMPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferences.m; sourceTree = "<group>"; };
 		FE2E19681640F19900BCFD53 /* CMNSString+FileManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CMNSString+FileManagement.h"; sourceTree = "<group>"; };
 		FE2E19691640F19900BCFD53 /* CMNSString+FileManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CMNSString+FileManagement.m"; sourceTree = "<group>"; };
+		FE36C37B168EC64500723CFA /* SRRemoveShortcut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcut.png; sourceTree = "<group>"; };
+		FE36C37C168EC64500723CFA /* SRRemoveShortcut@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcut@2x.png"; sourceTree = "<group>"; };
+		FE36C37D168EC64500723CFA /* SRRemoveShortcutPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcutPressed.png; sourceTree = "<group>"; };
+		FE36C37E168EC64500723CFA /* SRRemoveShortcutPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcutPressed@2x.png"; sourceTree = "<group>"; };
+		FE36C37F168EC64500723CFA /* SRRemoveShortcutRollover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcutRollover.png; sourceTree = "<group>"; };
+		FE36C380168EC64500723CFA /* SRRemoveShortcutRollover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcutRollover@2x.png"; sourceTree = "<group>"; };
+		FE36C382168EC64500723CFA /* ShortcutRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShortcutRecorder.h; sourceTree = "<group>"; };
+		FE36C384168EC64500723CFA /* SRCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRCommon.h; sourceTree = "<group>"; };
+		FE36C385168EC64500723CFA /* SRCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRCommon.m; sourceTree = "<group>"; };
+		FE36C386168EC64500723CFA /* SRKeyCodeTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKeyCodeTransformer.h; sourceTree = "<group>"; };
+		FE36C387168EC64500723CFA /* SRKeyCodeTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKeyCodeTransformer.m; sourceTree = "<group>"; };
+		FE36C388168EC64500723CFA /* SRRecorderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderCell.h; sourceTree = "<group>"; };
+		FE36C389168EC64500723CFA /* SRRecorderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderCell.m; sourceTree = "<group>"; };
+		FE36C38A168EC64500723CFA /* SRRecorderControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderControl.h; sourceTree = "<group>"; };
+		FE36C38B168EC64500723CFA /* SRRecorderControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderControl.m; sourceTree = "<group>"; };
+		FE36C38C168EC64500723CFA /* SRRecorderTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderTableCellView.h; sourceTree = "<group>"; };
+		FE36C38D168EC64500723CFA /* SRRecorderTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderTableCellView.m; sourceTree = "<group>"; };
+		FE36C38E168EC64500723CFA /* SRValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRValidator.h; sourceTree = "<group>"; };
+		FE36C38F168EC64500723CFA /* SRValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRValidator.m; sourceTree = "<group>"; };
 		FE42836215FE857400ED7CB9 /* Emulator.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Emulator.xib; sourceTree = "<group>"; };
 		FE42836915FE8DF300ED7CB9 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaTimer.m; sourceTree = "<group>"; };
@@ -974,17 +993,6 @@
 		FEA01BF21656F1C2002794C6 /* CMThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMThread.m; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMCocoaTimer.h; sourceTree = "<group>"; };
 		FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SnapshotDocument.icns; sourceTree = "<group>"; };
-		FEA2BBA616367C6E0014B233 /* ShortcutRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShortcutRecorder.h; sourceTree = "<group>"; };
-		FEA2BBA816367C6E0014B233 /* SRCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRCommon.h; sourceTree = "<group>"; };
-		FEA2BBA916367C6E0014B233 /* SRCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRCommon.m; sourceTree = "<group>"; };
-		FEA2BBAA16367C6E0014B233 /* SRKeyCodeTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKeyCodeTransformer.h; sourceTree = "<group>"; };
-		FEA2BBAB16367C6E0014B233 /* SRKeyCodeTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKeyCodeTransformer.m; sourceTree = "<group>"; };
-		FEA2BBAC16367C6E0014B233 /* SRRecorderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderCell.h; sourceTree = "<group>"; };
-		FEA2BBAD16367C6E0014B233 /* SRRecorderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderCell.m; sourceTree = "<group>"; };
-		FEA2BBAE16367C6E0014B233 /* SRRecorderControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderControl.h; sourceTree = "<group>"; };
-		FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderControl.m; sourceTree = "<group>"; };
-		FEA2BBB016367C6E0014B233 /* SRValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRValidator.h; sourceTree = "<group>"; };
-		FEA2BBB116367C6E0014B233 /* SRValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRValidator.m; sourceTree = "<group>"; };
 		FEA4548C1679B65300AAECB7 /* DiskDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DiskDocument.icns; sourceTree = "<group>"; };
 		FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CassetteDocument.icns; sourceTree = "<group>"; };
 		FEAABFB5165A113100934A94 /* CMMsxKeyboardMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMsxKeyboardMatrix.h; sourceTree = "<group>"; };
@@ -999,14 +1007,6 @@
 		FEC7231715FF0E3400CB508C /* CMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferenceController.h; sourceTree = "<group>"; };
 		FEC7231815FF0E3400CB508C /* CMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferenceController.m; sourceTree = "<group>"; };
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
-		FECF680416642A6700C9C4F4 /* SRRemoveShortcut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcut.png; sourceTree = "<group>"; };
-		FECF680516642A6700C9C4F4 /* SRRemoveShortcut@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcut@2x.png"; sourceTree = "<group>"; };
-		FECF680616642A6700C9C4F4 /* SRRemoveShortcutPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcutPressed.png; sourceTree = "<group>"; };
-		FECF680716642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcutPressed@2x.png"; sourceTree = "<group>"; };
-		FECF680816642A6700C9C4F4 /* SRRemoveShortcutRollover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcutRollover.png; sourceTree = "<group>"; };
-		FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcutRollover@2x.png"; sourceTree = "<group>"; };
-		FECF681116642A7E00C9C4F4 /* SRRecorderTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRRecorderTableCellView.h; sourceTree = "<group>"; };
-		FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRRecorderTableCellView.m; sourceTree = "<group>"; };
 		FED154BD168714910043C7E5 /* filmstrip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filmstrip.png; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
 		FEE801571674ACD000695F38 /* CartridgeDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CartridgeDocument.icns; sourceTree = "<group>"; };
@@ -1082,7 +1082,6 @@
 				FEEF38AC163C82D0005F7DC8 /* Cocoa */,
 				FEC7231515FF0DD900CB508C /* Controllers */,
 				E997310D1298B4B300766C90 /* Src */,
-				FEA2BB8516367C6E0014B233 /* ShortcutRecorder */,
 				FE5458B9168C17910002FA46 /* ThirdParty */,
 				FE9C6A29161AA39F00513A6D /* UI */,
 				FE4F9C04161CDE9400A53567 /* Supporting Files */,
@@ -1870,6 +1869,56 @@
 			path = Documents;
 			sourceTree = "<group>";
 		};
+		FE36C379168EC64500723CFA /* ShortcutRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				FE36C37A168EC64500723CFA /* Images */,
+				FE36C381168EC64500723CFA /* Localizations */,
+				FE36C382168EC64500723CFA /* ShortcutRecorder.h */,
+				FE36C383168EC64500723CFA /* Source */,
+			);
+			path = ShortcutRecorder;
+			sourceTree = "<group>";
+		};
+		FE36C37A168EC64500723CFA /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				FE36C37B168EC64500723CFA /* SRRemoveShortcut.png */,
+				FE36C37C168EC64500723CFA /* SRRemoveShortcut@2x.png */,
+				FE36C37D168EC64500723CFA /* SRRemoveShortcutPressed.png */,
+				FE36C37E168EC64500723CFA /* SRRemoveShortcutPressed@2x.png */,
+				FE36C37F168EC64500723CFA /* SRRemoveShortcutRollover.png */,
+				FE36C380168EC64500723CFA /* SRRemoveShortcutRollover@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		FE36C381168EC64500723CFA /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Localizations;
+			sourceTree = "<group>";
+		};
+		FE36C383168EC64500723CFA /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				FE36C384168EC64500723CFA /* SRCommon.h */,
+				FE36C385168EC64500723CFA /* SRCommon.m */,
+				FE36C386168EC64500723CFA /* SRKeyCodeTransformer.h */,
+				FE36C387168EC64500723CFA /* SRKeyCodeTransformer.m */,
+				FE36C388168EC64500723CFA /* SRRecorderCell.h */,
+				FE36C389168EC64500723CFA /* SRRecorderCell.m */,
+				FE36C38A168EC64500723CFA /* SRRecorderControl.h */,
+				FE36C38B168EC64500723CFA /* SRRecorderControl.m */,
+				FE36C38C168EC64500723CFA /* SRRecorderTableCellView.h */,
+				FE36C38D168EC64500723CFA /* SRRecorderTableCellView.m */,
+				FE36C38E168EC64500723CFA /* SRValidator.h */,
+				FE36C38F168EC64500723CFA /* SRValidator.m */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		FE4F9C04161CDE9400A53567 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1882,6 +1931,7 @@
 		FE5458B9168C17910002FA46 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				FE36C379168EC64500723CFA /* ShortcutRecorder */,
 				FE5458BB168C17FE0002FA46 /* MGScopeBar */,
 			);
 			path = ThirdParty;
@@ -1897,7 +1947,7 @@
 				FE5458C0168C182A0002FA46 /* MGScopeBarDelegateProtocol.h */,
 				FE5458C1168C182A0002FA46 /* ReadMe.txt */,
 			);
-			name = MGScopeBar;
+			path = MGScopeBar;
 			sourceTree = "<group>";
 		};
 		FE9C6A29161AA39F00513A6D /* UI */ = {
@@ -1909,56 +1959,6 @@
 				FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		FEA2BB8516367C6E0014B233 /* ShortcutRecorder */ = {
-			isa = PBXGroup;
-			children = (
-				FEA2BB8616367C6E0014B233 /* Images */,
-				FEA2BB8B16367C6E0014B233 /* Localizations */,
-				FEA2BBA616367C6E0014B233 /* ShortcutRecorder.h */,
-				FEA2BBA716367C6E0014B233 /* Source */,
-			);
-			path = ShortcutRecorder;
-			sourceTree = "<group>";
-		};
-		FEA2BB8616367C6E0014B233 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				FECF680416642A6700C9C4F4 /* SRRemoveShortcut.png */,
-				FECF680516642A6700C9C4F4 /* SRRemoveShortcut@2x.png */,
-				FECF680616642A6700C9C4F4 /* SRRemoveShortcutPressed.png */,
-				FECF680716642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png */,
-				FECF680816642A6700C9C4F4 /* SRRemoveShortcutRollover.png */,
-				FECF680916642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png */,
-			);
-			path = Images;
-			sourceTree = "<group>";
-		};
-		FEA2BB8B16367C6E0014B233 /* Localizations */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Localizations;
-			sourceTree = "<group>";
-		};
-		FEA2BBA716367C6E0014B233 /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				FEA2BBA816367C6E0014B233 /* SRCommon.h */,
-				FEA2BBA916367C6E0014B233 /* SRCommon.m */,
-				FEA2BBAA16367C6E0014B233 /* SRKeyCodeTransformer.h */,
-				FEA2BBAB16367C6E0014B233 /* SRKeyCodeTransformer.m */,
-				FEA2BBAC16367C6E0014B233 /* SRRecorderCell.h */,
-				FEA2BBAD16367C6E0014B233 /* SRRecorderCell.m */,
-				FEA2BBAE16367C6E0014B233 /* SRRecorderControl.h */,
-				FEA2BBAF16367C6E0014B233 /* SRRecorderControl.m */,
-				FECF681116642A7E00C9C4F4 /* SRRecorderTableCellView.h */,
-				FECF681216642A7E00C9C4F4 /* SRRecorderTableCellView.m */,
-				FEA2BBB016367C6E0014B233 /* SRValidator.h */,
-				FEA2BBB116367C6E0014B233 /* SRValidator.m */,
-			);
-			path = Source;
 			sourceTree = "<group>";
 		};
 		FEC7231515FF0DD900CB508C /* Controllers */ = {
@@ -2139,12 +2139,6 @@
 				6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */,
 				6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */,
 				FE1A3631165623AC0083BA21 /* icon.icns in Resources */,
-				FECF680A16642A6700C9C4F4 /* SRRemoveShortcut.png in Resources */,
-				FECF680B16642A6700C9C4F4 /* SRRemoveShortcut@2x.png in Resources */,
-				FECF680C16642A6700C9C4F4 /* SRRemoveShortcutPressed.png in Resources */,
-				FECF680D16642A6700C9C4F4 /* SRRemoveShortcutPressed@2x.png in Resources */,
-				FECF680E16642A6700C9C4F4 /* SRRemoveShortcutRollover.png in Resources */,
-				FECF680F16642A6700C9C4F4 /* SRRemoveShortcutRollover@2x.png in Resources */,
 				FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */,
 				FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */,
 				FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */,
@@ -2157,6 +2151,12 @@
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
 				FE5458C4168C182A0002FA46 /* ReadMe.txt in Resources */,
 				FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */,
+				FE36C390168EC64500723CFA /* SRRemoveShortcut.png in Resources */,
+				FE36C391168EC64500723CFA /* SRRemoveShortcut@2x.png in Resources */,
+				FE36C392168EC64500723CFA /* SRRemoveShortcutPressed.png in Resources */,
+				FE36C393168EC64500723CFA /* SRRemoveShortcutPressed@2x.png in Resources */,
+				FE36C394168EC64500723CFA /* SRRemoveShortcutRollover.png in Resources */,
+				FE36C395168EC64500723CFA /* SRRemoveShortcutRollover@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2445,11 +2445,6 @@
 				6B5D287B161F60620081F586 /* Language.c in Sources */,
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
-				FEA2BBB816367C6E0014B233 /* SRCommon.m in Sources */,
-				FEA2BBB916367C6E0014B233 /* SRKeyCodeTransformer.m in Sources */,
-				FEA2BBBA16367C6E0014B233 /* SRRecorderCell.m in Sources */,
-				FEA2BBBB16367C6E0014B233 /* SRRecorderControl.m in Sources */,
-				FEA2BBBC16367C6E0014B233 /* SRValidator.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
 				FE2E196A1640F19900BCFD53 /* CMNSString+FileManagement.m in Sources */,
 				FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */,
@@ -2457,13 +2452,18 @@
 				FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */,
 				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
 				FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */,
-				FECF681316642A7E00C9C4F4 /* SRRecorderTableCellView.m in Sources */,
 				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,
 				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,
 				6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */,
 				FE1C1356167DD08E00CE2B6B /* CMAboutController.m in Sources */,
 				FE5458C2168C182A0002FA46 /* MGRecessedPopUpButtonCell.m in Sources */,
 				FE5458C3168C182A0002FA46 /* MGScopeBar.m in Sources */,
+				FE36C396168EC64500723CFA /* SRCommon.m in Sources */,
+				FE36C397168EC64500723CFA /* SRKeyCodeTransformer.m in Sources */,
+				FE36C398168EC64500723CFA /* SRRecorderCell.m in Sources */,
+				FE36C399168EC64500723CFA /* SRRecorderControl.m in Sources */,
+				FE36C39A168EC64500723CFA /* SRRecorderTableCellView.m in Sources */,
+				FE36C39B168EC64500723CFA /* SRValidator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
