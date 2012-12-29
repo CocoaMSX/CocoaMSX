@@ -160,12 +160,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)awakeFromNib
 {
-    openRomFileTypes = [[NSArray arrayWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"col", @"sg", @"sc", @"zip", nil] retain];
-    openDiskFileTypes = [[NSArray arrayWithObjects:@"dsk", @"di1", @"di2", @"360", @"720", @"sf7", @"zip", nil] retain];
-    openCassetteFileTypes = [[NSArray arrayWithObjects:@"cas", @"zip", nil] retain];
-    stateFileTypes = [[NSArray arrayWithObjects:@"sta", nil] retain];
-    captureAudioTypes = [[NSArray arrayWithObjects:@"wav", nil] retain];
-    captureGameplayTypes = [[NSArray arrayWithObjects:@"cap", nil] retain];
+    openRomFileTypes = [[NSArray alloc] initWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"zip", nil];
+    openDiskFileTypes = [[NSArray alloc] initWithObjects:@"dsk", @"di1", @"di2", @"360", @"720", @"sf7", @"zip", nil];
+    openCassetteFileTypes = [[NSArray alloc] initWithObjects:@"cas", @"zip", nil];
+    stateFileTypes = [[NSArray alloc] initWithObjects:@"sta", nil];
+    captureAudioTypes = [[NSArray alloc] initWithObjects:@"wav", nil];
+    captureGameplayTypes = [[NSArray alloc] initWithObjects:@"cap", nil];
     
     [inputDeviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
@@ -307,7 +307,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     self.isInitialized = YES;
     
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"EmulatorController: initialized");
 #endif
 }
@@ -353,7 +353,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)stop
 {
-    if (self.isInitialized && [self isRunning])
+    if ([self isInitialized] && [self isRunning])
     {
         emulatorSuspend();
         emulatorStop();
@@ -490,10 +490,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)setScanlines:(NSInteger)value
 {
-    properties->video.scanlinesEnable = (value > 0);
-    properties->video.scanlinesPct = 100 - value;
-    
-    videoUpdateAll(video, properties);
+    if ([self isRunning])
+    {
+        properties->video.scanlinesEnable = (value > 0);
+        properties->video.scanlinesPct = 100 - value;
+        
+        videoUpdateAll(video, properties);
+    }
 }
 
 - (NSInteger)scanlines
@@ -1244,11 +1247,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)saveState:(id)sender
 {
-    if (!self.isInitialized)
-        return;
-    
-    NSInteger emulatorState = emulatorGetState();
-    if (emulatorState != EMU_RUNNING && emulatorState != EMU_PAUSED)
+    if (!self.isInitialized || !self.isRunning)
         return;
     
     emulatorSuspend();
@@ -1485,7 +1484,7 @@ void archTrap(UInt8 value)
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification
 {
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"EmulatorController: willEnterFullScreen");
 #endif
     
@@ -1503,7 +1502,7 @@ void archTrap(UInt8 value)
 
 - (void)windowWillExitFullScreen:(NSNotification *)notification
 {
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"EmulatorController: willExitFullScreen");
 #endif
     
@@ -1519,7 +1518,7 @@ void archTrap(UInt8 value)
 
 - (void)cartSelectedOfType:(NSInteger)romType romName:(const char*)romName slot:(NSInteger)slot;
 {
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"EmulatorController:cartSelectedOfType %ld '%s'", romType, romName);
 #endif
     
@@ -1532,7 +1531,7 @@ void archTrap(UInt8 value)
 
 - (void)cassetteRepositionedTo:(NSInteger)position
 {
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"EmulatorController:cassetteRepositionedTo:%ld", position);
 #endif
     

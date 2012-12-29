@@ -6,3 +6,5 @@
   making assumptions when repositioning cassette that this will not be the case
 
 * Add option to create new disk images
+* Add an option to paste text, and possibly figure out a way to copy 
+  (read VRAM?)

@@ -20,8 +20,16 @@
  **
  ******************************************************************************
  */
-#import <Cocoa/Cocoa.h>
+#import "NSString+FileManagement.h"
 
-@interface CMMsxKeyboardMatrix : NSView
+@implementation NSString (CMNSStringFileManagement)
+
+- (BOOL)cm_isEqualToPath:(NSString *)path
+{
+    if (!path)
+        return NO;
+    
+    return [[NSURL fileURLWithPath:self] isEqualTo:[NSURL fileURLWithPath:path]];
+}
 
 @end

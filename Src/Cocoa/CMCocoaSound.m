@@ -170,7 +170,7 @@ static OSStatus audioCallback(void *inRefCon,
     
     [self resume];
     
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"CocoaSound: initialized");
 #endif
     
@@ -220,7 +220,7 @@ static OSStatus audioCallback(void *inRefCon,
     
     isReady = NO;
     
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"CocoaSound: destroyed");
 #endif
     

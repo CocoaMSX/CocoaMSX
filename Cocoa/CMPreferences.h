@@ -74,8 +74,6 @@
 - (void)setVdpSyncMode:(NSInteger)syncMode;
 - (NSInteger)emulationSpeedPercentage;
 - (void)setEmulationSpeedPercentage:(NSInteger)percentage;
-- (NSInteger)scanlineAmount;
-- (void)setScanlineAmount:(NSInteger)amount;
 
 - (BOOL)createAudioCaptureDirectory;
 - (BOOL)createVideoCaptureDirectory;

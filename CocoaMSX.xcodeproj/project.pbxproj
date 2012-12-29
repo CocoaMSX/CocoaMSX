@@ -293,7 +293,7 @@
 		FE2CEB581622A50500E58F9A /* Databases in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB551622A50500E58F9A /* Databases */; };
 		FE2CEB5A1622A50500E58F9A /* Machines in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB571622A50500E58F9A /* Machines */; };
 		FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E1962164085A000BCFD53 /* CMPreferences.m */; };
-		FE2E196A1640F19900BCFD53 /* CMNSString+FileManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E19691640F19900BCFD53 /* CMNSString+FileManagement.m */; };
+		FE2E196A1640F19900BCFD53 /* NSString+FileManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E19691640F19900BCFD53 /* NSString+FileManagement.m */; };
 		FE36C390168EC64500723CFA /* SRRemoveShortcut.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37B168EC64500723CFA /* SRRemoveShortcut.png */; };
 		FE36C391168EC64500723CFA /* SRRemoveShortcut@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37C168EC64500723CFA /* SRRemoveShortcut@2x.png */; };
 		FE36C392168EC64500723CFA /* SRRemoveShortcutPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = FE36C37D168EC64500723CFA /* SRRemoveShortcutPressed.png */; };
@@ -311,7 +311,6 @@
 		FE42CF80160EBF9B00D06E1D /* CMCocoaTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */; };
 		FE5458C2168C182A0002FA46 /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */; };
 		FE5458C3168C182A0002FA46 /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BF168C182A0002FA46 /* MGScopeBar.m */; };
-		FE5458C4168C182A0002FA46 /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = FE5458C1168C182A0002FA46 /* ReadMe.txt */; };
 		FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */; };
 		FE89754D1614038D00F07D76 /* CMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE89754C1614038D00F07D76 /* CMAppDelegate.m */; };
 		FE99C53A160E58FE00843DC8 /* CMFrameCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE99C539160E58FD00843DC8 /* CMFrameCounter.m */; };
@@ -328,7 +327,6 @@
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
-		FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
 		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
@@ -940,8 +938,8 @@
 		FE2CEB571622A50500E58F9A /* Machines */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Machines; sourceTree = "<group>"; };
 		FE2E1961164085A000BCFD53 /* CMPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferences.h; sourceTree = "<group>"; };
 		FE2E1962164085A000BCFD53 /* CMPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferences.m; sourceTree = "<group>"; };
-		FE2E19681640F19900BCFD53 /* CMNSString+FileManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CMNSString+FileManagement.h"; sourceTree = "<group>"; };
-		FE2E19691640F19900BCFD53 /* CMNSString+FileManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CMNSString+FileManagement.m"; sourceTree = "<group>"; };
+		FE2E19681640F19900BCFD53 /* NSString+FileManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FileManagement.h"; sourceTree = "<group>"; };
+		FE2E19691640F19900BCFD53 /* NSString+FileManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FileManagement.m"; sourceTree = "<group>"; };
 		FE36C37B168EC64500723CFA /* SRRemoveShortcut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcut.png; sourceTree = "<group>"; };
 		FE36C37C168EC64500723CFA /* SRRemoveShortcut@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SRRemoveShortcut@2x.png"; sourceTree = "<group>"; };
 		FE36C37D168EC64500723CFA /* SRRemoveShortcutPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SRRemoveShortcutPressed.png; sourceTree = "<group>"; };
@@ -969,7 +967,6 @@
 		FE5458BE168C182A0002FA46 /* MGScopeBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar.h; sourceTree = "<group>"; };
 		FE5458BF168C182A0002FA46 /* MGScopeBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGScopeBar.m; sourceTree = "<group>"; };
 		FE5458C0168C182A0002FA46 /* MGScopeBarDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBarDelegateProtocol.h; sourceTree = "<group>"; };
-		FE5458C1168C182A0002FA46 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "MGScopeBar License.rtf"; sourceTree = "<group>"; };
 		FE89754B1614038D00F07D76 /* CMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMAppDelegate.h; sourceTree = "<group>"; };
 		FE89754C1614038D00F07D76 /* CMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMAppDelegate.m; sourceTree = "<group>"; };
@@ -995,8 +992,6 @@
 		FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SnapshotDocument.icns; sourceTree = "<group>"; };
 		FEA4548C1679B65300AAECB7 /* DiskDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DiskDocument.icns; sourceTree = "<group>"; };
 		FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CassetteDocument.icns; sourceTree = "<group>"; };
-		FEAABFB5165A113100934A94 /* CMMsxKeyboardMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMsxKeyboardMatrix.h; sourceTree = "<group>"; };
-		FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMsxKeyboardMatrix.m; sourceTree = "<group>"; };
 		FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputDeviceLayout.h; sourceTree = "<group>"; };
 		FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputDeviceLayout.m; sourceTree = "<group>"; };
 		FEAAF3F61672942600D371CD /* CMInputMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputMethod.h; sourceTree = "<group>"; };
@@ -1872,9 +1867,8 @@
 		FE36C379168EC64500723CFA /* ShortcutRecorder */ = {
 			isa = PBXGroup;
 			children = (
-				FE36C37A168EC64500723CFA /* Images */,
-				FE36C381168EC64500723CFA /* Localizations */,
 				FE36C382168EC64500723CFA /* ShortcutRecorder.h */,
+				FE36C37A168EC64500723CFA /* Images */,
 				FE36C383168EC64500723CFA /* Source */,
 			);
 			path = ShortcutRecorder;
@@ -1891,13 +1885,6 @@
 				FE36C380168EC64500723CFA /* SRRemoveShortcutRollover@2x.png */,
 			);
 			path = Images;
-			sourceTree = "<group>";
-		};
-		FE36C381168EC64500723CFA /* Localizations */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Localizations;
 			sourceTree = "<group>";
 		};
 		FE36C383168EC64500723CFA /* Source */ = {
@@ -1945,7 +1932,6 @@
 				FE5458BE168C182A0002FA46 /* MGScopeBar.h */,
 				FE5458BF168C182A0002FA46 /* MGScopeBar.m */,
 				FE5458C0168C182A0002FA46 /* MGScopeBarDelegateProtocol.h */,
-				FE5458C1168C182A0002FA46 /* ReadMe.txt */,
 			);
 			path = MGScopeBar;
 			sourceTree = "<group>";
@@ -1955,8 +1941,6 @@
 			children = (
 				FEF40ED2160DB83B009170A9 /* CMMsxDisplayView.h */,
 				FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */,
-				FEAABFB5165A113100934A94 /* CMMsxKeyboardMatrix.h */,
-				FEAABFB6165A113100934A94 /* CMMsxKeyboardMatrix.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1991,10 +1975,10 @@
 				FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */,
 				6B1C25AA1672972F004DD618 /* CMKeyboardInput.h */,
 				6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */,
-				FE2E19681640F19900BCFD53 /* CMNSString+FileManagement.h */,
-				FE2E19691640F19900BCFD53 /* CMNSString+FileManagement.m */,
 				FE2E1961164085A000BCFD53 /* CMPreferences.h */,
 				FE2E1962164085A000BCFD53 /* CMPreferences.m */,
+				FE2E19681640F19900BCFD53 /* NSString+FileManagement.h */,
+				FE2E19691640F19900BCFD53 /* NSString+FileManagement.m */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
@@ -2149,7 +2133,6 @@
 				FE2B026F167F121900159D33 /* ShortcutRecorder.strings in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
-				FE5458C4168C182A0002FA46 /* ReadMe.txt in Resources */,
 				FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */,
 				FE36C390168EC64500723CFA /* SRRemoveShortcut.png in Resources */,
 				FE36C391168EC64500723CFA /* SRRemoveShortcut@2x.png in Resources */,
@@ -2446,12 +2429,11 @@
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
-				FE2E196A1640F19900BCFD53 /* CMNSString+FileManagement.m in Sources */,
+				FE2E196A1640F19900BCFD53 /* NSString+FileManagement.m in Sources */,
 				FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */,
 				FEA01BF31656F1C2002794C6 /* CMEvent.m in Sources */,
 				FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */,
 				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
-				FEAABFB7165A113100934A94 /* CMMsxKeyboardMatrix.m in Sources */,
 				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,
 				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,
 				6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */,

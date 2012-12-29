@@ -720,6 +720,10 @@ static NSMutableDictionary *typewriterLayouts = nil;
     NSLog(@"keyDown: %i", [event keyCode]);
 #endif
     
+    // Ignore keys while Command is pressed - they don't generate keyUp
+    if ((event.modifierFlags & NSCommandKeyMask) != 0)
+        return;
+    
     [self handleKeyEvent:event.keyCode isDown:YES];
 }
 
@@ -816,7 +820,7 @@ static NSMutableDictionary *typewriterLayouts = nil;
 {
     if (!focus)
     {
-#if DEBUG
+#ifdef DEBUG
         NSLog(@"CMCocoaKeyboard: -Focus");
 #endif
         // Emulator has lost focus - release all virtual keys
@@ -824,7 +828,7 @@ static NSMutableDictionary *typewriterLayouts = nil;
     }
     else
     {
-#if DEBUG
+#ifdef DEBUG
         NSLog(@"CMCocoaKeyboard: +Focus");
 #endif
     }

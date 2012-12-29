@@ -100,14 +100,14 @@
         if (createDirectoryError)
         {
             // TODO: log this
-#if DEBUG
+#ifdef DEBUG
             NSLog(@"Error creating directory '%@': %@", directory,
                   createDirectoryError.localizedDescription);
 #endif
             return;
         }
         
-#if DEBUG
+#ifdef DEBUG
         NSLog(@"Created directory '%@'", directory);
 #endif
         
@@ -140,7 +140,7 @@
                             attributes:nil
                                  error:NULL];
              
-#if DEBUG
+#ifdef DEBUG
              NSLog(@"Created directory '%@'", destPath);
 #endif
              
@@ -153,7 +153,7 @@
          if (enumerateFilesError)
          {
              // TODO: log this
-#if DEBUG
+#ifdef DEBUG
              NSLog(@"Error enumerating files in '%@': %@", sourcePath,
                    enumerateFilesError.localizedDescription);
 #endif
@@ -174,14 +174,14 @@
               if (copyFilesError)
               {
                   // TODO: log this
-#if DEBUG
+#ifdef DEBUG
                   NSLog(@"Error copying resource '%@': %@", obj,
                         copyFilesError.localizedDescription);
 #endif
                   return;
               }
               
-#if DEBUG
+#ifdef DEBUG
               NSLog(@"Copied '%@' to '%@'", [sourceFile lastPathComponent], destFile);
 #endif
               
@@ -189,7 +189,7 @@
           }];
      }];
     
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"Resources: initialized (created %ld dirs; copied %ld files)",
           dirsCreated, filesCopied);
 #endif

@@ -24,7 +24,7 @@
 
 #import "CMInputDeviceLayout.h"
 
-#import "CMNSString+FileManagement.h"
+#import "NSString+FileManagement.h"
 
 static NSString * const CMScreenWidthPrefKey = @"screenWidth";
 static NSString * const CMScreenHeightPrefKey = @"screenHeight";
@@ -50,7 +50,7 @@ static NSString * const CMCartridgeDirectoryKey = @"cartridgeDirectory";
 static NSString * const CMDiskDirectoryKey = @"diskDirectory";
 
 static NSString * const CMSnapshotIconStyle = @"snapshotIconStyle";
-static NSString * const CMScanlineAmount = @"scanlines";
+static NSString * const CMScanlineAmount = @"scanlineAmount";
 
 @interface CMPreferences ()
 
@@ -85,9 +85,11 @@ static CMPreferences *preferences = nil;
     if (possibleURLs.count < 1)
         return nil;
     
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+    NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:bundlePath];
+    
     NSURL *appSupportDir = [possibleURLs objectAtIndex:0];
-    NSString *appBundleID = [[NSBundle mainBundle] bundleIdentifier];
-    NSURL *appDirectory = [appSupportDir URLByAppendingPathComponent:appBundleID];
+    NSURL *appDirectory = [appSupportDir URLByAppendingPathComponent:appName];
     
     return appDirectory.path;
 }
@@ -422,17 +424,6 @@ static CMPreferences *preferences = nil;
 {
     [[NSUserDefaults standardUserDefaults] setInteger:iconStyle
                                               forKey:CMSnapshotIconStyle];
-}
-
-- (NSInteger)scanlineAmount
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:CMScanlineAmount];
-}
-
-- (void)setScanlineAmount:(NSInteger)amount
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:amount
-                                               forKey:CMScanlineAmount];
 }
 
 @end

@@ -55,8 +55,13 @@
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString* version = [infoDict objectForKey:@"CFBundleShortVersionString"];
     
-    versionNumber.stringValue = [NSString stringWithFormat:CMLoc(@"VersionAbout"),
+    versionNumberField.stringValue = [NSString stringWithFormat:CMLoc(@"VersionAbout"),
                                  version];
+    
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+    NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:bundlePath];
+    
+    appNameField.stringValue = appName;
 }
 
 #pragma mark - Actions

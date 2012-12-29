@@ -67,6 +67,10 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
                    name:NSWindowDidResignKeyNotification
                  object:self.window];
     
+    
+    [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                               forKeyPath:@"scanlineAmount"];
+    
     glDeleteTextures(1, &screenTexId);
     
     CVDisplayLinkRelease(displayLink);
@@ -94,6 +98,12 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
                 name:NSWindowDidResignKeyNotification
               object:self.window];
     
+    // Start observing scanline for changes
+    [[NSUserDefaults standardUserDefaults] addObserver:self
+                                            forKeyPath:@"scanlineAmount"
+                                               options:NSKeyValueObservingOptionNew
+                                               context:NULL];
+    
     frameCounter = [[CMFrameCounter alloc] init];
     
     cursorVisible = YES;
@@ -104,6 +114,21 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 }
 
 #pragma mark - Notification Callbacks
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+    if ([keyPath isEqualToString:@"scanlineAmount"])
+    {
+        NSNumber *newValue = [change objectForKey:NSKeyValueChangeNewKey];
+        
+        // Change actual scanline value, but only if the display is large enough
+        if (self.bounds.size.width >= WIDTH * ZOOM)
+            emulator.scanlines = [newValue integerValue];
+    }
+}
 
 - (void)windowKeyChange
 {
@@ -129,7 +154,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     GLint swapInt = 1;
     [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
     
-    glClearColor(0, 0, 0, 0);
+    glClearColor(0, 0, 0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     
     glEnable(GL_TEXTURE_2D);
@@ -173,7 +198,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     // Activate the display link
 //    CVDisplayLinkStart(displayLink);
     
-#if DEBUG
+#ifdef DEBUG
     NSLog(@"MsxDisplayView: initialized");
 #endif
 }
@@ -194,7 +219,33 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     
     NSSize size = [self bounds].size;
     
-#if DEBUG
+    if ([emulator isRunning])
+    {
+        if (size.width < WIDTH * ZOOM)
+        {
+            if (emulator.scanlines != 0)
+            {
+                emulator.scanlines = 0;
+#ifdef DEBUG
+                NSLog(@"Disabling scanlines - screen not large enough");
+#endif
+            }
+        }
+        else
+        {
+            NSInteger scanlineAmount = [[NSUserDefaults standardUserDefaults] integerForKey:@"scanlineAmount"];
+            if (emulator.scanlines != scanlineAmount)
+            {
+                emulator.scanlines = scanlineAmount;
+#ifdef DEBUG
+                NSLog(@"Resetting scanlines to %ld%% - screen not large enough",
+                      scanlineAmount);
+#endif
+            }
+        }
+    }
+    
+#ifdef DEBUG
     NSLog(@"MsxDisplayView: resized to %.00fx%.00f", size.width, size.height);
 #endif
     
@@ -283,11 +334,16 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (void)renderScreen
 {
-    if (!emulator.isInitialized)
-        return;
-    
     NSOpenGLContext *nsContext = [self openGLContext];
     [nsContext makeCurrentContext];
+    
+    if (!emulator.isInitialized)
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+        [nsContext flushBuffer];
+        
+        return;
+    }
     
     CGLContextObj cglContext = [nsContext CGLContextObj];
     
