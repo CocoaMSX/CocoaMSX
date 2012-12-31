@@ -69,6 +69,8 @@ NSString * const CMKeyboardLayoutPrefKey;
     
     IBOutlet NSTextField *fpsCounter;
     IBOutlet CMMsxDisplayView *screen;
+    
+    BOOL pausedDueToLostFocus;
 }
 
 @property (nonatomic, copy) NSString *lastOpenSavePanelDirectory;
@@ -94,8 +96,12 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (void)start;
 - (void)stop;
+- (void)pause;
+- (void)resume;
+
 - (void)performColdReboot;
 - (BOOL)isRunning;
+- (BOOL)isPaused;
 - (NSInteger)machineState;
 
 - (BOOL)isInFullScreenMode;

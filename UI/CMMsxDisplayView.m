@@ -58,16 +58,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (void)dealloc
 {
-    NSNotificationCenter* gcd = [NSNotificationCenter defaultCenter];
-    [gcd removeObserver:self
-                   name:NSWindowDidBecomeKeyNotification
-                 object:self.window];
-    
-    [gcd removeObserver:self
-                   name:NSWindowDidResignKeyNotification
-                 object:self.window];
-    
-    
     [[NSUserDefaults standardUserDefaults] removeObserver:self
                                                forKeyPath:@"scanlineAmount"];
     
@@ -86,17 +76,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 - (void)awakeFromNib
 {
     [self.window setAcceptsMouseMovedEvents:YES];
-    
-    NSNotificationCenter* gcd = [NSNotificationCenter defaultCenter];
-    
-    [gcd addObserver:self
-            selector:@selector(windowKeyChange)
-                name:NSWindowDidBecomeKeyNotification
-              object:self.window];
-    [gcd addObserver:self
-            selector:@selector(windowKeyChange)
-                name:NSWindowDidResignKeyNotification
-              object:self.window];
     
     // Start observing scanline for changes
     [[NSUserDefaults standardUserDefaults] addObserver:self
@@ -128,15 +107,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
         if (self.bounds.size.width >= WIDTH * ZOOM)
             emulator.scanlines = [newValue integerValue];
     }
-}
-
-- (void)windowKeyChange
-{
-    BOOL isWindowFocused = [self.window isKeyWindow];
-    
-    emulator.mouse.emulatorHasFocus = isWindowFocused;
-    emulator.keyboard.emulatorHasFocus = isWindowFocused;
-    emulator.joystick.emulatorHasFocus = isWindowFocused;
 }
 
 #pragma mark - Cocoa Callbacks

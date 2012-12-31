@@ -102,6 +102,8 @@
 - (NSInteger)emulationSpeedPercentageFromFrequency:(NSInteger)frequency;
 - (NSInteger)emulationFrequencyFromPercentage:(NSInteger)percentage;
 
+- (void)windowKeyDidChange:(BOOL)isKey;
+
 - (void)create;
 - (void)destroy;
 
@@ -179,6 +181,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     theEmulator = self; // FIXME
     
     self.isInitialized = NO;
+    
+    pausedDueToLostFocus = NO;
     
     properties = NULL;
     video = NULL;
@@ -358,6 +362,18 @@ CMEmulatorController *theEmulator = nil; // FIXME
         emulatorSuspend();
         emulatorStop();
     }
+}
+
+- (void)pause
+{
+    emulatorSetState(EMU_PAUSED);
+    debuggerNotifyEmulatorPause();
+}
+
+- (void)resume
+{
+    emulatorSetState(EMU_RUNNING);
+    debuggerNotifyEmulatorResume();
 }
 
 - (void)performColdReboot
@@ -671,6 +687,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     NSInteger machineState = emulatorGetState();
     return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
+}
+
+- (BOOL)isPaused
+{
+    return (emulatorGetState() == EMU_PAUSED);
 }
 
 - (NSInteger)machineState
@@ -1037,6 +1058,34 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return NO;
 }
 
+- (void)windowKeyDidChange:(BOOL)isKey
+{
+    mouse.emulatorHasFocus = isKey;
+    keyboard.emulatorHasFocus = isKey;
+    joystick.emulatorHasFocus = isKey;
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"pauseWhenUnfocused"])
+    {
+        if (isKey)
+        {
+            if ([self isPaused] && pausedDueToLostFocus)
+                [self resume];
+            
+            pausedDueToLostFocus = NO;
+        }
+        else
+        {
+            pausedDueToLostFocus = NO;
+            
+            if ([self isRunning])
+            {
+                [self pause];
+                pausedDueToLostFocus = YES;
+            }
+        }
+    }
+}
+
 #pragma mark - IBActions
 
 - (void)openAbout:(id)sender
@@ -1212,13 +1261,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (machineState == EMU_PAUSED)
     {
-        emulatorSetState(EMU_RUNNING);
-        debuggerNotifyEmulatorResume();
+        [self resume];
     }
     else if (machineState == EMU_RUNNING)
     {
-        emulatorSetState(EMU_PAUSED);
-        debuggerNotifyEmulatorPause();
+        [self pause];
     }
 }
 
@@ -1478,6 +1525,16 @@ void archTrap(UInt8 value)
         [[CMPreferences preferences] setScreenWidth:screen.bounds.size.width];
         [[CMPreferences preferences] setScreenHeight:screen.bounds.size.height];
     }
+}
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+    [self windowKeyDidChange:YES];
+}
+
+- (void)windowDidResignKey:(NSNotification *)notification
+{
+    [self windowKeyDidChange:NO];
 }
 
 #define CMMinYEdgeHeight 32.0
