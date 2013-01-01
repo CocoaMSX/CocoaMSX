@@ -47,9 +47,12 @@
     
     IBOutlet NSSlider *emulationSpeedSlider;
     
+    IBOutlet NSArrayController *availableMachineArrayController;
+    
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
+    NSMutableArray *availableMachines;
     
     CMEmulatorController *_emulator;
     NSArray *virtualEmulationSpeedRange;
@@ -65,8 +68,6 @@
 @property (nonatomic, retain) NSMutableArray *joystickPortPeripherals;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort1Selection;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort2Selection;
-
-@property (nonatomic, retain) NSMutableArray *machineConfigurations;
 
 @property NSInteger colorMode;
 

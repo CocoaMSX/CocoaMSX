@@ -270,7 +270,7 @@ void propInitDefaults(Properties* properties, int langType, PropKeyboardLanguage
     properties->video.maximizeIsFullscreen  = 1;
     properties->video.deInterlace           = 1;
     properties->video.blendFrames           = 0;
-    properties->video.horizontalStretch     = 1;
+    properties->video.horizontalStretch     = 0;
     properties->video.verticalStretch       = 0;
     properties->video.contrast              = 100;
     properties->video.brightness            = 100;

@@ -35,7 +35,6 @@ static NSString * const CMJoystickTwoLayoutPrefKey = @"msxJoystickTwoLayout";
 
 static NSString * const CMAudioCaptureDirectoryKey = @"audioCaptureDirectory";
 static NSString * const CMVideoCaptureDirectoryKey = @"videoCaptureDirectory";
-static NSString * const CMQuickSaveDirectoryKey = @"quickSaveDirectory";
 static NSString * const CMSramDirectoryKey = @"sramDirectory";
 static NSString * const CMCassetteDataDirectoryKey = @"cassetteDataDirectory";
 static NSString * const CMDatabaseDirectoryKey = @"databaseDirectory";
@@ -236,24 +235,6 @@ static CMPreferences *preferences = nil;
 {
     [self setAppSupportSubdirectoryForKey:CMVideoCaptureDirectoryKey
                         withDefaultSuffix:@"Video Capture"
-                              toDirectory:directory];
-}
-
-- (BOOL)createQuickSaveDirectory
-{
-    return [[NSUserDefaults standardUserDefaults] stringForKey:CMQuickSaveDirectoryKey] == nil;
-}
-
-- (NSString *)quickSaveDirectory
-{
-    return [self appSupportSubdirectoryForKey:CMQuickSaveDirectoryKey
-                                defaultSuffix:@"QuickSave"];
-}
-
-- (void)setQuickSaveDirectory:(NSString *)directory
-{
-    [self setAppSupportSubdirectoryForKey:CMQuickSaveDirectoryKey
-                        withDefaultSuffix:@"QuickSave"
                               toDirectory:directory];
 }
 

@@ -12,10 +12,6 @@
 		6B5D2863161F44CC0081F586 /* CMCocoaKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */; };
 		6B5D2866161F4A920081F586 /* CMCocoaJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2865161F4A920081F586 /* CMCocoaJoystick.m */; };
 		6B5D287B161F60620081F586 /* Language.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2868161F60620081F586 /* Language.c */; };
-		6BCA7564164D7D09002CA211 /* toolbar-audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA755E164D7D09002CA211 /* toolbar-audio.png */; };
-		6BCA7565164D7D09002CA211 /* toolbar-audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA755F164D7D09002CA211 /* toolbar-audio@2x.png */; };
-		6BCA7566164D7D09002CA211 /* toolbar-input.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7560164D7D09002CA211 /* toolbar-input.png */; };
-		6BCA7567164D7D09002CA211 /* toolbar-input@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7561164D7D09002CA211 /* toolbar-input@2x.png */; };
 		6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7562164D7D09002CA211 /* toolbar-video.png */; };
 		6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7563164D7D09002CA211 /* toolbar-video@2x.png */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -331,6 +327,12 @@
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
 		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
 		FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */; };
+		FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */; };
+		FEB8DFBF1692402E009BE6E4 /* toolbar-joypad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFB91692402E009BE6E4 /* toolbar-joypad@2x.png */; };
+		FEB8DFC01692402E009BE6E4 /* toolbar-keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBA1692402E009BE6E4 /* toolbar-keyboard.png */; };
+		FEB8DFC11692402E009BE6E4 /* toolbar-keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBB1692402E009BE6E4 /* toolbar-keyboard@2x.png */; };
+		FEB8DFC21692402E009BE6E4 /* toolbar-sound.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBC1692402E009BE6E4 /* toolbar-sound.png */; };
+		FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBD1692402E009BE6E4 /* toolbar-sound@2x.png */; };
 		FEC7231915FF0E3400CB508C /* CMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC7231815FF0E3400CB508C /* CMPreferenceController.m */; };
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
 		FED154BE168714910043C7E5 /* filmstrip.png in Resources */ = {isa = PBXBuildFile; fileRef = FED154BD168714910043C7E5 /* filmstrip.png */; };
@@ -368,10 +370,6 @@
 		6B5D2868161F60620081F586 /* Language.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Language.c; sourceTree = "<group>"; };
 		6B5D2869161F60620081F586 /* Language.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Language.h; sourceTree = "<group>"; };
 		6B5D286E161F60620081F586 /* LanguageEnglish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguageEnglish.h; sourceTree = "<group>"; };
-		6BCA755E164D7D09002CA211 /* toolbar-audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-audio.png"; sourceTree = "<group>"; };
-		6BCA755F164D7D09002CA211 /* toolbar-audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-audio@2x.png"; sourceTree = "<group>"; };
-		6BCA7560164D7D09002CA211 /* toolbar-input.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-input.png"; sourceTree = "<group>"; };
-		6BCA7561164D7D09002CA211 /* toolbar-input@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-input@2x.png"; sourceTree = "<group>"; };
 		6BCA7562164D7D09002CA211 /* toolbar-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-video.png"; sourceTree = "<group>"; };
 		6BCA7563164D7D09002CA211 /* toolbar-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-video@2x.png"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* CocoaMSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaMSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -999,6 +997,12 @@
 		FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MachineEditor.xib; sourceTree = "<group>"; };
 		FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineEditorController.h; sourceTree = "<group>"; };
 		FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineEditorController.m; sourceTree = "<group>"; };
+		FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-joypad.png"; sourceTree = "<group>"; };
+		FEB8DFB91692402E009BE6E4 /* toolbar-joypad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-joypad@2x.png"; sourceTree = "<group>"; };
+		FEB8DFBA1692402E009BE6E4 /* toolbar-keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-keyboard.png"; sourceTree = "<group>"; };
+		FEB8DFBB1692402E009BE6E4 /* toolbar-keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-keyboard@2x.png"; sourceTree = "<group>"; };
+		FEB8DFBC1692402E009BE6E4 /* toolbar-sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-sound.png"; sourceTree = "<group>"; };
+		FEB8DFBD1692402E009BE6E4 /* toolbar-sound@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-sound@2x.png"; sourceTree = "<group>"; };
 		FEC7231715FF0E3400CB508C /* CMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferenceController.h; sourceTree = "<group>"; };
 		FEC7231815FF0E3400CB508C /* CMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferenceController.m; sourceTree = "<group>"; };
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
@@ -1139,10 +1143,12 @@
 				FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */,
 				FEA4548C1679B65300AAECB7 /* DiskDocument.icns */,
 				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
-				6BCA755E164D7D09002CA211 /* toolbar-audio.png */,
-				6BCA755F164D7D09002CA211 /* toolbar-audio@2x.png */,
-				6BCA7560164D7D09002CA211 /* toolbar-input.png */,
-				6BCA7561164D7D09002CA211 /* toolbar-input@2x.png */,
+				FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */,
+				FEB8DFB91692402E009BE6E4 /* toolbar-joypad@2x.png */,
+				FEB8DFBA1692402E009BE6E4 /* toolbar-keyboard.png */,
+				FEB8DFBB1692402E009BE6E4 /* toolbar-keyboard@2x.png */,
+				FEB8DFBC1692402E009BE6E4 /* toolbar-sound.png */,
+				FEB8DFBD1692402E009BE6E4 /* toolbar-sound@2x.png */,
 				6BCA7562164D7D09002CA211 /* toolbar-video.png */,
 				6BCA7563164D7D09002CA211 /* toolbar-video@2x.png */,
 			);
@@ -2116,10 +2122,6 @@
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
 				FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */,
 				6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */,
-				6BCA7564164D7D09002CA211 /* toolbar-audio.png in Resources */,
-				6BCA7565164D7D09002CA211 /* toolbar-audio@2x.png in Resources */,
-				6BCA7566164D7D09002CA211 /* toolbar-input.png in Resources */,
-				6BCA7567164D7D09002CA211 /* toolbar-input@2x.png in Resources */,
 				6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */,
 				6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */,
 				FE1A3631165623AC0083BA21 /* icon.icns in Resources */,
@@ -2140,6 +2142,12 @@
 				FE36C393168EC64500723CFA /* SRRemoveShortcutPressed@2x.png in Resources */,
 				FE36C394168EC64500723CFA /* SRRemoveShortcutRollover.png in Resources */,
 				FE36C395168EC64500723CFA /* SRRemoveShortcutRollover@2x.png in Resources */,
+				FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */,
+				FEB8DFBF1692402E009BE6E4 /* toolbar-joypad@2x.png in Resources */,
+				FEB8DFC01692402E009BE6E4 /* toolbar-keyboard.png in Resources */,
+				FEB8DFC11692402E009BE6E4 /* toolbar-keyboard@2x.png in Resources */,
+				FEB8DFC21692402E009BE6E4 /* toolbar-sound.png in Resources */,
+				FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

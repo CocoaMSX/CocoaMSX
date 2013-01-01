@@ -77,7 +77,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 {
     [self.window setAcceptsMouseMovedEvents:YES];
     
-    // Start observing scanline for changes
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"scanlineAmount"
                                                options:NSKeyValueObservingOptionNew

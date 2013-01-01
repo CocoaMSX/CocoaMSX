@@ -153,8 +153,7 @@
         keyCategories = [[NSMutableArray alloc] init];
         joystickOneCategories = [[NSMutableArray alloc] init];
         joystickTwoCategories = [[NSMutableArray alloc] init];
-        
-        self.machineConfigurations = [NSMutableArray array];
+        availableMachines = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -214,23 +213,13 @@
     
     // Machine configurations
     
-    NSMutableArray *machineConfigurationsProxy = [self mutableArrayValueForKey:@"machineConfigurations"];
     NSArray *machineConfigurations = [CMEmulatorController machineConfigurations];
-    
-    __block BOOL configurationFound = NO;
-    NSString *currentConfiguration = [prefs machineConfiguration];
-    
-    [machineConfigurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        NSString *configurationName = obj;
-         
-        if ([configurationName isEqualToString:currentConfiguration])
-            configurationFound = YES;
-         
-        [machineConfigurationsProxy addObject:configurationName];
-    }];
+    [availableMachineArrayController addObjects:machineConfigurations];
     
     // If there is no matching configuration, use the first available
+    NSString *currentConfiguration = [prefs machineConfiguration];
+    BOOL configurationFound = [machineConfigurations containsObject:currentConfiguration];
+    
     if (!configurationFound && machineConfigurations.count > 0)
         [prefs setMachineConfiguration:[machineConfigurations objectAtIndex:0]];
     
@@ -261,11 +250,10 @@
     self.joystickPort1Selection = nil;
     self.joystickPort2Selection = nil;
     
-    self.machineConfigurations = nil;
-    
     [keyCategories release];
     [joystickOneCategories release];
     [joystickTwoCategories release];
+    [availableMachines release];
     
     [virtualEmulationSpeedRange release];
     

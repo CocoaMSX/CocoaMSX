@@ -1,9 +1,5 @@
 * Go over Caps Lock - is it being pressed/released correctly in the emulator?
-
-* Inserting special cartridges doesn't work - try inserting FMPAC
-* Don't list special carts not found on the host system
-* Don't allow cassette changing while the machine is stopped. I'm currently
-  making assumptions when repositioning cassette that this will not be the case
+* Shut down the emulator if the emulation window is closed
 
 * Add option to create new disk images
 * Add an option to paste text, and possibly figure out a way to copy 

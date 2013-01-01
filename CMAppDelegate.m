@@ -71,8 +71,6 @@
         [directoriesToCreate addObject:prefs.audioCaptureDirectory];
     if ([prefs createVideoCaptureDirectory])
         [directoriesToCreate addObject:prefs.videoCaptureDirectory];
-    if ([prefs createQuickSaveDirectory])
-        [directoriesToCreate addObject:prefs.quickSaveDirectory];
     if ([prefs createSramDirectory])
         [directoriesToCreate addObject:prefs.sramDirectory];
     if ([prefs createCassetteDataDirectory])

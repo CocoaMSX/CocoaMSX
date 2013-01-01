@@ -53,8 +53,6 @@
 - (void)setAudioCaptureDirectory:(NSString *)directory;
 - (NSString *)videoCaptureDirectory;
 - (void)setVideoCaptureDirectory:(NSString *)directory;
-- (NSString *)quickSaveDirectory;
-- (void)setQuickSaveDirectory:(NSString *)directory;
 - (NSString *)sramDirectory;
 - (void)setSramDirectory:(NSString *)directory;
 - (NSString *)cassetteDataDirectory;
@@ -77,7 +75,6 @@
 
 - (BOOL)createAudioCaptureDirectory;
 - (BOOL)createVideoCaptureDirectory;
-- (BOOL)createQuickSaveDirectory;
 - (BOOL)createSramDirectory;
 - (BOOL)createCassetteDataDirectory;
 - (BOOL)createDatabaseDirectory;

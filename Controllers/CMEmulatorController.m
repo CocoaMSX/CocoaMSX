@@ -130,6 +130,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)dealloc
 {
+    [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                               forKeyPath:@"pauseWhenUnfocused"];
+    
     [self destroy];
     
     [openRomFileTypes release];
@@ -191,6 +194,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                    [[CMPreferences preferences] screenHeight])
                 animate:NO];
     
+    [[NSUserDefaults standardUserDefaults] addObserver:self
+                                            forKeyPath:@"pauseWhenUnfocused"
+                                               options:NSKeyValueObservingOptionNew
+                                               context:NULL];
+    
     [self create];
     [self start];
 }
@@ -212,7 +220,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     propertiesSetDirectory([prefs.appSupportDirectory UTF8String], [prefs.appSupportDirectory UTF8String]);
     actionSetAudioCaptureSetDirectory((char*)[prefs.audioCaptureDirectory UTF8String], "");
     actionSetVideoCaptureSetDirectory((char*)[prefs.videoCaptureDirectory UTF8String], "");
-    actionSetQuickSaveSetDirectory((char*)[prefs.quickSaveDirectory UTF8String], "");
     boardSetDirectory((char*)[prefs.sramDirectory UTF8String]);
     tapeSetDirectory((char*)[prefs.cassetteDataDirectory UTF8String], "");
     mediaDbLoad((char*)[prefs.databaseDirectory UTF8String]);
@@ -1064,24 +1071,21 @@ CMEmulatorController *theEmulator = nil; // FIXME
     keyboard.emulatorHasFocus = isKey;
     joystick.emulatorHasFocus = isKey;
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"pauseWhenUnfocused"])
+    BOOL pauseWhenUnfocused = [[NSUserDefaults standardUserDefaults] boolForKey:@"pauseWhenUnfocused"];
+    
+    if (isKey)
     {
-        if (isKey)
+        if ([self isPaused] && pausedDueToLostFocus)
+            [self resume];
+        
+        pausedDueToLostFocus = NO;
+    }
+    else
+    {
+        if ([self isRunning] && pauseWhenUnfocused)
         {
-            if ([self isPaused] && pausedDueToLostFocus)
-                [self resume];
-            
-            pausedDueToLostFocus = NO;
-        }
-        else
-        {
-            pausedDueToLostFocus = NO;
-            
-            if ([self isRunning])
-            {
-                [self pause];
-                pausedDueToLostFocus = YES;
-            }
+            [self pause];
+            pausedDueToLostFocus = YES;
         }
     }
 }
@@ -1485,6 +1489,19 @@ void archEmulationStartFailure()
 
 void archTrap(UInt8 value)
 {
+}
+
+#pragma mark - Notifications
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+    if ([keyPath isEqualToString:@"pauseWhenUnfocused"])
+    {
+        [self windowKeyDidChange:self.window.isKeyWindow];
+    }
 }
 
 #pragma mark - NSWindowController
