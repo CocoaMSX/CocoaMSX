@@ -8,3 +8,5 @@
 
 #define CMLoc(x) NSLocalizedString(x, nil)
 #define CMMakeNumber(x) [NSNumber numberWithInteger:x]
+#define CMGetIntPref(key) [[NSUserDefaults standardUserDefaults] integerForKey:key]
+#define CMSetIntPref(key, value) [[NSUserDefaults standardUserDefaults] setInteger:value forKey:key]

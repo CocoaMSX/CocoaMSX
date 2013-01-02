@@ -190,8 +190,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     properties = NULL;
     video = NULL;
     
-    [self setScreenSize:NSMakeSize([[CMPreferences preferences] screenWidth],
-                                   [[CMPreferences preferences] screenHeight])
+    [self setScreenSize:NSMakeSize(CMGetIntPref(@"screenWidth"), CMGetIntPref(@"screenHeight"))
                 animate:NO];
     
     [[NSUserDefaults standardUserDefaults] addObserver:self
@@ -359,6 +358,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
         }
         
         emulatorStart(NULL);
+        
+        // Pause if not focused
+        [self windowKeyDidChange:self.window.isKeyWindow];
     }
 }
 
@@ -539,17 +541,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (BOOL)stretchHorizontally
 {
     return properties->video.horizontalStretch;
-}
-
-- (void)setStretchVertically:(BOOL)value
-{
-    properties->video.verticalStretch = value;
-    videoUpdateAll(video, properties);
-}
-
-- (BOOL)stretchVertically
-{
-    return properties->video.verticalStretch;
 }
 
 - (void)setDeinterlace:(BOOL)value
@@ -1539,9 +1530,11 @@ void archTrap(UInt8 value)
     
     if (([self.window styleMask] & NSFullScreenWindowMask) != NSFullScreenWindowMask)
     {
-        [[CMPreferences preferences] setScreenWidth:screen.bounds.size.width];
-        [[CMPreferences preferences] setScreenHeight:screen.bounds.size.height];
+        CMSetIntPref(@"screenWidth", screen.bounds.size.width);
+        CMSetIntPref(@"screenHeight", screen.bounds.size.height);
     }
+    
+    [[NSApplication sharedApplication] terminate:self];
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
@@ -1563,8 +1556,8 @@ void archTrap(UInt8 value)
 #endif
     
     // Save the screen size first
-    [[CMPreferences preferences] setScreenWidth:screen.bounds.size.width];
-    [[CMPreferences preferences] setScreenHeight:screen.bounds.size.height];
+    CMSetIntPref(@"screenWidth", screen.bounds.size.width);
+    CMSetIntPref(@"screenHeight", screen.bounds.size.height);
     
     [self.window setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
     [self.window setContentBorderThickness:0 forEdge:NSMinYEdge];

@@ -32,11 +32,6 @@
 
 + (CMPreferences *)preferences;
 
-- (NSInteger)screenWidth;
-- (void)setScreenWidth:(NSInteger)width;
-- (NSInteger)screenHeight;
-- (void)setScreenHeight:(NSInteger)height;
-
 - (CMInputDeviceLayout *)keyboardLayout;
 - (void)setKeyboardLayout:(CMInputDeviceLayout *)keyboardLayout;
 - (CMInputDeviceLayout *)joystickOneLayout;

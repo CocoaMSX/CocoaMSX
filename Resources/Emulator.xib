@@ -781,7 +781,7 @@
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="244130915">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSOpenGLView" id="1005680393">
@@ -789,6 +789,7 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 32}, {640, 480}}</string>
 							<reference key="NSSuperview" ref="244130915"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="974846936"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
@@ -802,6 +803,8 @@
 							<int key="NSvFlags">295</int>
 							<string key="NSFrame">{{238, 7}, {165, 17}}</string>
 							<reference key="NSSuperview" ref="244130915"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:1535</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="272522322">
@@ -839,6 +842,8 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{640, 512}</string>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="1005680393"/>
 					<string key="NSReuseIdentifierKey">_NS:20</string>
 				</object>
@@ -1969,7 +1974,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1234</int>
+			<int key="maxID">1245</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

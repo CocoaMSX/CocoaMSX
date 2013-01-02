@@ -125,7 +125,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property NSInteger scanlines;
 
 @property BOOL stretchHorizontally;
-@property BOOL stretchVertically;
 @property BOOL deinterlace;
 @property BOOL fdcTimingDisabled;
 

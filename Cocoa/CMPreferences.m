@@ -26,9 +26,6 @@
 
 #import "NSString+FileManagement.h"
 
-static NSString * const CMScreenWidthPrefKey = @"screenWidth";
-static NSString * const CMScreenHeightPrefKey = @"screenHeight";
-
 static NSString * const CMKeyboardLayoutPrefKey = @"msxKeyboardLayout";
 static NSString * const CMJoystickOneLayoutPrefKey = @"msxJoystickOneLayout";
 static NSString * const CMJoystickTwoLayoutPrefKey = @"msxJoystickTwoLayout";
@@ -111,28 +108,6 @@ static CMPreferences *preferences = nil;
     if (![directory cm_isEqualToPath:defaultDirectory])
         [[NSUserDefaults standardUserDefaults] setObject:directory
                                                   forKey:CMAudioCaptureDirectoryKey];
-}
-
-#pragma mark - Video
-
-- (NSInteger)screenWidth
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:CMScreenWidthPrefKey];
-}
-
-- (void)setScreenWidth:(NSInteger)width
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:width forKey:CMScreenWidthPrefKey];
-}
-
-- (NSInteger)screenHeight
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:CMScreenHeightPrefKey];
-}
-
-- (void)setScreenHeight:(NSInteger)height
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:height forKey:CMScreenHeightPrefKey];
 }
 
 #pragma mark - Input Devices

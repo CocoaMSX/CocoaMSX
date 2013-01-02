@@ -821,7 +821,7 @@ static NSMutableDictionary *typewriterLayouts = nil;
     if (!focus)
     {
 #ifdef DEBUG
-        NSLog(@"CMCocoaKeyboard: -Focus");
+        NSLog(@"CocoaKeyboard: -Focus");
 #endif
         // Emulator has lost focus - release all virtual keys
         [self resetState];
@@ -829,7 +829,7 @@ static NSMutableDictionary *typewriterLayouts = nil;
     else
     {
 #ifdef DEBUG
-        NSLog(@"CMCocoaKeyboard: +Focus");
+        NSLog(@"CocoaKeyboard: +Focus");
 #endif
     }
 }

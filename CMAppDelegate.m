@@ -33,6 +33,9 @@
 
 @implementation CMAppDelegate
 
+@synthesize emulator;
+@synthesize applicationHasLoaded;
+
 #pragma mark - Initialization & Deallocation
 
 + (void)initialize
