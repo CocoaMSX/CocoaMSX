@@ -136,8 +136,9 @@
 
 @implementation CMSpecialCartChooserController
 
-@synthesize delegate;
-@synthesize isSelectable;
+@synthesize delegate = _delegate;
+@synthesize isSelectable = _isSelectable;
+@synthesize cartridgeSlot = _cartridgeSlot;
 
 #pragma mark - Initialization
 

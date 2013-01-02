@@ -13,6 +13,8 @@
 
 @implementation SRRecorderTableCellView
 
+@synthesize recorderControl = _recorderControl;
+
 - (id)initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame]))

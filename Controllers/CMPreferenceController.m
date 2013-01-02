@@ -66,6 +66,9 @@
 
 @interface CMKeyCategory : NSObject
 {
+    NSNumber *_category;
+    NSString *_title;
+    
     NSMutableArray *items;
 }
 
@@ -78,6 +81,9 @@
 @end
 
 @implementation CMKeyCategory
+
+@synthesize category = _category;
+@synthesize title = _title;
 
 - (id)init
 {
@@ -141,6 +147,11 @@
 @implementation CMPreferenceController
 
 @synthesize emulator = _emulator;
+@synthesize isSaturationEnabled = _isSaturationEnabled;
+@synthesize colorMode = _colorMode;
+@synthesize joystickPortPeripherals = _joystickPortPeripherals;
+@synthesize joystickPort1Selection = _joystickPort1Selection;
+@synthesize joystickPort2Selection = _joystickPort2Selection;
 
 #pragma mark - Init & Dealloc
 

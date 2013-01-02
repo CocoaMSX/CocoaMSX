@@ -30,13 +30,15 @@
 
 @interface CMRepositionCassetteController : NSWindowController<NSTableViewDataSource, NSTableViewDelegate>
 {
+    id <CMCassetteRepositionDelegate> _delegate;
+    BOOL _isSelectable;
+    
     NSMutableArray *casEntries;
     
     IBOutlet NSTableView *tableView;
 }
 
 @property (nonatomic, assign) id <CMCassetteRepositionDelegate> delegate;
-
 @property (nonatomic, assign) BOOL isSelectable;
 
 - (void)showSheetForWindow:(NSWindow *)window;

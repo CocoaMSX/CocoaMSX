@@ -31,6 +31,13 @@
 
 @interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDelegate, MGScopeBarDelegate>
 {
+    CMEmulatorController *_emulator;
+    BOOL _isSaturationEnabled;
+    NSInteger _colorMode;
+    NSMutableArray *_joystickPortPeripherals;
+    CMJoyPortDevice *_joystickPort1Selection;
+    CMJoyPortDevice *_joystickPort2Selection;
+    
     IBOutlet NSToolbar *toolbar;
     IBOutlet NSTabView *tabView;
     IBOutlet MGScopeBar *scopeBar;
@@ -54,7 +61,6 @@
     NSMutableArray *joystickTwoCategories;
     NSMutableArray *availableMachines;
     
-    CMEmulatorController *_emulator;
     NSArray *virtualEmulationSpeedRange;
     
     NSInteger selectedKeyboardRegion;
@@ -64,12 +70,11 @@
 @property (nonatomic, retain) CMEmulatorController *emulator;
 
 @property (nonatomic, assign) BOOL isSaturationEnabled;
+@property (nonatomic, assign) NSInteger colorMode;
 
 @property (nonatomic, retain) NSMutableArray *joystickPortPeripherals;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort1Selection;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort2Selection;
-
-@property NSInteger colorMode;
 
 - (id)initWithEmulator:(CMEmulatorController *)emulator;
 

@@ -246,27 +246,3 @@ CGFloat SRAnimationEaseInOut(CGFloat t) {
 	//	NSLog(@"SRAnimationEaseInOut: %f. a: %f, b: %f, c: %f, d: %f, e: %f", t, (t * M_PI), ((t * M_PI) - M_PI_2), sin((t * M_PI) - M_PI_2), (sin((t * M_PI) - M_PI_2) + 1.0), x);
 	return x;
 } 
-
-
-#pragma mark -
-#pragma mark additions
-
-@implementation NSAlert( SRAdditions )
-
-//---------------------------------------------------------- 
-// + alertWithNonRecoverableError:
-//---------------------------------------------------------- 
-+ (NSAlert *) alertWithNonRecoverableError:(NSError *)error;
-{
-	NSString *reason = [error localizedRecoverySuggestion];
-    if (!reason)
-        reason = @"";
-    
-	return [self alertWithMessageText:[error localizedDescription]
-						defaultButton:[[error localizedRecoveryOptions] objectAtIndex:0U]
-					  alternateButton:nil
-						  otherButton:nil
-			informativeTextWithFormat:reason];
-}
-
-@end

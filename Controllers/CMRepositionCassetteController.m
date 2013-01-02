@@ -88,8 +88,8 @@
 
 @implementation CMRepositionCassetteController
 
-@synthesize delegate;
-@synthesize isSelectable;
+@synthesize delegate = _delegate;
+@synthesize isSelectable = _isSelectable;
 
 #pragma mark - Initialization, Destruction
 

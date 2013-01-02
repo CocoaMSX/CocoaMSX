@@ -111,6 +111,11 @@
 
 @implementation CMEmulatorController
 
+@synthesize lastOpenSavePanelDirectory = _lastOpenSavePanelDirectory;
+@synthesize fpsDisplay = _fpsDisplay;
+@synthesize fileToLoadAtStartup = _fileToLoadAtStartup;
+@synthesize isInitialized = _isInitialized;
+
 #define WIDTH_DEFAULT   320.0
 #define HEIGHT_DEFAULT  240.0
 
@@ -613,19 +618,23 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (NSInteger)emulationSpeedPercentage
 {
-    NSLog(@"P: %ld CPU: %d",
-          [self emulationSpeedPercentageFromFrequency:properties->emulation.speed],
+#ifdef DEBUG
+    NSLog(@"P: %d CPU: %d",
+          (int)[self emulationSpeedPercentageFromFrequency:properties->emulation.speed],
           properties->emulation.speed);
+#endif
     
     return [self emulationSpeedPercentageFromFrequency:properties->emulation.speed];
 }
 
 - (void)setEmulationSpeedPercentage:(NSInteger)percentage
 {
-    NSLog(@"P: %ld CPU: %ld",
-          percentage,
-          [self emulationFrequencyFromPercentage:percentage]);
-    
+#ifdef DEBUG
+    NSLog(@"P: %d CPU: %d",
+          (int)percentage,
+          (int)[self emulationFrequencyFromPercentage:percentage]);
+#endif
+
     properties->emulation.speed = [self emulationFrequencyFromPercentage:percentage];
     emulatorSetFrequency(properties->emulation.speed, NULL);
 }
@@ -1586,7 +1595,8 @@ void archTrap(UInt8 value)
 - (void)cartSelectedOfType:(NSInteger)romType romName:(const char*)romName slot:(NSInteger)slot;
 {
 #ifdef DEBUG
-    NSLog(@"EmulatorController:cartSelectedOfType %ld '%s'", romType, romName);
+    NSLog(@"EmulatorController:cartSelectedOfType %d '%s'",
+          (int)romType, romName);
 #endif
     
     emulatorSuspend();
@@ -1599,7 +1609,7 @@ void archTrap(UInt8 value)
 - (void)cassetteRepositionedTo:(NSInteger)position
 {
 #ifdef DEBUG
-    NSLog(@"EmulatorController:cassetteRepositionedTo:%ld", position);
+    NSLog(@"EmulatorController:cassetteRepositionedTo:%d", (int)position);
 #endif
     
     emulatorSuspend();

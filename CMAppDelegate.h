@@ -24,11 +24,13 @@
 
 #import "CMEmulatorController.h"
 
-@class CMEmulatorController;
-
 @interface CMAppDelegate : NSObject <NSApplicationDelegate>
+{
+    CMEmulatorController *_emulator;
+    
+    BOOL applicationDidLoad;
+}
 
-@property (nonatomic, assign) BOOL applicationHasLoaded;
 @property (nonatomic, retain) CMEmulatorController *emulator;
 
 @end

@@ -672,7 +672,7 @@
 								andFlagsTaken:[self _filteredCocoaToCarbonFlags:flags]
 										error:&error] ) {
                     // display the error...
-						NSAlert *alert = [NSAlert alertWithNonRecoverableError:error];
+						NSAlert *alert = [NSAlert alertWithError:error];
 						[alert setAlertStyle:NSCriticalAlertStyle];
 						[alert runModal];
 						

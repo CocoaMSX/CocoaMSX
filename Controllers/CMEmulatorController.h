@@ -43,6 +43,11 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate>
 {
+    NSString *_lastOpenSavePanelDirectory;
+    NSString *_fpsDisplay;
+    NSString *_fileToLoadAtStartup;
+    BOOL _isInitialized;
+    
     Mixer *mixer;
     Properties *properties;
     Video *video;
@@ -73,10 +78,10 @@ NSString * const CMKeyboardLayoutPrefKey;
     BOOL pausedDueToLostFocus;
 }
 
+@property (nonatomic, assign) BOOL isInitialized;
+
 @property (nonatomic, copy) NSString *lastOpenSavePanelDirectory;
-
 @property (nonatomic, copy) NSString *fpsDisplay;
-
 @property (nonatomic, copy) NSString *fileToLoadAtStartup;
 
 - (Properties *)properties;
@@ -112,8 +117,6 @@ NSString * const CMKeyboardLayoutPrefKey;
                    slot:(NSInteger)slot;
 
 - (BOOL)insertUnknownMedia:(NSString *)media;
-
-@property (nonatomic, assign) BOOL isInitialized;
 
 @property NSInteger brightness;
 @property NSInteger contrast;

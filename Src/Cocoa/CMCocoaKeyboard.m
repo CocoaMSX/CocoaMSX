@@ -39,6 +39,10 @@
     [CMMsxKeyInfo keyInfoWithDefaultStateLabel:d shiftedStateLabel:s]
 
 @interface CMMsxKeyInfo : NSObject
+{
+    NSString *_defaultStateLabel;
+    NSString *_shiftedStateLabel;
+}
 
 @property (nonatomic, copy) NSString *defaultStateLabel;
 @property (nonatomic, copy) NSString *shiftedStateLabel;
@@ -46,6 +50,9 @@
 @end
 
 @implementation CMMsxKeyInfo
+
+@synthesize defaultStateLabel = _defaultStateLabel;
+@synthesize shiftedStateLabel = _shiftedStateLabel;
 
 + (CMMsxKeyInfo *)keyInfoWithDefaultStateLabel:(NSString *)defaultStateLabel
                              shiftedStateLabel:(NSString *)shiftedStateLabel

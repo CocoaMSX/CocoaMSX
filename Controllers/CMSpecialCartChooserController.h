@@ -32,6 +32,10 @@
 
 @interface CMSpecialCartChooserController : NSWindowController<NSBrowserDelegate>
 {
+    NSInteger _cartridgeSlot;
+    BOOL _isSelectable;
+    id <CMSpecialCartSelectedDelegate> _delegate;
+    
     CMSpecialCartNode *root;
     
     IBOutlet NSBrowser *browser;

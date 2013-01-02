@@ -32,6 +32,10 @@
 
 @implementation CMJoyPortDevice
 
+@synthesize isKeyConfigurable = _isKeyConfigurable;
+@synthesize deviceId = _deviceId;
+@synthesize name = _name;
+
 + (CMJoyPortDevice*)deviceLocalizedAs:(NSString*)localizationKey
                             deviceId:(NSInteger)deviceId
 {

@@ -14,7 +14,10 @@
 #import "SRRecorderControl.h"
 
 @interface SRRecorderTableCellView : NSTableCellView
+{
+    SRRecorderControl *_recorderControl;
+}
 
-@property (nonatomic, assign) IBOutlet SRRecorderControl *recorderControl;
+@property (nonatomic, assign) SRRecorderControl *recorderControl;
 
 @end

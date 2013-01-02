@@ -24,6 +24,8 @@
 
 @implementation CMKeyboardInput
 
+@synthesize keyCode = _keyCode;
+
 + (CMKeyboardInput *)keyboardInputWithKeyCode:(NSInteger)keyCode
 {
     CMKeyboardInput *key = [[CMKeyboardInput alloc] init];

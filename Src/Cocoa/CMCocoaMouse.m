@@ -32,6 +32,9 @@
 
 @implementation CMCocoaMouse
 
+@synthesize emulatorHasFocus = _emulatorHasFocus;
+@synthesize mouseMode = _mouseMode;
+
 // In terms of the screen size
 #define ESCAPE_THRESHOLD_RATIO .15
 
@@ -192,7 +195,7 @@
                 centerScreen.y = screenRect.height - centerScreen.y;
                 
                 // Reposition the cursor
-                CGWarpMouseCursorPosition(centerScreen);
+                CGWarpMouseCursorPosition(NSPointToCGPoint(centerScreen));
                 
                 discardNextDelta = YES;
                 wasWithinBounds = YES;

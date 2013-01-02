@@ -24,6 +24,9 @@
 
 @interface CMCocoaMouse : NSObject
 {
+    BOOL _emulatorHasFocus;
+    NSUInteger _mouseMode;
+    
     NSInteger buttonState;
     CGFloat deltaX;
     CGFloat deltaY;

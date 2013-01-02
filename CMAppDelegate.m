@@ -23,7 +23,6 @@
 #import "CMAppDelegate.h"
 
 #import "CMPreferences.h"
-#import "CMEmulatorController.h"
 
 @interface CMAppDelegate ()
 
@@ -33,8 +32,7 @@
 
 @implementation CMAppDelegate
 
-@synthesize emulator;
-@synthesize applicationHasLoaded;
+@synthesize emulator = _emulator;
 
 #pragma mark - Initialization & Deallocation
 
@@ -49,7 +47,7 @@
 
 - (void)awakeFromNib
 {
-    self.applicationHasLoaded = NO;
+    applicationDidLoad = NO;
 }
 
 - (void)dealloc
@@ -191,8 +189,8 @@
      }];
     
 #ifdef DEBUG
-    NSLog(@"Resources: initialized (created %ld dirs; copied %ld files)",
-          dirsCreated, filesCopied);
+    NSLog(@"Resources: initialized (created %d dirs; copied %d files)",
+          (int)dirsCreated, (int)filesCopied);
 #endif
 }
 
@@ -203,7 +201,7 @@
     if (!self.emulator || ![[NSFileManager defaultManager] fileExistsAtPath:filename])
         return NO;
     
-    if (!self.applicationHasLoaded)
+    if (!applicationDidLoad)
     {
         // Ask the emulator to load the file when initialization completes
         self.emulator.fileToLoadAtStartup = filename;
@@ -224,7 +222,8 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     [self.emulator showWindow:self];
-    self.applicationHasLoaded = YES;
+    
+    applicationDidLoad = YES;
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication

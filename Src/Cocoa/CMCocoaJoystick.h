@@ -23,6 +23,11 @@
 #import <Foundation/Foundation.h>
 
 @interface CMJoyPortDevice : NSObject
+{
+    BOOL _isKeyConfigurable;
+    NSInteger _deviceId;
+    NSString *_name;
+}
 
 @property (nonatomic, assign) BOOL isKeyConfigurable;
 @property (nonatomic, assign) NSInteger deviceId;
