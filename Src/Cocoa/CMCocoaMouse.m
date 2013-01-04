@@ -260,29 +260,33 @@ extern CMEmulatorController *theEmulator;
 
 void archMouseGetState(int *dx, int *dy)
 {
-    @autoreleasepool
-    {
-        NSPoint coordinates = theEmulator.mouse.pointerCoordinates;
-        
-        *dx = (int)coordinates.x;
-        *dy = (int)coordinates.y;
-    }
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    NSPoint coordinates = theEmulator.mouse.pointerCoordinates;
+    *dx = (int)coordinates.x;
+    *dy = (int)coordinates.y;
+    
+    [pool drain];
 }
 
 int archMouseGetButtonState(int checkAlways)
 {
-    @autoreleasepool
-    {
-        return theEmulator.mouse.buttonState;
-    }
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    int buttonState = theEmulator.mouse.buttonState;
+    
+    [pool drain];
+    
+    return buttonState;
 }
 
 void archMouseEmuEnable(AmEnableMode mode)
 {
-    @autoreleasepool
-    {
-        theEmulator.mouse.mouseMode = mode;
-    }
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    theEmulator.mouse.mouseMode = mode;
+    
+    [pool drain];
 }
 
 void archMouseSetForceLock(int lock) { }

@@ -22,6 +22,8 @@
  */
 #import <Cocoa/Cocoa.h>
 
+#import <QuartzCore/CVDisplayLink.h>
+
 @class CMCocoaBuffer;
 @class CMFrameCounter;
 @class CMEmulatorController;

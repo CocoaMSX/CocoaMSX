@@ -467,11 +467,9 @@
 
 - (void)joystickDeviceChanged:(id)sender
 {
-    NSPopUpButton *button = sender;
-    
-    if ([button.identifier isEqualToString:@"CMJoystickPortDevice1"])
+    if (sender == joystickOneDevice)
         self.emulator.deviceInJoystickPort1 = self.joystickPort1Selection.deviceId;
-    if ([button.identifier isEqualToString:@"CMJoystickPortDevice2"])
+    else if (sender == joystickTwoDevice)
         self.emulator.deviceInJoystickPort2 = self.joystickPort2Selection.deviceId;
 }
 

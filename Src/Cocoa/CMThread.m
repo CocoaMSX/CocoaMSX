@@ -88,10 +88,11 @@ static void* pThreadCallback(void* data)
 {
     CMThreadArg *arg = (CMThreadArg *)data;
     
-    @autoreleasepool
-    {
-        arg->entryPoint();
-    }
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    arg->entryPoint();
+    
+    [pool drain];
     
     return NULL;
     

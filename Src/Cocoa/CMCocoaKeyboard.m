@@ -1076,10 +1076,11 @@ extern CMEmulatorController *theEmulator;
 
 void archPollInput()
 {
-    @autoreleasepool
-    {
-        [theEmulator.keyboard updateKeyboardState];
-    }
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    [theEmulator.keyboard updateKeyboardState];
+    
+    [pool drain];
 }
 
 void archKeyboardSetSelectedKey(int keyCode) {}

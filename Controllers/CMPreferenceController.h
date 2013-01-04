@@ -38,6 +38,9 @@
     CMJoyPortDevice *_joystickPort1Selection;
     CMJoyPortDevice *_joystickPort2Selection;
     
+    IBOutlet NSPopUpButton *joystickOneDevice;
+    IBOutlet NSPopUpButton *joystickTwoDevice;
+    
     IBOutlet NSToolbar *toolbar;
     IBOutlet NSTabView *tabView;
     IBOutlet MGScopeBar *scopeBar;
