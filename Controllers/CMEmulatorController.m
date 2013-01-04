@@ -820,8 +820,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
                         canChooseDirectories:NO];
 }
 
-- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
+- (NSString*)showOpenFileDialogWithTitle:(NSString *)title
+                        allowedFileTypes:(NSArray *)allowedFileTypes
                          openInDirectory:(NSString *)initialDirectory
                     canChooseDirectories:(BOOL)canChooseDirectories
 {
@@ -1471,6 +1471,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self zoomWindowBy:2.0];
 }
 
+- (void)toggleFullScreen:(id)sender
+{
+    // TODO: fullScreen support for Snow Leopard
+    if ([self.window respondsToSelector:@selector(toggleFullScreen:)])
+        [self.window toggleFullScreen:sender];
+}
+
 #pragma mark - blueMSX implementations - emulation
 
 void archEmulationStartNotification()
@@ -1738,6 +1745,11 @@ void archTrap(UInt8 value)
             menuItem.title = CMLoc(@"StopRecording");
         
         return isRunning;
+    }
+    else if (item.action == @selector(toggleFullScreen:))
+    {
+        // TODO: fullScreen support for Snow Leopard
+        return [self.window respondsToSelector:@selector(toggleFullScreen:)];
     }
     
     return menuItem.isEnabled;

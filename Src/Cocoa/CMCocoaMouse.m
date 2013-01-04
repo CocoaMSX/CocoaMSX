@@ -28,6 +28,9 @@
 
 @interface CMCocoaMouse ()
 
++ (NSRect)convertRectToScreen:(NSRect)rect
+                       window:(NSWindow *)window;
+
 @end
 
 @implementation CMCocoaMouse
@@ -127,6 +130,20 @@
     return point;
 }
 
++ (NSRect)convertRectToScreen:(NSRect)rect
+                       window:(NSWindow *)window
+{
+    if ([window respondsToSelector:@selector(convertRectToScreen:)])
+        return [window convertRectToScreen:rect];
+    
+    NSRect frame = [window frame];
+    
+    rect.origin.x += frame.origin.x;
+    rect.origin.y += frame.origin.y;
+    
+    return rect;
+}
+
 #pragma mark - Cocoa Callbacks
 
 - (void)mouseMoved:(NSEvent *)theEvent
@@ -189,7 +206,8 @@
                 centerView.origin.y = (viewOrig.y + viewSize.height) / 2.0;
                 
                 // Compute screen coordinates
-                NSPoint centerScreen = [view.window convertRectToScreen:centerView].origin;
+                NSPoint centerScreen = [CMCocoaMouse convertRectToScreen:centerView
+                                                                  window:view.window].origin;
                 
                 // Flip screen coordinates
                 centerScreen.y = screenRect.height - centerScreen.y;
@@ -260,33 +278,28 @@ extern CMEmulatorController *theEmulator;
 
 void archMouseGetState(int *dx, int *dy)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-    NSPoint coordinates = theEmulator.mouse.pointerCoordinates;
-    *dx = (int)coordinates.x;
-    *dy = (int)coordinates.y;
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        NSPoint coordinates = theEmulator.mouse.pointerCoordinates;
+        *dx = (int)coordinates.x;
+        *dy = (int)coordinates.y;
+    }
 }
 
 int archMouseGetButtonState(int checkAlways)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    int buttonState = theEmulator.mouse.buttonState;
-    
-    [pool drain];
-    
-    return buttonState;
+    @autoreleasepool
+    {
+        return theEmulator.mouse.buttonState;
+    }
 }
 
 void archMouseEmuEnable(AmEnableMode mode)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    theEmulator.mouse.mouseMode = mode;
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        theEmulator.mouse.mouseMode = mode;
+    }
 }
 
 void archMouseSetForceLock(int lock) { }

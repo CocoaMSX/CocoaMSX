@@ -360,24 +360,22 @@ static OSStatus audioCallback(void *inRefCon,
                               UInt32 inBusNumber, UInt32 inNumberFrames,
                               AudioBufferList *ioData)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    CMCocoaSound *sound = (CMCocoaSound*)inRefCon;
-    [sound renderSoundToStream:ioData];
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        CMCocoaSound *sound = (CMCocoaSound*)inRefCon;
+        [sound renderSoundToStream:ioData];
+    }
     
     return 0;
 }
 
 static Int32 mixSound(void *dummy, Int16 *buffer, UInt32 count)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    CMCocoaSound *sound = (CMCocoaSound*)dummy;
-    [sound mixSoundFromBuffer:buffer bytes:count];
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        CMCocoaSound *sound = (CMCocoaSound*)dummy;
+        [sound mixSoundFromBuffer:buffer bytes:count];
+    }
     
     return 0;
 }
@@ -386,42 +384,38 @@ static Int32 mixSound(void *dummy, Int16 *buffer, UInt32 count)
 
 void archSoundCreate(Mixer* mixer, UInt32 sampleRate, UInt32 bufferSize, Int16 channels)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    [theEmulator.sound initializeWithSampleRate:sampleRate
-                                       channels:channels
-                                     bufferSize:bufferSize
-                                          mixer:mixer
-                                 bitsPerChannel:16];
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        [theEmulator.sound initializeWithSampleRate:sampleRate
+                                           channels:channels
+                                         bufferSize:bufferSize
+                                              mixer:mixer
+                                     bitsPerChannel:16];
+    }
 }
 
 void archSoundDestroy()
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    [theEmulator.sound destroy];
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        [theEmulator.sound destroy];
+    }
 }
 
 void archSoundResume()
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    [theEmulator.sound resume];
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        [theEmulator.sound resume];
+    }
 }
 
 void archSoundSuspend()
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    [theEmulator.sound pause];
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        [theEmulator.sound pause];
+    }
 }
 
 @end

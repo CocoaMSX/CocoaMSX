@@ -84,15 +84,14 @@ static void* pThreadCallback(void* data);
     [NSThread sleepForTimeInterval:ms / 1000.0];
 }
 
-static void* pThreadCallback(void* data)
+static void *pThreadCallback(void *data)
 {
     CMThreadArg *arg = (CMThreadArg *)data;
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    arg->entryPoint();
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        arg->entryPoint();
+    }
     
     return NULL;
     

@@ -2484,7 +2484,7 @@
 				GCC_PREFIX_HEADER = CocoaMSX_Prefix.pch;
 				INFOPLIST_FILE = "CocoaMSX-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = (
 					"-DOSX",
 					"-DDEBUG",
@@ -2510,7 +2510,7 @@
 				GCC_PREFIX_HEADER = CocoaMSX_Prefix.pch;
 				INFOPLIST_FILE = "CocoaMSX-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = (
 					"-DOSX",
 					"-DFINAL",

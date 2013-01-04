@@ -280,11 +280,10 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    [self renderScreen];
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        [self renderScreen];
+    }
     
     return kCVReturnSuccess;
 }
@@ -405,11 +404,10 @@ extern CMEmulatorController *theEmulator;
 
 int archUpdateEmuDisplay(int syncMode)
 {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    theEmulator.screen.needsDisplay = YES;
-    
-    [pool drain];
+    @autoreleasepool
+    {
+        theEmulator.screen.needsDisplay = YES;
+    }
     
     return 1;
 }
@@ -493,21 +491,20 @@ void *archScreenCapture(ScreenCaptureType type, int *bitmapSize, int onlyBmp)
     void *bytes = NULL;
     *bitmapSize = 0;
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    NSImage *image = [theEmulator.screen captureScreen:NO];
-    if (image && [image representations].count > 0)
+    @autoreleasepool
     {
-        NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
-        NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
-        
-        *bitmapSize = pngData.length;
-        bytes = malloc(*bitmapSize);
-        
-        memcpy(bytes, [pngData bytes], *bitmapSize);
+        NSImage *image = [theEmulator.screen captureScreen:NO];
+        if (image && [image representations].count > 0)
+        {
+            NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
+            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+            
+            *bitmapSize = pngData.length;
+            bytes = malloc(*bitmapSize);
+            
+            memcpy(bytes, [pngData bytes], *bitmapSize);
+        }
     }
-    
-    [pool drain];
     
     return bytes;
 }
