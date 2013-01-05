@@ -2,7 +2,7 @@
  **
  ** CocoaMSX: MSX Emulator for Mac OS X
  ** http://www.cocoamsx.com
- ** Copyright (C) 2012 Akop Karapetyan
+ ** Copyright (C) 2012-2013 Akop Karapetyan
  **
  ** This program is free software; you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -290,20 +290,33 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     for (int i = 0; i < PROP_MAX_CARTS; i++)
     {
-        if (properties->media.carts[i].fileName[0]) insertCartridge(properties, i, properties->media.carts[i].fileName, properties->media.carts[i].fileNameInZip, properties->media.carts[i].type, -1);
-        updateExtendedRomName(i, properties->media.carts[i].fileName, properties->media.carts[i].fileNameInZip);
+        if (properties->media.carts[i].fileName[0])
+            insertCartridge(properties, i, properties->media.carts[i].fileName,
+                            properties->media.carts[i].fileNameInZip,
+                            properties->media.carts[i].type, -1);
+        
+        updateExtendedRomName(i, properties->media.carts[i].fileName,
+                              properties->media.carts[i].fileNameInZip);
     }
     
     for (int i = 0; i < PROP_MAX_DISKS; i++)
     {
-        if (properties->media.disks[i].fileName[0]) insertDiskette(properties, i, properties->media.disks[i].fileName, properties->media.disks[i].fileNameInZip, -1);
-        updateExtendedDiskName(i, properties->media.disks[i].fileName, properties->media.disks[i].fileNameInZip);
+        if (properties->media.disks[i].fileName[0])
+            insertDiskette(properties, i, properties->media.disks[i].fileName,
+                           properties->media.disks[i].fileNameInZip, -1);
+        
+        updateExtendedDiskName(i, properties->media.disks[i].fileName,
+                               properties->media.disks[i].fileNameInZip);
     }
     
     for (int i = 0; i < PROP_MAX_TAPES; i++)
     {
-        if (properties->media.tapes[i].fileName[0]) insertCassette(properties, i, properties->media.tapes[i].fileName, properties->media.tapes[i].fileNameInZip, 0);
-        updateExtendedCasName(i, properties->media.tapes[i].fileName, properties->media.tapes[i].fileNameInZip);
+        if (properties->media.tapes[i].fileName[0])
+            insertCassette(properties, i, properties->media.tapes[i].fileName,
+                           properties->media.tapes[i].fileNameInZip, 0);
+        
+        updateExtendedCasName(i, properties->media.tapes[i].fileName,
+                              properties->media.tapes[i].fileNameInZip);
     }
     
     Machine* machine = machineCreate(properties->emulation.machineName);

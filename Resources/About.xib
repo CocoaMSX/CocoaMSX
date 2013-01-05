@@ -143,7 +143,7 @@
 									<object class="NSTextFieldCell" key="NSCell" id="758403068">
 										<int key="NSCellFlags">68157504</int>
 										<int key="NSCellFlags2">272630784</int>
-										<string key="NSContents">© 2012 Akop Karapetyan</string>
+										<string key="NSContents">© 2012-2013 Akop Karapetyan</string>
 										<reference key="NSSupport" ref="26"/>
 										<string key="NSCellIdentifier">_NS:1535</string>
 										<reference key="NSControlView" ref="846336310"/>
