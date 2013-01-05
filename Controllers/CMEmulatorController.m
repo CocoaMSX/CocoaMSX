@@ -61,23 +61,26 @@
 - (void)setScreenSize:(NSSize)size
               animate:(BOOL)animate;
 
-- (NSString*)showOpenFolderDialogWithTitle:(NSString*)title;
+- (void)showOpenFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler;
+- (void)showOpenFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                    openInDirectory:(NSString *)initialDirectory
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler;
+- (void)showOpenFileDialogWithTitle:(NSString *)title
+                   allowedFileTypes:(NSArray *)allowedFileTypes
+                    openInDirectory:(NSString *)initialDirectory
+               canChooseDirectories:(BOOL)canChooseDirectories
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
-- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes;
-- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
-                         openInDirectory:(NSString*)initialDirectory;
-- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
-                         openInDirectory:(NSString*)initialDirectory
-                    canChooseDirectories:(BOOL)canChooseDirectories;
-
-- (NSString*)showSaveFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes;
-- (NSString*)showSaveFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
-                         openInDirectory:(NSString*)initialDirectory;
+- (void)showSaveFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler;
+- (void)showSaveFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                    openInDirectory:(NSString*)initialDirectory
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
 - (void)insertCartridgeIntoSlot:(NSInteger)slot;
 - (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot;
@@ -111,7 +114,6 @@
 
 @implementation CMEmulatorController
 
-@synthesize lastOpenSavePanelDirectory = _lastOpenSavePanelDirectory;
 @synthesize fpsDisplay = _fpsDisplay;
 @synthesize fileToLoadAtStartup = _fileToLoadAtStartup;
 @synthesize isInitialized = _isInitialized;
@@ -154,7 +156,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [preferenceController release];
     
     self.fileToLoadAtStartup = nil;
-    self.lastOpenSavePanelDirectory = nil;
     
     [keyboard release];
     [mouse release];
@@ -773,57 +774,34 @@ CMEmulatorController *theEmulator = nil; // FIXME
              animate:animate];
 }
 
-- (NSString*)showOpenFolderDialogWithTitle:(NSString*)title
+- (void)showOpenFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler
 {
-    NSOpenPanel* dialog = [NSOpenPanel openPanel];
-    
-    dialog.canChooseFiles = NO;
-    dialog.canChooseDirectories = YES;
-    dialog.canCreateDirectories = YES;
-    
-    dialog.title = title;
-    
-    [NSApp beginSheet:dialog
-       modalForWindow:self.window
-        modalDelegate:nil
-       didEndSelector:nil
-          contextInfo:nil];
-    
-    NSString *path = nil;
-    if ([NSApp runModalForWindow:dialog])
-        path = [dialog URL].path;
-    
-    self.lastOpenSavePanelDirectory = [dialog directoryURL].path;
-    
-    [NSApp endSheet:dialog];
-    [dialog orderOut:self];
-    
-    return path;
+    [self showOpenFileDialogWithTitle:title
+                     allowedFileTypes:allowedFileTypes
+                      openInDirectory:nil
+                 canChooseDirectories:NO
+                    completionHandler:handler];
 }
 
-- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
+- (void)showOpenFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                    openInDirectory:(NSString *)initialDirectory
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler
 {
-    return [self showOpenFileDialogWithTitle:title
-                            allowedFileTypes:allowedFileTypes
-                             openInDirectory:nil
-                        canChooseDirectories:NO];
+    [self showOpenFileDialogWithTitle:title
+                     allowedFileTypes:allowedFileTypes
+                      openInDirectory:initialDirectory
+                 canChooseDirectories:NO
+                    completionHandler:handler];
 }
 
-- (NSString*)showOpenFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
-                         openInDirectory:(NSString *)initialDirectory
-{
-    return [self showOpenFileDialogWithTitle:title
-                            allowedFileTypes:allowedFileTypes
-                             openInDirectory:initialDirectory
-                        canChooseDirectories:NO];
-}
-
-- (NSString*)showOpenFileDialogWithTitle:(NSString *)title
-                        allowedFileTypes:(NSArray *)allowedFileTypes
-                         openInDirectory:(NSString *)initialDirectory
-                    canChooseDirectories:(BOOL)canChooseDirectories
+- (void)showOpenFileDialogWithTitle:(NSString *)title
+                   allowedFileTypes:(NSArray *)allowedFileTypes
+                    openInDirectory:(NSString *)initialDirectory
+               canChooseDirectories:(BOOL)canChooseDirectories
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler
 {
     NSOpenPanel* dialog = [NSOpenPanel openPanel];
     
@@ -836,27 +814,26 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (initialDirectory)
         dialog.directoryURL = [NSURL fileURLWithPath:initialDirectory];
     
-    [NSApp beginSheet:dialog
-       modalForWindow:self.window
-        modalDelegate:nil
-       didEndSelector:nil
-          contextInfo:nil];
-    
-    NSString *file = nil;
-    if ([NSApp runModalForWindow:dialog])
-        file = [dialog URL].path;
-    
-    self.lastOpenSavePanelDirectory = dialog.directoryURL.path;
-    
-    [NSApp endSheet:dialog];
-    [dialog orderOut:self];
-    
-    return file;
+    [dialog beginSheetModalForWindow:self.window
+                   completionHandler:^(NSInteger result)
+     {
+         NSString *file = nil;
+         NSString *filePath = nil;
+         
+         if (result == NSFileHandlingPanelOKButton)
+         {
+             file = [dialog URL].path;
+             filePath = dialog.directoryURL.path;
+         }
+         
+         handler(file, filePath);
+     }];
 }
 
-- (NSString*)showSaveFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
-                         openInDirectory:(NSString*)initialDirectory
+- (void)showSaveFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                    openInDirectory:(NSString*)initialDirectory
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler
 {
     NSSavePanel *dialog = [NSSavePanel savePanel];
     
@@ -867,30 +844,30 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (initialDirectory)
         dialog.directoryURL = [NSURL fileURLWithPath:initialDirectory];
     
-    [NSApp beginSheet:dialog
-       modalForWindow:self.window
-        modalDelegate:nil
-       didEndSelector:nil
-          contextInfo:nil];
-    
-    NSString *file = nil;
-    if ([NSApp runModalForWindow:dialog])
-        file = [dialog URL].path;
-    
-    self.lastOpenSavePanelDirectory = dialog.directoryURL.path;
-    
-    [NSApp endSheet:dialog];
-    [dialog orderOut:self];
-    
-    return file;
+    [dialog beginSheetModalForWindow:self.window
+                   completionHandler:^(NSInteger result)
+     {
+         NSString *file = nil;
+         NSString *filePath = nil;
+         
+         if (result == NSFileHandlingPanelOKButton)
+         {
+             file = [dialog URL].path;
+             filePath = dialog.directoryURL.path;
+         }
+         
+         handler(file, filePath);
+     }];
 }
 
-- (NSString*)showSaveFileDialogWithTitle:(NSString*)title
-                        allowedFileTypes:(NSArray*)allowedFileTypes
+- (void)showSaveFileDialogWithTitle:(NSString*)title
+                   allowedFileTypes:(NSArray*)allowedFileTypes
+                  completionHandler:(void (^)(NSString *file, NSString *path))handler
 {
-    return [self showSaveFileDialogWithTitle:title
-                            allowedFileTypes:allowedFileTypes
-                             openInDirectory:nil];
+    [self showSaveFileDialogWithTitle:title
+                     allowedFileTypes:allowedFileTypes
+                      openInDirectory:nil
+                    completionHandler:handler];
 }
 
 - (void)insertCartridgeIntoSlot:(NSInteger)slot
@@ -898,15 +875,16 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"InsertCartridge")
-                                      allowedFileTypes:openRomFileTypes
-                                       openInDirectory:[CMPreferences preferences].cartridgeDirectory];
-    
-    if (file)
+    [self showOpenFileDialogWithTitle:CMLoc(@"InsertCartridge")
+                     allowedFileTypes:openRomFileTypes
+                    completionHandler:^(NSString *file, NSString *path)
     {
-        [CMPreferences preferences].cartridgeDirectory = self.lastOpenSavePanelDirectory;
-        [self insertCartridge:file slot:slot];
-    }
+        if (file)
+        {
+            [CMPreferences preferences].cartridgeDirectory = path;
+            [self insertCartridge:file slot:slot];
+        }
+    }];
 }
 
 - (BOOL)insertCartridge:(NSString *)cartridge
@@ -989,37 +967,39 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
-                                      allowedFileTypes:openDiskFileTypes
-                                       openInDirectory:[CMPreferences preferences].diskDirectory
-                                  canChooseDirectories:YES];
-    
-    if (file)
-    {
-        emulatorSuspend();
-        
-        BOOL isDirectory;
-        const char *fileCstr = [file UTF8String];
-        
-        [[NSFileManager defaultManager] fileExistsAtPath:file isDirectory:&isDirectory];
-        
-        if (isDirectory)
-        {
-            // Insert directory
-            
-            strcpy(properties->media.disks[slot].directory, fileCstr);
-            insertDiskette(properties, slot, fileCstr, NULL, 0);
-        }
-        else
-        {
-            // Insert disk file
-            
-            insertDiskette(properties, slot, fileCstr, NULL, 0);
-            [CMPreferences preferences].diskDirectory = self.lastOpenSavePanelDirectory;
-        }
-        
-        emulatorResume();
-    }
+    [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
+                     allowedFileTypes:openDiskFileTypes
+                      openInDirectory:[CMPreferences preferences].diskDirectory
+                 canChooseDirectories:YES
+                    completionHandler:^(NSString *file, NSString *path)
+     {
+         if (file)
+         {
+             emulatorSuspend();
+             
+             BOOL isDirectory;
+             const char *fileCstr = [file UTF8String];
+             
+             [[NSFileManager defaultManager] fileExistsAtPath:file isDirectory:&isDirectory];
+             
+             if (isDirectory)
+             {
+                 // Insert directory
+                 
+                 strcpy(properties->media.disks[slot].directory, fileCstr);
+                 insertDiskette(properties, slot, fileCstr, NULL, 0);
+             }
+             else
+             {
+                 // Insert disk file
+                 
+                 insertDiskette(properties, slot, fileCstr, NULL, 0);
+                 [CMPreferences preferences].diskDirectory = path;
+             }
+             
+             emulatorResume();
+         }
+     }];
 }
 
 - (void)ejectDiskFromSlot:(NSInteger)slot
@@ -1180,22 +1160,24 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"InsertCassette")
-                                      allowedFileTypes:openCassetteFileTypes
-                                       openInDirectory:[CMPreferences preferences].cassetteDirectory];
-    
-    if (file)
+    [self showOpenFileDialogWithTitle:CMLoc(@"InsertCassette")
+                     allowedFileTypes:openCassetteFileTypes
+                      openInDirectory:[CMPreferences preferences].cassetteDirectory
+                    completionHandler:^(NSString *file, NSString *path)
     {
-        emulatorSuspend();
-        
-        if (properties->cassette.rewindAfterInsert)
-            tapeRewindNextInsert();
-        
-        insertCassette(properties, 0, [file UTF8String], NULL, 0);
-        [CMPreferences preferences].cassetteDirectory = self.lastOpenSavePanelDirectory;
-        
-        emulatorResume();
-    }
+        if (file)
+        {
+            emulatorSuspend();
+            
+            if (properties->cassette.rewindAfterInsert)
+                tapeRewindNextInsert();
+            
+            insertCassette(properties, 0, [file UTF8String], NULL, 0);
+            [CMPreferences preferences].cassetteDirectory = path;
+            
+            emulatorResume();
+        }
+    }];
 }
 
 - (void)ejectCassette:(id)sender
@@ -1282,18 +1264,20 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (emulatorState != EMU_RUNNING && emulatorState != EMU_PAUSED)
         return;
     
-    NSString *file = [self showOpenFileDialogWithTitle:CMLoc(@"LoadSnapshot")
-                                      allowedFileTypes:stateFileTypes
-                                       openInDirectory:[CMPreferences preferences].snapshotDirectory];
-    
-    if (file)
+    [self showOpenFileDialogWithTitle:CMLoc(@"LoadSnapshot")
+                     allowedFileTypes:stateFileTypes
+                      openInDirectory:[CMPreferences preferences].snapshotDirectory
+                    completionHandler:^(NSString *file, NSString *path)
     {
-        emulatorSuspend();
-        emulatorStop();
-        emulatorStart([file UTF8String]);
-        
-        [CMPreferences preferences].snapshotDirectory = self.lastOpenSavePanelDirectory;
-    }
+        if (file)
+        {
+            emulatorSuspend();
+            emulatorStop();
+            emulatorStart([file UTF8String]);
+            
+            [CMPreferences preferences].snapshotDirectory = path;
+        }
+    }];
 }
 
 - (void)saveState:(id)sender
@@ -1303,68 +1287,70 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"SaveSnapshot")
-                                      allowedFileTypes:stateFileTypes
-                                       openInDirectory:[CMPreferences preferences].snapshotDirectory];
-    
-    if (file)
-    {
-        boardSaveState([file UTF8String], 1);
-        
-        CMPreferences *preferences = [CMPreferences preferences];
-        preferences.snapshotDirectory = self.lastOpenSavePanelDirectory;
-        
-        if (preferences.snapshotIconStyle != CMSnapshotIconStyleNone)
-        {
-            NSImage *screenshot = [screen captureScreen:YES];
-            
-            if (screenshot)
-            {
-                NSImage *icon = nil;
-                
-                if (preferences.snapshotIconStyle == CMSnapshotIconStyleFilmstrip)
-                {
-                    CGFloat iconDim = 512;
-                    CGFloat insetSize = 360;
-                    
-                    icon = [NSImage imageNamed:@"filmstrip"];
-                    [icon setSize:NSMakeSize(iconDim, iconDim)];
-                    
-                    [icon lockFocus];
-                    
-                    [screenshot drawAtPoint:NSMakePoint(76, 73)
-                                   fromRect:NSMakeRect((screenshot.size.width - insetSize) / 2.0,
-                                                       (screenshot.size.height - insetSize) / 2.0,
-                                                       insetSize, insetSize)
-                                  operation:NSCompositeSourceOver
-                                   fraction:1.0];
-                    
-                    [icon unlockFocus];
-                }
-                else if (preferences.snapshotIconStyle == CMSnapshotIconStyleScreen)
-                {
-                    CGFloat iconDim = MIN(screenshot.size.width, screenshot.size.height);
-                    
-                    icon = [[[NSImage alloc] initWithSize:NSMakeSize(iconDim, iconDim)] autorelease];
-                    
-                    [icon lockFocus];
-                    
-                    [screenshot drawAtPoint:NSZeroPoint
-                                   fromRect:NSMakeRect((screenshot.size.width - iconDim) / 2.0,
-                                                       (screenshot.size.height - iconDim) / 2.0,
-                                                       iconDim, iconDim)
-                                  operation:NSCompositeSourceOver
-                                   fraction:1.0];
-                    
-                    [icon unlockFocus];
-                }
-                
-                [[NSWorkspace sharedWorkspace] setIcon:icon forFile:file options:NSExcludeQuickDrawElementsIconCreationOption];
-            }
-        }
-    }
-    
-    emulatorResume();
+    [self showSaveFileDialogWithTitle:CMLoc(@"SaveSnapshot")
+                     allowedFileTypes:stateFileTypes
+                      openInDirectory:[CMPreferences preferences].snapshotDirectory
+                    completionHandler:^(NSString *file, NSString *path)
+     {
+         if (file)
+         {
+             boardSaveState([file UTF8String], 1);
+             
+             CMPreferences *preferences = [CMPreferences preferences];
+             preferences.snapshotDirectory = path;
+             
+             if (preferences.snapshotIconStyle != CMSnapshotIconStyleNone)
+             {
+                 NSImage *screenshot = [screen captureScreen:YES];
+                 
+                 if (screenshot)
+                 {
+                     NSImage *icon = nil;
+                     
+                     if (preferences.snapshotIconStyle == CMSnapshotIconStyleFilmstrip)
+                     {
+                         CGFloat iconDim = 512;
+                         CGFloat insetSize = 360;
+                         
+                         icon = [NSImage imageNamed:@"filmstrip"];
+                         [icon setSize:NSMakeSize(iconDim, iconDim)];
+                         
+                         [icon lockFocus];
+                         
+                         [screenshot drawAtPoint:NSMakePoint(76, 73)
+                                        fromRect:NSMakeRect((screenshot.size.width - insetSize) / 2.0,
+                                                            (screenshot.size.height - insetSize) / 2.0,
+                                                            insetSize, insetSize)
+                                       operation:NSCompositeSourceOver
+                                        fraction:1.0];
+                         
+                         [icon unlockFocus];
+                     }
+                     else if (preferences.snapshotIconStyle == CMSnapshotIconStyleScreen)
+                     {
+                         CGFloat iconDim = MIN(screenshot.size.width, screenshot.size.height);
+                         
+                         icon = [[[NSImage alloc] initWithSize:NSMakeSize(iconDim, iconDim)] autorelease];
+                         
+                         [icon lockFocus];
+                         
+                         [screenshot drawAtPoint:NSZeroPoint
+                                        fromRect:NSMakeRect((screenshot.size.width - iconDim) / 2.0,
+                                                            (screenshot.size.height - iconDim) / 2.0,
+                                                            iconDim, iconDim)
+                                       operation:NSCompositeSourceOver
+                                        fraction:1.0];
+                         
+                         [icon unlockFocus];
+                     }
+                     
+                     [[NSWorkspace sharedWorkspace] setIcon:icon forFile:file options:NSExcludeQuickDrawElementsIconCreationOption];
+                 }
+             }
+         }
+         
+         emulatorResume();
+     }];
 }
 
 - (void)saveScreenshot:(id)sender
@@ -1374,22 +1360,24 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"SaveScreenshot")
-                                      allowedFileTypes:[NSArray arrayWithObjects:@"png", nil]];
-    
-    if (file)
-    {
-        NSImage *image = [screen captureScreen:YES];
-        if (image && [image representations].count > 0)
-        {
-            NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
-            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
-            
-            [pngData writeToFile:file atomically:NO];
-        }
-    }
-    
-    emulatorResume();
+    [self showSaveFileDialogWithTitle:CMLoc(@"SaveScreenshot")
+                     allowedFileTypes:[NSArray arrayWithObjects:@"png", nil]
+                    completionHandler:^(NSString *file, NSString *path)
+     {
+         if (file)
+         {
+             NSImage *image = [screen captureScreen:YES];
+             if (image && [image representations].count > 0)
+             {
+                 NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
+                 NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+                 
+                 [pngData writeToFile:file atomically:NO];
+             }
+         }
+         
+         emulatorResume();
+     }];
 }
 
 - (void)recordAudio:(id)sender
@@ -1403,17 +1391,19 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         emulatorSuspend();
         
-        NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"CaptureAudio")
-                                          allowedFileTypes:captureAudioTypes
-                                           openInDirectory:[CMPreferences preferences].audioCaptureDirectory];
-        
-        if (file)
-        {
-            mixerStartLog(mixer, [file UTF8String]);
-            [CMPreferences preferences].audioCaptureDirectory = self.lastOpenSavePanelDirectory;
-        }
-        
-        emulatorResume();
+        [self showSaveFileDialogWithTitle:CMLoc(@"CaptureAudio")
+                         allowedFileTypes:captureAudioTypes
+                          openInDirectory:[CMPreferences preferences].audioCaptureDirectory
+                        completionHandler:^(NSString *file, NSString *path)
+         {
+             if (file)
+             {
+                 mixerStartLog(mixer, [file UTF8String]);
+                 [CMPreferences preferences].audioCaptureDirectory = path;
+             }
+             
+             emulatorResume();
+         }];
     }
 }
 
@@ -1426,19 +1416,21 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (!boardCaptureIsRecording())
     {
-        NSString *file = [self showSaveFileDialogWithTitle:CMLoc(@"CaptureGameplay")
-                                          allowedFileTypes:captureGameplayTypes
-                                           openInDirectory:[CMPreferences preferences].videoCaptureDirectory];
-        
-        if (file)
-        {
-            const char *destination = [file UTF8String];
-            strncpy(properties->filehistory.videocap, destination, PROP_MAXPATH - 1);
-            
-            boardCaptureStart(destination);
-            
-            [CMPreferences preferences].videoCaptureDirectory = self.lastOpenSavePanelDirectory;
-        }
+        [self showSaveFileDialogWithTitle:CMLoc(@"CaptureGameplay")
+                         allowedFileTypes:captureGameplayTypes
+                          openInDirectory:[CMPreferences preferences].videoCaptureDirectory
+                        completionHandler:^(NSString *file, NSString *path)
+         {
+             if (file)
+             {
+                 const char *destination = [file UTF8String];
+                 strncpy(properties->filehistory.videocap, destination, PROP_MAXPATH - 1);
+                 
+                 boardCaptureStart(destination);
+                 
+                 [CMPreferences preferences].videoCaptureDirectory = path;
+             }
+         }];
     }
     else
     {

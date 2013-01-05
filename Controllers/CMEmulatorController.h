@@ -43,7 +43,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate>
 {
-    NSString *_lastOpenSavePanelDirectory;
     NSString *_fpsDisplay;
     NSString *_fileToLoadAtStartup;
     BOOL _isInitialized;
@@ -80,7 +79,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 @property (nonatomic, assign) BOOL isInitialized;
 
-@property (nonatomic, copy) NSString *lastOpenSavePanelDirectory;
 @property (nonatomic, copy) NSString *fpsDisplay;
 @property (nonatomic, copy) NSString *fileToLoadAtStartup;
 
