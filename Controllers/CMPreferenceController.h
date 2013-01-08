@@ -28,8 +28,9 @@
 @class CMJoyPortDevice;
 @class CMMsxKeyLayout;
 @class MGScopeBar;
+@class CMKeyCaptureView;
 
-@interface CMPreferenceController : NSWindowController<NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDelegate, MGScopeBarDelegate>
+@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDelegate, MGScopeBarDelegate>
 {
     CMEmulatorController *_emulator;
     BOOL _isSaturationEnabled;
@@ -44,6 +45,8 @@
     IBOutlet NSToolbar *toolbar;
     IBOutlet NSTabView *tabView;
     IBOutlet MGScopeBar *scopeBar;
+    
+    CMKeyCaptureView *keyCaptureView;
     
     IBOutlet NSOutlineView *keyboardLayoutEditor;
     IBOutlet NSOutlineView *joystickOneLayoutEditor;

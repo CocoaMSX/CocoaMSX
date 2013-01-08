@@ -207,8 +207,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
             {
                 emulator.scanlines = scanlineAmount;
 #ifdef DEBUG
-                NSLog(@"Resetting scanlines to %d%% - screen not large enough",
-                      (int)scanlineAmount);
+                NSLog(@"Resetting scanlines to %d%%", (int)scanlineAmount);
 #endif
             }
         }

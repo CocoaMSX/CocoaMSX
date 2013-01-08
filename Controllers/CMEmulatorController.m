@@ -110,6 +110,9 @@
 - (void)create;
 - (void)destroy;
 
+- (BOOL)isLionFullscreenAvailable;
+- (void)toggleFullScreen;
+
 @end
 
 @implementation CMEmulatorController
@@ -755,11 +758,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return screen;
 }
 
-- (BOOL)isInFullScreenMode
-{
-    return (self.window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
-}
-
 #pragma mark - Private methods
 
 - (void)zoomWindowBy:(CGFloat)factor
@@ -772,7 +770,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
               animate:(BOOL)animate
 {
     if ([self isInFullScreenMode])
-        [self.window toggleFullScreen:nil];
+        [self toggleFullScreen];
     
     NSSize windowSize = self.window.frame.size;
     NSSize screenSize = screen.frame.size;
@@ -1080,6 +1078,33 @@ CMEmulatorController *theEmulator = nil; // FIXME
             [self pause];
             pausedDueToLostFocus = YES;
         }
+    }
+}
+
+- (BOOL)isLionFullscreenAvailable
+{
+    return [self.window respondsToSelector:@selector(toggleFullScreen:)];
+}
+
+- (BOOL)isInFullScreenMode
+{
+    if ([self isLionFullscreenAvailable])
+        return (self.window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
+    else
+        return [self.window.contentView isInFullScreenMode];
+}
+
+- (void)toggleFullScreen
+{
+    if ([self isLionFullscreenAvailable])
+        [self.window toggleFullScreen:nil];
+    else
+    {
+        if ([self isInFullScreenMode])
+            [self.window.contentView exitFullScreenModeWithOptions:nil];
+        else
+            [self.window.contentView enterFullScreenMode:[NSScreen mainScreen]
+                                             withOptions:nil];
     }
 }
 
@@ -1478,9 +1503,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)toggleFullScreen:(id)sender
 {
-    // TODO: fullScreen support for Snow Leopard
-    if ([self.window respondsToSelector:@selector(toggleFullScreen:)])
-        [self.window toggleFullScreen:sender];
+    [self toggleFullScreen];
 }
 
 #pragma mark - blueMSX implementations - emulation
@@ -1549,7 +1572,7 @@ void archTrap(UInt8 value)
     [self stop];
     [self destroy];
     
-    if (([self.window styleMask] & NSFullScreenWindowMask) != NSFullScreenWindowMask)
+    if (![self isInFullScreenMode])
     {
         CMSetIntPref(@"screenWidth", screen.bounds.size.width);
         CMSetIntPref(@"screenHeight", screen.bounds.size.height);
@@ -1750,11 +1773,6 @@ void archTrap(UInt8 value)
             menuItem.title = CMLoc(@"StopRecording");
         
         return isRunning;
-    }
-    else if (item.action == @selector(toggleFullScreen:))
-    {
-        // TODO: fullScreen support for Snow Leopard
-        return [self.window respondsToSelector:@selector(toggleFullScreen:)];
     }
     
     return menuItem.isEnabled;

@@ -1,8 +1,3 @@
-Snow Leopard issues:
-* Open dialogs start nowhere, and show nothing until icon mode is toggled
-* No Fullscreen currently
-* Everything dealing with key/joystick configuration is broken
-
 Other:
 * Go over Caps Lock - is it being pressed/released correctly in the emulator?
 * Change how scanline enabling/disabling is handled - currently clumsy, considering

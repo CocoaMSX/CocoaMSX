@@ -13,7 +13,7 @@ CocoaMSX is based on blueMSX by Daniel Vik & blueMSX Development Team
   http://www.bluemsx.com/
   Licensed under GNU GPL v2
 
-CocoaMSX uses a modified version of ShortcutRecorder by various contributors
+CocoaMSX contains code from ShortcutRecorder by various contributors
   http://wafflesoftware.net/shortcut/
   Licensed under BSD License
 

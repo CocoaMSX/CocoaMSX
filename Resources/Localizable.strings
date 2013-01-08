@@ -129,9 +129,6 @@ KeyCode = "Code";
 KeyGraph = "Graph";
 KeyJikkou = "実行 (Jikkou)";
 KeyTorike = "取消 (Torikeshi)";
-KeyCapsLock = "Caps Lock";
-KeyMacLeftModifier_f = "Left %C";
-KeyMacRightModifier_f = "Right %C";
 
 JoyButtonOne = "Button 1";
 JoyButtonTwo = "Button 2";
@@ -176,3 +173,9 @@ KeyLayoutRegion = "Layout";
 
 KeyStateNormal = "Normal";
 KeyStateShifted = "Shifted";
+
+LeftKey_f = "Left %C";
+RightKey_f = "Right %C";
+CapsLock = "Caps Lock";
+Spacebar = "Space";
+NumpadKey_f = "Numeric Keypad %@";

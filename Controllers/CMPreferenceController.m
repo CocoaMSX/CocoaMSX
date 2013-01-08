@@ -28,10 +28,9 @@
 
 #import "CMKeyboardInput.h"
 
-#import "SRRecorderTableCellView.h"
-#import "SRRecorderControl.h"
-
 #import "MGScopeBar.h"
+#import "CMKeyCaptureView.h"
+#import "CMHeaderRowCell.h"
 
 #include "InputEvent.h"
 
@@ -174,6 +173,8 @@
 {
     CMPreferences *prefs = [CMPreferences preferences];
     
+    keyCaptureView = nil;
+    
     // Initialize sliders
     
     NSArray *sliders = [NSArray arrayWithObjects:
@@ -260,6 +261,8 @@
     self.joystickPortPeripherals = nil;
     self.joystickPort1Selection = nil;
     self.joystickPort2Selection = nil;
+    
+    [keyCaptureView release];
     
     [keyCategories release];
     [joystickOneCategories release];
@@ -536,7 +539,48 @@
     [tabView selectTabViewItemWithIdentifier:toolbar.selectedItemIdentifier];
 }
 
+#pragma mark - NSWindowDelegate
+
+- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject
+{
+    if (anObject == keyboardLayoutEditor
+        || anObject == joystickOneLayoutEditor
+        || anObject == joystickTwoLayoutEditor)
+    {
+        if (!keyCaptureView)
+            keyCaptureView = [[CMKeyCaptureView alloc] init];
+        
+        return keyCaptureView;
+    }
+    
+    return nil;
+}
+
 #pragma mark - NSOutlineViewDataSourceDelegate
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+    if ([item isKindOfClass:CMKeyCategory.class])
+        return ((CMKeyCategory *)item).items.count;
+    
+    if (outlineView == keyboardLayoutEditor)
+    {
+        if (!item)
+            return keyCategories.count;
+    }
+    else if (outlineView == joystickOneLayoutEditor)
+    {
+        if (!item)
+            return joystickOneCategories.count;
+    }
+    else if (outlineView == joystickTwoLayoutEditor)
+    {
+        if (!item)
+            return joystickTwoCategories.count;
+    }
+    
+    return 0;
+}
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
@@ -567,148 +611,64 @@
     return [item isKindOfClass:[CMKeyCategory class]];
 }
 
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-    if ([item isKindOfClass:CMKeyCategory.class])
-        return ((CMKeyCategory *)item).items.count;
-    
-    if (outlineView == keyboardLayoutEditor)
-    {
-        if (!item)
-            return keyCategories.count;
-    }
-    else if (outlineView == joystickOneLayoutEditor)
-    {
-        if (!item)
-            return joystickOneCategories.count;
-    }
-    else if (outlineView == joystickTwoLayoutEditor)
-    {
-        if (!item)
-            return joystickTwoCategories.count;
-    }
-    
-    return 0;
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView
-viewForTableColumn:(NSTableColumn *)tableColumn
-             item:(id)item
-{
-    NSTableCellView *cell = nil;
-    
-    if (!item)
-        return nil;
-    
     if ([item isKindOfClass:[CMKeyCategory class]])
     {
         if ([tableColumn.identifier isEqualToString:@"CMKeyLabelColumn"])
-        {
-            CMKeyCategory *keyCategory = item;
-            cell = [outlineView makeViewWithIdentifier:@"headerColumn" owner:self];
-            
-            if (!cell)
-            {
-                NSRect cellFrame = NSMakeRect(0, 0, tableColumn.width, outlineView.rowHeight);
-                
-                cell = [[[NSTableCellView alloc] initWithFrame:cellFrame] autorelease];
-                cell.identifier = @"headerColumn";
-                cell.textField = [[[NSTextField alloc] initWithFrame:cell.frame] autorelease];
-                
-                [cell.textField setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
-                [cell.textField setBordered:NO];
-                [cell.textField setEditable:NO];
-                [cell.textField setDrawsBackground:NO];
-                [cell.textField.cell setLineBreakMode:NSLineBreakByTruncatingTail];
-                [cell.textField setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-                
-                [cell addSubview:cell.textField];
-            }
-            
-            cell.textField.stringValue = keyCategory.title;
-        }
+            return [((CMKeyCategory *)item) title];
     }
     else if ([item isKindOfClass:[NSNumber class]])
     {
-        CMInputDeviceLayout *layout = [self inputDeviceLayoutFromOutlineView:outlineView];;
-        
+        CMInputDeviceLayout *layout = [self inputDeviceLayoutFromOutlineView:outlineView];
         NSUInteger virtualCode = [(NSNumber *)item integerValue];
-        CMKeyboardInput *keyInput = (CMKeyboardInput *)[layout inputMethodForVirtualCode:virtualCode];
         
         if ([tableColumn.identifier isEqualToString:@"CMKeyLabelColumn"])
         {
-            cell = [outlineView makeViewWithIdentifier:tableColumn.identifier owner:self];
-            
-            if (!cell)
-            {
-                NSRect cellFrame = NSMakeRect(0, 0, tableColumn.width, outlineView.rowHeight);
-                
-                cell = [[[NSTableCellView alloc] initWithFrame:cellFrame] autorelease];
-                cell.identifier = tableColumn.identifier;
-                cell.textField = [[[NSTextField alloc] initWithFrame:cell.frame] autorelease];
-                
-                [cell.textField setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
-                [cell.textField setBordered:NO];
-                [cell.textField setEditable:NO];
-                [cell.textField setDrawsBackground:NO];
-                [cell.textField.cell setLineBreakMode:NSLineBreakByTruncatingTail];
-                [cell.textField setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-                
-                [cell addSubview:cell.textField];
-            }
-            
-            cell.textField.stringValue = [self.emulator.keyboard inputNameForVirtualCode:virtualCode
-                                                                              shiftState:selectedKeyboardShiftState
-                                                                                layoutId:selectedKeyboardRegion];
+            return [self.emulator.keyboard inputNameForVirtualCode:virtualCode
+                                                        shiftState:selectedKeyboardShiftState
+                                                          layoutId:selectedKeyboardRegion];
         }
         else if ([tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
         {
-            SRRecorderTableCellView *srCell = [outlineView makeViewWithIdentifier:tableColumn.identifier owner:self];
+            CMKeyboardInput *keyInput = (CMKeyboardInput *)[layout inputMethodForVirtualCode:virtualCode];
             
-            if (!srCell)
-            {
-                NSRect cellFrame = NSMakeRect(0, 0, tableColumn.width, outlineView.rowHeight);
-                
-                srCell = [[[SRRecorderTableCellView alloc] initWithFrame:cellFrame] autorelease];
-                srCell.identifier = tableColumn.identifier;
-                srCell.recorderControl = [[[SRRecorderControl alloc] initWithFrame:srCell.frame] autorelease];
-                
-                srCell.recorderControl.delegate = self;
-                srCell.recorderControl.allowedFlags = SRLeftShiftMask | SRRightShiftMask
-                    | SRLeftAlternateMask | SRRightAlternateMask
-                    | SRLeftControlKeyMask | SRRightControlKeyMask;
-                
-                srCell.recorderControl.useSingleKeyMode = YES;
-                srCell.recorderControl.tableCellMode = YES;
-                
-                [srCell.recorderControl setAllowsKeyOnly:YES escapeKeysRecord:YES];
-                [srCell.recorderControl setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-                
-                [srCell addSubview:srCell.recorderControl];
-            }
-            
-            srCell.recorderControl.tag = virtualCode;
-            [srCell.recorderControl setKeyCombo:SRMakeKeyCombo((keyInput) ? keyInput.keyCode : ShortcutRecorderEmptyCode,
-                                                               ShortcutRecorderEmptyFlags)];
-            
-            cell = srCell;
+            return [CMKeyCaptureView descriptionForKeyCode:CMMakeNumber([keyInput keyCode])];
         }
     }
     
-    return cell;
+    return nil;
 }
 
-- (NSTableRowView *)outlineView:(NSOutlineView *)outlineView rowViewForItem:(id)item
+- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-    NSTableRowView *row = nil;
-    
-    if ([item isKindOfClass:[CMKeyCategory class]])
+    if ([item isKindOfClass:[NSNumber class]]
+        && [tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
     {
-        NSRect rowRect = NSMakeRect(0, 0, outlineView.frame.size.width, outlineView.rowHeight);
-        row = [[[CMOutlineHeaderRowView alloc] initWithFrame:rowRect] autorelease];
+        NSNumber *keyCode = [CMKeyCaptureView keyCodeForDescription:(NSString *)object];
+        
+        CMInputDeviceLayout *layout = [self inputDeviceLayoutFromOutlineView:outlineView];
+        
+        if (layout)
+        {
+            NSUInteger virtualCode = [(NSNumber *)item integerValue];
+            CMInputMethod *currentMethod = [layout inputMethodForVirtualCode:virtualCode];
+            CMKeyboardInput *newMethod = [CMKeyboardInput keyboardInputWithKeyCode:[keyCode integerValue]];
+            
+            if (![newMethod isEqualToInputMethod:currentMethod])
+            {
+                [layout assignInputMethod:newMethod toVirtualCode:virtualCode];
+                
+                CMPreferences *preferences = [CMPreferences preferences];
+                if (layout == self.emulator.keyboardLayout)
+                    [preferences setKeyboardLayout:layout];
+                else if (layout == self.emulator.joystickOneLayout)
+                    [preferences setJoystickOneLayout:layout];
+                else if (layout == self.emulator.joystickTwoLayout)
+                    [preferences setJoystickTwoLayout:layout];
+            }
+        }
     }
-    
-    return row;
 }
 
 #pragma mark - NSOutlineViewDelegate
@@ -718,33 +678,18 @@ viewForTableColumn:(NSTableColumn *)tableColumn
     return ![item isKindOfClass:CMKeyCategory.class];
 }
 
-#pragma mark - SRRecorderDelegate
-
-- (void)shortcutRecorder:(SRRecorderControl *)aRecorder keyComboDidChange:(KeyCombo)newKeyCombo
+- (NSCell *)outlineView:(NSOutlineView *)outlineView dataCellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-    CMPreferences *preferences = [CMPreferences preferences];
-    
-    NSOutlineView *outlineView = (NSOutlineView *)[[[aRecorder superview] superview] superview];
-    CMInputDeviceLayout *layout = [self inputDeviceLayoutFromOutlineView:outlineView];
-    
-    if (layout)
+    if ([item isKindOfClass:[CMKeyCategory class]])
     {
-        NSInteger virtualCode = aRecorder.tag;
-        CMInputMethod *currentMethod = [layout inputMethodForVirtualCode:virtualCode];
-        CMKeyboardInput *newMethod = [CMKeyboardInput keyboardInputWithKeyCode:newKeyCombo.code];
-        
-        if (![newMethod isEqualToInputMethod:currentMethod])
+        if (!tableColumn)
         {
-            [layout assignInputMethod:newMethod toVirtualCode:virtualCode];
-            
-            if (layout == self.emulator.keyboardLayout)
-                [preferences setKeyboardLayout:layout];
-            else if (layout == self.emulator.joystickOneLayout)
-                [preferences setJoystickOneLayout:layout];
-            else if (layout == self.emulator.joystickTwoLayout)
-                [preferences setJoystickTwoLayout:layout];
+            CMKeyCategory *category = (CMKeyCategory *)item;
+            return [[[CMHeaderRowCell alloc] initWithHeaderText:[category title]] autorelease];
         }
     }
+    
+    return nil;
 }
 
 #pragma mark MGScopeBarDelegate
@@ -788,9 +733,7 @@ viewForTableColumn:(NSTableColumn *)tableColumn
 - (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber // return nil or an empty string for no label.
 {
     if (groupNumber == SCOPEBAR_GROUP_REGIONS)
-    {
         return CMLoc(@"KeyLayoutRegion");
-    }
     
     return nil;
 }
