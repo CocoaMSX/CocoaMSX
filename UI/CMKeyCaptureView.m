@@ -29,6 +29,7 @@
 
 @interface CMKeyCaptureView ()
 
+- (void)captureKeyCode:(NSInteger)keyCode;
 - (NSRect)unmapRect;
 - (BOOL)canUnmap;
 
@@ -36,16 +37,47 @@
 
 @implementation CMKeyCaptureView
 
+#define CMKeyLeftCommand      55
+#define CMKeyRightCommand     54
+#define CMKeyFunctionModifier 63
+
 #define CMCharAsString(x) [NSString stringWithFormat:@"%C", (unsigned short)x]
 #define CMFormattedCharAsString(fmt, x) [NSString stringWithFormat:CMLoc(fmt), x]
 
 static NSMutableDictionary *keyCodeLookupTable;
 static NSMutableDictionary *reverseKeyCodeLookupTable;
+static NSArray *keyCodesToIgnore;
 
 + (void)initialize
 {
-    // Set up some well-known keys
+    keyCodesToIgnore = [[NSArray alloc] initWithObjects:
+                        
+                        // Ignore the function modifier key (needed on MacBooks)
+                        
+                        CMMakeNumber(CMKeyFunctionModifier),
+                        
+                        // Ignore the Command modifier keys - they're used
+                        // for shortcuts
+                        
+                        CMMakeNumber(CMKeyLeftCommand),
+                        CMMakeNumber(CMKeyRightCommand),
+                        
+                        nil];
+    
     keyCodeLookupTable = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                          
+                          // These seem to be unused. Included here to avoid
+                          // creating collisions in reverseKeyCodeLookupTable
+                          // with identical names
+                          
+                          @"",    CMMakeNumber(102),
+                          @"",    CMMakeNumber(104),
+                          @"",    CMMakeNumber(108),
+                          @"",    CMMakeNumber(110),
+                          @"",    CMMakeNumber(112),
+                          
+                          // Well-known keys
+                          
                           @"F1",  CMMakeNumber(122),
                           @"F2",  CMMakeNumber(120),
                           @"F3",  CMMakeNumber(99),
@@ -181,41 +213,76 @@ static NSMutableDictionary *reverseKeyCodeLookupTable;
     {
         NSNumber *keyCodeObj = key;
         NSString *keyName = obj;
+        NSNumber *existingCode;
         
-        if ([reverseKeyCodeLookupTable objectForKey:keyName])
+        if ([keyName length] > 0)
         {
-            NSLog(@"reverseKeyCodeLookupTable conflict: name: '%@' code: %@",
-                  keyName, keyCodeObj);
+            if ((existingCode = [reverseKeyCodeLookupTable objectForKey:keyName]))
+            {
+                NSLog(@"reverseKeyCodeLookupTable conflict: name: '%@' code: %@ (existing: %@)",
+                      keyName, keyCodeObj, existingCode);
+                
+                return;
+            }
             
-            return;
+            [reverseKeyCodeLookupTable setObject:keyCodeObj forKey:keyName];
         }
-        
-        [reverseKeyCodeLookupTable setObject:keyCodeObj forKey:keyName];
     }];
 }
 
+#pragma mark - Input events
+
 - (void)keyDown:(NSEvent *)theEvent
 {
-    NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:CMMakeNumber(theEvent.keyCode)];
-    
-    if (keyName)
-    {
-        [[self textStorage] replaceCharactersInRange:NSMakeRange(0, [[self textStorage] length])
-                                          withString:keyName];
-        [[self window] makeFirstResponder:(NSView *)self.delegate];
-    }
+    if (![keyCodesToIgnore containsObject:CMMakeNumber([theEvent keyCode])])
+        [self captureKeyCode:[theEvent keyCode]];
 }
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:CMMakeNumber(theEvent.keyCode)];
-    
-    if (keyName)
+    if (![keyCodesToIgnore containsObject:CMMakeNumber([theEvent keyCode])])
+        [self captureKeyCode:[theEvent keyCode]];
+}
+
+- (BOOL)becomeFirstResponder
+{
+    if ([super becomeFirstResponder])
     {
-        [[self textStorage] replaceCharactersInRange:NSMakeRange(0, [[self textStorage] length])
-                                          withString:keyName];
-        [[self window] makeFirstResponder:(NSView *)self.delegate];
+        [self setEditable:NO];
+        [self setSelectable:NO];
+        
+        return YES;
     }
+    
+    return NO;
+}
+
+- (void)mouseDown:(NSEvent *)theEvent
+{
+    [super mouseDown:theEvent];
+    
+    if ([self canUnmap])
+    {
+        NSPoint mousePosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        if (NSPointInRect(mousePosition, [self unmapRect]))
+            [self captureKeyCode:CMKeyNone];
+    }
+}
+
+#pragma mark - Private methods
+
+- (void)captureKeyCode:(NSInteger)keyCode
+{
+    NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:CMMakeNumber(keyCode)];
+    if (!keyName)
+        keyName = @"";
+    
+    // Update the editor's text with the code's description
+    [[self textStorage] replaceCharactersInRange:NSMakeRange(0, [[self textStorage] length])
+                                      withString:keyName];
+    
+    // Resign first responder (closes the editor)
+    [[self window] makeFirstResponder:(NSView *)self.delegate];
 }
 
 + (NSString *)descriptionForKeyCode:(NSNumber *)keyCode
@@ -242,19 +309,6 @@ static NSMutableDictionary *reverseKeyCodeLookupTable;
     return CMMakeNumber(CMKeyNone);
 }
 
-- (BOOL)becomeFirstResponder
-{
-    if ([super becomeFirstResponder])
-    {
-        [self setEditable:NO];
-        [self setSelectable:NO];
-        
-        return YES;
-    }
-    
-    return NO;
-}
-
 - (BOOL)canUnmap
 {
     return ([self string] && [[self string] length] > 0);
@@ -269,6 +323,8 @@ static NSMutableDictionary *reverseKeyCodeLookupTable;
                       cellFrame.origin.y + (cellFrame.size.height - diam) / 2.0,
                       diam, diam);
 }
+
+#pragma mark - NSTextView
 
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -318,23 +374,6 @@ static NSMutableDictionary *reverseKeyCodeLookupTable;
     }
     
     [[NSGraphicsContext currentContext] restoreGraphicsState];
-}
-
-- (void)mouseDown:(NSEvent *)theEvent
-{
-    [super mouseDown:theEvent];
-    
-    if ([self canUnmap])
-    {
-        NSPoint mousePosition = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        
-        if (NSPointInRect(mousePosition, [self unmapRect]))
-        {
-            [[self textStorage] replaceCharactersInRange:NSMakeRange(0, [[self textStorage] length])
-                                              withString:@""];
-            [[self window] makeFirstResponder:(NSView *)self.delegate];
-        }
-    }
 }
 
 @end
