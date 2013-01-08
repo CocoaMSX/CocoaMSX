@@ -13,19 +13,19 @@ CocoaMSX is based on blueMSX by Daniel Vik & blueMSX Development Team
   http://www.bluemsx.com/
   Licensed under GNU GPL v2
 
-CocoaMSX contains code from ShortcutRecorder by various contributors
-  http://wafflesoftware.net/shortcut/
-  Licensed under BSD License
-
-CocoaMSX contains sound engine code from the SDL library by Sam Lantinga and
-contributors
-  http://www.libsdl.org
-  Licensed under GNU LGPL
-
 CocoaMSX uses MGScopeBar by Matt Gemmell
   http://mattgemmell.com
   Licensed under a BSD-like license with attribution; see 
   "MGScopeBar License.rtf" for more information
+
+CocoaMSX includes code from ShortcutRecorder by various contributors
+  http://wafflesoftware.net/shortcut/
+  Licensed under BSD License
+
+CocoaMSX includes code from the SDL library by Sam Lantinga and
+contributors
+  http://www.libsdl.org
+  Licensed under GNU LGPL
 
 Graphics:
 

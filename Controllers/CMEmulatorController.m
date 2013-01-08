@@ -1083,7 +1083,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (BOOL)isLionFullscreenAvailable
 {
-    return [self.window respondsToSelector:@selector(toggleFullScreen:)];
+    return NO;//[self.window respondsToSelector:@selector(toggleFullScreen:)];
 }
 
 - (BOOL)isInFullScreenMode
@@ -1100,12 +1100,32 @@ CMEmulatorController *theEmulator = nil; // FIXME
         [self.window toggleFullScreen:nil];
     else
     {
+        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 CMMakeNumber(NSApplicationPresentationHideDock
+                                              | NSApplicationPresentationAutoHideMenuBar), NSFullScreenModeApplicationPresentationOptions,
+                                 nil];
+        
         if ([self isInFullScreenMode])
-            [self.window.contentView exitFullScreenModeWithOptions:nil];
+        {
+            [self.window.contentView exitFullScreenModeWithOptions:options];
+        }
         else
+        {
             [self.window.contentView enterFullScreenMode:[NSScreen mainScreen]
-                                             withOptions:nil];
+                                             withOptions:options];
+            
+            [self.window makeKeyWindow];
+            [self.screen becomeFirstResponder];
+        }
     }
+}
+
+-(BOOL)canBecomeKeyWindow
+{
+    if (![self isLionFullscreenAvailable])
+        return YES;
+    
+    return NO;
 }
 
 #pragma mark - IBActions
