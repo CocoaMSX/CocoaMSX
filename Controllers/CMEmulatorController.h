@@ -103,7 +103,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (void)resume;
 
 - (void)performColdReboot;
-- (BOOL)isRunning;
+- (BOOL)isStarted;
 - (BOOL)isPaused;
 - (NSInteger)machineState;
 

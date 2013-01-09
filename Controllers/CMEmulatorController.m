@@ -112,6 +112,9 @@
 
 - (BOOL)isLionFullscreenAvailable;
 - (void)toggleFullScreen;
+- (NSWindow *)activeWindow;
+- (void)enterLegacyFullscreen;
+- (void)exitLegacyFullscreen;
 
 @end
 
@@ -123,6 +126,8 @@
 
 #define WIDTH_DEFAULT   320.0
 #define HEIGHT_DEFAULT  240.0
+
+#define CMMinYEdgeHeight 32.0 // Height of the status bar at bottom
 
 CMEmulatorController *theEmulator = nil; // FIXME
 
@@ -349,7 +354,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized)
         return;
     
-    if ([self isRunning])
+    if ([self isStarted])
         [self stop];
     
     videoDestroy(video);
@@ -368,7 +373,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     if (self.isInitialized)
     {
-        if ([self isRunning])
+        if ([self isStarted])
             [self stop];
         
         if (self.fileToLoadAtStartup)
@@ -382,13 +387,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
         emulatorStart(NULL);
         
         // Pause if not focused
-        [self windowKeyDidChange:self.window.isKeyWindow];
+        [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
     }
 }
 
 - (void)stop
 {
-    if ([self isInitialized] && [self isRunning])
+    if ([self isInitialized] && [self isStarted])
     {
         emulatorSuspend();
         emulatorStop();
@@ -537,7 +542,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)setScanlines:(NSInteger)value
 {
-    if ([self isRunning])
+    if ([self isStarted])
     {
         properties->video.scanlinesEnable = (value > 0);
         properties->video.scanlinesPct = 100 - value;
@@ -707,7 +712,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 #pragma mark - Properties
 
-- (BOOL)isRunning
+- (BOOL)isStarted
 {
     NSInteger machineState = emulatorGetState();
     return (machineState == EMU_RUNNING || machineState == EMU_PAUSED);
@@ -825,7 +830,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (initialDirectory)
         dialog.directoryURL = [NSURL fileURLWithPath:initialDirectory];
     
-    [dialog beginSheetModalForWindow:self.window
+    [dialog beginSheetModalForWindow:[self activeWindow]
                    completionHandler:^(NSInteger result)
      {
          NSString *file = nil;
@@ -855,7 +860,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (initialDirectory)
         dialog.directoryURL = [NSURL fileURLWithPath:initialDirectory];
     
-    [dialog beginSheetModalForWindow:self.window
+    [dialog beginSheetModalForWindow:[self activeWindow]
                    completionHandler:^(NSInteger result)
      {
          NSString *file = nil;
@@ -913,7 +918,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (BOOL)insertUnknownMedia:(NSString *)media
 {
-    if (self.isRunning)
+    if ([self isStarted])
         [self stop];
     
     return tryLaunchUnknownFile(self.properties, [media UTF8String], YES) != 0;
@@ -933,7 +938,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)ejectCartridgeFromSlot:(NSInteger)slot
 {
-    if (![self isRunning])
+    if (![self isStarted])
         return;
     
     actionCartRemove(slot);
@@ -1064,26 +1069,34 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     BOOL pauseWhenUnfocused = [[NSUserDefaults standardUserDefaults] boolForKey:@"pauseWhenUnfocused"];
     
-    if (isKey)
+    if ([self isStarted])
     {
-        if ([self isPaused] && pausedDueToLostFocus)
-            [self resume];
-        
-        pausedDueToLostFocus = NO;
-    }
-    else
-    {
-        if ([self isRunning] && pauseWhenUnfocused)
+        if (isKey)
         {
-            [self pause];
-            pausedDueToLostFocus = YES;
+            if ([self isPaused] && pausedDueToLostFocus)
+                [self resume];
+            
+            pausedDueToLostFocus = NO;
+        }
+        else
+        {
+            if (![self isPaused] && pauseWhenUnfocused)
+            {
+                [self pause];
+                pausedDueToLostFocus = YES;
+            }
         }
     }
 }
 
 - (BOOL)isLionFullscreenAvailable
 {
-    return NO;//[self.window respondsToSelector:@selector(toggleFullScreen:)];
+    return [self.window respondsToSelector:@selector(toggleFullScreen:)];
+}
+
+- (NSWindow *)activeWindow
+{
+    return [[self screen] window];
 }
 
 - (BOOL)isInFullScreenMode
@@ -1094,38 +1107,88 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return [self.window.contentView isInFullScreenMode];
 }
 
+- (void)enterLegacyFullscreen
+{
+    // Save screen size
+    CMSetIntPref(@"screenWidth", [screen bounds].size.width);
+    CMSetIntPref(@"screenHeight", [screen bounds].size.height);
+    
+    // Hide the bottom border
+    [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
+    [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
+    
+    // Set options (hide dock, auto-hide menu bar)
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                             CMMakeNumber(NSApplicationPresentationHideDock
+                                          | NSApplicationPresentationAutoHideMenuBar), NSFullScreenModeApplicationPresentationOptions,
+                             nil];
+    
+    // Switch to full screen
+    [[[self window] contentView] enterFullScreenMode:[NSScreen mainScreen]
+                                         withOptions:options];
+    
+    // Hide the original window
+    [[self window] orderOut:self];
+    
+    // Set a black background color to the full screen window
+    [[self activeWindow] setBackgroundColor:[NSColor blackColor]];
+    
+    NSSize screenSize = [[NSScreen mainScreen] frame].size;
+    CGFloat fullWidth = screenSize.width;
+    CGFloat screenWidth = screenSize.height * 1.33333;
+    CGFloat x = (fullWidth - screenWidth) / 2.0;
+    
+    // Proportionally resize the screen and hide the status bar items
+    [[self screen] setFrame:NSMakeRect(x, 0, screenWidth, screenSize.height)];
+    [fpsCounter setHidden:YES];
+    
+    // Set EmulatorController as the full screen window's delegate
+    [[self activeWindow] setDelegate:self];
+    
+    // Toggle auto-pause/auto-resume
+    [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
+    
+    // Make the screen the first responder
+    [[self activeWindow] makeFirstResponder:self.screen];
+}
+
+- (void)exitLegacyFullscreen
+{
+    // Show bottom border
+    [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+    [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
+    
+    // Un-hide the original window
+    [[self window] orderBack:self];
+    
+    // Exit full screen mode
+    [[[self window] contentView] exitFullScreenModeWithOptions:nil];
+    
+    // Resize the screen and show the status section
+    NSSize contentSize = [[[self window] contentView] bounds].size;
+    [[self screen] setFrame:NSMakeRect(0, CMMinYEdgeHeight,
+                                       contentSize.width,
+                                       contentSize.height - CMMinYEdgeHeight)];
+    
+    [fpsCounter setHidden:NO];
+    
+    // Make the screen the first responder
+    [[self window] makeFirstResponder:self.screen];
+}
+
 - (void)toggleFullScreen
 {
     if ([self isLionFullscreenAvailable])
+    {
         [self.window toggleFullScreen:nil];
+    }
     else
     {
-        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 CMMakeNumber(NSApplicationPresentationHideDock
-                                              | NSApplicationPresentationAutoHideMenuBar), NSFullScreenModeApplicationPresentationOptions,
-                                 nil];
-        
-        if ([self isInFullScreenMode])
-        {
-            [self.window.contentView exitFullScreenModeWithOptions:options];
-        }
+        if (![self isInFullScreenMode])
+            [self enterLegacyFullscreen];
         else
-        {
-            [self.window.contentView enterFullScreenMode:[NSScreen mainScreen]
-                                             withOptions:options];
-            
-            [self.window makeKeyWindow];
-            [self.screen becomeFirstResponder];
-        }
+            [self exitLegacyFullscreen];
     }
-}
-
--(BOOL)canBecomeKeyWindow
-{
-    if (![self isLionFullscreenAvailable])
-        return YES;
-    
-    return NO;
 }
 
 #pragma mark - IBActions
@@ -1281,13 +1344,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)resetMsx:(id)sender
 {
-    if ([self isRunning])
+    if ([self isStarted])
         actionEmuResetSoft();
 }
 
 - (void)shutDownMsx:(id)sender
 {
-    if ([self isRunning])
+    if ([self isStarted])
     {
         [self destroy];
         [self stop];
@@ -1340,7 +1403,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)saveState:(id)sender
 {
-    if (!self.isInitialized || !self.isRunning)
+    if (![self isInitialized] || ![self isStarted])
         return;
     
     emulatorSuspend();
@@ -1413,7 +1476,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)saveScreenshot:(id)sender
 {
-    if (!self.isInitialized || ![self isRunning])
+    if (!self.isInitialized || ![self isStarted])
         return;
     
     emulatorSuspend();
@@ -1440,7 +1503,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)recordAudio:(id)sender
 {
-    if (!self.isInitialized || ![self isRunning])
+    if (!self.isInitialized || ![self isStarted])
         return;
     
     if (mixerIsLogging(mixer))
@@ -1467,7 +1530,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)recordGameplay:(id)sender
 {
-    if (!self.isInitialized || ![self isRunning])
+    if (!self.isInitialized || ![self isStarted])
         return;
     
     emulatorSuspend();
@@ -1555,7 +1618,7 @@ void archTrap(UInt8 value)
 {
     if ([keyPath isEqualToString:@"pauseWhenUnfocused"])
     {
-        [self windowKeyDidChange:self.window.isKeyWindow];
+        [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
     }
 }
 
@@ -1610,8 +1673,6 @@ void archTrap(UInt8 value)
 {
     [self windowKeyDidChange:NO];
 }
-
-#define CMMinYEdgeHeight 32.0
 
 - (void)windowWillEnterFullScreen:(NSNotification *)notification
 {
@@ -1679,7 +1740,7 @@ void archTrap(UInt8 value)
     NSMenuItem *menuItem = (NSMenuItem*)item;
     
     NSInteger machineState = [self machineState];
-    BOOL isRunning = [self isRunning];
+    BOOL isRunning = [self isStarted];
     
     if (item.action == @selector(toggleCartAutoReset:))
     {
@@ -1727,6 +1788,13 @@ void archTrap(UInt8 value)
              item.action == @selector(doubleSize:))
     {
         return ![self isInFullScreenMode];
+    }
+    else if (item.action == @selector(toggleFullScreen:))
+    {
+        if ([self isInFullScreenMode])
+            menuItem.title = CMLoc(@"ExitFullscreen");
+        else
+            menuItem.title = CMLoc(@"EnterFullscreen");
     }
     else if (item.action == @selector(loadState:))
     {

@@ -179,3 +179,7 @@ RightKey_f = "Right %C";
 CapsLock = "Caps Lock";
 Spacebar = "Space";
 NumpadKey_f = "Numeric Keypad %@";
+
+EnterFullscreen = "Enter Full Screen";
+ExitFullscreen = "Exit Full Screen";
+

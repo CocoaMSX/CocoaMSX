@@ -188,7 +188,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     
     NSSize size = [self bounds].size;
     
-    if ([emulator isRunning])
+    if ([emulator isStarted])
     {
         if (size.width < WIDTH * ZOOM)
         {
@@ -305,11 +305,11 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     NSOpenGLContext *nsContext = [self openGLContext];
     [nsContext makeCurrentContext];
     
+    glClear(GL_COLOR_BUFFER_BIT);
+    
     if (!emulator.isInitialized)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
         [nsContext flushBuffer];
-        
         return;
     }
     
@@ -449,7 +449,6 @@ void archUpdateWindow()
     videoDestroy(copy);
     
     // Mirror the byte order
-    
     for (int i = width * height - 1; i >= 0; i--)
     {
         UInt8 r = rawBitmapBuffer[i] & 0xff;
@@ -460,7 +459,6 @@ void archUpdateWindow()
     }
     
     // Create a bitmap representation
-    
     NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
                                                                      pixelsWide:frameBuffer->maxWidth * zoom
                                                                      pixelsHigh:height
@@ -474,12 +472,13 @@ void archUpdateWindow()
                                                                    bitsPerPixel:0] autorelease];
     
     // Copy contents of bitmap to NSBitmapImageRep
-    
     memcpy([rep bitmapData], rawBitmapBuffer, pitch * height);
     
+    // Create an image with the newly created representation
     NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
     [image addRepresentation:rep];
     
+    // Finally, free the buffer
     free(rawBitmapBuffer);
     
     return [image autorelease];
