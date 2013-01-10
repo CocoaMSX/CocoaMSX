@@ -45,7 +45,6 @@ static NSString * const CMCassetteDirectoryKey = @"cassetteDirectory";
 static NSString * const CMCartridgeDirectoryKey = @"cartridgeDirectory";
 static NSString * const CMDiskDirectoryKey = @"diskDirectory";
 
-static NSString * const CMSnapshotIconStyle = @"snapshotIconStyle";
 static NSString * const CMScanlineAmount = @"scanlineAmount";
 
 @interface CMPreferences ()
@@ -369,17 +368,6 @@ static CMPreferences *preferences = nil;
 - (NSString *)diskDirectory
 {
     return [[NSUserDefaults standardUserDefaults] stringForKey:CMDiskDirectoryKey];
-}
-
-- (NSInteger)snapshotIconStyle
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:CMSnapshotIconStyle];
-}
-
-- (void)setSnapshotIconStyle:(NSInteger)iconStyle
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:iconStyle
-                                              forKey:CMSnapshotIconStyle];
 }
 
 @end

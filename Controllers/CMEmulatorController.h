@@ -102,6 +102,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (void)pause;
 - (void)resume;
 
+- (BOOL)saveStateToFile:(NSString *)file;
+
 - (void)performColdReboot;
 - (BOOL)isStarted;
 - (BOOL)isPaused;

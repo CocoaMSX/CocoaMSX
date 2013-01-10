@@ -83,7 +83,4 @@
 - (void)setDiskDirectory:(NSString *)directory;
 - (NSString *)diskDirectory;
 
-- (void)setSnapshotIconStyle:(NSInteger)iconStyle;
-- (NSInteger)snapshotIconStyle;
-
 @end
