@@ -37,9 +37,7 @@ static NSString * const CMCassetteDataDirectoryKey = @"cassetteDataDirectory";
 static NSString * const CMDatabaseDirectoryKey = @"databaseDirectory";
 static NSString * const CMMachineDirectoryKey = @"machineDirectory";
 static NSString * const CMSnapshotDirectoryKey = @"snapshotDirectory";
-static NSString * const CMMachineConfigurationKey = @"machineConfiguration";
 static NSString * const CMVdpSyncModeKey = @"vdpSyncMode";
-static NSString * const CMEmulationSpeedPercentageKey = @"emulationSpeedPercentage";
 
 static NSString * const CMCassetteDirectoryKey = @"cassetteDirectory";
 static NSString * const CMCartridgeDirectoryKey = @"cartridgeDirectory";
@@ -304,17 +302,6 @@ static CMPreferences *preferences = nil;
 
 #pragma mark Emulation
 
-- (NSString *)machineConfiguration
-{
-    return [[NSUserDefaults standardUserDefaults] stringForKey:CMMachineConfigurationKey];
-}
-
-- (void)setMachineConfiguration:(NSString *)configuration
-{
-    [[NSUserDefaults standardUserDefaults] setObject:configuration
-                                              forKey:CMMachineConfigurationKey];
-}
-
 - (NSInteger)vdpSyncMode
 {
     return [[NSUserDefaults standardUserDefaults] integerForKey:CMVdpSyncModeKey];
@@ -324,17 +311,6 @@ static CMPreferences *preferences = nil;
 {
     [[NSUserDefaults standardUserDefaults] setInteger:syncMode
                                                forKey:CMVdpSyncModeKey];
-}
-
-- (NSInteger)emulationSpeedPercentage
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:CMEmulationSpeedPercentageKey];
-}
-
-- (void)setEmulationSpeedPercentage:(NSInteger)percentage
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:percentage
-                                               forKey:CMEmulationSpeedPercentageKey];
 }
 
 - (void)setCassetteDirectory:(NSString *)directory

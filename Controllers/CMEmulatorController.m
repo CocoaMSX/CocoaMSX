@@ -145,8 +145,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)dealloc
 {
+    // Stop monitoring preferences
     [[NSUserDefaults standardUserDefaults] removeObserver:self
                                                forKeyPath:@"pauseWhenUnfocused"];
+    [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                               forKeyPath:@"emulationSpeedPercentage"];
     
     [self destroy];
     
@@ -207,8 +210,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self setScreenSize:NSMakeSize(CMGetIntPref(@"screenWidth"), CMGetIntPref(@"screenHeight"))
                 animate:NO];
     
+    // Start monitoring for preference changes
+    
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"pauseWhenUnfocused"
+                                               options:NSKeyValueObservingOptionNew
+                                               context:NULL];
+    [[NSUserDefaults standardUserDefaults] addObserver:self
+                                            forKeyPath:@"emulationSpeedPercentage"
                                                options:NSKeyValueObservingOptionNew
                                                context:NULL];
     
@@ -241,12 +250,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
     properties = propCreate(0, 0, P_KBD_EUROPEAN, 0, "");
     
     strncpy(properties->emulation.machineName,
-            [[prefs machineConfiguration] cStringUsingEncoding:NSUTF8StringEncoding],
+            [CMGetObjPref(@"machineConfiguration") cStringUsingEncoding:NSUTF8StringEncoding],
             PROP_MAXPATH - 1);
     
     // Initialize the emulator
     
-    NSInteger frequency = [self emulationFrequencyFromPercentage:[prefs emulationSpeedPercentage]];
+    NSInteger frequency = [self emulationFrequencyFromPercentage:CMGetIntPref(@"emulationSpeedPercentage")];
     
     properties->emulation.speed = frequency;
     properties->emulation.vdpSyncMode = prefs.vdpSyncMode;
@@ -636,29 +645,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     CGFloat logFrequency = log(frequency / 3579545.0) / log(2.0);
     
     return (NSInteger)(50.0 + 15.0515 * logFrequency);
-}
-
-- (NSInteger)emulationSpeedPercentage
-{
-#ifdef DEBUG
-    NSLog(@"P: %d CPU: %d",
-          (int)[self emulationSpeedPercentageFromFrequency:properties->emulation.speed],
-          properties->emulation.speed);
-#endif
-    
-    return [self emulationSpeedPercentageFromFrequency:properties->emulation.speed];
-}
-
-- (void)setEmulationSpeedPercentage:(NSInteger)percentage
-{
-#ifdef DEBUG
-    NSLog(@"P: %d CPU: %d",
-          (int)percentage,
-          (int)[self emulationFrequencyFromPercentage:percentage]);
-#endif
-
-    properties->emulation.speed = [self emulationFrequencyFromPercentage:percentage];
-    emulatorSetFrequency(properties->emulation.speed, NULL);
 }
 
 #pragma mark - Machine Configuration
@@ -1633,6 +1619,17 @@ void archTrap(UInt8 value)
     if ([keyPath isEqualToString:@"pauseWhenUnfocused"])
     {
         [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
+    }
+    else if ([keyPath isEqualToString:@"emulationSpeedPercentage"])
+    {
+        if ([self isInitialized])
+        {
+            NSInteger percentage = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            NSInteger mhz = [self emulationFrequencyFromPercentage:percentage];
+            
+            properties->emulation.speed = mhz;
+            emulatorSetFrequency(properties->emulation.speed, NULL);
+        }
     }
 }
 

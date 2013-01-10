@@ -58,15 +58,9 @@
 - (void)setMachineDirectory:(NSString *)directory;
 - (NSString *)snapshotDirectory;
 - (void)setSnapshotDirectory:(NSString *)directory;
-- (NSString *)machineConfiguration;
-- (void)setMachineConfiguration:(NSString *)configuration;
 
-- (NSString *)machineConfiguration;
-- (void)setMachineConfiguration:(NSString *)configuration;
 - (NSInteger)vdpSyncMode;
 - (void)setVdpSyncMode:(NSInteger)syncMode;
-- (NSInteger)emulationSpeedPercentage;
-- (void)setEmulationSpeedPercentage:(NSInteger)percentage;
 
 - (BOOL)createAudioCaptureDirectory;
 - (BOOL)createVideoCaptureDirectory;

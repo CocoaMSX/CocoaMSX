@@ -34,33 +34,6 @@
 
 #include "InputEvent.h"
 
-#pragma mark - CMOutlineHeaderRowView
-
-@interface CMOutlineHeaderRowView : NSTableRowView
-
-@end
-
-@implementation CMOutlineHeaderRowView
-
-- (void)drawBackgroundInRect:(NSRect)dirtyRect
-{
-    NSColor *gradientStartColor = [[NSColor alternateSelectedControlColor] highlightWithLevel:0.8f];
-    NSColor *gradientEndColor = [[NSColor alternateSelectedControlColor] highlightWithLevel:0.4f];
-    
-    NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:gradientStartColor
-                                                          endingColor:gradientEndColor] autorelease];
-    
-    [[NSGraphicsContext currentContext] saveGraphicsState];
-    
-    [[NSColor gridColor] set];
-    [[NSBezierPath bezierPathWithRect:self.bounds] fill];
-    
-    [gradient drawInRect:NSInsetRect(self.bounds, 0, 1) angle:90.0f];
-    [[NSGraphicsContext currentContext] restoreGraphicsState];
-}
-
-@end
-
 #pragma mark - KeyCategory
 
 @interface CMKeyCategory : NSObject
@@ -141,6 +114,8 @@
 - (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
                              withLayout:(CMInputDeviceLayout *)layout;
 
+- (void)synchronizeSettings;
+
 @end
 
 @implementation CMPreferenceController
@@ -164,6 +139,16 @@
         joystickOneCategories = [[NSMutableArray alloc] init];
         joystickTwoCategories = [[NSMutableArray alloc] init];
         availableMachines = [[NSMutableArray alloc] init];
+        
+        // Set the virtual emulation speed range
+        virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:
+                                      [NSNumber numberWithInteger:10],
+                                      [NSNumber numberWithInteger:100],
+                                      [NSNumber numberWithInteger:250],
+                                      [NSNumber numberWithInteger:500],
+                                      [NSNumber numberWithInteger:1000],
+                                      
+                                      nil];
     }
     
     return self;
@@ -171,12 +156,9 @@
 
 - (void)awakeFromNib
 {
-    CMPreferences *prefs = [CMPreferences preferences];
-    
     keyCaptureView = nil;
     
     // Initialize sliders
-    
     NSArray *sliders = [NSArray arrayWithObjects:
                         brightnessSlider,
                         contrastSlider,
@@ -194,17 +176,7 @@
     
     self.isSaturationEnabled = (self.emulator.colorMode == 0);
     
-    // Set the virtual emulation speed range
-    
-    virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:
-                                  [NSNumber numberWithInteger:10],
-                                  [NSNumber numberWithInteger:100],
-                                  [NSNumber numberWithInteger:250],
-                                  [NSNumber numberWithInteger:500],
-                                  [NSNumber numberWithInteger:1000], nil];
-    
     // Joystick devices
-    
     self.joystickPortPeripherals = [NSMutableArray array];
     NSMutableArray *kvoProxy = [self mutableArrayValueForKey:@"joystickPortPeripherals"];
     NSArray *supportedDevices = [CMCocoaJoystick supportedDevices];
@@ -223,23 +195,11 @@
         [kvoProxy addObject:jd];
     }];
     
-    // Machine configurations
-    
-    NSArray *machineConfigurations = [CMEmulatorController machineConfigurations];
-    [availableMachineArrayController addObjects:machineConfigurations];
-    
-    // If there is no matching configuration, use the first available
-    NSString *currentConfiguration = [prefs machineConfiguration];
-    BOOL configurationFound = [machineConfigurations containsObject:currentConfiguration];
-    
-    if (!configurationFound && machineConfigurations.count > 0)
-        [prefs setMachineConfiguration:[machineConfigurations objectAtIndex:0]];
+    // Scope Bar
+    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
+    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
     
     // FIXME: These need to be synchronized when the window re-opens
-    
-    [emulationSpeedSlider setDoubleValue:[self physicalPositionOfSlider:emulationSpeedSlider
-                                                            fromVirtual:prefs.emulationSpeedPercentage
-                                                             usingTable:virtualEmulationSpeedRange]];
     
     [self initializeInputDeviceCategories:keyCategories
                                withLayout:self.emulator.keyboardLayout];
@@ -248,12 +208,11 @@
     [self initializeInputDeviceCategories:joystickTwoCategories
                                withLayout:self.emulator.joystickTwoLayout];
     
-    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
-    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
-    
     [keyboardLayoutEditor expandItem:nil expandChildren:YES];
     [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
     [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
+    
+    [self synchronizeSettings];
 }
 
 - (void)dealloc
@@ -272,6 +231,40 @@
     [virtualEmulationSpeedRange release];
     
     [super dealloc];
+}
+
+#pragma mark - Private Methods
+
+- (void)synchronizeSettings
+{
+#ifdef DEBUG
+    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
+#endif
+    
+    // Machine configurations
+    
+    // Remove all existing configurations
+    NSRange range = NSMakeRange(0, [[availableMachineArrayController arrangedObjects] count]);
+    [availableMachineArrayController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:range]];
+    
+    // Add available configurations
+    NSArray *machineConfigurations = [CMEmulatorController machineConfigurations];
+    [availableMachineArrayController addObjects:machineConfigurations];
+    
+    // If there is no matching configuration, use the first available
+    NSString *currentConfiguration = CMGetObjPref(@"machineConfiguration");
+    if (![machineConfigurations containsObject:currentConfiguration] && [machineConfigurations count] > 0)
+        CMSetObjPref(@"machineConfiguration", [machineConfigurations objectAtIndex:0]);
+    
+    // Update emulation speed
+    [emulationSpeedSlider setDoubleValue:[self physicalPositionOfSlider:emulationSpeedSlider
+                                                            fromVirtual:CMGetIntPref(@"emulationSpeedPercentage")
+                                                             usingTable:virtualEmulationSpeedRange]];
+    
+#ifdef DEBUG
+    NSLog(@"synchronizeSettings: Took %.02fms",
+           [NSDate timeIntervalSinceReferenceDate] - startTime);
+#endif
 }
 
 - (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
@@ -515,8 +508,7 @@
     NSInteger percentage = [self virtualPositionOfSlider:slider
                                               usingTable:virtualEmulationSpeedRange];
     
-    self.emulator.emulationSpeedPercentage = percentage;
-    [CMPreferences preferences].emulationSpeedPercentage = percentage;
+    CMSetIntPref(@"emulationSpeedPercentage", percentage);
 }
 
 - (void)showMachinesInFinder:(id)sender
@@ -554,6 +546,11 @@
     }
     
     return nil;
+}
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+    [self synchronizeSettings];
 }
 
 #pragma mark - NSOutlineViewDataSourceDelegate

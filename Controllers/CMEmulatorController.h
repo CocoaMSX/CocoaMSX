@@ -135,9 +135,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property BOOL msxMusicEnabled;
 @property BOOL moonSoundEnabled;
 
-- (NSInteger)emulationSpeedPercentage;
-- (void)setEmulationSpeedPercentage:(NSInteger)percentage;
-
 @property NSInteger deviceInJoystickPort1;
 @property NSInteger deviceInJoystickPort2;
 
