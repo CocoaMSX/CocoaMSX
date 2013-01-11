@@ -22,8 +22,12 @@
  */
 #import <Foundation/Foundation.h>
 
-@interface NSString (CMNSStringFileManagement)
+@interface NSString (CMExtensions)
 
-- (BOOL)cm_isEqualToPath:(NSString *)path;
+- (BOOL)isEqualToPath:(NSString *)path;
+
+- (BOOL)containsString:(NSString *)string
+               options:(NSStringCompareOptions)options;
+- (BOOL)containsString:(NSString *)string;
 
 @end

@@ -32,6 +32,8 @@
 
 #import "CMPreferences.h"
 
+#import "NSString+CMExtensions.h"
+
 #include "MsxTypes.h"
 #include "AudioMixer.h"
 #include "Emulator.h"
@@ -419,6 +421,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     emulatorSetState(EMU_RUNNING);
     debuggerNotifyEmulatorResume();
+}
+
+- (NSString *)runningMachineConfiguration
+{
+    if (![self isInitialized])
+        return nil;
+    
+    return [NSString stringWithUTF8String:properties->emulation.machineName];
 }
 
 - (void)performColdReboot
@@ -1386,6 +1396,18 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [cassetteRepositioner showSheetForWindow:self.window];
 }
 
+- (BOOL)canInsertDiskettes
+{
+    NSString *runningMachine = [self runningMachineConfiguration];
+    return runningMachine && ![runningMachine containsString:@"C-BIOS"];
+}
+
+- (BOOL)canInsertCassettes
+{
+    NSString *runningMachine = [self runningMachineConfiguration];
+    return runningMachine && ![runningMachine containsString:@"C-BIOS"];
+}
+
 // MSX menu
 
 - (void)statusMsx:(id)sender
@@ -1759,12 +1781,18 @@ void archTrap(UInt8 value)
         return isRunning;
     }
     else if (item.action == @selector(insertCartridgeSlot1:) ||
-             item.action == @selector(insertCartridgeSlot2:) ||
-             item.action == @selector(insertDiskSlot1:) ||
-             item.action == @selector(insertDiskSlot2:) ||
-             item.action == @selector(insertCassette:))
+             item.action == @selector(insertCartridgeSlot2:))
     {
         return isRunning;
+    }
+    else if (item.action == @selector(insertDiskSlot1:) ||
+             item.action == @selector(insertDiskSlot2:))
+    {
+        return isRunning && [self canInsertDiskettes];
+    }
+    else if (item.action == @selector(insertCassette:))
+    {
+        return isRunning && [self canInsertCassettes];
     }
     else if (item.action == @selector(ejectCartridgeSlot1:))
         return [self toggleEjectCartridgeMenuItemStatus:menuItem slot:0];

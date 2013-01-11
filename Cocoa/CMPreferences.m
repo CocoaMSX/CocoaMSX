@@ -24,7 +24,7 @@
 
 #import "CMInputDeviceLayout.h"
 
-#import "NSString+FileManagement.h"
+#import "NSString+CMExtensions.h"
 
 static NSString * const CMKeyboardLayoutPrefKey = @"msxKeyboardLayout";
 static NSString * const CMJoystickOneLayoutPrefKey = @"msxJoystickOneLayout";
@@ -102,7 +102,7 @@ static CMPreferences *preferences = nil;
                             toDirectory:(NSString *)directory
 {
     NSString *defaultDirectory = [[self appSupportDirectory] stringByAppendingPathComponent:defaultSuffix];
-    if (![directory cm_isEqualToPath:defaultDirectory])
+    if (![directory isEqualToPath:defaultDirectory])
         [[NSUserDefaults standardUserDefaults] setObject:directory
                                                   forKey:CMAudioCaptureDirectoryKey];
 }

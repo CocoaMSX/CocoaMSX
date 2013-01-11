@@ -195,10 +195,6 @@
         [kvoProxy addObject:jd];
     }];
     
-    // Scope Bar
-    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
-    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
-    
     // FIXME: These need to be synchronized when the window re-opens
     
     [self initializeInputDeviceCategories:keyCategories
@@ -211,6 +207,10 @@
     [keyboardLayoutEditor expandItem:nil expandChildren:YES];
     [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
     [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
+    
+    // Scope Bar
+    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
+    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
     
     [self synchronizeSettings];
 }

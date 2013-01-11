@@ -20,16 +20,28 @@
  **
  ******************************************************************************
  */
-#import "NSString+FileManagement.h"
+#import "NSString+CMExtensions.h"
 
-@implementation NSString (CMNSStringFileManagement)
+@implementation NSString (CMExtensions)
 
-- (BOOL)cm_isEqualToPath:(NSString *)path
+- (BOOL)isEqualToPath:(NSString *)path
 {
     if (!path)
         return NO;
     
     return [[NSURL fileURLWithPath:self] isEqualTo:[NSURL fileURLWithPath:path]];
+}
+
+- (BOOL)containsString:(NSString *)string
+               options:(NSStringCompareOptions)options
+{
+    NSRange rng = [self rangeOfString:string options:options];
+    return rng.location != NSNotFound;
+}
+
+- (BOOL)containsString:(NSString *)string
+{
+    return [self containsString:string options:0];
 }
 
 @end

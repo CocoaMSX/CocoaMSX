@@ -141,6 +141,11 @@ NSString * const CMKeyboardLayoutPrefKey;
 + (NSArray *)machineConfigurations;
 - (NSString *)currentMachineConfiguration;
 
+- (NSString *)runningMachineConfiguration;
+
+- (BOOL)canInsertDiskettes;
+- (BOOL)canInsertCassettes;
+
 // Apple menu
 
 - (IBAction)openAbout:(id)sender;
