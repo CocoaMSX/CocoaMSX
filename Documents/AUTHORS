@@ -13,6 +13,10 @@ CocoaMSX is based on blueMSX by Daniel Vik & blueMSX Development Team
   http://www.bluemsx.com/
   Licensed under GNU GPL v2
 
+CocoaMSX includes C-BIOS by C-BIOS Association
+  http://cbios.sourceforge.net/
+  Licensed under BSD License
+
 CocoaMSX uses MGScopeBar by Matt Gemmell
   http://mattgemmell.com
   Licensed under a BSD-like license with attribution; see 

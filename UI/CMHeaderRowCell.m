@@ -109,7 +109,7 @@
     
     // Display the title
     
-    CGSize textSize = [headerText sizeWithAttributes:textAttributes];
+    NSSize textSize = [headerText sizeWithAttributes:textAttributes];
     NSPoint textPos = NSMakePoint(cellFrame.origin.x + 6,
                                   cellFrame.origin.y + (cellFrame.size.height - textSize.height) / 2 - 1);
     

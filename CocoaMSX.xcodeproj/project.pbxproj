@@ -313,12 +313,14 @@
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
+		FEA6277B16A0CAD70048C05C /* cbios.txt in Resources */ = {isa = PBXBuildFile; fileRef = FEA6277A16A0CAD70048C05C /* cbios.txt */; };
 		FEA8BF0E16A00EA1006E67D2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FEA8BF1016A01007006E67D2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
 		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
 		FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */; };
+		FEACF06C16A07B9800EEF84C /* sparkle_dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = FEACF06B16A07B9800EEF84C /* sparkle_dsa_pub.pem */; };
 		FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */; };
 		FEB8DFBF1692402E009BE6E4 /* toolbar-joypad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFB91692402E009BE6E4 /* toolbar-joypad@2x.png */; };
 		FEB8DFC01692402E009BE6E4 /* toolbar-keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBA1692402E009BE6E4 /* toolbar-keyboard.png */; };
@@ -981,6 +983,7 @@
 		FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SnapshotDocument.icns; sourceTree = "<group>"; };
 		FEA4548C1679B65300AAECB7 /* DiskDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DiskDocument.icns; sourceTree = "<group>"; };
 		FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CassetteDocument.icns; sourceTree = "<group>"; };
+		FEA6277A16A0CAD70048C05C /* cbios.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cbios.txt; sourceTree = "<group>"; };
 		FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputDeviceLayout.h; sourceTree = "<group>"; };
 		FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputDeviceLayout.m; sourceTree = "<group>"; };
@@ -989,6 +992,7 @@
 		FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MachineEditor.xib; sourceTree = "<group>"; };
 		FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineEditorController.h; sourceTree = "<group>"; };
 		FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineEditorController.m; sourceTree = "<group>"; };
+		FEACF06B16A07B9800EEF84C /* sparkle_dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sparkle_dsa_pub.pem; sourceTree = "<group>"; };
 		FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-joypad.png"; sourceTree = "<group>"; };
 		FEB8DFB91692402E009BE6E4 /* toolbar-joypad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-joypad@2x.png"; sourceTree = "<group>"; };
 		FEB8DFBA1692402E009BE6E4 /* toolbar-keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-keyboard.png"; sourceTree = "<group>"; };
@@ -1088,6 +1092,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FEACF06B16A07B9800EEF84C /* sparkle_dsa_pub.pem */,
 				6BCA755D164D7D09002CA211 /* Icons */,
 				FE1C1359167DE41800CE2B6B /* Images */,
 				FED34F3C163F320D002FCC89 /* Defaults.plist */,
@@ -1853,8 +1858,9 @@
 		FE20DB8D1632776500D44ADF /* Documents */ = {
 			isa = PBXGroup;
 			children = (
-				FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */,
 				FE20DB94163278AD00D44ADF /* blueMSX License.txt */,
+				FEA6277A16A0CAD70048C05C /* cbios.txt */,
+				FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */,
 				FE20DB8E1632783200D44ADF /* AUTHORS */,
 				FE20DB8F1632783200D44ADF /* COPYING */,
 				FE20DB901632783200D44ADF /* README */,
@@ -2098,6 +2104,8 @@
 				FEB8DFC11692402E009BE6E4 /* toolbar-keyboard@2x.png in Resources */,
 				FEB8DFC21692402E009BE6E4 /* toolbar-sound.png in Resources */,
 				FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */,
+				FEACF06C16A07B9800EEF84C /* sparkle_dsa_pub.pem in Resources */,
+				FEA6277B16A0CAD70048C05C /* cbios.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

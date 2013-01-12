@@ -61,6 +61,19 @@
 
 - (void)initializeResources
 {
+    NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+    
+    NSInteger currentVersion = [[infoDict objectForKey:@"CFBundleVersion"] integerValue];
+    NSInteger previousVersion = CMGetIntPref(@"previousVersion");
+    
+    BOOL versionChanged = (currentVersion != previousVersion);
+    
+#ifdef DEBUG
+    NSLog(@"initializeResources: version: %d lastVersion: %d",
+          (int)currentVersion, (int)previousVersion);
+#endif
+    
+    __block BOOL hasErrored = NO;
     __block NSInteger dirsCreated = 0;
     __block NSInteger filesCopied = 0;
     
@@ -100,14 +113,15 @@
         {
             // TODO: log this
 #ifdef DEBUG
-            NSLog(@"Error creating directory '%@': %@", directory,
-                  createDirectoryError.localizedDescription);
+            NSLog(@"initializeResources: Error creating directory '%@': %@",
+                  directory, createDirectoryError.localizedDescription);
 #endif
+            hasErrored = YES;
             return;
         }
         
 #ifdef DEBUG
-        NSLog(@"Created directory '%@'", directory);
+        NSLog(@"initializeResources: Created directory '%@'", directory);
 #endif
         
         dirsCreated++;
@@ -140,7 +154,7 @@
                                  error:NULL];
              
 #ifdef DEBUG
-             NSLog(@"Created directory '%@'", destPath);
+             NSLog(@"initializeResources: Created directory '%@'", destPath);
 #endif
              
              dirsCreated++;
@@ -153,9 +167,10 @@
          {
              // TODO: log this
 #ifdef DEBUG
-             NSLog(@"Error enumerating files in '%@': %@", sourcePath,
-                   enumerateFilesError.localizedDescription);
+             NSLog(@"initializeResources: Error enumerating files in '%@': %@",
+                   sourcePath, enumerateFilesError.localizedDescription);
 #endif
+             hasErrored = YES;
              return;
          }
          
@@ -165,7 +180,29 @@
               NSString *destFile = [destPath stringByAppendingPathComponent:obj];
               
               if ([fm fileExistsAtPath:destFile])
-                  return;
+              {
+                  // File already exists
+                  if (versionChanged)
+                  {
+                      NSError *removeFilesError = NULL;
+                      [fm removeItemAtPath:destFile error:&removeFilesError];
+                      
+                      if (removeFilesError)
+                      {
+                          // Couldn't remove file - don't attempt copy
+#ifdef DEBUG
+                          NSLog(@"initializeResources: Error deleting existing resource '%@'",
+                                destFile);
+#endif
+                          return;
+                      }
+                  }
+                  else
+                  {
+                      // Version hasn't changed, don't copy an existing file
+                      return;
+                  }
+              }
               
               NSError *copyFilesError = NULL;
               [fm copyItemAtPath:sourceFile toPath:destFile error:&copyFilesError];
@@ -174,14 +211,16 @@
               {
                   // TODO: log this
 #ifdef DEBUG
-                  NSLog(@"Error copying resource '%@': %@", obj,
-                        copyFilesError.localizedDescription);
+                  NSLog(@"initializeResources: Error copying resource '%@': %@",
+                        obj, copyFilesError.localizedDescription);
 #endif
+                  hasErrored = YES;
                   return;
               }
               
 #ifdef DEBUG
-              NSLog(@"Copied '%@' to '%@'", [sourceFile lastPathComponent], destFile);
+              NSLog(@"Copied '%@' to '%@'",
+                    [sourceFile lastPathComponent], destFile);
 #endif
               
               filesCopied++;
@@ -189,9 +228,15 @@
      }];
     
 #ifdef DEBUG
-    NSLog(@"Resources: initialized (created %d dirs; copied %d files)",
+    NSLog(@"initializeResources: initialized (created %d dirs; copied %d files)",
           (int)dirsCreated, (int)filesCopied);
+    
+    if (hasErrored)
+        NSLog(@"initializeResources: Errors during initialization");
 #endif
+    
+    if (!hasErrored)
+        CMSetIntPref(@"previousVersion", currentVersion);
 }
 
 #pragma mark - NSApplicationDelegate
