@@ -40,6 +40,9 @@
 @property (assign, nonatomic) BOOL emulatorHasFocus;
 @property (assign, nonatomic) NSUInteger mouseMode;
 
+- (void)lockCursor:(NSView *)screen;
+- (void)unlockCursor;
+
 - (BOOL)isMouseEnabled;
 - (NSInteger)buttonState;
 - (NSPoint)pointerCoordinates;

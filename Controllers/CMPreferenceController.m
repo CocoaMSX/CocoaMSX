@@ -427,7 +427,6 @@
     self.emulator.signalMode = 0;
     self.emulator.rfModulation = 0;
     self.emulator.scanlines = 0;
-    self.emulator.stretchHorizontally = NO;
     self.emulator.deinterlace = YES;
 }
 

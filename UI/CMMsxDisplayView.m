@@ -34,10 +34,12 @@
 #include "FrameBuffer.h"
 #include "ArchNotifications.h"
 
-#define WIDTH  320
-#define HEIGHT 240
-#define DEPTH  32
-#define ZOOM   2
+#define ACTUAL_WIDTH 272
+
+#define BUFFER_WIDTH 320
+#define HEIGHT       240
+#define DEPTH        32
+#define ZOOM         2
 
 @interface CMMsxDisplayView ()
 
@@ -103,7 +105,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
         NSNumber *newValue = [change objectForKey:NSKeyValueChangeNewKey];
         
         // Change actual scanline value, but only if the display is large enough
-        if (self.bounds.size.width >= WIDTH * ZOOM)
+        if (self.bounds.size.width >= ACTUAL_WIDTH * ZOOM)
             emulator.scanlines = [newValue integerValue];
     }
 }
@@ -139,7 +141,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     for (int i = 0; i < 2; i++)
     {
         [screens[i] release];
-        screens[i] = [[CMCocoaBuffer alloc] initWithWidth:WIDTH
+        screens[i] = [[CMCocoaBuffer alloc] initWithWidth:BUFFER_WIDTH
                                                    height:HEIGHT
                                                     depth:DEPTH
                                                      zoom:ZOOM];
@@ -190,7 +192,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     
     if ([emulator isStarted])
     {
-        if (size.width < WIDTH * ZOOM)
+        if (size.width < ACTUAL_WIDTH * ZOOM)
         {
             if (emulator.scanlines != 0)
             {
@@ -333,17 +335,11 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     if (frameBuffer == NULL)
         frameBuffer = frameBufferGetWhiteNoiseFrame();
     
-    int borderWidth = (WIDTH - frameBuffer->maxWidth) * currentScreen->zoom / 2;
+    int borderWidth = (BUFFER_WIDTH - frameBuffer->maxWidth) * currentScreen->zoom / 2;
     const int linesPerBlock = 4;
     GLfloat coordX = currentScreen->textureCoordX;
     GLfloat coordY = currentScreen->textureCoordY;
     int y;
-    
-    if (emulator.stretchHorizontally)
-    {
-        coordX = currentScreen->textureCoordX * (width - 2 * borderWidth) / width;
-        borderWidth = 0;
-    }
     
     videoRender(video, frameBuffer, currentScreen->depth, currentScreen->zoom,
                 dpyData + borderWidth * currentScreen->bytesPerPixel, 0,
@@ -373,15 +369,18 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     
     NSSize size = [self bounds].size;
     
+    CGFloat widthRatio = size.width / (CGFloat)ACTUAL_WIDTH;
+    CGFloat offset = ((BUFFER_WIDTH - ACTUAL_WIDTH) / 2.0) * widthRatio;
+    
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 0.0);
-    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(-offset, 0.0, 0.0);
     glTexCoord2f(coordX, 0.0);
-    glVertex3f(size.width, 0.0, 0.0);
+    glVertex3f(size.width + offset, 0.0, 0.0);
     glTexCoord2f(coordX, coordY);
-    glVertex3f(size.width, size.height, 0.0);
+    glVertex3f(size.width + offset, size.height, 0.0);
     glTexCoord2f(0.0, coordY);
-    glVertex3f(0.0, size.height, 0.0);
+    glVertex3f(-offset, size.height, 0.0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
     
@@ -418,7 +417,7 @@ void archUpdateWindow()
 - (NSImage *)captureScreen:(BOOL)large
 {
     NSInteger zoom = (large) ? 2 : 1;
-    NSInteger width = WIDTH * zoom;
+    NSInteger width = BUFFER_WIDTH * zoom;
     NSInteger height = HEIGHT * zoom;
     NSInteger pitch = width * sizeof(UInt32);
     

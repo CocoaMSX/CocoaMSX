@@ -12,3 +12,5 @@
 #define CMSetIntPref(key, value) [[NSUserDefaults standardUserDefaults] setInteger:value forKey:key]
 #define CMGetObjPref(key) [[NSUserDefaults standardUserDefaults] objectForKey:key]
 #define CMSetObjPref(key, value) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key]
+#define CMGetBoolPref(key) [[NSUserDefaults standardUserDefaults] boolForKey:key]
+#define CMSetBoolPref(key, value) [[NSUserDefaults standardUserDefaults] setBool:value forKey:key]

@@ -70,7 +70,7 @@
 
 - (BOOL)isMouseEnabled
 {
-    return self.mouseMode != AM_DISABLE;
+    return [self mouseMode] != AM_DISABLE;
 }
 
 - (void)setEmulatorHasFocus:(BOOL)emulatorHasFocus
@@ -85,20 +85,60 @@
         deltaY = 0;
         wasWithinBounds = NO;
         
-        if (!cursorAssociated)
-        {
-            cursorAssociated = YES;
-            CGAssociateMouseAndMouseCursorPosition(true);
-        }
-        
-        if (!cursorVisible)
-        {
-            cursorVisible = YES;
-            [NSCursor unhide];
-        }
+        [self unlockCursor];
     }
     
     _emulatorHasFocus = emulatorHasFocus;
+}
+
+- (void)lockCursor:(NSView *)screen
+{
+    if (cursorVisible)
+    {
+        [NSCursor hide];
+        cursorVisible = NO;
+    }
+    
+    NSPoint viewOrig = [screen bounds].origin;
+    NSSize viewSize = [screen bounds].size;
+    
+    NSRect centerView;
+    centerView.origin.x = (viewOrig.x + viewSize.width) / 2.0;
+    centerView.origin.y = (viewOrig.y + viewSize.height) / 2.0;
+    
+    // Compute screen coordinates
+    NSPoint centerScreen = [CMCocoaMouse convertRectToScreen:centerView
+                                                      window:[screen window]].origin;
+    
+    // Flip screen coordinates
+    centerScreen.y = [[NSScreen mainScreen] frame].size.height - centerScreen.y;
+    
+    // Reposition the cursor
+    CGWarpMouseCursorPosition(NSPointToCGPoint(centerScreen));
+    
+    discardNextDelta = YES;
+    wasWithinBounds = YES;
+    
+    if (cursorAssociated)
+    {
+        cursorAssociated = NO;
+        CGAssociateMouseAndMouseCursorPosition(false);
+    }
+}
+
+- (void)unlockCursor
+{
+    if (!cursorAssociated)
+    {
+        cursorAssociated = YES;
+        CGAssociateMouseAndMouseCursorPosition(true);
+    }
+    
+    if (!cursorVisible)
+    {
+        cursorVisible = YES;
+        [NSCursor unhide];
+    }
 }
 
 - (NSInteger)buttonState
@@ -147,7 +187,7 @@
 #pragma mark - Cocoa Callbacks
 
 - (void)mouseMoved:(NSEvent *)theEvent
-        withinView:(NSView*)view
+        withinView:(NSView *)view
 {
     if (![self isMouseEnabled])
         return;
@@ -164,92 +204,51 @@
     CGFloat escapeThresholdX = screenRect.width * ESCAPE_THRESHOLD_RATIO;
     CGFloat escapeThresholdY = screenRect.height * ESCAPE_THRESHOLD_RATIO;
     
-    NSPoint viewOrig = view.bounds.origin;
     NSSize viewSize = view.bounds.size;
     
-    NSPoint point = [view convertPoint:[theEvent locationInWindow]
-                              fromView:nil];
+    NSPoint positionWithinView = [view convertPoint:[theEvent locationInWindow]
+                                           fromView:nil];
     
-    BOOL cursorOutsideBounds = (point.x < 0 || point.x > viewSize.width ||
-                                point.y < 0 || point.y > viewSize.height);
+    BOOL cursorInsideView = NSPointInRect(positionWithinView, [view bounds]);
     
     if (self.mouseMode == AM_ENABLE_MOUSE)
     {
-        if (cursorOutsideBounds)
+        if (cursorInsideView)
         {
-            // Out of bounds
-            
-            if (wasWithinBounds)
-            {
-                wasWithinBounds = NO;
-                buttonState = 0;
-            }
-            
-            if (!cursorVisible)
-            {
-                [NSCursor unhide];
-                cursorVisible = YES;
-            }
+            if (!wasWithinBounds)
+                [self lockCursor:view];
         }
         else
         {
-            if (cursorVisible)
-            {
-                [NSCursor hide];
-                cursorVisible = NO;
-            }
-            
-            if (!wasWithinBounds)
-            {
-                NSRect centerView;
-                centerView.origin.x = (viewOrig.x + viewSize.width) / 2.0;
-                centerView.origin.y = (viewOrig.y + viewSize.height) / 2.0;
-                
-                // Compute screen coordinates
-                NSPoint centerScreen = [CMCocoaMouse convertRectToScreen:centerView
-                                                                  window:view.window].origin;
-                
-                // Flip screen coordinates
-                centerScreen.y = screenRect.height - centerScreen.y;
-                
-                // Reposition the cursor
-                CGWarpMouseCursorPosition(NSPointToCGPoint(centerScreen));
-                
-                discardNextDelta = YES;
-                wasWithinBounds = YES;
-                
-                if (cursorAssociated)
-                {
-                    cursorAssociated = NO;
-                    CGAssociateMouseAndMouseCursorPosition(false);
-                }
-            }
+            [self unlockCursor];
         }
+        
+        wasWithinBounds = cursorInsideView;
         
         deltaX = theEvent.deltaX;
         deltaY = theEvent.deltaY;
         
         if (abs(deltaX) > escapeThresholdX || abs(deltaY) > escapeThresholdY)
-        {
-            if (!cursorAssociated)
-            {
-                cursorAssociated = YES;
-                CGAssociateMouseAndMouseCursorPosition(true);
-            }
-        }
+            [self unlockCursor];
     }
     else if (self.mouseMode == AM_ENABLE_LASER)
     {
-        if (!cursorOutsideBounds)
+        if (cursorInsideView)
         {
-            deltaX = 0x10000 * (point.x / viewSize.width);
-            deltaY = 0x10000 * (1.0 - (point.y / viewSize.height));
+            deltaX = 0x10000 * (positionWithinView.x / viewSize.width);
+            deltaY = 0x10000 * (1.0 - (positionWithinView.y / viewSize.height));
         }
     }
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
+    if (([theEvent modifierFlags] & NSCommandKeyMask) != 0)
+    {
+        if ([self isMouseEnabled])
+            [self unlockCursor];
+    }
+    
     if ([self isMouseEnabled])
         buttonState |= 1;
 }

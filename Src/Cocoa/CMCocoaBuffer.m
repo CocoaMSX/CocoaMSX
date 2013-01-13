@@ -56,9 +56,7 @@
         zoom = zoomFactor;
         bytesPerPixel = imageDepth / 8;
         pitch = actualWidth * bytesPerPixel;
-        pixels = (char*)calloc(1, bytesPerPixel *
-                                     textureWidth *
-                                     textureHeight);
+        pixels = (char*)calloc(1, bytesPerPixel * textureWidth * textureHeight);
     }
     
     return self;

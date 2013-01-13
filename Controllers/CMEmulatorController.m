@@ -126,7 +126,7 @@
 @synthesize fileToLoadAtStartup = _fileToLoadAtStartup;
 @synthesize isInitialized = _isInitialized;
 
-#define WIDTH_DEFAULT   320.0
+#define WIDTH_DEFAULT   272.0
 #define HEIGHT_DEFAULT  240.0
 
 #define CMMinYEdgeHeight 32.0 // Height of the status bar at bottom
@@ -576,17 +576,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return 0;
     
     return 100 - properties->video.scanlinesPct;
-}
-
-- (void)setStretchHorizontally:(BOOL)value
-{
-    properties->video.horizontalStretch = value;
-    videoUpdateAll(video, properties);
-}
-
-- (BOOL)stretchHorizontally
-{
-    return properties->video.horizontalStretch;
 }
 
 - (void)setDeinterlace:(BOOL)value
@@ -1200,7 +1189,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     // Proportionally resize the screen and hide the status bar items
     [[self screen] setFrame:NSMakeRect(x, 0, screenWidth, screenSize.height)];
-    [fpsCounter setHidden:YES];
+    [statusBar setHidden:YES];
     
     // Set EmulatorController as the full screen window's delegate
     [[self activeWindow] setDelegate:self];
@@ -1230,7 +1219,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                        contentSize.width,
                                        contentSize.height - CMMinYEdgeHeight)];
     
-    [fpsCounter setHidden:NO];
+    [statusBar setHidden:NO];
     
     // Make the screen the first responder
     [[self window] makeFirstResponder:self.screen];
@@ -1722,7 +1711,7 @@ void archTrap(UInt8 value)
     
     NSSize newScreenSize = screen.frame.size;
     [screen setFrame:NSMakeRect(0, 0, newScreenSize.width, newScreenSize.height + CMMinYEdgeHeight)];
-    [fpsCounter setHidden:YES];
+    [statusBar setHidden:YES];
 }
 
 - (void)windowWillExitFullScreen:(NSNotification *)notification
@@ -1736,7 +1725,7 @@ void archTrap(UInt8 value)
     
     NSSize newScreenSize = screen.frame.size;
     [screen setFrame:NSMakeRect(0, CMMinYEdgeHeight, newScreenSize.width, newScreenSize.height - CMMinYEdgeHeight)];
-    [fpsCounter setHidden:NO];
+    [statusBar setHidden:NO];
 }
 
 #pragma mark - SpecialCartSelectedDelegate

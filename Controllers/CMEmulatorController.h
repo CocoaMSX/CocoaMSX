@@ -71,6 +71,7 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSArray *captureAudioTypes;
     NSArray *captureGameplayTypes;
     
+    IBOutlet NSBox *statusBar;
     IBOutlet NSTextField *fpsCounter;
     IBOutlet CMMsxDisplayView *screen;
     
@@ -127,7 +128,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property NSInteger rfModulation;
 @property NSInteger scanlines;
 
-@property BOOL stretchHorizontally;
 @property BOOL deinterlace;
 @property BOOL fdcTimingDisabled;
 
