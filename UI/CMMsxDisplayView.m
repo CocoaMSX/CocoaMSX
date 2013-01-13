@@ -261,12 +261,14 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    [emulator.mouse mouseDown:theEvent];
+    [emulator.mouse mouseDown:theEvent
+                   withinView:self];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-    [emulator.mouse mouseUp:theEvent];
+    [emulator.mouse mouseUp:theEvent
+                 withinView:self];
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent

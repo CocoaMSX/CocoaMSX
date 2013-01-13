@@ -31,9 +31,10 @@
     CGFloat deltaX;
     CGFloat deltaY;
     
+    BOOL isCursorLocked;
     BOOL wasWithinBounds;
-    BOOL cursorVisible;
-    BOOL cursorAssociated;
+    BOOL isCursorVisible;
+    BOOL isCursorAssociated;
     BOOL discardNextDelta;
 }
 
@@ -48,9 +49,11 @@
 - (NSPoint)pointerCoordinates;
 
 - (void)mouseMoved:(NSEvent *)theEvent
-        withinView:(NSView*)view;
-- (void)mouseDown:(NSEvent *)theEvent;
-- (void)mouseUp:(NSEvent *)theEvent;
+        withinView:(NSView *)view;
+- (void)mouseDown:(NSEvent *)theEvent
+       withinView:(NSView *)view;
+- (void)mouseUp:(NSEvent *)theEvent
+     withinView:(NSView *)view;
 - (void)rightMouseDown:(NSEvent *)theEvent;
 - (void)rightMouseUp:(NSEvent *)theEvent;
 

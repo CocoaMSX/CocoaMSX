@@ -50,8 +50,9 @@
         deltaX = 0;
         deltaY = 0;
         
-        cursorVisible = YES;
-        cursorAssociated = YES;
+        isCursorLocked = NO;
+        isCursorVisible = YES;
+        isCursorAssociated = YES;
         
         self.emulatorHasFocus = NO;
         discardNextDelta = NO;
@@ -93,10 +94,10 @@
 
 - (void)lockCursor:(NSView *)screen
 {
-    if (cursorVisible)
+    if (isCursorVisible)
     {
         [NSCursor hide];
-        cursorVisible = NO;
+        isCursorVisible = NO;
     }
     
     NSPoint viewOrig = [screen bounds].origin;
@@ -119,26 +120,38 @@
     discardNextDelta = YES;
     wasWithinBounds = YES;
     
-    if (cursorAssociated)
+    if (isCursorAssociated)
     {
-        cursorAssociated = NO;
+        isCursorAssociated = NO;
         CGAssociateMouseAndMouseCursorPosition(false);
     }
+    
+    isCursorLocked = YES;
+    
+#ifdef DEBUG
+    NSLog(@"CocoaMouse: lockCursor");
+#endif
 }
 
 - (void)unlockCursor
 {
-    if (!cursorAssociated)
+    if (!isCursorAssociated)
     {
-        cursorAssociated = YES;
+        isCursorAssociated = YES;
         CGAssociateMouseAndMouseCursorPosition(true);
     }
     
-    if (!cursorVisible)
+    if (!isCursorVisible)
     {
-        cursorVisible = YES;
+        isCursorVisible = YES;
         [NSCursor unhide];
     }
+    
+    isCursorLocked = NO;
+    
+#ifdef DEBUG
+    NSLog(@"CocoaMouse: unlockCursor");
+#endif
 }
 
 - (NSInteger)buttonState
@@ -199,12 +212,12 @@
     }
     
     NSScreen *currentScreen = [NSScreen mainScreen];
-    NSSize screenRect = currentScreen.frame.size;
+    NSSize screenSize = [currentScreen frame].size;
     
-    CGFloat escapeThresholdX = screenRect.width * ESCAPE_THRESHOLD_RATIO;
-    CGFloat escapeThresholdY = screenRect.height * ESCAPE_THRESHOLD_RATIO;
+    CGFloat escapeThresholdX = screenSize.width * ESCAPE_THRESHOLD_RATIO;
+    CGFloat escapeThresholdY = screenSize.height * ESCAPE_THRESHOLD_RATIO;
     
-    NSSize viewSize = view.bounds.size;
+    NSSize viewSize = [view bounds].size;
     
     NSPoint positionWithinView = [view convertPoint:[theEvent locationInWindow]
                                            fromView:nil];
@@ -218,18 +231,21 @@
             if (!wasWithinBounds)
                 [self lockCursor:view];
         }
-        else
+        else if (isCursorLocked)
         {
             [self unlockCursor];
         }
         
         wasWithinBounds = cursorInsideView;
         
-        deltaX = theEvent.deltaX;
-        deltaY = theEvent.deltaY;
-        
-        if (abs(deltaX) > escapeThresholdX || abs(deltaY) > escapeThresholdY)
-            [self unlockCursor];
+        if (isCursorLocked)
+        {
+            deltaX = theEvent.deltaX;
+            deltaY = theEvent.deltaY;
+            
+            if (abs(deltaX) > escapeThresholdX || abs(deltaY) > escapeThresholdY)
+                [self unlockCursor];
+        }
     }
     else if (self.mouseMode == AM_ENABLE_LASER)
     {
@@ -242,18 +258,27 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
+       withinView:(NSView *)view
 {
-    if (([theEvent modifierFlags] & NSCommandKeyMask) != 0)
-    {
-        if ([self isMouseEnabled])
-            [self unlockCursor];
-    }
-    
     if ([self isMouseEnabled])
+    {
+        BOOL isCursorLockedAtStartOfEvent = isCursorLocked;
+        
+        if (([theEvent modifierFlags] & NSCommandKeyMask) != 0)
+        {
+            if (isCursorLockedAtStartOfEvent)
+                [self unlockCursor];
+        }
+        
+        if (!isCursorLockedAtStartOfEvent)
+            [self lockCursor:view];
+        
         buttonState |= 1;
+    }
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
+     withinView:(NSView *)view
 {
     if ([self isMouseEnabled])
         buttonState &= ~1;
