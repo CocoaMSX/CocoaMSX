@@ -43,7 +43,9 @@
     IBOutlet NSPopUpButton *joystickTwoDevice;
     
     IBOutlet NSToolbar *toolbar;
-    IBOutlet NSTabView *tabView;
+    IBOutlet NSTabView *preferenceCategoryTabView;
+    IBOutlet NSTabView *joystickOneDeviceTabView;
+    IBOutlet NSTabView *joystickTwoDeviceTabView;
     IBOutlet MGScopeBar *scopeBar;
     
     CMKeyCaptureView *keyCaptureView;

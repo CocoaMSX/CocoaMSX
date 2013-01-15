@@ -33,6 +33,7 @@
 #import "CMHeaderRowCell.h"
 
 #include "InputEvent.h"
+#include "JoystickPort.h"
 
 #pragma mark - KeyCategory
 
@@ -116,6 +117,9 @@
 
 - (void)synchronizeSettings;
 
+- (void)setDeviceForJoystickPort:(NSInteger)joystickPort
+                      toDeviceId:(NSInteger)deviceId;
+
 @end
 
 @implementation CMPreferenceController
@@ -195,8 +199,6 @@
         [kvoProxy addObject:jd];
     }];
     
-    // FIXME: These need to be synchronized when the window re-opens
-    
     [self initializeInputDeviceCategories:keyCategories
                                withLayout:self.emulator.keyboardLayout];
     [self initializeInputDeviceCategories:joystickOneCategories
@@ -261,6 +263,12 @@
                                                             fromVirtual:CMGetIntPref(@"emulationSpeedPercentage")
                                                              usingTable:virtualEmulationSpeedRange]];
     
+    // Update joystick device view
+    [self setDeviceForJoystickPort:0
+                        toDeviceId:[[self joystickPort1Selection] deviceId]];
+    
+    [self setDeviceForJoystickPort:1
+                        toDeviceId:[[self joystickPort2Selection] deviceId]];
 #ifdef DEBUG
     NSLog(@"synchronizeSettings: Took %.02fms",
            [NSDate timeIntervalSinceReferenceDate] - startTime);
@@ -309,6 +317,29 @@
     
     [categoryArray removeAllObjects];
     [categoryArray addObjectsFromArray:sortedCategories];
+}
+
+- (void)setDeviceForJoystickPort:(NSInteger)joystickPort
+                      toDeviceId:(NSInteger)deviceId
+{
+    NSTabView *configurationTabView = nil;
+    if (joystickPort == 0)
+    {
+        configurationTabView = joystickOneDeviceTabView;
+        [[self emulator] setDeviceInJoystickPort1:deviceId];
+    }
+    else
+    {
+        configurationTabView = joystickTwoDeviceTabView;
+        [[self emulator] setDeviceInJoystickPort2:deviceId];
+    }
+    
+    if (deviceId == JOYSTICK_PORT_JOYSTICK)
+        [configurationTabView selectTabViewItemWithIdentifier:@"twoButtonJoystick"];
+    else if (deviceId == JOYSTICK_PORT_MOUSE)
+        [configurationTabView selectTabViewItemWithIdentifier:@"mouse"];
+    else
+        [configurationTabView selectTabViewItemWithIdentifier:@"configurationless"];
 }
 
 #pragma mark - Properties
@@ -398,9 +429,9 @@
 
 - (void)tabChanged:(id)sender
 {
-    NSToolbarItem *selectedItem = (NSToolbarItem*)sender;
+    NSToolbarItem *selectedItem = (NSToolbarItem *)sender;
     
-    [tabView selectTabViewItemWithIdentifier:selectedItem.itemIdentifier];
+    [preferenceCategoryTabView selectTabViewItemWithIdentifier:[selectedItem itemIdentifier]];
 }
 
 - (void)sliderValueChanged:(id)sender
@@ -463,9 +494,15 @@
 - (void)joystickDeviceChanged:(id)sender
 {
     if (sender == joystickOneDevice)
-        self.emulator.deviceInJoystickPort1 = self.joystickPort1Selection.deviceId;
+    {
+        [self setDeviceForJoystickPort:0
+                            toDeviceId:[[self joystickPort1Selection] deviceId]];
+    }
     else if (sender == joystickTwoDevice)
-        self.emulator.deviceInJoystickPort2 = self.joystickPort2Selection.deviceId;
+    {
+        [self setDeviceForJoystickPort:1
+                            toDeviceId:[[self joystickPort2Selection] deviceId]];
+    }
 }
 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
@@ -527,7 +564,7 @@
     
     // Select first tab
     toolbar.selectedItemIdentifier = selectedIdentifier;
-    [tabView selectTabViewItemWithIdentifier:toolbar.selectedItemIdentifier];
+    [preferenceCategoryTabView selectTabViewItemWithIdentifier:toolbar.selectedItemIdentifier];
 }
 
 #pragma mark - NSWindowDelegate

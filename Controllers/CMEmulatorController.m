@@ -118,6 +118,9 @@
 - (void)enterLegacyFullscreen;
 - (void)exitLegacyFullscreen;
 
+- (BOOL)isStatusBarVisible;
+- (void)toggleStatusBarVisibility:(BOOL)isVisible;
+
 @end
 
 @implementation CMEmulatorController
@@ -152,6 +155,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                forKeyPath:@"pauseWhenUnfocused"];
     [[NSUserDefaults standardUserDefaults] removeObserver:self
                                                forKeyPath:@"emulationSpeedPercentage"];
+    [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                               forKeyPath:@"isStatusBarVisible"];
     
     [self destroy];
     
@@ -212,6 +217,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self setScreenSize:NSMakeSize(CMGetIntPref(@"screenWidth"), CMGetIntPref(@"screenHeight"))
                 animate:NO];
     
+    [self toggleStatusBarVisibility:CMGetBoolPref(@"isStatusBarVisible")];
+    
     // Start monitoring for preference changes
     
     [[NSUserDefaults standardUserDefaults] addObserver:self
@@ -220,6 +227,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                context:NULL];
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"emulationSpeedPercentage"
+                                               options:NSKeyValueObservingOptionNew
+                                               context:NULL];
+    [[NSUserDefaults standardUserDefaults] addObserver:self
+                                            forKeyPath:@"isStatusBarVisible"
                                                options:NSKeyValueObservingOptionNew
                                                context:NULL];
     
@@ -771,8 +782,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self.window setFrame:NSMakeRect(self.window.frame.origin.x,
                                      self.window.frame.origin.y,
                                      newWidth, newHeight)
-             display:YES
-             animate:animate];
+                  display:YES
+                  animate:animate];
 }
 
 - (void)showOpenFileDialogWithTitle:(NSString*)title
@@ -1240,6 +1251,47 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
 }
 
+- (BOOL)isStatusBarVisible
+{
+    return ![statusBar isHidden];
+}
+
+- (void)toggleStatusBarVisibility:(BOOL)isVisible
+{
+    NSRect windowFrame = [[self window] frame];
+    NSRect screenFrame = [[self screen] frame];
+    
+    CGFloat screenHeight = [[self screen] frame].size.height;
+    CGFloat contentSizeDifference = [[self window] frame].size.height -
+        [[[self window] contentView] frame].size.height;
+    
+    windowFrame.size.height = contentSizeDifference + screenHeight;
+    screenFrame.origin.y = 0;
+    screenFrame.size.height = screenHeight;
+    
+    if (isVisible)
+    {
+        [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+        [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
+        
+        windowFrame.origin.y -= CMMinYEdgeHeight;
+        windowFrame.size.height += CMMinYEdgeHeight;
+        screenFrame.origin.y += CMMinYEdgeHeight;
+    }
+    else
+    {
+        [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
+        [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
+        
+        windowFrame.origin.y += CMMinYEdgeHeight;
+    }
+    
+    [statusBar setHidden:!isVisible];
+    
+    [[self window] setFrame:windowFrame display:YES];
+    [[self screen] setFrame:screenFrame];
+}
+
 #pragma mark - IBActions
 
 - (void)openAbout:(id)sender
@@ -1642,6 +1694,11 @@ void archTrap(UInt8 value)
             emulatorSetFrequency(properties->emulation.speed, NULL);
         }
     }
+    else if ([keyPath isEqualToPath:@"isStatusBarVisible"])
+    {
+        if (![self isInFullScreenMode])
+            [self toggleStatusBarVisibility:[[change objectForKey:NSKeyValueChangeNewKey] boolValue]];
+    }
 }
 
 #pragma mark - NSWindowController
@@ -1703,15 +1760,18 @@ void archTrap(UInt8 value)
 #endif
     
     // Save the screen size first
-    CMSetIntPref(@"screenWidth", screen.bounds.size.width);
-    CMSetIntPref(@"screenHeight", screen.bounds.size.height);
+    CMSetIntPref(@"screenWidth", [screen bounds].size.width);
+    CMSetIntPref(@"screenHeight", [screen bounds].size.height);
     
-    [self.window setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
-    [self.window setContentBorderThickness:0 forEdge:NSMinYEdge];
-    
-    NSSize newScreenSize = screen.frame.size;
-    [screen setFrame:NSMakeRect(0, 0, newScreenSize.width, newScreenSize.height + CMMinYEdgeHeight)];
-    [statusBar setHidden:YES];
+    if ([self isStatusBarVisible])
+    {
+        [self.window setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
+        [self.window setContentBorderThickness:0 forEdge:NSMinYEdge];
+        
+        NSSize newScreenSize = screen.frame.size;
+        [screen setFrame:NSMakeRect(0, 0, newScreenSize.width, newScreenSize.height + CMMinYEdgeHeight)];
+        [statusBar setHidden:YES];
+    }
 }
 
 - (void)windowWillExitFullScreen:(NSNotification *)notification
@@ -1720,12 +1780,18 @@ void archTrap(UInt8 value)
     NSLog(@"EmulatorController: willExitFullScreen");
 #endif
     
-    [self.window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    [self.window setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
     
-    NSSize newScreenSize = screen.frame.size;
-    [screen setFrame:NSMakeRect(0, CMMinYEdgeHeight, newScreenSize.width, newScreenSize.height - CMMinYEdgeHeight)];
-    [statusBar setHidden:NO];
+    // FIXME: if preferences are toggled while fullscreen, screen size becomes
+    // corrupted
+    if (CMGetBoolPref(@"isStatusBarVisible"))
+    {
+        [self.window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+        [self.window setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
+        
+        NSSize newScreenSize = screen.frame.size;
+        [screen setFrame:NSMakeRect(0, CMMinYEdgeHeight, newScreenSize.width, newScreenSize.height - CMMinYEdgeHeight)];
+        [statusBar setHidden:NO];
+    }
 }
 
 #pragma mark - SpecialCartSelectedDelegate

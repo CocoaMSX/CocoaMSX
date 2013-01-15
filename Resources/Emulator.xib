@@ -18,6 +18,7 @@
 			<string>NSOpenGLView</string>
 			<string>NSTextField</string>
 			<string>NSTextFieldCell</string>
+			<string>NSUserDefaultsController</string>
 			<string>NSView</string>
 			<string>NSWindowTemplate</string>
 		</array>
@@ -609,6 +610,25 @@
 									<reference key="NSOnImage" ref="229763992"/>
 									<reference key="NSMixedImage" ref="909111550"/>
 								</object>
+								<object class="NSMenuItem" id="158505840">
+									<reference key="NSMenu" ref="466310130"/>
+									<string key="NSTitle">Show Status Bar</string>
+									<string key="NSKeyEquiv">/</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
+								<object class="NSMenuItem" id="1064651752">
+									<reference key="NSMenu" ref="466310130"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="229763992"/>
+									<reference key="NSMixedImage" ref="909111550"/>
+								</object>
 								<object class="NSMenuItem" id="198832746">
 									<reference key="NSMenu" ref="466310130"/>
 									<string key="NSTitle">Enter Full Screen</string>
@@ -795,7 +815,8 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 32}, {640, 480}}</string>
 							<reference key="NSSuperview" ref="244130915"/>
-							<reference key="NSNextKeyView" ref="172146238"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="576554606"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
 								<object class="NSMutableData" key="NSPixelAttributes">
@@ -803,19 +824,20 @@
 								</object>
 							</object>
 						</object>
-						<object class="NSBox" id="172146238">
+						<object class="NSBox" id="576554606">
 							<reference key="NSNextResponder" ref="244130915"/>
 							<int key="NSvFlags">34</int>
 							<array class="NSMutableArray" key="NSSubviews">
-								<object class="NSView" id="85119628">
-									<reference key="NSNextResponder" ref="172146238"/>
+								<object class="NSView" id="28921300">
+									<reference key="NSNextResponder" ref="576554606"/>
 									<int key="NSvFlags">274</int>
 									<array class="NSMutableArray" key="NSSubviews">
 										<object class="NSTextField" id="974846936">
-											<reference key="NSNextResponder" ref="85119628"/>
+											<reference key="NSNextResponder" ref="28921300"/>
 											<int key="NSvFlags">263</int>
 											<string key="NSFrame">{{224, 6}, {192, 17}}</string>
-											<reference key="NSSuperview" ref="85119628"/>
+											<reference key="NSSuperview" ref="28921300"/>
+											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<bool key="NSEnabled">YES</bool>
@@ -854,14 +876,16 @@
 										</object>
 									</array>
 									<string key="NSFrameSize">{640, 32}</string>
-									<reference key="NSSuperview" ref="172146238"/>
+									<reference key="NSSuperview" ref="576554606"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="974846936"/>
 									<string key="NSReuseIdentifierKey">_NS:11</string>
 								</object>
 							</array>
 							<string key="NSFrameSize">{640, 32}</string>
 							<reference key="NSSuperview" ref="244130915"/>
-							<reference key="NSNextKeyView" ref="85119628"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="28921300"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
@@ -887,7 +911,7 @@
 									<bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
 								</object>
 							</object>
-							<reference key="NSContentView" ref="85119628"/>
+							<reference key="NSContentView" ref="28921300"/>
 							<int key="NSBorderType">0</int>
 							<int key="NSBoxType">0</int>
 							<int key="NSTitlePosition">0</int>
@@ -896,6 +920,7 @@
 					</array>
 					<string key="NSFrameSize">{640, 512}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="1005680393"/>
 					<string key="NSReuseIdentifierKey">_NS:20</string>
 				</object>
@@ -908,6 +933,9 @@
 			</object>
 			<object class="NSCustomObject" id="449845520">
 				<string key="NSClassName">SUUpdater</string>
+			</object>
+			<object class="NSUserDefaultsController" id="95271821">
+				<bool key="NSSharedInstance">YES</bool>
 			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -1196,7 +1224,7 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">statusBar</string>
 						<reference key="source" ref="1021"/>
-						<reference key="destination" ref="172146238"/>
+						<reference key="destination" ref="576554606"/>
 					</object>
 					<int key="connectionID">1278</int>
 				</object>
@@ -1311,6 +1339,22 @@
 						<reference key="destination" ref="824663449"/>
 					</object>
 					<int key="connectionID">1276</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.isStatusBarVisible</string>
+						<reference key="source" ref="158505840"/>
+						<reference key="destination" ref="95271821"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="158505840"/>
+							<reference key="NSDestination" ref="95271821"/>
+							<string key="NSLabel">value: values.isStatusBarVisible</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.isStatusBarVisible</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1284</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1526,6 +1570,8 @@
 							<reference ref="280434043"/>
 							<reference ref="567557776"/>
 							<reference ref="198832746"/>
+							<reference ref="158505840"/>
+							<reference ref="1064651752"/>
 						</array>
 						<reference key="parent" ref="586577488"/>
 					</object>
@@ -1542,7 +1588,7 @@
 						<reference key="object" ref="244130915"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="1005680393"/>
-							<reference ref="172146238"/>
+							<reference ref="576554606"/>
 						</array>
 						<reference key="parent" ref="629410865"/>
 					</object>
@@ -1938,7 +1984,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1277</int>
-						<reference key="object" ref="172146238"/>
+						<reference key="object" ref="576554606"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="974846936"/>
 						</array>
@@ -1950,12 +1996,27 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="272522322"/>
 						</array>
-						<reference key="parent" ref="172146238"/>
+						<reference key="parent" ref="576554606"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1077</int>
 						<reference key="object" ref="272522322"/>
 						<reference key="parent" ref="974846936"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1279</int>
+						<reference key="object" ref="158505840"/>
+						<reference key="parent" ref="466310130"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1280</int>
+						<reference key="object" ref="1064651752"/>
+						<reference key="parent" ref="466310130"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1283</int>
+						<reference key="object" ref="95271821"/>
+						<reference key="parent" ref="0"/>
 					</object>
 				</array>
 			</object>
@@ -1998,6 +2059,9 @@
 				<string key="1273.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1274.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1277.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1279.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1280.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1283.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="129.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="130.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="131.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2066,9 +2130,257 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1278</int>
+			<int key="maxID">1285</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">CMEmulatorController</string>
+					<string key="superclassName">NSWindowController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="doubleSize:">id</string>
+						<string key="editMachineSettings:">id</string>
+						<string key="ejectCartridgeSlot1:">id</string>
+						<string key="ejectCartridgeSlot2:">id</string>
+						<string key="ejectCassette:">id</string>
+						<string key="ejectDiskSlot1:">id</string>
+						<string key="ejectDiskSlot2:">id</string>
+						<string key="insertCartridgeSlot1:">id</string>
+						<string key="insertCartridgeSlot2:">id</string>
+						<string key="insertCassette:">id</string>
+						<string key="insertDiskSlot1:">id</string>
+						<string key="insertDiskSlot2:">id</string>
+						<string key="insertSpecialCartridgeSlot1:">id</string>
+						<string key="insertSpecialCartridgeSlot2:">id</string>
+						<string key="loadState:">id</string>
+						<string key="normalSize:">id</string>
+						<string key="openAbout:">id</string>
+						<string key="openPreferences:">id</string>
+						<string key="pauseMsx:">id</string>
+						<string key="recordAudio:">id</string>
+						<string key="recordGameplay:">id</string>
+						<string key="repositionCassette:">id</string>
+						<string key="resetMsx:">id</string>
+						<string key="rewindCassette:">id</string>
+						<string key="saveScreenshot:">id</string>
+						<string key="saveState:">id</string>
+						<string key="shutDownMsx:">id</string>
+						<string key="statusMsx:">id</string>
+						<string key="toggleCartAutoReset:">id</string>
+						<string key="toggleCassetteAutoRewind:">id</string>
+						<string key="toggleCassetteWriteProtect:">id</string>
+						<string key="toggleDiskAutoReset:">id</string>
+						<string key="toggleFullScreen:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="doubleSize:">
+							<string key="name">doubleSize:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="editMachineSettings:">
+							<string key="name">editMachineSettings:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="ejectCartridgeSlot1:">
+							<string key="name">ejectCartridgeSlot1:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="ejectCartridgeSlot2:">
+							<string key="name">ejectCartridgeSlot2:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="ejectCassette:">
+							<string key="name">ejectCassette:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="ejectDiskSlot1:">
+							<string key="name">ejectDiskSlot1:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="ejectDiskSlot2:">
+							<string key="name">ejectDiskSlot2:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="insertCartridgeSlot1:">
+							<string key="name">insertCartridgeSlot1:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="insertCartridgeSlot2:">
+							<string key="name">insertCartridgeSlot2:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="insertCassette:">
+							<string key="name">insertCassette:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="insertDiskSlot1:">
+							<string key="name">insertDiskSlot1:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="insertDiskSlot2:">
+							<string key="name">insertDiskSlot2:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="insertSpecialCartridgeSlot1:">
+							<string key="name">insertSpecialCartridgeSlot1:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="insertSpecialCartridgeSlot2:">
+							<string key="name">insertSpecialCartridgeSlot2:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="loadState:">
+							<string key="name">loadState:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="normalSize:">
+							<string key="name">normalSize:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openAbout:">
+							<string key="name">openAbout:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openPreferences:">
+							<string key="name">openPreferences:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="pauseMsx:">
+							<string key="name">pauseMsx:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="recordAudio:">
+							<string key="name">recordAudio:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="recordGameplay:">
+							<string key="name">recordGameplay:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="repositionCassette:">
+							<string key="name">repositionCassette:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="resetMsx:">
+							<string key="name">resetMsx:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="rewindCassette:">
+							<string key="name">rewindCassette:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveScreenshot:">
+							<string key="name">saveScreenshot:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveState:">
+							<string key="name">saveState:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="shutDownMsx:">
+							<string key="name">shutDownMsx:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="statusMsx:">
+							<string key="name">statusMsx:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleCartAutoReset:">
+							<string key="name">toggleCartAutoReset:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleCassetteAutoRewind:">
+							<string key="name">toggleCassetteAutoRewind:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleCassetteWriteProtect:">
+							<string key="name">toggleCassetteWriteProtect:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleDiskAutoReset:">
+							<string key="name">toggleDiskAutoReset:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleFullScreen:">
+							<string key="name">toggleFullScreen:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="fpsCounter">NSTextField</string>
+						<string key="screen">CMMsxDisplayView</string>
+						<string key="statusBar">NSBox</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="fpsCounter">
+							<string key="name">fpsCounter</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="screen">
+							<string key="name">screen</string>
+							<string key="candidateClassName">CMMsxDisplayView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="statusBar">
+							<string key="name">statusBar</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CMEmulatorController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">CMMsxDisplayView</string>
+					<string key="superclassName">NSOpenGLView</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">emulator</string>
+						<string key="NS.object.0">CMEmulatorController</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">emulator</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">emulator</string>
+							<string key="candidateClassName">CMEmulatorController</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CMMsxDisplayView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SUUpdater</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">checkForUpdates:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">checkForUpdates:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">checkForUpdates:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">delegate</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">delegate</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">delegate</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SUUpdater.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>

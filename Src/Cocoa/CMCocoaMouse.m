@@ -228,7 +228,7 @@
     {
         if (cursorInsideView)
         {
-            if (!wasWithinBounds)
+            if (!wasWithinBounds && CMGetBoolPref(@"lockMouseCursorOnHover"))
                 [self lockCursor:view];
         }
         else if (isCursorLocked)
@@ -243,8 +243,11 @@
             deltaX = theEvent.deltaX;
             deltaY = theEvent.deltaY;
             
-            if (abs(deltaX) > escapeThresholdX || abs(deltaY) > escapeThresholdY)
+            if (CMGetBoolPref(@"unlockMouseCursorOnShake") &&
+                (abs(deltaX) > escapeThresholdX || abs(deltaY) > escapeThresholdY))
+            {
                 [self unlockCursor];
+            }
         }
     }
     else if (self.mouseMode == AM_ENABLE_LASER)
