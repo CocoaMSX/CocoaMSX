@@ -119,7 +119,7 @@
 - (void)exitLegacyFullscreen;
 
 - (BOOL)isStatusBarVisible;
-- (void)toggleStatusBarVisibility:(BOOL)isVisible;
+- (void)setIsStatusBarVisible:(BOOL)isVisible;
 
 @end
 
@@ -131,6 +131,7 @@
 
 #define WIDTH_DEFAULT   272.0
 #define HEIGHT_DEFAULT  240.0
+#define WIDTH_TO_HEIGHT_RATIO (WIDTH_DEFAULT / HEIGHT_DEFAULT)
 
 #define CMMinYEdgeHeight 32.0 // Height of the status bar at bottom
 
@@ -155,8 +156,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                forKeyPath:@"pauseWhenUnfocused"];
     [[NSUserDefaults standardUserDefaults] removeObserver:self
                                                forKeyPath:@"emulationSpeedPercentage"];
-    [[NSUserDefaults standardUserDefaults] removeObserver:self
-                                               forKeyPath:@"isStatusBarVisible"];
     
     [self destroy];
     
@@ -217,7 +216,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self setScreenSize:NSMakeSize(CMGetIntPref(@"screenWidth"), CMGetIntPref(@"screenHeight"))
                 animate:NO];
     
-    [self toggleStatusBarVisibility:CMGetBoolPref(@"isStatusBarVisible")];
+    [self setIsStatusBarVisible:CMGetBoolPref(@"isStatusBarVisible")];
     
     // Start monitoring for preference changes
     
@@ -227,10 +226,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                context:NULL];
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"emulationSpeedPercentage"
-                                               options:NSKeyValueObservingOptionNew
-                                               context:NULL];
-    [[NSUserDefaults standardUserDefaults] addObserver:self
-                                            forKeyPath:@"isStatusBarVisible"
                                                options:NSKeyValueObservingOptionNew
                                                context:NULL];
     
@@ -773,14 +768,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if ([self isInFullScreenMode])
         [self toggleFullScreen];
     
-    NSSize windowSize = self.window.frame.size;
-    NSSize screenSize = screen.frame.size;
+    NSSize windowSize = [[self window] frame].size;
+    NSSize screenSize = [screen frame].size;
     
     CGFloat newWidth = size.width + (windowSize.width - screenSize.width);
     CGFloat newHeight = size.height + (windowSize.height - screenSize.height);
     
-    [self.window setFrame:NSMakeRect(self.window.frame.origin.x,
-                                     self.window.frame.origin.y,
+    [self.window setFrame:NSMakeRect([[self window] frame].origin.x,
+                                     [[self window] frame].origin.y,
                                      newWidth, newHeight)
                   display:YES
                   animate:animate];
@@ -1173,10 +1168,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     CMSetIntPref(@"screenWidth", [screen bounds].size.width);
     CMSetIntPref(@"screenHeight", [screen bounds].size.height);
     
-    // Hide the bottom border
-    [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
-    [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
-    
     // Set options (hide dock, auto-hide menu bar)
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                              CMMakeNumber(NSApplicationPresentationHideDock
@@ -1195,7 +1186,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     NSSize screenSize = [[NSScreen mainScreen] frame].size;
     CGFloat fullWidth = screenSize.width;
-    CGFloat screenWidth = screenSize.height * 1.33333;
+    CGFloat screenWidth = screenSize.height * WIDTH_TO_HEIGHT_RATIO;
     CGFloat x = (fullWidth - screenWidth) / 2.0;
     
     // Proportionally resize the screen and hide the status bar items
@@ -1214,10 +1205,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)exitLegacyFullscreen
 {
-    // Show bottom border
-    [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
-    
     // Un-hide the original window
     [[self window] orderBack:self];
     
@@ -1226,9 +1213,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     // Resize the screen and show the status section
     NSSize contentSize = [[[self window] contentView] bounds].size;
-    [[self screen] setFrame:NSMakeRect(0, CMMinYEdgeHeight,
+    
+    CGFloat yOffset = 0;
+    if (CMGetBoolPref(@"isStatusBarVisible"))
+        yOffset += CMMinYEdgeHeight;
+    
+    [[self screen] setFrame:NSMakeRect(0, yOffset,
                                        contentSize.width,
-                                       contentSize.height - CMMinYEdgeHeight)];
+                                       contentSize.height - yOffset)];
     
     [statusBar setHidden:NO];
     
@@ -1256,7 +1248,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return ![statusBar isHidden];
 }
 
-- (void)toggleStatusBarVisibility:(BOOL)isVisible
+- (void)setIsStatusBarVisible:(BOOL)isVisible
 {
     NSRect windowFrame = [[self window] frame];
     NSRect screenFrame = [[self screen] frame];
@@ -1271,6 +1263,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (isVisible)
     {
+        // Show the status bar
         [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
         [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
         
@@ -1280,6 +1273,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
     else
     {
+        // Hide the status bar
         [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
         [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
         
@@ -1287,6 +1281,22 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
     
     [statusBar setHidden:!isVisible];
+    
+    // Constrain the window frame within the available area
+    NSRect constrainedRect = [[self window] constrainFrameRect:windowFrame
+                                                      toScreen:[[self window] screen]];
+    
+    if (!NSEqualRects(constrainedRect, windowFrame))
+    {
+        // Looks like the window frame doesn't fit within the screen
+        // Recompute the sizes in relation to the window height
+        
+        screenFrame.size.height = constrainedRect.size.height - contentSizeDifference - screenFrame.origin.y;
+        screenFrame.size.width = screenFrame.size.height * WIDTH_TO_HEIGHT_RATIO;
+        constrainedRect.size.width = screenFrame.size.width;
+        
+        windowFrame = constrainedRect;
+    }
     
     [[self window] setFrame:windowFrame display:YES];
     [[self screen] setFrame:screenFrame];
@@ -1652,6 +1662,19 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self toggleFullScreen];
 }
 
+- (void)toggleStatusBar:(id)sender
+{
+    if (![self isInFullScreenMode])
+    {
+        // Toggle status
+        BOOL isVisible = !CMGetBoolPref(@"isStatusBarVisible");
+        CMSetBoolPref(@"isStatusBarVisible", isVisible);
+        
+        // Update UI
+        [self setIsStatusBarVisible:isVisible];
+    }
+}
+
 #pragma mark - blueMSX implementations - emulation
 
 void archEmulationStartNotification()
@@ -1694,11 +1717,6 @@ void archTrap(UInt8 value)
             emulatorSetFrequency(properties->emulation.speed, NULL);
         }
     }
-    else if ([keyPath isEqualToPath:@"isStatusBarVisible"])
-    {
-        if (![self isInFullScreenMode])
-            [self toggleStatusBarVisibility:[[change objectForKey:NSKeyValueChangeNewKey] boolValue]];
-    }
 }
 
 #pragma mark - NSWindowController
@@ -1724,7 +1742,7 @@ void archTrap(UInt8 value)
         frameSize.height = HEIGHT_DEFAULT + marginY;
     
     // Set the screen width as a percentage of the screen height
-    frameSize.width = (frameSize.height - marginY) / (HEIGHT_DEFAULT / WIDTH_DEFAULT) + marginX;
+    frameSize.width = (frameSize.height - marginY) / (1 / WIDTH_TO_HEIGHT_RATIO) + marginX;
     
     return frameSize;
 }
@@ -1765,12 +1783,7 @@ void archTrap(UInt8 value)
     
     if ([self isStatusBarVisible])
     {
-        [self.window setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
-        [self.window setContentBorderThickness:0 forEdge:NSMinYEdge];
-        
-        NSSize newScreenSize = screen.frame.size;
-        [screen setFrame:NSMakeRect(0, 0, newScreenSize.width, newScreenSize.height + CMMinYEdgeHeight)];
-        [statusBar setHidden:YES];
+        [self setIsStatusBarVisible:NO];
     }
 }
 
@@ -1780,17 +1793,9 @@ void archTrap(UInt8 value)
     NSLog(@"EmulatorController: willExitFullScreen");
 #endif
     
-    
-    // FIXME: if preferences are toggled while fullscreen, screen size becomes
-    // corrupted
     if (CMGetBoolPref(@"isStatusBarVisible"))
     {
-        [self.window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-        [self.window setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
-        
-        NSSize newScreenSize = screen.frame.size;
-        [screen setFrame:NSMakeRect(0, CMMinYEdgeHeight, newScreenSize.width, newScreenSize.height - CMMinYEdgeHeight)];
-        [statusBar setHidden:NO];
+        [self setIsStatusBarVisible:YES];
     }
 }
 
@@ -1882,6 +1887,11 @@ void archTrap(UInt8 value)
              item.action == @selector(doubleSize:))
     {
         return ![self isInFullScreenMode];
+    }
+    else if (item.action == @selector(toggleStatusBar:))
+    {
+        menuItem.state = CMGetBoolPref(@"isStatusBarVisible") ? NSOnState : NSOffState;
+        return ![self isInFullScreenMode]; // Can't toggle in fullscreen mode
     }
     else if (item.action == @selector(toggleFullScreen:))
     {

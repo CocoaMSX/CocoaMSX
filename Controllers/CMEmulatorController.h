@@ -185,6 +185,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)normalSize:(id)sender;
 - (IBAction)doubleSize:(id)sender;
 - (IBAction)toggleFullScreen:(id)sender;
+- (IBAction)toggleStatusBar:(id)sender;
 
 // MSX menu
 - (IBAction)statusMsx:(id)sender;
