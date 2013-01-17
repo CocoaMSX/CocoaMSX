@@ -176,15 +176,11 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    [super drawRect:dirtyRect];
-    
     [self renderScreen];
 }
 
 - (void)reshape
 {
-    [super reshape];
-    
     [[self openGLContext] makeCurrentContext];
     [[self openGLContext] update];
     

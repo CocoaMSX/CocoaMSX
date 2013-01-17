@@ -1264,8 +1264,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (isVisible)
     {
         // Show the status bar
-        [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-        [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
+//        [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+//        [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
         
         windowFrame.origin.y -= CMMinYEdgeHeight;
         windowFrame.size.height += CMMinYEdgeHeight;
@@ -1274,13 +1274,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
     else
     {
         // Hide the status bar
-        [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
-        [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
+//        [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
+//        [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
         
         windowFrame.origin.y += CMMinYEdgeHeight;
     }
     
-    [statusBar setHidden:!isVisible];
+//    [statusBar setHidden:!isVisible];
     
     // Constrain the window frame within the available area
     NSRect constrainedRect = [[self window] constrainFrameRect:windowFrame
@@ -1298,8 +1298,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
         windowFrame = constrainedRect;
     }
     
+    NSDisableScreenUpdates();
+    [[self screen] setHidden:YES];
     [[self window] setFrame:windowFrame display:YES];
     [[self screen] setFrame:screenFrame];
+    [[self screen] setHidden:NO];
+    NSEnableScreenUpdates();
 }
 
 #pragma mark - IBActions
