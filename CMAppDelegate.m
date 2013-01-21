@@ -160,7 +160,7 @@
              dirsCreated++;
          }
          
-         NSError *enumerateFilesError = NULL;
+         NSError *enumerateFilesError = nil;
          NSArray *sourceFiles = [fm contentsOfDirectoryAtPath:sourcePath error:&enumerateFilesError];
          
          if (enumerateFilesError)

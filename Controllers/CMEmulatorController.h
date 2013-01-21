@@ -139,6 +139,9 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property NSInteger deviceInJoystickPort2;
 
 + (NSArray *)machineConfigurations;
++ (BOOL)removeMachineConfiguration:(NSString *)configurationName;
++ (NSString *)pathForMachineConfigurationNamed:(NSString *)name;
+
 - (NSString *)currentMachineConfiguration;
 
 - (NSString *)runningMachineConfiguration;

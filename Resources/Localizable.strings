@@ -137,7 +137,11 @@ JoyDown = "Down";
 JoyLeft = "Left";
 JoyRight = "Right";
 
-SureYouWantToRestartTheMachine = "Restart the machine? You will lose all changes in your applications.";
+SureYouWantToDeleteTheMachine_f = "Are you sure you want to remove '%1$@'?";
+SureYouWantToRestartTheMachine = "Restart the system? You will lose all changes.";
+YouHaveSelectedSystem_f = "You have selected \"%1$@.\"";
+YouHaveNotSelectedAnySystem = "You have not selected a system.";
+
 Yes = "Yes";
 No = "No";
 SaveScreenshot = "Save Screenshot";

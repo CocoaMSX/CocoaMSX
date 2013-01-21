@@ -99,6 +99,9 @@
 
 #pragma mark - PreferenceController
 
+#define ALERT_RESTART_SYSTEM 1
+#define ALERT_REMOVE_SYSTEM  2
+
 #define SCOPEBAR_GROUP_SHIFTED 0
 #define SCOPEBAR_GROUP_REGIONS 1
 
@@ -116,6 +119,9 @@
                              withLayout:(CMInputDeviceLayout *)layout;
 
 - (void)synchronizeSettings;
+- (NSString *)selectedConfigurationName;
+- (void)toggleSystemSpecificButtons;
+- (void)updateCurrentConfigurationInformation;
 
 - (void)setDeviceForJoystickPort:(NSInteger)joystickPort
                       toDeviceId:(NSInteger)deviceId;
@@ -237,26 +243,52 @@
 
 #pragma mark - Private Methods
 
+- (void)updateCurrentConfigurationInformation
+{
+    NSString *selectedConfigurationName = CMGetObjPref(@"machineConfiguration");
+    
+    if (selectedConfigurationName && [availableMachines containsObject:selectedConfigurationName])
+        [activeSystemTextView setStringValue:[NSString stringWithFormat:CMLoc(@"YouHaveSelectedSystem_f"),
+                                              selectedConfigurationName]];
+    else
+        [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
+}
+
 - (void)synchronizeSettings
 {
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
-    
     // Machine configurations
+    NSString *selectedConfigurationName = CMGetObjPref(@"machineConfiguration");
+    NSInteger currentConfigurationIndex = [availableMachines indexOfObject:selectedConfigurationName];
     
-    // Remove all existing configurations
-    NSRange range = NSMakeRange(0, [[availableMachineArrayController arrangedObjects] count]);
-    [availableMachineArrayController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:range]];
+    NSArray *foundConfigurations = [CMEmulatorController machineConfigurations];
     
-    // Add available configurations
-    NSArray *machineConfigurations = [CMEmulatorController machineConfigurations];
-    [availableMachineArrayController addObjects:machineConfigurations];
+    [availableMachines removeAllObjects];
+    [availableMachines addObjectsFromArray:foundConfigurations];
     
-    // If there is no matching configuration, use the first available
-    NSString *currentConfiguration = CMGetObjPref(@"machineConfiguration");
-    if (![machineConfigurations containsObject:currentConfiguration] && [machineConfigurations count] > 0)
-        CMSetObjPref(@"machineConfiguration", [machineConfigurations objectAtIndex:0]);
+    // Selected machine is no longer available found - select closest
+    if (![availableMachines containsObject:selectedConfigurationName])
+    {
+        selectedConfigurationName = nil;
+        
+        if (currentConfigurationIndex >= [availableMachines count])
+            currentConfigurationIndex--;
+        if (currentConfigurationIndex < 0 && [availableMachines count] > 0)
+            currentConfigurationIndex = 0;
+        
+        if (currentConfigurationIndex > 0)
+        {
+            selectedConfigurationName = [availableMachines objectAtIndex:currentConfigurationIndex];
+            CMSetObjPref(@"machineConfiguration", selectedConfigurationName);
+        }
+    }
+    
+    [systemTableView reloadData];
+    
+    [self toggleSystemSpecificButtons];
+    [self updateCurrentConfigurationInformation];
     
     // Update emulation speed
     [emulationSpeedSlider setDoubleValue:[self physicalPositionOfSlider:emulationSpeedSlider
@@ -342,21 +374,6 @@
         [configurationTabView selectTabViewItemWithIdentifier:@"configurationless"];
 }
 
-#pragma mark - Properties
-
-- (void)setColorMode:(NSInteger)colorMode
-{
-    self.isSaturationEnabled = (colorMode == 0);
-    self.emulator.colorMode = colorMode;
-}
-
-- (NSInteger)colorMode
-{
-    return self.emulator.colorMode;
-}
-
-#pragma mark - Methods
-
 - (NSInteger)virtualPositionOfSlider:(NSSlider *)slider
                           usingTable:(NSArray *)table
 {
@@ -388,14 +405,14 @@
     __block NSInteger tickIndex = slider.numberOfTickMarks - 1;
     
     [table enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        NSNumber *number = obj;
-        if ([number integerValue] > virtualPosition)
-        {
-            tickIndex = idx - 1;
-            *stop = YES;
-        }
-    }];
+     {
+         NSNumber *number = obj;
+         if ([number integerValue] > virtualPosition)
+         {
+             tickIndex = idx - 1;
+             *stop = YES;
+         }
+     }];
     
     double physicalRange = slider.maxValue - slider.minValue;
     double physicalTickRange = physicalRange / (slider.numberOfTickMarks - 1);
@@ -425,7 +442,59 @@
     return layout;
 }
 
+- (NSString *)selectedConfigurationName
+{
+    NSInteger selectedRow = [systemTableView selectedRow];
+    if (selectedRow < 0)
+        return nil;
+    
+    return [availableMachines objectAtIndex:selectedRow];
+}
+
+- (void)toggleSystemSpecificButtons
+{
+    NSString *selectedConfigurationName = [self selectedConfigurationName];
+    BOOL isRemoveButtonEnabled = (selectedConfigurationName != nil)
+        && ([availableMachines count] > 1); // At least one machine must remain
+    
+    [removeMachineButton setEnabled:isRemoveButtonEnabled];
+}
+
+#pragma mark - Properties
+
+- (void)setColorMode:(NSInteger)colorMode
+{
+    self.isSaturationEnabled = (colorMode == 0);
+    self.emulator.colorMode = colorMode;
+}
+
+- (NSInteger)colorMode
+{
+    return self.emulator.colorMode;
+}
+
 #pragma mark - Actions
+
+- (void)removeMachineConfiguration:(id)sender
+{
+    NSString *selectedConfigurationName = [self selectedConfigurationName];
+    
+    if (selectedConfigurationName)
+    {
+        NSString *message = [NSString stringWithFormat:CMLoc(@"SureYouWantToDeleteTheMachine_f"),
+                             selectedConfigurationName];
+        NSAlert *alert = [NSAlert alertWithMessageText:message
+                                         defaultButton:CMLoc(@"No")
+                                       alternateButton:nil
+                                           otherButton:CMLoc(@"Yes")
+                             informativeTextWithFormat:@""];
+        
+        [alert beginSheetModalForWindow:self.window
+                          modalDelegate:self
+                         didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+                            contextInfo:(void *)ALERT_REMOVE_SYSTEM];
+    }
+}
 
 - (void)tabChanged:(id)sender
 {
@@ -505,10 +574,27 @@
     }
 }
 
-- (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+- (void)alertDidEnd:(NSAlert *)alert
+         returnCode:(NSInteger)returnCode
+        contextInfo:(void *)contextInfo
 {
-    if (returnCode == NSAlertOtherReturn)
-        [self.emulator performColdReboot];
+    if ((int)contextInfo == ALERT_RESTART_SYSTEM)
+    {
+        if (returnCode == NSAlertOtherReturn)
+            [self.emulator performColdReboot];
+    }
+    else if ((int)contextInfo == ALERT_REMOVE_SYSTEM)
+    {
+        if (returnCode == NSAlertOtherReturn)
+        {
+            NSString *selectedConfigurationName = [self selectedConfigurationName];
+            if (selectedConfigurationName)
+            {
+                // FIXME: show dialog if error
+                [CMEmulatorController removeMachineConfiguration:selectedConfigurationName];
+            }
+        }
+    }
 }
 
 - (void)performColdRebootClicked:(id)sender
@@ -522,7 +608,7 @@
     [alert beginSheetModalForWindow:self.window
                       modalDelegate:self
                      didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-                        contextInfo:nil];
+                        contextInfo:(void *)ALERT_RESTART_SYSTEM];
 }
 
 - (void)emulationSpeedSliderMoved:(id)sender
@@ -549,10 +635,24 @@
 
 - (void)showMachinesInFinder:(id)sender
 {
-    CMPreferences *prefs = [CMPreferences preferences];
-    NSURL *machinesUrl = [NSURL fileURLWithPath:prefs.machineDirectory];
+    NSString *selectedConfigurationName = [self selectedConfigurationName];
+    NSString *finderPath;
     
-    [[NSWorkspace sharedWorkspace] openURL:machinesUrl];
+    if (selectedConfigurationName)
+        finderPath = [CMEmulatorController pathForMachineConfigurationNamed:selectedConfigurationName];
+    else
+        finderPath = [[CMPreferences preferences] machineDirectory];
+    
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:finderPath]];
+}
+
+#pragma mark - KVO Notifications
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
 }
 
 #pragma mark - NSWindowController
@@ -723,6 +823,47 @@
     }
     
     return nil;
+}
+
+#pragma mark - NSTableViewDataSourceDelegate
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    return [availableMachines count];
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    NSString *configurationName = [availableMachines objectAtIndex:rowIndex];
+    
+    NSString *columnIdentifer = [aTableColumn identifier];
+    if ([columnIdentifer isEqualToString:@"isSelected"])
+        return [NSNumber numberWithBool:[configurationName isEqualToString:CMGetObjPref(@"machineConfiguration")]];
+    else if ([columnIdentifer isEqualToString:@"name"])
+        return configurationName;
+    
+    return nil;
+}
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    NSString *configurationName = [availableMachines objectAtIndex:row];
+    
+    NSString *columnIdentifer = [tableColumn identifier];
+    if ([columnIdentifer isEqualToString:@"isSelected"])
+    {
+        CMSetObjPref(@"machineConfiguration", configurationName);
+        [self updateCurrentConfigurationInformation];
+    }
+    
+    [tableView reloadData];
+}
+
+#pragma mark - NSTableViewDelegate
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    [self toggleSystemSpecificButtons];
 }
 
 #pragma mark MGScopeBarDelegate

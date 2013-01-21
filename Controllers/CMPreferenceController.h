@@ -30,7 +30,7 @@
 @class MGScopeBar;
 @class CMKeyCaptureView;
 
-@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTableViewDelegate, MGScopeBarDelegate>
+@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate>
 {
     CMEmulatorController *_emulator;
     BOOL _isSaturationEnabled;
@@ -39,16 +39,23 @@
     CMJoyPortDevice *_joystickPort1Selection;
     CMJoyPortDevice *_joystickPort2Selection;
     
+    IBOutlet NSButton *removeMachineButton;
+    
     IBOutlet NSPopUpButton *joystickOneDevice;
     IBOutlet NSPopUpButton *joystickTwoDevice;
     
     IBOutlet NSToolbar *toolbar;
+    
     IBOutlet NSTabView *preferenceCategoryTabView;
     IBOutlet NSTabView *joystickOneDeviceTabView;
     IBOutlet NSTabView *joystickTwoDeviceTabView;
+    
     IBOutlet MGScopeBar *scopeBar;
     
     CMKeyCaptureView *keyCaptureView;
+    
+    IBOutlet NSTableView *systemTableView;
+    IBOutlet NSTextField *activeSystemTextView;
     
     IBOutlet NSOutlineView *keyboardLayoutEditor;
     IBOutlet NSOutlineView *joystickOneLayoutEditor;
@@ -61,8 +68,6 @@
     IBOutlet NSSlider *scanlineSlider;
     
     IBOutlet NSSlider *emulationSpeedSlider;
-    
-    IBOutlet NSArrayController *availableMachineArrayController;
     
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
@@ -92,7 +97,9 @@
 - (IBAction)revertKeyboardClicked:(id)sender;
 - (IBAction)revertJoystickOneClicked:(id)sender;
 - (IBAction)revertJoystickTwoClicked:(id)sender;
+
 - (IBAction)showMachinesInFinder:(id)sender;
+- (IBAction)removeMachineConfiguration:(id)sender;
 
 - (IBAction)performColdRebootClicked:(id)sender;
 

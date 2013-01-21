@@ -677,6 +677,21 @@ CMEmulatorController *theEmulator = nil; // FIXME
                               encoding:NSUTF8StringEncoding];
 }
 
++ (NSString *)pathForMachineConfigurationNamed:(NSString *)name
+{
+    NSString *machinesPath = [[CMPreferences preferences] machineDirectory];
+    return [machinesPath stringByAppendingPathComponent:name];
+}
+
++ (BOOL)removeMachineConfiguration:(NSString *)configurationName
+{
+    NSError *error = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:[self pathForMachineConfigurationNamed:configurationName]
+                                               error:&error];
+    
+    return (error == nil);
+}
+
 #pragma mark - Input Peripherals
 
 - (NSInteger)deviceInJoystickPort1
@@ -1264,8 +1279,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (isVisible)
     {
         // Show the status bar
-//        [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-//        [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
+        [[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+        [[self window] setContentBorderThickness:CMMinYEdgeHeight forEdge:NSMinYEdge];
         
         windowFrame.origin.y -= CMMinYEdgeHeight;
         windowFrame.size.height += CMMinYEdgeHeight;
@@ -1274,13 +1289,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
     else
     {
         // Hide the status bar
-//        [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
-//        [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
+        [[self window] setAutorecalculatesContentBorderThickness:YES forEdge:NSMinYEdge];
+        [[self window] setContentBorderThickness:0 forEdge:NSMinYEdge];
         
         windowFrame.origin.y += CMMinYEdgeHeight;
     }
     
-//    [statusBar setHidden:!isVisible];
+    [statusBar setHidden:!isVisible];
     
     // Constrain the window frame within the available area
     NSRect constrainedRect = [[self window] constrainFrameRect:windowFrame
