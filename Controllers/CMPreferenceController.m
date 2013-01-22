@@ -500,6 +500,7 @@
 {
     NSToolbarItem *selectedItem = (NSToolbarItem *)sender;
     
+    [toolbar setSelectedItemIdentifier:[selectedItem itemIdentifier]];
     [preferenceCategoryTabView selectTabViewItemWithIdentifier:[selectedItem itemIdentifier]];
 }
 
