@@ -25,6 +25,7 @@
 #import "CMEmulatorController.h"
 #import "CMCocoaJoystick.h"
 #import "CMPreferences.h"
+#import "NSString+CMExtensions.h"
 
 #import "CMKeyboardInput.h"
 
@@ -93,6 +94,77 @@
     
     [items removeAllObjects];
     [items addObjectsFromArray:sortedItems];
+}
+
+@end
+
+#pragma mark - Machine
+
+#define CMUnknownMachine   0
+#define CMMsxMachine       1
+#define CMMsx2Machine      2
+#define CMMsx2PlusMachine  3
+#define CMMsxTurboRMachine 4
+
+@interface CMMachine : NSObject
+{
+    NSInteger system;
+    NSString *_name;
+    NSString *_path;
+}
+
+@property (nonatomic, assign) NSInteger system;
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *path;
+
+@end
+
+@implementation CMMachine
+
+@synthesize path = _path;
+@synthesize name = _name;
+@synthesize system = _system;
+
++ (CMMachine *)machineWithPath:(NSString *)path
+{
+    CMMachine *machine = [[CMMachine alloc] init];
+    
+    [machine setPath:path];
+    [machine setName:path];
+    [machine setSystem:CMUnknownMachine];
+    
+    NSRange occurrence = [path rangeOfString:@" - "];
+    if (occurrence.location != NSNotFound)
+    {
+        NSString *name = [path substringFromIndex:occurrence.location + occurrence.length];
+        NSString *system = [path substringToIndex:occurrence.location];
+        
+        if ([system isEqual:@"MSX"])
+            [machine setSystem:CMMsxMachine];
+        else if ([system isEqual:@"MSX2"])
+            [machine setSystem:CMMsx2Machine];
+        else if ([system isEqual:@"MSX2+"])
+            [machine setSystem:CMMsx2PlusMachine];
+        else if ([system isEqual:@"MSXturboR"])
+            [machine setSystem:CMMsxTurboRMachine];
+        
+        if ([path containsString:@"C-BIOS"])
+            name = [NSString stringWithFormat:CMLoc(@"CBiosTemplate_f"), name, system];
+        
+        [machine setName:name];
+    }
+    
+    return [machine autorelease];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[CMMachine class]])
+        return [[self path] isEqualToString:[object path]];
+    if ([object isKindOfClass:[NSString class]])
+        return [[self path] isEqualToString:object];
+    
+    return NO;
 }
 
 @end
@@ -260,29 +332,35 @@
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
     // Machine configurations
-    NSString *selectedConfigurationName = CMGetObjPref(@"machineConfiguration");
-    NSInteger currentConfigurationIndex = [availableMachines indexOfObject:selectedConfigurationName];
-    
+    CMMachine *selectedMachine = [CMMachine machineWithPath:CMGetObjPref(@"machineConfiguration")];
     NSArray *foundConfigurations = [CMEmulatorController machineConfigurations];
     
     [availableMachines removeAllObjects];
-    [availableMachines addObjectsFromArray:foundConfigurations];
+    [foundConfigurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        [availableMachines addObject:[CMMachine machineWithPath:obj]];
+    }];
+    [availableMachines sortUsingComparator:^NSComparisonResult(id obj1, id obj2)
+    {
+        return [[obj1 name] localizedCaseInsensitiveCompare:[obj2 name]];
+    }];
     
     // Selected machine is no longer available found - select closest
-    if (![availableMachines containsObject:selectedConfigurationName])
+    if (![availableMachines containsObject:selectedMachine])
     {
-        selectedConfigurationName = nil;
-        
-        if (currentConfigurationIndex >= [availableMachines count])
-            currentConfigurationIndex--;
-        if (currentConfigurationIndex < 0 && [availableMachines count] > 0)
-            currentConfigurationIndex = 0;
-        
-        if (currentConfigurationIndex > 0)
+        __block CMMachine *machine = [availableMachines lastObject];
+        [availableMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
         {
-            selectedConfigurationName = [availableMachines objectAtIndex:currentConfigurationIndex];
-            CMSetObjPref(@"machineConfiguration", selectedConfigurationName);
-        }
+            NSInteger comparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
+            if (comparison == NSOrderedAscending || comparison == NSOrderedSame)
+            {
+                machine = obj;
+                *stop = YES;
+            }
+        }];
+        
+        if (machine)
+            CMSetObjPref(@"machineConfiguration", [machine path]);
     }
     
     [systemTableView reloadData];
@@ -448,7 +526,7 @@
     if (selectedRow < 0)
         return nil;
     
-    return [availableMachines objectAtIndex:selectedRow];
+    return [[availableMachines objectAtIndex:selectedRow] path];
 }
 
 - (void)toggleSystemSpecificButtons
@@ -835,25 +913,25 @@
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    NSString *configurationName = [availableMachines objectAtIndex:rowIndex];
+    CMMachine *machine = [availableMachines objectAtIndex:rowIndex];
     
     NSString *columnIdentifer = [aTableColumn identifier];
     if ([columnIdentifer isEqualToString:@"isSelected"])
-        return [NSNumber numberWithBool:[configurationName isEqualToString:CMGetObjPref(@"machineConfiguration")]];
+        return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
     else if ([columnIdentifer isEqualToString:@"name"])
-        return configurationName;
+        return [machine name];
     
     return nil;
 }
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    NSString *configurationName = [availableMachines objectAtIndex:row];
+    CMMachine *machine = [availableMachines objectAtIndex:row];
     
     NSString *columnIdentifer = [tableColumn identifier];
     if ([columnIdentifer isEqualToString:@"isSelected"])
     {
-        CMSetObjPref(@"machineConfiguration", configurationName);
+        CMSetObjPref(@"machineConfiguration", [machine path]);
         [self updateCurrentConfigurationInformation];
     }
     

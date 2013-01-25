@@ -187,3 +187,4 @@ NumpadKey_f = "Numeric Keypad %@";
 EnterFullscreen = "Enter Full Screen";
 ExitFullscreen = "Exit Full Screen";
 
+CBiosTemplate_f = "%1$@ (%2$@)";
