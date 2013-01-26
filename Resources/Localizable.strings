@@ -139,8 +139,8 @@ JoyRight = "Right";
 
 SureYouWantToDeleteTheMachine_f = "Are you sure you want to remove '%1$@'?";
 SureYouWantToRestartTheMachine = "Restart the system? You will lose all changes.";
-YouHaveSelectedSystem_f = "You have selected \"%1$@.\"";
-YouHaveNotSelectedAnySystem = "You have not selected a system.";
+YouHaveSelectedSystem_f = "You have selected \"%1$@\" (%2$@).";
+YouHaveNotSelectedAnySystem = "You have not selected a system, or the selected system is no longer available.";
 
 Yes = "Yes";
 No = "No";

@@ -28,6 +28,7 @@
 #import "NSString+CMExtensions.h"
 
 #import "CMKeyboardInput.h"
+#import "CMMachine.h"
 
 #import "MGScopeBar.h"
 #import "CMKeyCaptureView.h"
@@ -94,77 +95,6 @@
     
     [items removeAllObjects];
     [items addObjectsFromArray:sortedItems];
-}
-
-@end
-
-#pragma mark - Machine
-
-#define CMUnknownMachine   0
-#define CMMsxMachine       1
-#define CMMsx2Machine      2
-#define CMMsx2PlusMachine  3
-#define CMMsxTurboRMachine 4
-
-@interface CMMachine : NSObject
-{
-    NSInteger system;
-    NSString *_name;
-    NSString *_path;
-}
-
-@property (nonatomic, assign) NSInteger system;
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *path;
-
-@end
-
-@implementation CMMachine
-
-@synthesize path = _path;
-@synthesize name = _name;
-@synthesize system = _system;
-
-+ (CMMachine *)machineWithPath:(NSString *)path
-{
-    CMMachine *machine = [[CMMachine alloc] init];
-    
-    [machine setPath:path];
-    [machine setName:path];
-    [machine setSystem:CMUnknownMachine];
-    
-    NSRange occurrence = [path rangeOfString:@" - "];
-    if (occurrence.location != NSNotFound)
-    {
-        NSString *name = [path substringFromIndex:occurrence.location + occurrence.length];
-        NSString *system = [path substringToIndex:occurrence.location];
-        
-        if ([system isEqual:@"MSX"])
-            [machine setSystem:CMMsxMachine];
-        else if ([system isEqual:@"MSX2"])
-            [machine setSystem:CMMsx2Machine];
-        else if ([system isEqual:@"MSX2+"])
-            [machine setSystem:CMMsx2PlusMachine];
-        else if ([system isEqual:@"MSXturboR"])
-            [machine setSystem:CMMsxTurboRMachine];
-        
-        if ([path containsString:@"C-BIOS"])
-            name = [NSString stringWithFormat:CMLoc(@"CBiosTemplate_f"), name, system];
-        
-        [machine setName:name];
-    }
-    
-    return [machine autorelease];
-}
-
-- (BOOL)isEqual:(id)object
-{
-    if ([object isKindOfClass:[CMMachine class]])
-        return [[self path] isEqualToString:[object path]];
-    if ([object isKindOfClass:[NSString class]])
-        return [[self path] isEqualToString:object];
-    
-    return NO;
 }
 
 @end
@@ -317,11 +247,11 @@
 
 - (void)updateCurrentConfigurationInformation
 {
-    NSString *selectedConfigurationName = CMGetObjPref(@"machineConfiguration");
+    CMMachine *selected = [CMMachine machineWithPath:CMGetObjPref(@"machineConfiguration")];
     
-    if (selectedConfigurationName && [availableMachines containsObject:selectedConfigurationName])
+    if (selected && [availableMachines containsObject:selected])
         [activeSystemTextView setStringValue:[NSString stringWithFormat:CMLoc(@"YouHaveSelectedSystem_f"),
-                                              selectedConfigurationName]];
+                                              [selected name], [selected systemName]]];
     else
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
 }
@@ -919,7 +849,7 @@
     if ([columnIdentifer isEqualToString:@"isSelected"])
         return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
     else if ([columnIdentifer isEqualToString:@"name"])
-        return [machine name];
+        return machine;
     
     return nil;
 }

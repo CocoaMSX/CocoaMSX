@@ -270,6 +270,16 @@
 		E99734781298B4B500766C90 /* R800Dasm.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733621298B4B500766C90 /* R800Dasm.c */; };
 		E99734791298B4B500766C90 /* R800Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733641298B4B500766C90 /* R800Debug.c */; };
 		E997347A1298B4B500766C90 /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
+		FE17DBF116B3B9A7004ED68D /* CMMachineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */; };
+		FE17DBFB16B3BD1A004ED68D /* logo-msx.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF316B3BD1A004ED68D /* logo-msx.png */; };
+		FE17DBFC16B3BD1A004ED68D /* logo-msx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */; };
+		FE17DBFD16B3BD1A004ED68D /* logo-msx2.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF516B3BD1A004ED68D /* logo-msx2.png */; };
+		FE17DBFE16B3BD1A004ED68D /* logo-msx2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF616B3BD1A004ED68D /* logo-msx2@2x.png */; };
+		FE17DBFF16B3BD1A004ED68D /* logo-msx2p.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF716B3BD1A004ED68D /* logo-msx2p.png */; };
+		FE17DC0016B3BD1A004ED68D /* logo-msx2p@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF816B3BD1A004ED68D /* logo-msx2p@2x.png */; };
+		FE17DC0116B3BD1A004ED68D /* logo-turbor.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF916B3BD1A004ED68D /* logo-turbor.png */; };
+		FE17DC0216B3BD1A004ED68D /* logo-turbor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBFA16B3BD1A004ED68D /* logo-turbor@2x.png */; };
+		FE17DC0516B3CFAF004ED68D /* CMMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = FE17DC0416B3CFAF004ED68D /* CMMachine.m */; };
 		FE1A3631165623AC0083BA21 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FE1A3630165623AC0083BA21 /* icon.icns */; };
 		FE1C134F167DCF8900CE2B6B /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE1C134E167DCF8900CE2B6B /* About.xib */; };
 		FE1C1356167DD08E00CE2B6B /* CMAboutController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1C1355167DD08E00CE2B6B /* CMAboutController.m */; };
@@ -922,6 +932,18 @@
 		E99733651298B4B500766C90 /* R800Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R800Debug.h; sourceTree = "<group>"; };
 		E99733661298B4B500766C90 /* R800SaveState.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = R800SaveState.c; sourceTree = "<group>"; };
 		E99733671298B4B500766C90 /* R800SaveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R800SaveState.h; sourceTree = "<group>"; };
+		FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineCell.h; sourceTree = "<group>"; };
+		FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineCell.m; sourceTree = "<group>"; };
+		FE17DBF316B3BD1A004ED68D /* logo-msx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx.png"; sourceTree = "<group>"; };
+		FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx@2x.png"; sourceTree = "<group>"; };
+		FE17DBF516B3BD1A004ED68D /* logo-msx2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx2.png"; sourceTree = "<group>"; };
+		FE17DBF616B3BD1A004ED68D /* logo-msx2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx2@2x.png"; sourceTree = "<group>"; };
+		FE17DBF716B3BD1A004ED68D /* logo-msx2p.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx2p.png"; sourceTree = "<group>"; };
+		FE17DBF816B3BD1A004ED68D /* logo-msx2p@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx2p@2x.png"; sourceTree = "<group>"; };
+		FE17DBF916B3BD1A004ED68D /* logo-turbor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-turbor.png"; sourceTree = "<group>"; };
+		FE17DBFA16B3BD1A004ED68D /* logo-turbor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-turbor@2x.png"; sourceTree = "<group>"; };
+		FE17DC0316B3CFAF004ED68D /* CMMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachine.h; sourceTree = "<group>"; };
+		FE17DC0416B3CFAF004ED68D /* CMMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachine.m; sourceTree = "<group>"; };
 		FE1A3630165623AC0083BA21 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		FE1C134E167DCF8900CE2B6B /* About.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = About.xib; sourceTree = "<group>"; };
 		FE1C1354167DD08E00CE2B6B /* CMAboutController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMAboutController.h; sourceTree = "<group>"; };
@@ -1145,6 +1167,14 @@
 				FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */,
 				FEA4548C1679B65300AAECB7 /* DiskDocument.icns */,
 				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
+				FE17DBF316B3BD1A004ED68D /* logo-msx.png */,
+				FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */,
+				FE17DBF516B3BD1A004ED68D /* logo-msx2.png */,
+				FE17DBF616B3BD1A004ED68D /* logo-msx2@2x.png */,
+				FE17DBF716B3BD1A004ED68D /* logo-msx2p.png */,
+				FE17DBF816B3BD1A004ED68D /* logo-msx2p@2x.png */,
+				FE17DBF916B3BD1A004ED68D /* logo-turbor.png */,
+				FE17DBFA16B3BD1A004ED68D /* logo-turbor@2x.png */,
 				FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */,
 				FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */,
 				FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */,
@@ -1915,6 +1945,8 @@
 				FE88FF55169B9AC5004B483B /* CMKeyCaptureView.m */,
 				FEF40ED2160DB83B009170A9 /* CMMsxDisplayView.h */,
 				FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */,
+				FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */,
+				FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1949,6 +1981,8 @@
 				FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */,
 				6B1C25AA1672972F004DD618 /* CMKeyboardInput.h */,
 				6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */,
+				FE17DC0316B3CFAF004ED68D /* CMMachine.h */,
+				FE17DC0416B3CFAF004ED68D /* CMMachine.m */,
 				FE2E1961164085A000BCFD53 /* CMPreferences.h */,
 				FE2E1962164085A000BCFD53 /* CMPreferences.m */,
 				FE2E19681640F19900BCFD53 /* NSString+CMExtensions.h */,
@@ -2114,6 +2148,14 @@
 				FEA6277B16A0CAD70048C05C /* cbios.txt in Resources */,
 				FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */,
 				FE3D5E6716AE6EBA00898DF5 /* toolbar-computer@2x.png in Resources */,
+				FE17DBFB16B3BD1A004ED68D /* logo-msx.png in Resources */,
+				FE17DBFC16B3BD1A004ED68D /* logo-msx@2x.png in Resources */,
+				FE17DBFD16B3BD1A004ED68D /* logo-msx2.png in Resources */,
+				FE17DBFE16B3BD1A004ED68D /* logo-msx2@2x.png in Resources */,
+				FE17DBFF16B3BD1A004ED68D /* logo-msx2p.png in Resources */,
+				FE17DC0016B3BD1A004ED68D /* logo-msx2p@2x.png in Resources */,
+				FE17DC0116B3BD1A004ED68D /* logo-turbor.png in Resources */,
+				FE17DC0216B3BD1A004ED68D /* logo-turbor@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2417,6 +2459,8 @@
 				FE88FF58169B9AC5004B483B /* CMKeyCaptureView.m in Sources */,
 				FE88FF59169B9AC5004B483B /* CMKeyCaptureFieldCell.m in Sources */,
 				FE88FF5D169BAB8B004B483B /* CMHeaderRowCell.m in Sources */,
+				FE17DBF116B3B9A7004ED68D /* CMMachineCell.m in Sources */,
+				FE17DC0516B3CFAF004ED68D /* CMMachine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
