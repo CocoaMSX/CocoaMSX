@@ -39,6 +39,9 @@
     CMJoyPortDevice *_joystickPort1Selection;
     CMJoyPortDevice *_joystickPort2Selection;
     
+    NSInteger machineDisplayMode;
+    
+    IBOutlet NSButton *addMachineButton;
     IBOutlet NSButton *removeMachineButton;
     
     IBOutlet NSPopUpButton *joystickOneDevice;
@@ -50,7 +53,8 @@
     IBOutlet NSTabView *joystickOneDeviceTabView;
     IBOutlet NSTabView *joystickTwoDeviceTabView;
     
-    IBOutlet MGScopeBar *scopeBar;
+    IBOutlet MGScopeBar *keyboardScopeBar;
+    IBOutlet MGScopeBar *machineScopeBar;
     
     CMKeyCaptureView *keyCaptureView;
     
@@ -88,6 +92,8 @@
 @property (nonatomic, retain) NSMutableArray *joystickPortPeripherals;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort1Selection;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort2Selection;
+
+- (NSManagedObjectContext *)managedObjectContext;
 
 - (id)initWithEmulator:(CMEmulatorController *)emulator;
 

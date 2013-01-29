@@ -265,7 +265,7 @@
 				
 				// If this is a radio-mode group, select the first item automatically.
 				if (selMode == MGRadioSelectionMode) {
-					[self updateSelectedState:YES forItem:[identifiers objectAtIndex:0] inGroup:groupNum informDelegate:YES];
+					[self updateSelectedState:YES forItem:[identifiers objectAtIndex:0] inGroup:groupNum informDelegate:NO];
 				}
 			}
 			

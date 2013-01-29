@@ -71,20 +71,22 @@ static CMPreferences *preferences = nil;
 
 - (NSString *)appSupportDirectory
 {
+    return [[self appSupportUrl] path];
+}
+
+- (NSURL *)appSupportUrl
+{
     NSFileManager* fm = [NSFileManager defaultManager];
-    NSArray* possibleURLs = [fm URLsForDirectory:NSApplicationSupportDirectory
-                                       inDomains:NSUserDomainMask];
+    NSURL *appSupportUrl = [[fm URLsForDirectory:NSApplicationSupportDirectory
+                                       inDomains:NSUserDomainMask] lastObject];
     
-    if (possibleURLs.count < 1)
+    if (!appSupportUrl)
         return nil;
     
     NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
     NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:bundlePath];
     
-    NSURL *appSupportDir = [possibleURLs objectAtIndex:0];
-    NSURL *appDirectory = [appSupportDir URLByAppendingPathComponent:appName];
-    
-    return appDirectory.path;
+    return [appSupportUrl URLByAppendingPathComponent:appName];
 }
 
 - (NSString *)appSupportSubdirectoryForKey:(NSString *)preferenceKey

@@ -22,15 +22,19 @@
  */
 #import "CMPreferenceController.h"
 
+#import "CMAppDelegate.h"
 #import "CMEmulatorController.h"
 #import "CMCocoaJoystick.h"
 #import "CMPreferences.h"
 #import "NSString+CMExtensions.h"
 
+
+#import "MGScopeBar.h"
+#import "SBJson.h"
+
 #import "CMKeyboardInput.h"
 #import "CMMachine.h"
 
-#import "MGScopeBar.h"
 #import "CMKeyCaptureView.h"
 #import "CMHeaderRowCell.h"
 
@@ -38,6 +42,10 @@
 #include "JoystickPort.h"
 
 #pragma mark - KeyCategory
+
+#define CMShowInstalledMachines 1
+#define CMShowAvailableMachines 2
+#define CMShowAllMachines       (CMShowInstalledMachines | CMShowAvailableMachines)
 
 @interface CMKeyCategory : NSObject
 {
@@ -121,7 +129,8 @@
                              withLayout:(CMInputDeviceLayout *)layout;
 
 - (void)synchronizeSettings;
-- (NSString *)selectedConfigurationName;
+- (CMMachine *)machineWithId:(NSString *)machineId;
+- (CMMachine *)selectedMachine;
 - (void)toggleSystemSpecificButtons;
 - (void)updateCurrentConfigurationInformation;
 
@@ -219,14 +228,25 @@
     [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
     
     // Scope Bar
-    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
-    [scopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
+    [keyboardScopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
+    [keyboardScopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
     
     [self synchronizeSettings];
+    
+    machineDisplayMode = CMGetIntPref(@"machineDisplayMode");
+    [[NSUserDefaults standardUserDefaults] addObserver:self
+                                            forKeyPath:@"machineDisplayMode"
+                                               options:NSKeyValueObservingOptionNew
+                                               context:NULL];
+    
+    [machineScopeBar setSelected:YES forItem:@(machineDisplayMode) inGroup:0];
 }
 
 - (void)dealloc
 {
+    [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                               forKeyPath:@"machineDisplayMode"];
+    
     self.joystickPortPeripherals = nil;
     self.joystickPort1Selection = nil;
     self.joystickPort2Selection = nil;
@@ -245,15 +265,89 @@
 
 #pragma mark - Private Methods
 
+- (CMMachine *)machineWithId:(NSString *)machineId
+{
+    __block CMMachine *found = nil;
+    
+    [availableMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        if ([[obj machineId] isEqualToString:machineId])
+        {
+            found = obj;
+            *stop = YES;
+        }
+    }];
+    
+    return found;
+}
+
 - (void)updateCurrentConfigurationInformation
 {
-    CMMachine *selected = [CMMachine machineWithPath:CMGetObjPref(@"machineConfiguration")];
-    
-    if (selected && [availableMachines containsObject:selected])
+    CMMachine *selected = [self machineWithId:CMGetObjPref(@"machineConfiguration")];
+    if (selected)
         [activeSystemTextView setStringValue:[NSString stringWithFormat:CMLoc(@"YouHaveSelectedSystem_f"),
                                               [selected name], [selected systemName]]];
     else
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
+}
+
+// FIXME
+- (NSArray *)machinesAvailableForDownload:(NSError *)error
+{
+    // FIXME
+#define TIMEOUT_SECONDS 30
+    NSURL *url = [NSURL URLWithString:@"http://www.vik.cc/bluemsx/cocoamsx/downloads.json"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                                       timeoutInterval:TIMEOUT_SECONDS];
+    
+    [request setHTTPMethod:@"GET"];
+    //    [request setHTTPBody:[httpBody dataUsingEncoding:NSUTF8StringEncoding]];
+    //    [request setAllHTTPHeaderFields:allHeaders];
+    
+    NSURLResponse *response = nil;
+    NSError *netError = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request
+                                         returningResponse:&response
+                                                     error:&netError];
+    
+    if (!data)
+    {
+        if (error && netError)
+        {
+            // FIXME
+            //            *error = [XboxLiveParser errorWithCode:XBLPNetworkError
+            //                                           message:[netError localizedDescription]];
+        }
+        
+        // FIXME
+        //        return nil;
+    }
+    
+    NSString *content = [[[NSString alloc] initWithData:data
+                                               encoding:NSUTF8StringEncoding] autorelease];
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSDictionary *dict = [parser objectWithString:content];
+    
+    // FIXME
+    if (!dict) NSLog(@"error: %@", parser.error);
+    [parser release];
+    
+    NSArray *machines = [dict objectForKey:@"machines"];
+    NSMutableArray *remoteMachines = [NSMutableArray array];
+    
+    [machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
+                                                    machineId:[obj objectForKey:@"id"]
+                                                         name:[obj objectForKey:@"name"]
+                                                   systemName:[obj objectForKey:@"system"]] autorelease];
+        [machine setInstalled:NO];
+        [remoteMachines addObject:machine];
+    }];
+    
+    return remoteMachines;
 }
 
 - (void)synchronizeSettings
@@ -261,25 +355,39 @@
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
+    
     // Machine configurations
-    CMMachine *selectedMachine = [CMMachine machineWithPath:CMGetObjPref(@"machineConfiguration")];
+    CMMachine *selectedMachine = [[[self machineWithId:CMGetObjPref(@"machineConfiguration")] copy] autorelease];
     NSArray *foundConfigurations = [CMEmulatorController machineConfigurations];
     
-    [availableMachines removeAllObjects];
+    NSMutableArray *installedMachines = [NSMutableArray array];
     [foundConfigurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
-        [availableMachines addObject:[CMMachine machineWithPath:obj]];
-    }];
-    [availableMachines sortUsingComparator:^NSComparisonResult(id obj1, id obj2)
-    {
-        return [[obj1 name] localizedCaseInsensitiveCompare:[obj2 name]];
+        CMMachine *machine = [[[CMMachine alloc] initWithPath:obj] autorelease];
+        [machine setInstalled:YES];
+        [installedMachines addObject:machine];
     }];
     
-    // Selected machine is no longer available found - select closest
-    if (![availableMachines containsObject:selectedMachine])
+    NSMutableArray *remoteMachines = [NSMutableArray arrayWithArray:[self machinesAvailableForDownload:nil]];
+    [remoteMachines removeObjectsInArray:installedMachines];
+    [remoteMachines addObjectsFromArray:installedMachines];
+    
+    [availableMachines removeAllObjects];
+    [availableMachines addObjectsFromArray:remoteMachines];
+    
+    [availableMachines sortUsingComparator:^NSComparisonResult(CMMachine *obj1, CMMachine *obj2)
     {
-        __block CMMachine *machine = [availableMachines lastObject];
-        [availableMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+        if ([obj1 system] != [obj2 system])
+            return [obj1 system] - [obj2 system];
+        
+        return [[obj1 name] localizedCompare:[obj2 name]];
+    }];
+    
+    // Selected machine is no longer available - select closest
+    if (![installedMachines containsObject:selectedMachine])
+    {
+        __block CMMachine *machine = [installedMachines lastObject];
+        [installedMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
         {
             NSInteger comparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
             if (comparison == NSOrderedAscending || comparison == NSOrderedSame)
@@ -290,7 +398,7 @@
         }];
         
         if (machine)
-            CMSetObjPref(@"machineConfiguration", [machine path]);
+            CMSetObjPref(@"machineConfiguration", [machine machineId]);
     }
     
     [systemTableView reloadData];
@@ -450,21 +558,26 @@
     return layout;
 }
 
-- (NSString *)selectedConfigurationName
+- (CMMachine *)selectedMachine
 {
     NSInteger selectedRow = [systemTableView selectedRow];
     if (selectedRow < 0)
         return nil;
     
-    return [[availableMachines objectAtIndex:selectedRow] path];
+    return [availableMachines objectAtIndex:selectedRow];
 }
 
 - (void)toggleSystemSpecificButtons
 {
-    NSString *selectedConfigurationName = [self selectedConfigurationName];
-    BOOL isRemoveButtonEnabled = (selectedConfigurationName != nil)
-        && ([availableMachines count] > 1); // At least one machine must remain
+    CMMachine *selectedMachine = [self selectedMachine];
     
+    BOOL isRemoveButtonEnabled = selectedMachine
+        && [selectedMachine installed]
+        && [availableMachines count] > 1; // At least one machine must remain
+    BOOL isAddButtonEnabled = selectedMachine
+        && ![selectedMachine installed];
+    
+    [addMachineButton setEnabled:isAddButtonEnabled];
     [removeMachineButton setEnabled:isRemoveButtonEnabled];
 }
 
@@ -485,12 +598,12 @@
 
 - (void)removeMachineConfiguration:(id)sender
 {
-    NSString *selectedConfigurationName = [self selectedConfigurationName];
+    NSString *selectedMachineId = [[self selectedMachine] machineId];
     
-    if (selectedConfigurationName)
+    if (selectedMachineId)
     {
         NSString *message = [NSString stringWithFormat:CMLoc(@"SureYouWantToDeleteTheMachine_f"),
-                             selectedConfigurationName];
+                             selectedMachineId];
         NSAlert *alert = [NSAlert alertWithMessageText:message
                                          defaultButton:CMLoc(@"No")
                                        alternateButton:nil
@@ -596,11 +709,11 @@
     {
         if (returnCode == NSAlertOtherReturn)
         {
-            NSString *selectedConfigurationName = [self selectedConfigurationName];
-            if (selectedConfigurationName)
+            CMMachine *selectedMachine = [self selectedMachine];
+            if (selectedMachine)
             {
                 // FIXME: show dialog if error
-                [CMEmulatorController removeMachineConfiguration:selectedConfigurationName];
+                [CMEmulatorController removeMachineConfiguration:[selectedMachine path]];
             }
         }
     }
@@ -644,11 +757,11 @@
 
 - (void)showMachinesInFinder:(id)sender
 {
-    NSString *selectedConfigurationName = [self selectedConfigurationName];
+    CMMachine *selectedMachine = [self selectedMachine];
     NSString *finderPath;
     
-    if (selectedConfigurationName)
-        finderPath = [CMEmulatorController pathForMachineConfigurationNamed:selectedConfigurationName];
+    if (selectedMachine)
+        finderPath = [CMEmulatorController pathForMachineConfigurationNamed:[selectedMachine machineId]];
     else
         finderPath = [[CMPreferences preferences] machineDirectory];
     
@@ -662,6 +775,11 @@
                         change:(NSDictionary *)change
                        context:(void *)context
 {
+    if ([keyPath isEqualToString:@"machineDisplayMode"])
+    {
+        machineDisplayMode = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+        [systemTableView reloadData];
+    }
 }
 
 #pragma mark - NSWindowController
@@ -847,7 +965,9 @@
     
     NSString *columnIdentifer = [aTableColumn identifier];
     if ([columnIdentifer isEqualToString:@"isSelected"])
+    {
         return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
+    }
     else if ([columnIdentifer isEqualToString:@"name"])
         return machine;
     
@@ -870,6 +990,15 @@
 
 #pragma mark - NSTableViewDelegate
 
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    if ([[aTableColumn identifier] isEqualToString:@"isSelected"])
+    {
+        CMMachine *machine = [availableMachines objectAtIndex:rowIndex];
+        [aCell setEnabled:[machine installed]];
+    }
+}
+
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
     [self toggleSystemSpecificButtons];
@@ -879,33 +1008,48 @@
 
 - (int)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar
 {
-    return 2;
+    if (theScopeBar == keyboardScopeBar)
+        return 2;
+    
+    return 1;
 }
 
 - (NSArray *)scopeBar:(MGScopeBar *)theScopeBar itemIdentifiersForGroup:(int)groupNumber
 {
-    if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+    if (theScopeBar == keyboardScopeBar)
     {
-        return [NSArray arrayWithObjects:
-                CMMakeNumber(CMKeyShiftStateNormal),
-                CMMakeNumber(CMKeyShiftStateShifted),
-                
-                nil];
+        if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+        {
+            return [NSArray arrayWithObjects:
+                    CMMakeNumber(CMKeyShiftStateNormal),
+                    CMMakeNumber(CMKeyShiftStateShifted),
+                    
+                    nil];
+        }
+        else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+        {
+            return [NSArray arrayWithObjects:
+                    CMMakeNumber(CMKeyLayoutArabic),
+                    CMMakeNumber(CMKeyLayoutBrazilian),
+                    CMMakeNumber(CMKeyLayoutEstonian),
+                    CMMakeNumber(CMKeyLayoutEuropean),
+                    CMMakeNumber(CMKeyLayoutFrench),
+                    CMMakeNumber(CMKeyLayoutGerman),
+                    CMMakeNumber(CMKeyLayoutJapanese),
+                    CMMakeNumber(CMKeyLayoutKorean),
+                    CMMakeNumber(CMKeyLayoutRussian),
+                    CMMakeNumber(CMKeyLayoutSpanish),
+                    CMMakeNumber(CMKeyLayoutSwedish),
+                    
+                    nil];
+        }
     }
-    else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+    else if (theScopeBar == machineScopeBar)
     {
         return [NSArray arrayWithObjects:
-                CMMakeNumber(CMKeyLayoutArabic),
-                CMMakeNumber(CMKeyLayoutBrazilian),
-                CMMakeNumber(CMKeyLayoutEstonian),
-                CMMakeNumber(CMKeyLayoutEuropean),
-                CMMakeNumber(CMKeyLayoutFrench),
-                CMMakeNumber(CMKeyLayoutGerman),
-                CMMakeNumber(CMKeyLayoutJapanese),
-                CMMakeNumber(CMKeyLayoutKorean),
-                CMMakeNumber(CMKeyLayoutRussian),
-                CMMakeNumber(CMKeyLayoutSpanish),
-                CMMakeNumber(CMKeyLayoutSwedish),
+                @CMShowAllMachines,
+                @CMShowInstalledMachines,
+                @CMShowAvailableMachines,
                 
                 nil];
     }
@@ -915,8 +1059,11 @@
 
 - (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber // return nil or an empty string for no label.
 {
-    if (groupNumber == SCOPEBAR_GROUP_REGIONS)
-        return CMLoc(@"KeyLayoutRegion");
+    if (theScopeBar == keyboardScopeBar)
+    {
+        if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+            return CMLoc(@"KeyLayoutRegion");
+    }
     
     return nil;
 }
@@ -928,41 +1075,55 @@
 
 - (NSString *)scopeBar:(MGScopeBar *)theScopeBar titleOfItem:(id)identifier inGroup:(int)groupNumber
 {
-    if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+    if (theScopeBar == keyboardScopeBar)
     {
-        NSNumber *shiftState = identifier;
-        
-        if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateNormal)])
-            return CMLoc(@"KeyStateNormal");
-        if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateShifted)])
-            return CMLoc(@"KeyStateShifted");
+        if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+        {
+            NSNumber *shiftState = identifier;
+            
+            if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateNormal)])
+                return CMLoc(@"KeyStateNormal");
+            if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateShifted)])
+                return CMLoc(@"KeyStateShifted");
+        }
+        else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+        {
+            NSNumber *layoutId = identifier;
+            
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutArabic)])
+                return CMLoc(@"MsxKeyLayoutArabic");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutBrazilian)])
+                return CMLoc(@"MsxKeyLayoutBrazilian");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEstonian)])
+                return CMLoc(@"MsxKeyLayoutEstonian");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEuropean)])
+                return CMLoc(@"MsxKeyLayoutEuropean");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutFrench)])
+                return CMLoc(@"MsxKeyLayoutFrench");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutGerman)])
+                return CMLoc(@"MsxKeyLayoutGerman");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutJapanese)])
+                return CMLoc(@"MsxKeyLayoutJapanese");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutKorean)])
+                return CMLoc(@"MsxKeyLayoutKorean");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutRussian)])
+                return CMLoc(@"MsxKeyLayoutRussian");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSpanish)])
+                return CMLoc(@"MsxKeyLayoutSpanish");
+            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSwedish)])
+                return CMLoc(@"MsxKeyLayoutSwedish");
+        }
     }
-    else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+    else if (theScopeBar == machineScopeBar)
     {
-        NSNumber *layoutId = identifier;
+        NSInteger displayMode = [identifier integerValue];
         
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutArabic)])
-            return CMLoc(@"MsxKeyLayoutArabic");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutBrazilian)])
-            return CMLoc(@"MsxKeyLayoutBrazilian");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEstonian)])
-            return CMLoc(@"MsxKeyLayoutEstonian");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEuropean)])
-            return CMLoc(@"MsxKeyLayoutEuropean");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutFrench)])
-            return CMLoc(@"MsxKeyLayoutFrench");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutGerman)])
-            return CMLoc(@"MsxKeyLayoutGerman");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutJapanese)])
-            return CMLoc(@"MsxKeyLayoutJapanese");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutKorean)])
-            return CMLoc(@"MsxKeyLayoutKorean");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutRussian)])
-            return CMLoc(@"MsxKeyLayoutRussian");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSpanish)])
-            return CMLoc(@"MsxKeyLayoutSpanish");
-        if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSwedish)])
-            return CMLoc(@"MsxKeyLayoutSwedish");
+        if (displayMode == CMShowInstalledMachines)
+            return CMLoc(@"Installed");
+        else if (displayMode == CMShowAvailableMachines)
+            return CMLoc(@"Available");
+        else if (displayMode == CMShowAllMachines)
+            return CMLoc(@"All");
     }
     
     return nil;
@@ -970,20 +1131,32 @@
 
 - (void)scopeBar:(MGScopeBar *)theScopeBar selectedStateChanged:(BOOL)selected forItem:(id)identifier inGroup:(int)groupNumber
 {
-    if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+    if (theScopeBar == keyboardScopeBar)
     {
-        NSNumber *shiftState = identifier;
-        selectedKeyboardShiftState = [shiftState integerValue];
-        
-        [keyboardLayoutEditor reloadData];
+        if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
+        {
+            NSNumber *shiftState = identifier;
+            selectedKeyboardShiftState = [shiftState integerValue];
+            
+            [keyboardLayoutEditor reloadData];
+        }
+        else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+        {
+            NSNumber *layoutId = identifier;
+            selectedKeyboardRegion = [layoutId integerValue];
+            
+            [keyboardLayoutEditor reloadData];
+        }
     }
-    else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
+    else if (theScopeBar == machineScopeBar)
     {
-        NSNumber *layoutId = identifier;
-        selectedKeyboardRegion = [layoutId integerValue];
-        
-        [keyboardLayoutEditor reloadData];
+        CMSetIntPref(@"machineDisplayMode", [identifier integerValue]);
     }
+}
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    return [[NSApp delegate] managedObjectContext];
 }
 
 @end

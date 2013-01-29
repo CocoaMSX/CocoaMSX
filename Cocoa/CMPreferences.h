@@ -43,7 +43,9 @@
 - (CMInputDeviceLayout *)defaultJoystickOneLayout;
 - (CMInputDeviceLayout *)defaultJoystickTwoLayout;
 
+- (NSURL *)appSupportUrl;
 - (NSString *)appSupportDirectory;
+
 - (NSString *)audioCaptureDirectory;
 - (void)setAudioCaptureDirectory:(NSString *)directory;
 - (NSString *)videoCaptureDirectory;

@@ -26,10 +26,12 @@
 
 @interface CMAppDelegate : NSObject <NSApplicationDelegate>
 {
-    CMEmulatorController *_emulator;
-    
     BOOL applicationDidLoad;
 }
+
+@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
 

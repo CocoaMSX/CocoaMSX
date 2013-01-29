@@ -30,7 +30,13 @@
 {
     [controlView lockFocus];
     
-    NSColor *textColor = [self isHighlighted] ? [NSColor whiteColor] : [NSColor controlTextColor];
+    NSColor *textColor;
+    if ([self isHighlighted])
+        textColor = [NSColor whiteColor];
+    else
+        textColor = ![machine installed]
+            ? [NSColor disabledControlTextColor] : [NSColor controlTextColor];
+    
     NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                     [NSFont systemFontOfSize:[NSFont systemFontSize]], NSFontAttributeName,
                                     textColor, NSForegroundColorAttributeName,

@@ -35,69 +35,123 @@ NSString *const CMMsx2Machine      = @"MSX 2";
 NSString *const CMMsx2PMachine     = @"MSX 2+";
 NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 
+@interface CMMachine ()
+
++ (NSInteger)systemNamed:(NSString *)systemName;
+
+@end
+
 @implementation CMMachine
 
 @synthesize path = _path;
 @synthesize name = _name;
+@synthesize machineId = _machineId;
+@synthesize installed = _installed;
+@synthesize system = _system;
 
-+ (CMMachine *)machineWithPath:(NSString *)path
+- (id)init
 {
-    CMMachine *machine = [[CMMachine alloc] init];
-    
-    [machine setPath:path];
-    [machine setName:path];
-    machine->system = CMUnknown;
-    
-    NSRange occurrence = [path rangeOfString:@" - "];
-    if (occurrence.location != NSNotFound)
+    if ((self = [super init]))
     {
-        NSString *name = [path substringFromIndex:occurrence.location + occurrence.length];
-        NSString *system = [path substringToIndex:occurrence.location];
-        
-        if ([system isEqual:@"MSX"])
-            machine->system = CMMsx;
-        else if ([system isEqual:@"MSX2"])
-            machine->system = CMMsx2;
-        else if ([system isEqual:@"MSX2+"])
-            machine->system = CMMsx2Plus;
-        else if ([system isEqual:@"MSXturboR"])
-            machine->system = CMMsxTurboR;
-        
-        [machine setName:name];
+        _name = nil;
+        _path = nil;
+        _machineId = nil;
+        _installed = NO;
+        _system = CMUnknown;
     }
     
-    return [machine autorelease];
+    return self;
+}
+- (id)initWithPath:(NSString *)path
+{
+    if ((self = [self init]))
+    {
+        NSString *name = path;
+        NSString *machineId = path;
+        NSString *systemName = nil;
+        
+        NSRange occurrence = [path rangeOfString:@" - "];
+        if (occurrence.location != NSNotFound)
+        {
+            name = [path substringFromIndex:occurrence.location + occurrence.length];
+            systemName = [path substringToIndex:occurrence.location];
+        }
+        
+        _path = [path copy];
+        _machineId = [machineId copy];
+        _name = [name copy];
+        _installed = NO;
+        _system = [CMMachine systemNamed:systemName];
+    }
+    
+    return self;
+}
+
+- (id)initWithPath:(NSString *)path
+         machineId:(NSString *)machineId
+              name:(NSString *)name
+        systemName:(NSString *)systemName
+{
+    if ((self = [self init]))
+    {
+        _path = [path copy];
+        _machineId = [machineId copy];
+        _name = [name copy];
+        _installed = NO;
+        _system = [CMMachine systemNamed:systemName];
+    }
+    
+    return self;
 }
 
 - (void)dealloc
 {
-    [_path release];
-    [_name release];
+    [self setPath:nil];
+    [self setName:nil];
+    [self setMachineId:nil];
     
     [super dealloc];
 }
 
++ (NSInteger)systemNamed:(NSString *)systemName
+{
+    if ([systemName isEqual:@"MSX"])
+        return CMMsx;
+    else if ([systemName isEqual:@"MSX2"])
+        return CMMsx2;
+    else if ([systemName isEqual:@"MSX2+"])
+        return CMMsx2Plus;
+    else if ([systemName isEqual:@"MSXturboR"])
+        return CMMsxTurboR;
+    
+    return CMUnknown;
+}
+
 - (NSString *)systemName
 {
-    if (system == CMMsx)
+    if (_system == CMMsx)
         return CMMsxMachine;
-    if (system == CMMsx2)
+    if (_system == CMMsx2)
         return CMMsx2Machine;
-    if (system == CMMsx2Plus)
+    if (_system == CMMsx2Plus)
         return CMMsx2PMachine;
-    if (system == CMMsxTurboR)
+    if (_system == CMMsxTurboR)
         return CMMsxTurboRMachine;
     
     return nil;
 }
 
+- (NSUInteger)hash
+{
+    return [[self machineId] hash];
+}
 
 - (BOOL)isEqual:(id)object
 {
     if ([object isKindOfClass:[CMMachine class]])
-        return [[self path] isEqualToString:[object path]];
+        return [[self machineId] isEqualToString:[object machineId]];
     if ([object isKindOfClass:[NSString class]])
-        return [[self path] isEqualToString:object];
+        return [[self machineId] isEqualToString:object];
     
     return NO;
 }
@@ -108,9 +162,11 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 {
     CMMachine *copy = [[self class] allocWithZone:zone];
     
-    copy->_path = [_path retain];
-    copy->_name = [_name retain];
-    copy->system = system;
+    [copy setPath:[self path]];
+    [copy setName:[self name]];
+    [copy setMachineId:[self machineId]];
+    [copy setInstalled:[self installed]];
+    [copy setSystem:[self system]];
     
     return copy;
 }
