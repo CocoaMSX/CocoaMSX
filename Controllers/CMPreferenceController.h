@@ -76,7 +76,9 @@
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
+    NSMutableArray *installedMachines;
     NSMutableArray *availableMachines;
+    NSMutableArray *allMachines;
     
     NSArray *virtualEmulationSpeedRange;
     
@@ -92,8 +94,6 @@
 @property (nonatomic, retain) NSMutableArray *joystickPortPeripherals;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort1Selection;
 @property (nonatomic, retain) CMJoyPortDevice *joystickPort2Selection;
-
-- (NSManagedObjectContext *)managedObjectContext;
 
 - (id)initWithEmulator:(CMEmulatorController *)emulator;
 

@@ -310,7 +310,6 @@
 		FE3754E016B638DB005360CC /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D416B638DB005360CC /* SBJsonStreamWriterAccumulator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		FE3754E116B638DB005360CC /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D616B638DB005360CC /* SBJsonStreamWriterState.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		FE3754E216B638DB005360CC /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D816B638DB005360CC /* SBJsonWriter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE37551416B7A2AD005360CC /* CocoaMsx.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FE37551216B7A2AD005360CC /* CocoaMsx.xcdatamodeld */; };
 		FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */; };
 		FE3D5E6716AE6EBA00898DF5 /* toolbar-computer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */; };
 		FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE42836215FE857400ED7CB9 /* Emulator.xib */; };
@@ -1000,7 +999,6 @@
 		FE3754D616B638DB005360CC /* SBJsonStreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriterState.m; sourceTree = "<group>"; };
 		FE3754D716B638DB005360CC /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		FE3754D816B638DB005360CC /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
-		FE37551316B7A2AD005360CC /* CocoaMsx.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CocoaMsx.xcdatamodel; sourceTree = "<group>"; };
 		FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-computer.png"; sourceTree = "<group>"; };
 		FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-computer@2x.png"; sourceTree = "<group>"; };
 		FE42836215FE857400ED7CB9 /* Emulator.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Emulator.xib; sourceTree = "<group>"; };
@@ -1168,7 +1166,6 @@
 				FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */,
 				FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */,
 				6B36CC441644806B00B5FDB7 /* MainMenu.xib */,
-				FE37551216B7A2AD005360CC /* CocoaMsx.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2534,7 +2531,6 @@
 				FE3754E016B638DB005360CC /* SBJsonStreamWriterAccumulator.m in Sources */,
 				FE3754E116B638DB005360CC /* SBJsonStreamWriterState.m in Sources */,
 				FE3754E216B638DB005360CC /* SBJsonWriter.m in Sources */,
-				FE37551416B7A2AD005360CC /* CocoaMsx.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2703,19 +2699,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		FE37551216B7A2AD005360CC /* CocoaMsx.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				FE37551316B7A2AD005360CC /* CocoaMsx.xcdatamodel */,
-			);
-			currentVersion = FE37551316B7A2AD005360CC /* CocoaMsx.xcdatamodel */;
-			path = CocoaMsx.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }

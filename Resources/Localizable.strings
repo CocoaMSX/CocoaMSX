@@ -190,5 +190,6 @@ ExitFullscreen = "Exit Full Screen";
 CBiosTemplate_f = "%1$@ (%2$@)";
 
 Installed = "Installed";
+NotInstalled = "Not Installed";
 Available = "Available";
 All = "All";

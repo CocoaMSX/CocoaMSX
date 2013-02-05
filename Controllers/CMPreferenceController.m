@@ -131,6 +131,7 @@
 - (void)synchronizeSettings;
 - (CMMachine *)machineWithId:(NSString *)machineId;
 - (CMMachine *)selectedMachine;
+- (NSArray *)machinesCurrentlyVisible;
 - (void)toggleSystemSpecificButtons;
 - (void)updateCurrentConfigurationInformation;
 
@@ -159,6 +160,8 @@
         keyCategories = [[NSMutableArray alloc] init];
         joystickOneCategories = [[NSMutableArray alloc] init];
         joystickTwoCategories = [[NSMutableArray alloc] init];
+        allMachines = [[NSMutableArray alloc] init];
+        installedMachines = [[NSMutableArray alloc] init];
         availableMachines = [[NSMutableArray alloc] init];
         
         // Set the virtual emulation speed range
@@ -256,6 +259,8 @@
     [keyCategories release];
     [joystickOneCategories release];
     [joystickTwoCategories release];
+    [allMachines release];
+    [installedMachines release];
     [availableMachines release];
     
     [virtualEmulationSpeedRange release];
@@ -265,11 +270,21 @@
 
 #pragma mark - Private Methods
 
+- (NSArray *)machinesCurrentlyVisible
+{
+    if (machineDisplayMode == CMShowAvailableMachines)
+        return availableMachines;
+    else if (machineDisplayMode == CMShowInstalledMachines)
+        return installedMachines;
+    else
+        return allMachines;
+}
+
 - (CMMachine *)machineWithId:(NSString *)machineId
 {
     __block CMMachine *found = nil;
     
-    [availableMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [allMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         if ([[obj machineId] isEqualToString:machineId])
         {
@@ -357,10 +372,12 @@
 #endif
     
     // Machine configurations
-    CMMachine *selectedMachine = [[[self machineWithId:CMGetObjPref(@"machineConfiguration")] copy] autorelease];
+//    CMMachine *selectedMachine = [[[self machineWithId:CMGetObjPref(@"machineConfiguration")] copy] autorelease];
     NSArray *foundConfigurations = [CMEmulatorController machineConfigurations];
     
-    NSMutableArray *installedMachines = [NSMutableArray array];
+    [installedMachines removeAllObjects];
+    [availableMachines removeAllObjects];
+    
     [foundConfigurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         CMMachine *machine = [[[CMMachine alloc] initWithPath:obj] autorelease];
@@ -368,38 +385,46 @@
         [installedMachines addObject:machine];
     }];
     
-    NSMutableArray *remoteMachines = [NSMutableArray arrayWithArray:[self machinesAvailableForDownload:nil]];
-    [remoteMachines removeObjectsInArray:installedMachines];
-    [remoteMachines addObjectsFromArray:installedMachines];
+    [availableMachines addObjectsFromArray:[self machinesAvailableForDownload:nil]];
+    [availableMachines removeObjectsInArray:installedMachines];
     
-    [availableMachines removeAllObjects];
-    [availableMachines addObjectsFromArray:remoteMachines];
+    [allMachines removeAllObjects];
+    [allMachines addObjectsFromArray:availableMachines];
+    [allMachines addObjectsFromArray:installedMachines];
     
-    [availableMachines sortUsingComparator:^NSComparisonResult(CMMachine *obj1, CMMachine *obj2)
+    NSArray *arraysToSort = [NSArray arrayWithObjects:installedMachines, availableMachines, allMachines, nil];
+    [arraysToSort enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
-        if ([obj1 system] != [obj2 system])
-            return [obj1 system] - [obj2 system];
-        
-        return [[obj1 name] localizedCompare:[obj2 name]];
+        [obj sortUsingComparator:^NSComparisonResult(CMMachine *obj1, CMMachine *obj2)
+         {
+             if ([obj1 installed] != [obj2 installed])
+                 return [obj2 installed] - [obj1 installed];
+             
+             if ([obj1 system] != [obj2 system])
+                 return [obj1 system] - [obj2 system];
+             
+             return [[obj1 name] localizedCompare:[obj2 name]];
+         }];
     }];
     
-    // Selected machine is no longer available - select closest
-    if (![installedMachines containsObject:selectedMachine])
-    {
-        __block CMMachine *machine = [installedMachines lastObject];
-        [installedMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-        {
-            NSInteger comparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
-            if (comparison == NSOrderedAscending || comparison == NSOrderedSame)
-            {
-                machine = obj;
-                *stop = YES;
-            }
-        }];
-        
-        if (machine)
-            CMSetObjPref(@"machineConfiguration", [machine machineId]);
-    }
+    // FIXME
+//    // Selected machine is no longer available - select closest
+//    if (![installedMachines containsObject:selectedMachine])
+//    {
+//        __block CMMachine *machine = [installedMachines lastObject];
+//        [installedMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+//        {
+//            NSInteger comparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
+//            if (comparison == NSOrderedAscending || comparison == NSOrderedSame)
+//            {
+//                machine = obj;
+//                *stop = YES;
+//            }
+//        }];
+//        
+//        if (machine)
+//            CMSetObjPref(@"machineConfiguration", [machine machineId]);
+//    }
     
     [systemTableView reloadData];
     
@@ -561,10 +586,12 @@
 - (CMMachine *)selectedMachine
 {
     NSInteger selectedRow = [systemTableView selectedRow];
-    if (selectedRow < 0)
-        return nil;
+    CMMachine *machine = nil;
     
-    return [availableMachines objectAtIndex:selectedRow];
+    if (selectedRow >= 0)
+        machine = [[self machinesCurrentlyVisible] objectAtIndex:selectedRow];
+    
+    return machine;
 }
 
 - (void)toggleSystemSpecificButtons
@@ -573,7 +600,7 @@
     
     BOOL isRemoveButtonEnabled = selectedMachine
         && [selectedMachine installed]
-        && [availableMachines count] > 1; // At least one machine must remain
+        && [allMachines count] > 1; // At least one machine must remain
     BOOL isAddButtonEnabled = selectedMachine
         && ![selectedMachine installed];
     
@@ -779,6 +806,7 @@
     {
         machineDisplayMode = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
         [systemTableView reloadData];
+        [self toggleSystemSpecificButtons];
     }
 }
 
@@ -956,18 +984,16 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return [availableMachines count];
+    return [[self machinesCurrentlyVisible] count];
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    CMMachine *machine = [availableMachines objectAtIndex:rowIndex];
-    
+    CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
     NSString *columnIdentifer = [aTableColumn identifier];
+    
     if ([columnIdentifer isEqualToString:@"isSelected"])
-    {
         return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
-    }
     else if ([columnIdentifer isEqualToString:@"name"])
         return machine;
     
@@ -976,16 +1002,17 @@
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    CMMachine *machine = [availableMachines objectAtIndex:row];
-    
     NSString *columnIdentifer = [tableColumn identifier];
     if ([columnIdentifer isEqualToString:@"isSelected"])
     {
+        CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:row];
+        
         CMSetObjPref(@"machineConfiguration", [machine path]);
         [self updateCurrentConfigurationInformation];
+        
+        // This is so that the radio buttons can be deselected
+        [tableView reloadData];
     }
-    
-    [tableView reloadData];
 }
 
 #pragma mark - NSTableViewDelegate
@@ -994,7 +1021,7 @@
 {
     if ([[aTableColumn identifier] isEqualToString:@"isSelected"])
     {
-        CMMachine *machine = [availableMachines objectAtIndex:rowIndex];
+        CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
         [aCell setEnabled:[machine installed]];
     }
 }
@@ -1121,7 +1148,7 @@
         if (displayMode == CMShowInstalledMachines)
             return CMLoc(@"Installed");
         else if (displayMode == CMShowAvailableMachines)
-            return CMLoc(@"Available");
+            return CMLoc(@"NotInstalled");
         else if (displayMode == CMShowAllMachines)
             return CMLoc(@"All");
     }
@@ -1152,11 +1179,6 @@
     {
         CMSetIntPref(@"machineDisplayMode", [identifier integerValue]);
     }
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    return [[NSApp delegate] managedObjectContext];
 }
 
 @end
