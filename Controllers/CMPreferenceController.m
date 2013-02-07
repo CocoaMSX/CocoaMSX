@@ -352,13 +352,18 @@
     NSArray *machines = [dict objectForKey:@"machines"];
     NSMutableArray *remoteMachines = [NSMutableArray array];
     
+    NSURL *downloadRoot = [url URLByDeletingLastPathComponent];
+    
     [machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
                                                     machineId:[obj objectForKey:@"id"]
                                                          name:[obj objectForKey:@"name"]
                                                    systemName:[obj objectForKey:@"system"]] autorelease];
+        
         [machine setInstalled:NO];
+        [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
+        
         [remoteMachines addObject:machine];
     }];
     
@@ -622,6 +627,16 @@
 }
 
 #pragma mark - Actions
+
+- (void)installMachineConfiguration:(id)sender
+{
+    CMMachine *selectedMachine = [self selectedMachine];
+    
+    if (selectedMachine && ![selectedMachine installed])
+    {
+        NSLog(@"Clicked: %@", [selectedMachine machineUrl]);
+    }
+}
 
 - (void)removeMachineConfiguration:(id)sender
 {

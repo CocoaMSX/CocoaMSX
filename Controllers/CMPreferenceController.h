@@ -105,6 +105,7 @@
 - (IBAction)revertJoystickTwoClicked:(id)sender;
 
 - (IBAction)showMachinesInFinder:(id)sender;
+- (IBAction)installMachineConfiguration:(id)sender;
 - (IBAction)removeMachineConfiguration:(id)sender;
 
 - (IBAction)performColdRebootClicked:(id)sender;

@@ -46,6 +46,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 @synthesize path = _path;
 @synthesize name = _name;
 @synthesize machineId = _machineId;
+@synthesize machineUrl = _machineUrl;
 @synthesize installed = _installed;
 @synthesize system = _system;
 
@@ -56,6 +57,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _name = nil;
         _path = nil;
         _machineId = nil;
+        _machineUrl = nil;
         _installed = NO;
         _system = CMUnknown;
     }
@@ -109,6 +111,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [self setPath:nil];
     [self setName:nil];
     [self setMachineId:nil];
+    [self setMachineUrl:nil];
     
     [super dealloc];
 }
