@@ -23,6 +23,7 @@
 #import "CMMachine.h"
 
 #import "NSString+CMExtensions.h"
+#import "CMPreferences.h"
 
 #define CMUnknown   0
 #define CMMsx       1
@@ -64,6 +65,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     
     return self;
 }
+
 - (id)initWithPath:(NSString *)path
 {
     if ((self = [self init]))
@@ -159,17 +161,54 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     return NO;
 }
 
+- (NSString *)downloadPath
+{
+    if (![self path])
+        return nil;
+    
+    CMPreferences *prefs = [CMPreferences preferences];
+    return [[prefs machineDirectory] stringByAppendingPathComponent:[[self machineUrl] lastPathComponent]];
+}
+
+#pragma mark - NSCoding
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [self init]))
+    {
+        _name = [[aDecoder decodeObjectForKey:@"name"] retain];
+        _path = [[aDecoder decodeObjectForKey:@"path"] retain];
+        _machineId = [[aDecoder decodeObjectForKey:@"machineId"] retain];
+        _machineUrl = [[aDecoder decodeObjectForKey:@"machineUrl"] retain];
+        _installed = [aDecoder decodeBoolForKey:@"installed"];
+        _system = [aDecoder decodeIntegerForKey:@"system"];
+    }
+    
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:_name forKey:@"name"];
+    [aCoder encodeObject:_path forKey:@"path"];
+    [aCoder encodeObject:_machineId forKey:@"machineId"];
+    [aCoder encodeObject:_machineUrl forKey:@"machineUrl"];
+    [aCoder encodeBool:_installed forKey:@"installed"];
+    [aCoder encodeInteger:_system forKey:@"system"];
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {
     CMMachine *copy = [[self class] allocWithZone:zone];
     
-    [copy setPath:[self path]];
-    [copy setName:[self name]];
-    [copy setMachineId:[self machineId]];
-    [copy setInstalled:[self installed]];
-    [copy setSystem:[self system]];
+    [copy setName:_name];
+    [copy setPath:_path];
+    [copy setMachineId:_machineId];
+    [copy setMachineUrl:_machineUrl];
+    [copy setInstalled:_installed];
+    [copy setSystem:_system];
     
     return copy;
 }

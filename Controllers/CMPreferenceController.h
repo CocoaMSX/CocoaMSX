@@ -77,6 +77,7 @@
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
     NSMutableArray *installedMachines;
+    NSMutableArray *remoteMachines;
     NSMutableArray *availableMachines;
     NSMutableArray *allMachines;
     

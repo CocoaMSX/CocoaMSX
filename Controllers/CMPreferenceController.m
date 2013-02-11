@@ -115,6 +115,18 @@
 #define SCOPEBAR_GROUP_SHIFTED 0
 #define SCOPEBAR_GROUP_REGIONS 1
 
+#define DOWNLOAD_TIMEOUT_SECONDS 10
+
+#define MACHINE_FEED_EXPIRATION_HOURS 24
+
+#define CMErrorDownloading    100
+#define CMErrorWriting        101
+#define CMErrorExecutingUnzip 102
+#define CMErrorUnzipping      103
+#define CMErrorDeleting       104
+#define CMErrorVerifyingHash  105
+#define CMErrorParsingJson    106
+
 @interface CMPreferenceController ()
 
 - (void)sliderValueChanged:(id)sender;
@@ -128,6 +140,9 @@
 - (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
                              withLayout:(CMInputDeviceLayout *)layout;
 
+- (NSArray *)machinesAvailableForDownload:(NSError **)error;
+- (BOOL)downloadAndInstallMachine:(CMMachine *)machine error:(NSError **)error;
+- (void)synchronizeMachines;
 - (void)synchronizeSettings;
 - (CMMachine *)machineWithId:(NSString *)machineId;
 - (CMMachine *)selectedMachine;
@@ -163,6 +178,7 @@
         allMachines = [[NSMutableArray alloc] init];
         installedMachines = [[NSMutableArray alloc] init];
         availableMachines = [[NSMutableArray alloc] init];
+        remoteMachines = [[NSMutableArray alloc] init];
         
         // Set the virtual emulation speed range
         virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:
@@ -262,6 +278,7 @@
     [allMachines release];
     [installedMachines release];
     [availableMachines release];
+    [remoteMachines release];
     
     [virtualEmulationSpeedRange release];
     
@@ -306,19 +323,48 @@
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
 }
 
-// FIXME
-- (NSArray *)machinesAvailableForDownload:(NSError *)error
+- (NSArray *)machinesAvailableForDownload:(NSError **)error
 {
-    // FIXME
-#define TIMEOUT_SECONDS 30
-    NSURL *url = [NSURL URLWithString:@"http://www.vik.cc/bluemsx/cocoamsx/downloads.json"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
+    // FIXME: make async
+    
+    NSDate *feedLastLoaded = CMGetObjPref(@"machineFeedLastLoaded");
+    if (!feedLastLoaded)
+        feedLastLoaded = [NSDate distantPast];
+    
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
+    [components setHour:-MACHINE_FEED_EXPIRATION_HOURS];
+    
+    NSDate *feedFreshnessThreshold = [cal dateByAddingComponents:components
+                                                          toDate:[NSDate date]
+                                                         options:0];
+    
+#if DEBUG
+    NSLog(@"Feed last loaded: %@; freshness threshold: %@",
+          feedLastLoaded, feedFreshnessThreshold);
+#endif
+    
+    if ([feedLastLoaded isGreaterThan:feedFreshnessThreshold])
+    {
+#if DEBUG
+        NSLog(@"Using existing feed updated %@", feedLastLoaded);
+#endif
+        NSArray *machineList = [NSKeyedUnarchiver unarchiveObjectWithData:CMGetObjPref(@"machineList")];
+        if (machineList)
+            return machineList;
+    }
+    
+    NSURL *feedUrl = [NSURL URLWithString:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CMMachineFeedURL"]];
+    
+#if DEBUG
+    NSLog(@"Downloading feed from %@...", feedUrl);
+#endif
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:feedUrl
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                                       timeoutInterval:TIMEOUT_SECONDS];
+                                                       timeoutInterval:DOWNLOAD_TIMEOUT_SECONDS];
     
     [request setHTTPMethod:@"GET"];
-    //    [request setHTTPBody:[httpBody dataUsingEncoding:NSUTF8StringEncoding]];
-    //    [request setAllHTTPHeaderFields:allHeaders];
     
     NSURLResponse *response = nil;
     NSError *netError = nil;
@@ -328,33 +374,49 @@
     
     if (!data)
     {
-        if (error && netError)
+        if (error)
         {
-            // FIXME
-            //            *error = [XboxLiveParser errorWithCode:XBLPNetworkError
-            //                                           message:[netError localizedDescription]];
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:CMErrorDownloading
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadingMachineFeed"
+                                                                                 forKey:NSLocalizedDescriptionKey]];
         }
         
-        // FIXME
-        //        return nil;
+        return nil;
     }
     
     NSString *content = [[[NSString alloc] initWithData:data
                                                encoding:NSUTF8StringEncoding] autorelease];
     
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
+#if DEBUG
+    NSLog(@"done. Parsing JSON...");
+#endif
+    
+    SBJsonParser *parser = [[[SBJsonParser alloc] init] autorelease];
     NSDictionary *dict = [parser objectWithString:content];
     
-    // FIXME
-    if (!dict) NSLog(@"error: %@", parser.error);
-    [parser release];
+    if (!dict)
+    {
+        if (error)
+        {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:CMErrorParsingJson
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorParsingMachineFeed"
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        
+    }
     
-    NSArray *machines = [dict objectForKey:@"machines"];
-    NSMutableArray *remoteMachines = [NSMutableArray array];
+#if DEBUG
+    NSLog(@"done. Creating machines...");
+#endif
     
-    NSURL *downloadRoot = [url URLByDeletingLastPathComponent];
+    NSArray *machinesJson = [dict objectForKey:@"machines"];
+    NSMutableArray *remoteMachineList = [NSMutableArray array];
     
-    [machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    NSURL *downloadRoot = [feedUrl URLByDeletingLastPathComponent];
+    
+    [machinesJson enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
                                                     machineId:[obj objectForKey:@"id"]
@@ -364,17 +426,182 @@
         [machine setInstalled:NO];
         [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
         
-        [remoteMachines addObject:machine];
+        [remoteMachineList addObject:machine];
     }];
     
-    return remoteMachines;
+#if DEBUG
+    NSLog(@"All done.");
+#endif
+    
+    CMSetObjPref(@"machineList",
+                 [NSKeyedArchiver archivedDataWithRootObject:remoteMachineList]);
+    CMSetObjPref(@"machineFeedLastLoaded", [NSDate date]);
+    
+    return remoteMachineList;
 }
 
-- (void)synchronizeSettings
+- (BOOL)downloadAndInstallMachine:(CMMachine *)machine
+                            error:(NSError **)error
+{
+    // FIXME: progress indicator while downloading
+    
+    if ([machine installed] || ![machine machineUrl])
+        return NO;
+    
+#ifdef DEBUG
+    NSLog(@"Downloading from %@...", [machine machineUrl]);
+#endif
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[machine machineUrl]
+                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                                       timeoutInterval:DOWNLOAD_TIMEOUT_SECONDS];
+    
+    [request setHTTPMethod:@"GET"];
+    
+    NSURLResponse *response = nil;
+    NSError *netError = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request
+                                         returningResponse:&response
+                                                     error:&netError];
+    
+    if (netError)
+    {
+        if (error)
+        {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:CMErrorDownloading
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadingMachine"
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        
+        return NO;
+    }
+    
+    NSString *downloadPath = [machine downloadPath];
+    
+#ifdef DEBUG
+    NSLog(@"done. Writing to %@...", downloadPath);
+#endif
+    
+    if (![data writeToFile:downloadPath atomically:NO])
+    {
+        if (error)
+        {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:CMErrorWriting
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorWritingMachine"
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        
+        return NO;
+    }
+    
+#ifdef DEBUG
+    NSLog(@"done. Decompressing...");
+#endif
+    
+    NSTask *unzipTask = [[[NSTask alloc] init] autorelease];
+    [unzipTask setLaunchPath:@"/usr/bin/unzip"];
+    [unzipTask setCurrentDirectoryPath:[downloadPath stringByDeletingLastPathComponent]];
+    [unzipTask setArguments:[NSArray arrayWithObject:downloadPath]];
+    
+    @try
+    {
+        [unzipTask launch];
+    }
+    @catch (NSException *exception)
+    {
+        if (error)
+        {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:CMErrorExecutingUnzip
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorExecutingUnzip"
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        
+        return NO;
+    }
+    
+    [unzipTask waitUntilExit];
+    if ([unzipTask terminationStatus] != 0)
+    {
+        if (error)
+        {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:CMErrorUnzipping
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorUnzippingMachine"
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        
+        return NO;
+    }
+    
+#ifdef DEBUG
+    NSLog(@"done. Deleting %@...", downloadPath);
+#endif
+    
+    NSError *deleteError = nil;
+    if (![[NSFileManager defaultManager] removeItemAtPath:downloadPath error:&deleteError])
+    {
+        if (error)
+        {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:CMErrorDeleting
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDeletingMachine"
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        
+        return YES; // No biggie
+    }
+    
+#ifdef DEBUG
+    NSLog(@"All done");
+#endif
+    
+    return YES;
+}
+
+- (void)backgroundInstallCallback:(CMMachine *)machine
+{
+    NSError *error;
+    BOOL success = [self downloadAndInstallMachine:machine error:&error];
+    
+    if (!success && error)
+    {
+        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
+                                         defaultButton:CMLoc(@"OK")
+                                       alternateButton:nil
+                                           otherButton:nil
+                             informativeTextWithFormat:@""];
+        
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:nil
+                            contextInfo:nil];
+        
+        return;
+    }
+    
+    [self synchronizeMachines];
+}
+
+- (void)synchronizeMachines
 {
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
+    
+    if ([remoteMachines count] < 1)
+    {
+        NSError *error = nil;
+        NSArray *machines = [self machinesAvailableForDownload:&error];
+        
+        if (machines)
+            [remoteMachines addObjectsFromArray:machines];
+        
+        // For now, just ignore errors. We'll attempt the re-download next time
+        // this method is called.
+    }
     
     // Machine configurations
 //    CMMachine *selectedMachine = [[[self machineWithId:CMGetObjPref(@"machineConfiguration")] copy] autorelease];
@@ -390,7 +617,7 @@
         [installedMachines addObject:machine];
     }];
     
-    [availableMachines addObjectsFromArray:[self machinesAvailableForDownload:nil]];
+    [availableMachines addObjectsFromArray:remoteMachines];
     [availableMachines removeObjectsInArray:installedMachines];
     
     [allMachines removeAllObjects];
@@ -402,9 +629,6 @@
     {
         [obj sortUsingComparator:^NSComparisonResult(CMMachine *obj1, CMMachine *obj2)
          {
-             if ([obj1 installed] != [obj2 installed])
-                 return [obj2 installed] - [obj1 installed];
-             
              if ([obj1 system] != [obj2 system])
                  return [obj1 system] - [obj2 system];
              
@@ -436,6 +660,16 @@
     [self toggleSystemSpecificButtons];
     [self updateCurrentConfigurationInformation];
     
+#ifdef DEBUG
+    NSLog(@"synchronizeMachines: Took %.02fms",
+          [NSDate timeIntervalSinceReferenceDate] - startTime);
+#endif
+}
+
+- (void)synchronizeSettings
+{
+    [self synchronizeMachines];
+    
     // Update emulation speed
     [emulationSpeedSlider setDoubleValue:[self physicalPositionOfSlider:emulationSpeedSlider
                                                             fromVirtual:CMGetIntPref(@"emulationSpeedPercentage")
@@ -447,10 +681,6 @@
     
     [self setDeviceForJoystickPort:1
                         toDeviceId:[[self joystickPort2Selection] deviceId]];
-#ifdef DEBUG
-    NSLog(@"synchronizeSettings: Took %.02fms",
-           [NSDate timeIntervalSinceReferenceDate] - startTime);
-#endif
 }
 
 - (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
@@ -634,7 +864,9 @@
     
     if (selectedMachine && ![selectedMachine installed])
     {
-        NSLog(@"Clicked: %@", [selectedMachine machineUrl]);
+        [NSThread detachNewThreadSelector:@selector(backgroundInstallCallback:)
+                                 toTarget:self
+                               withObject:selectedMachine];
     }
 }
 
@@ -754,7 +986,6 @@
             CMMachine *selectedMachine = [self selectedMachine];
             if (selectedMachine)
             {
-                // FIXME: show dialog if error
                 [CMEmulatorController removeMachineConfiguration:[selectedMachine path]];
             }
         }

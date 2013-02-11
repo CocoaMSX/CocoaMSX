@@ -27,7 +27,7 @@ extern NSString * const CMMsx2Machine;
 extern NSString * const CMMsx2PMachine;
 extern NSString * const CMMsxTurboRMachine;
 
-@interface CMMachine : NSObject<NSCopying>
+@interface CMMachine : NSObject<NSCopying, NSCoding>
 {
     NSString *_machineId;
     NSString *_name;
@@ -51,5 +51,6 @@ extern NSString * const CMMsxTurboRMachine;
         systemName:(NSString *)systemName;
 
 - (NSString *)systemName;
+- (NSString *)downloadPath;
 
 @end

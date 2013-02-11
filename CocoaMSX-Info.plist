@@ -107,6 +107,8 @@
 	<string>http://www.cocoamsx.com/updates.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>sparkle_dsa_pub.pem</string>
+	<key>CMMachineFeedURL</key>
+	<string>http://www.vik.cc/bluemsx/cocoamsx/downloads.json</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
