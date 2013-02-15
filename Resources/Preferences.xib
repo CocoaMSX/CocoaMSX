@@ -729,7 +729,7 @@
 													<object class="NSScroller" id="968449518">
 														<reference key="NSNextResponder" ref="438340354"/>
 														<int key="NSvFlags">-2147483392</int>
-														<string key="NSFrame">{{1, 472}, {556, 16}}</string>
+														<string key="NSFrame">{{1, 273}, {556, 16}}</string>
 														<reference key="NSSuperview" ref="438340354"/>
 														<reference key="NSWindow"/>
 														<reference key="NSNextKeyView" ref="890387675"/>
@@ -738,7 +738,7 @@
 														<int key="NSsFlags">1</int>
 														<reference key="NSTarget" ref="438340354"/>
 														<string key="NSAction">_doScroller:</string>
-														<double key="NSPercent">0.8924558587479936</double>
+														<double key="NSPercent">0.90849673202614378</double>
 													</object>
 													<object class="NSClipView" id="311740135">
 														<reference key="NSNextResponder" ref="438340354"/>
@@ -6353,7 +6353,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">4000</int>
+			<int key="maxID">4003</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

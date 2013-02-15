@@ -50,6 +50,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 @synthesize machineUrl = _machineUrl;
 @synthesize installed = _installed;
 @synthesize system = _system;
+@synthesize downloading = _downloading;
 
 - (id)init
 {
@@ -60,6 +61,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _machineId = nil;
         _machineUrl = nil;
         _installed = NO;
+        _downloading = NO;
         _system = CMUnknown;
     }
     
@@ -84,7 +86,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _path = [path copy];
         _machineId = [machineId copy];
         _name = [name copy];
-        _installed = NO;
         _system = [CMMachine systemNamed:systemName];
     }
     
@@ -182,6 +183,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _machineUrl = [[aDecoder decodeObjectForKey:@"machineUrl"] retain];
         _installed = [aDecoder decodeBoolForKey:@"installed"];
         _system = [aDecoder decodeIntegerForKey:@"system"];
+        _downloading = [aDecoder decodeBoolForKey:@"downloading"];
     }
     
     return self;
@@ -195,6 +197,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [aCoder encodeObject:_machineUrl forKey:@"machineUrl"];
     [aCoder encodeBool:_installed forKey:@"installed"];
     [aCoder encodeInteger:_system forKey:@"system"];
+    [aCoder encodeBool:_downloading forKey:@"downloading"];
 }
 
 #pragma mark - NSCopying
@@ -209,6 +212,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [copy setMachineUrl:_machineUrl];
     [copy setInstalled:_installed];
     [copy setSystem:_system];
+    [copy setDownloading:_installed];
     
     return copy;
 }

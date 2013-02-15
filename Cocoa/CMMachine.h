@@ -35,6 +35,7 @@ extern NSString * const CMMsxTurboRMachine;
     NSInteger _system;
     NSURL *_machineUrl;
     BOOL _installed;
+    BOOL _downloading;
 }
 
 @property (nonatomic, copy) NSString *machineId;
@@ -43,6 +44,7 @@ extern NSString * const CMMsxTurboRMachine;
 @property (nonatomic, retain) NSURL *machineUrl;
 @property (nonatomic, assign) NSInteger system;
 @property (nonatomic, assign) BOOL installed;
+@property (nonatomic, assign) BOOL downloading;
 
 - (id)initWithPath:(NSString *)path;
 - (id)initWithPath:(NSString *)path

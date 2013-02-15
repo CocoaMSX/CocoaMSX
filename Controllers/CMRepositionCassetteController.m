@@ -151,9 +151,6 @@
 
 - (void)loadContents
 {
-    // FIXME: TapeContent is a static variable, so I can't free it.
-    //        It should be malloc'ed instead
-    
     int count = 0;
     TapeContent *tc = tapeGetContent(&count);
     

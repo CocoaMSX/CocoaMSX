@@ -117,8 +117,6 @@
 
 #define DOWNLOAD_TIMEOUT_SECONDS 10
 
-#define MACHINE_FEED_EXPIRATION_HOURS 24
-
 #define CMErrorDownloading    100
 #define CMErrorWriting        101
 #define CMErrorExecutingUnzip 102
@@ -126,6 +124,10 @@
 #define CMErrorDeleting       104
 #define CMErrorVerifyingHash  105
 #define CMErrorParsingJson    106
+
+#define CMInstallStartedNotification   @"com.akop.CocoaMSX.InstallStarted"
+#define CMInstallCompletedNotification @"com.akop.CocoaMSX.InstallCompleted"
+#define CMInstallErrorNotification     @"com.akop.CocoaMSX.InstallError"
 
 @interface CMPreferenceController ()
 
@@ -140,8 +142,13 @@
 - (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
                              withLayout:(CMInputDeviceLayout *)layout;
 
-- (NSArray *)machinesAvailableForDownload:(NSError **)error;
+- (void)performBlockOnMainThread:(void(^)(void))block;
+
+- (BOOL)updateMachineFeed:(NSError **)error;
+- (void)startBackgroundDownloadOfMachine:(CMMachine *)machine;
 - (BOOL)downloadAndInstallMachine:(CMMachine *)machine error:(NSError **)error;
+
+- (NSArray *)machinesAvailableForDownload;
 - (void)synchronizeMachines;
 - (void)synchronizeSettings;
 - (CMMachine *)machineWithId:(NSString *)machineId;
@@ -181,14 +188,10 @@
         remoteMachines = [[NSMutableArray alloc] init];
         
         // Set the virtual emulation speed range
-        virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:
-                                      [NSNumber numberWithInteger:10],
-                                      [NSNumber numberWithInteger:100],
-                                      [NSNumber numberWithInteger:250],
-                                      [NSNumber numberWithInteger:500],
-                                      [NSNumber numberWithInteger:1000],
-                                      
-                                      nil];
+        virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
+        
+        downloadQueue = [[NSOperationQueue alloc] init];
+        [downloadQueue setMaxConcurrentOperationCount:1];
     }
     
     return self;
@@ -199,11 +202,8 @@
     keyCaptureView = nil;
     
     // Initialize sliders
-    NSArray *sliders = [NSArray arrayWithObjects:
-                        brightnessSlider,
-                        contrastSlider,
-                        saturationSlider,
-                        gammaSlider,
+    NSArray *sliders = [NSArray arrayWithObjects:brightnessSlider,
+                        contrastSlider, saturationSlider, gammaSlider,
                         scanlineSlider, nil];
     
     [sliders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
@@ -247,8 +247,8 @@
     [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
     
     // Scope Bar
-    [keyboardScopeBar setSelected:YES forItem:CMMakeNumber(CMKeyShiftStateNormal) inGroup:SCOPEBAR_GROUP_SHIFTED];
-    [keyboardScopeBar setSelected:YES forItem:CMMakeNumber(CMKeyLayoutEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
+    [keyboardScopeBar setSelected:YES forItem:@CMKeyShiftStateNormal inGroup:SCOPEBAR_GROUP_SHIFTED];
+    [keyboardScopeBar setSelected:YES forItem:@CMKeyLayoutEuropean inGroup:SCOPEBAR_GROUP_REGIONS];
     
     [self synchronizeSettings];
     
@@ -258,6 +258,19 @@
                                                options:NSKeyValueObservingOptionNew
                                                context:NULL];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivedInstallStartedNotification:)
+                                                 name:CMInstallStartedNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivedInstallCompletedNotification:)
+                                                 name:CMInstallCompletedNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivedInstallErrorNotification:)
+                                                 name:CMInstallErrorNotification
+                                               object:nil];
+    
     [machineScopeBar setSelected:YES forItem:@(machineDisplayMode) inGroup:0];
 }
 
@@ -265,6 +278,18 @@
 {
     [[NSUserDefaults standardUserDefaults] removeObserver:self
                                                forKeyPath:@"machineDisplayMode"];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:CMInstallStartedNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:CMInstallCompletedNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:CMInstallErrorNotification
+                                                  object:nil];
+    
+    [downloadQueue release];
     
     self.joystickPortPeripherals = nil;
     self.joystickPort1Selection = nil;
@@ -323,37 +348,94 @@
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
 }
 
-- (NSArray *)machinesAvailableForDownload:(NSError **)error
+- (void)performBlockOnMainThread:(void(^)(void))block
 {
-    // FIXME: make async
-    
+    if (dispatch_get_current_queue() == dispatch_get_main_queue())
+    {
+        block();
+    }
+    else
+    {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:block];
+    }
+}
+
+- (NSArray *)machinesAvailableForDownload
+{
     NSDate *feedLastLoaded = CMGetObjPref(@"machineFeedLastLoaded");
     if (!feedLastLoaded)
         feedLastLoaded = [NSDate distantPast];
     
-    NSCalendar *cal = [NSCalendar currentCalendar];
     NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
-    [components setHour:-MACHINE_FEED_EXPIRATION_HOURS];
+    [components setMinute:-CMGetIntPref(@"machineFeedExpirationInMinutes")];
     
+    NSCalendar *cal = [NSCalendar currentCalendar];
     NSDate *feedFreshnessThreshold = [cal dateByAddingComponents:components
                                                           toDate:[NSDate date]
                                                          options:0];
     
-#if DEBUG
-    NSLog(@"Feed last loaded: %@; freshness threshold: %@",
-          feedLastLoaded, feedFreshnessThreshold);
-#endif
+    NSArray *machineList = nil;
+    NSData *machineListAsData = CMGetObjPref(@"machineList");
     
-    if ([feedLastLoaded isGreaterThan:feedFreshnessThreshold])
+    if (machineListAsData)
     {
 #if DEBUG
-        NSLog(@"Using existing feed updated %@", feedLastLoaded);
+        NSLog(@"Have an existing machine list, updated %@", feedLastLoaded);
 #endif
-        NSArray *machineList = [NSKeyedUnarchiver unarchiveObjectWithData:CMGetObjPref(@"machineList")];
-        if (machineList)
-            return machineList;
+        machineList = [NSKeyedUnarchiver unarchiveObjectWithData:machineListAsData];
     }
     
+    if ([feedLastLoaded isLessThan:feedFreshnessThreshold])
+    {
+#if DEBUG
+        if (machineList)
+            NSLog(@"Machine list expired (loaded %@); requesting update", feedLastLoaded);
+        else
+            NSLog(@"Machine list not found; requesting download");
+#endif
+        
+        // We don't have any machine data (or it's expired). Refresh our list of
+        // available machines
+        
+        NSOperation *downloadOp = [NSBlockOperation blockOperationWithBlock:^
+                                   {
+                                       NSError *error = nil;
+                                       BOOL success = [self updateMachineFeed:&error];
+                                       
+                                       if (success)
+                                       {
+                                           [self performBlockOnMainThread:^
+                                            {
+                                                [self synchronizeMachines];
+                                            }];
+                                       }
+                                       
+                                       if (!success && error)
+                                       {
+                                           [self performBlockOnMainThread:^
+                                            {
+                                                NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
+                                                                                 defaultButton:CMLoc(@"OK")
+                                                                               alternateButton:nil
+                                                                                   otherButton:nil
+                                                                     informativeTextWithFormat:@""];
+                                                
+                                                [alert beginSheetModalForWindow:[self window]
+                                                                  modalDelegate:self
+                                                                 didEndSelector:nil
+                                                                    contextInfo:nil];
+                                            }];
+                                       }
+                                   }];
+        
+        [downloadQueue addOperation:downloadOp];
+    }
+    
+    return machineList;
+}
+
+- (BOOL)updateMachineFeed:(NSError **)error
+{
     NSURL *feedUrl = [NSURL URLWithString:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CMMachineFeedURL"]];
     
 #if DEBUG
@@ -382,7 +464,7 @@
                                                                                  forKey:NSLocalizedDescriptionKey]];
         }
         
-        return nil;
+        return NO;
     }
     
     NSString *content = [[[NSString alloc] initWithData:data
@@ -405,6 +487,7 @@
                                                                                  forKey:NSLocalizedDescriptionKey]];
         }
         
+        return NO;
     }
     
 #if DEBUG
@@ -417,17 +500,17 @@
     NSURL *downloadRoot = [feedUrl URLByDeletingLastPathComponent];
     
     [machinesJson enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
-                                                    machineId:[obj objectForKey:@"id"]
-                                                         name:[obj objectForKey:@"name"]
-                                                   systemName:[obj objectForKey:@"system"]] autorelease];
-        
-        [machine setInstalled:NO];
-        [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
-        
-        [remoteMachineList addObject:machine];
-    }];
+     {
+         CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
+                                                     machineId:[obj objectForKey:@"id"]
+                                                          name:[obj objectForKey:@"name"]
+                                                    systemName:[obj objectForKey:@"system"]] autorelease];
+         
+         [machine setInstalled:NO];
+         [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
+         
+         [remoteMachineList addObject:machine];
+     }];
     
 #if DEBUG
     NSLog(@"All done.");
@@ -437,16 +520,17 @@
                  [NSKeyedArchiver archivedDataWithRootObject:remoteMachineList]);
     CMSetObjPref(@"machineFeedLastLoaded", [NSDate date]);
     
-    return remoteMachineList;
+    return YES;
 }
 
 - (BOOL)downloadAndInstallMachine:(CMMachine *)machine
                             error:(NSError **)error
 {
-    // FIXME: progress indicator while downloading
-    
     if ([machine installed] || ![machine machineUrl])
         return NO;
+    
+//    NSLog(@"Sleeping");
+//    [NSThread sleepForTimeInterval:5];
     
 #ifdef DEBUG
     NSLog(@"Downloading from %@...", [machine machineUrl]);
@@ -503,7 +587,7 @@
     NSTask *unzipTask = [[[NSTask alloc] init] autorelease];
     [unzipTask setLaunchPath:@"/usr/bin/unzip"];
     [unzipTask setCurrentDirectoryPath:[downloadPath stringByDeletingLastPathComponent]];
-    [unzipTask setArguments:[NSArray arrayWithObject:downloadPath]];
+    [unzipTask setArguments:[NSArray arrayWithObjects:@"-u", @"-o", downloadPath, nil]];
     
     @try
     {
@@ -561,28 +645,50 @@
     return YES;
 }
 
-- (void)backgroundInstallCallback:(CMMachine *)machine
+- (void)startBackgroundDownloadOfMachine:(CMMachine *)machine
 {
-    NSError *error;
-    BOOL success = [self downloadAndInstallMachine:machine error:&error];
-    
-    if (!success && error)
+    NSOperation *downloadOp = [NSBlockOperation blockOperationWithBlock:^
     {
-        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
-                                         defaultButton:CMLoc(@"OK")
-                                       alternateButton:nil
-                                           otherButton:nil
-                             informativeTextWithFormat:@""];
+        NSError *error = nil;
+        BOOL success = NO;
         
-        [alert beginSheetModalForWindow:[self window]
-                          modalDelegate:self
-                         didEndSelector:nil
-                            contextInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:CMInstallStartedNotification
+                                                            object:self
+                                                          userInfo:[NSDictionary dictionaryWithObject:machine
+                                                                                               forKey:@"machine"]];
         
-        return;
-    }
+        @try
+        {
+            success = [self downloadAndInstallMachine:machine error:&error];
+        }
+        @finally
+        {
+            [machine setDownloading:NO];
+        }
+        
+        if (success)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:CMInstallCompletedNotification
+                                                                object:self
+                                                              userInfo:[NSDictionary dictionaryWithObject:machine
+                                                                                                   forKey:@"machine"]];
+        }
+        
+        if (!success && error)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:CMInstallErrorNotification
+                                                                object:self
+                                                              userInfo:[NSDictionary dictionaryWithObject:error
+                                                                                                   forKey:@"error"]];
+        }
+    }];
     
-    [self synchronizeMachines];
+    [machine setDownloading:YES];
+    
+    [self toggleSystemSpecificButtons];
+    [systemTableView reloadData];
+    
+    [downloadQueue addOperation:downloadOp];
 }
 
 - (void)synchronizeMachines
@@ -593,14 +699,9 @@
     
     if ([remoteMachines count] < 1)
     {
-        NSError *error = nil;
-        NSArray *machines = [self machinesAvailableForDownload:&error];
-        
+        NSArray *machines = [self machinesAvailableForDownload];
         if (machines)
             [remoteMachines addObjectsFromArray:machines];
-        
-        // For now, just ignore errors. We'll attempt the re-download next time
-        // this method is called.
     }
     
     // Machine configurations
@@ -837,7 +938,8 @@
         && [selectedMachine installed]
         && [allMachines count] > 1; // At least one machine must remain
     BOOL isAddButtonEnabled = selectedMachine
-        && ![selectedMachine installed];
+        && ![selectedMachine installed]
+        && ![selectedMachine downloading];
     
     [addMachineButton setEnabled:isAddButtonEnabled];
     [removeMachineButton setEnabled:isRemoveButtonEnabled];
@@ -862,11 +964,11 @@
 {
     CMMachine *selectedMachine = [self selectedMachine];
     
-    if (selectedMachine && ![selectedMachine installed])
+    if (selectedMachine
+        && ![selectedMachine installed]
+        && ![selectedMachine downloading])
     {
-        [NSThread detachNewThreadSelector:@selector(backgroundInstallCallback:)
-                                 toTarget:self
-                               withObject:selectedMachine];
+        [self startBackgroundDownloadOfMachine:selectedMachine];
     }
 }
 
@@ -1090,6 +1192,59 @@
     [self synchronizeSettings];
 }
 
+#pragma mark - NSNotifications
+
+- (void)receivedInstallStartedNotification:(NSNotification *)notification
+{
+#ifdef DEBUG
+    NSLog(@"Received download started notification");
+#endif
+    
+    [self performBlockOnMainThread:^
+     {
+         [systemTableView reloadData];
+         [self toggleSystemSpecificButtons];
+     }];
+}
+
+- (void)receivedInstallCompletedNotification:(NSNotification *)notification
+{
+#ifdef DEBUG
+    NSLog(@"Received download completed notification");
+#endif
+    
+    [self performBlockOnMainThread:^
+     {
+         [self synchronizeMachines];
+     }];
+}
+
+- (void)receivedInstallErrorNotification:(NSNotification *)notification
+{
+    NSError *error = [[notification userInfo] objectForKey:@"error"];
+    
+#ifdef DEBUG
+    NSLog(@"Received error notification: %@", error);
+#endif
+    
+    if (error)
+    {
+        [self performBlockOnMainThread:^
+         {
+             NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
+                                              defaultButton:CMLoc(@"OK")
+                                            alternateButton:nil
+                                                otherButton:nil
+                                  informativeTextWithFormat:@""];
+             
+             [alert beginSheetModalForWindow:[self window]
+                               modalDelegate:self
+                              didEndSelector:nil
+                                 contextInfo:nil];
+         }];
+    }
+}
+
 #pragma mark - NSOutlineViewDataSourceDelegate
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
@@ -1240,6 +1395,8 @@
     
     if ([columnIdentifer isEqualToString:@"isSelected"])
         return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
+    else if ([columnIdentifer isEqualToString:@"spinner"])
+        return [NSNumber numberWithBool:YES];
     else if ([columnIdentifer isEqualToString:@"name"])
         return machine;
     
@@ -1267,8 +1424,11 @@
 {
     if ([[aTableColumn identifier] isEqualToString:@"isSelected"])
     {
+        NSButtonCell *buttonCell = aCell;
         CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
-        [aCell setEnabled:[machine installed]];
+        
+        [buttonCell setEnabled:[machine installed]];
+        [buttonCell setImagePosition:[machine installed] ? NSImageOnly : NSNoImage];
     }
 }
 
@@ -1294,27 +1454,23 @@
         if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
         {
             return [NSArray arrayWithObjects:
-                    CMMakeNumber(CMKeyShiftStateNormal),
-                    CMMakeNumber(CMKeyShiftStateShifted),
-                    
-                    nil];
+                    @CMKeyShiftStateNormal,
+                    @CMKeyShiftStateShifted, nil];
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
             return [NSArray arrayWithObjects:
-                    CMMakeNumber(CMKeyLayoutArabic),
-                    CMMakeNumber(CMKeyLayoutBrazilian),
-                    CMMakeNumber(CMKeyLayoutEstonian),
-                    CMMakeNumber(CMKeyLayoutEuropean),
-                    CMMakeNumber(CMKeyLayoutFrench),
-                    CMMakeNumber(CMKeyLayoutGerman),
-                    CMMakeNumber(CMKeyLayoutJapanese),
-                    CMMakeNumber(CMKeyLayoutKorean),
-                    CMMakeNumber(CMKeyLayoutRussian),
-                    CMMakeNumber(CMKeyLayoutSpanish),
-                    CMMakeNumber(CMKeyLayoutSwedish),
-                    
-                    nil];
+                    @CMKeyLayoutArabic,
+                    @CMKeyLayoutBrazilian,
+                    @CMKeyLayoutEstonian,
+                    @CMKeyLayoutEuropean,
+                    @CMKeyLayoutFrench,
+                    @CMKeyLayoutGerman,
+                    @CMKeyLayoutJapanese,
+                    @CMKeyLayoutKorean,
+                    @CMKeyLayoutRussian,
+                    @CMKeyLayoutSpanish,
+                    @CMKeyLayoutSwedish, nil];
         }
     }
     else if (theScopeBar == machineScopeBar)
@@ -1322,9 +1478,7 @@
         return [NSArray arrayWithObjects:
                 @CMShowAllMachines,
                 @CMShowInstalledMachines,
-                @CMShowAvailableMachines,
-                
-                nil];
+                @CMShowAvailableMachines, nil];
     }
     
     return nil;
@@ -1352,38 +1506,38 @@
     {
         if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
         {
-            NSNumber *shiftState = identifier;
+            NSInteger shiftState = [identifier integerValue];
             
-            if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateNormal)])
+            if (shiftState == CMKeyShiftStateNormal)
                 return CMLoc(@"KeyStateNormal");
-            if ([shiftState isEqualToNumber:CMMakeNumber(CMKeyShiftStateShifted)])
+            if (shiftState == CMKeyShiftStateShifted)
                 return CMLoc(@"KeyStateShifted");
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
-            NSNumber *layoutId = identifier;
+            NSInteger layoutId = [identifier integerValue];
             
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutArabic)])
+            if (layoutId == CMKeyLayoutArabic)
                 return CMLoc(@"MsxKeyLayoutArabic");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutBrazilian)])
+            if (layoutId == CMKeyLayoutBrazilian)
                 return CMLoc(@"MsxKeyLayoutBrazilian");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEstonian)])
+            if (layoutId == CMKeyLayoutEstonian)
                 return CMLoc(@"MsxKeyLayoutEstonian");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutEuropean)])
+            if (layoutId == CMKeyLayoutEuropean)
                 return CMLoc(@"MsxKeyLayoutEuropean");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutFrench)])
+            if (layoutId == CMKeyLayoutFrench)
                 return CMLoc(@"MsxKeyLayoutFrench");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutGerman)])
+            if (layoutId == CMKeyLayoutGerman)
                 return CMLoc(@"MsxKeyLayoutGerman");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutJapanese)])
+            if (layoutId == CMKeyLayoutJapanese)
                 return CMLoc(@"MsxKeyLayoutJapanese");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutKorean)])
+            if (layoutId == CMKeyLayoutKorean)
                 return CMLoc(@"MsxKeyLayoutKorean");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutRussian)])
+            if (layoutId == CMKeyLayoutRussian)
                 return CMLoc(@"MsxKeyLayoutRussian");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSpanish)])
+            if (layoutId == CMKeyLayoutSpanish)
                 return CMLoc(@"MsxKeyLayoutSpanish");
-            if ([layoutId isEqualToNumber:CMMakeNumber(CMKeyLayoutSwedish)])
+            if (layoutId == CMKeyLayoutSwedish)
                 return CMLoc(@"MsxKeyLayoutSwedish");
         }
     }

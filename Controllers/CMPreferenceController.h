@@ -85,6 +85,8 @@
     
     NSInteger selectedKeyboardRegion;
     NSInteger selectedKeyboardShiftState;
+    
+    NSOperationQueue *downloadQueue;
 }
 
 @property (nonatomic, retain) CMEmulatorController *emulator;

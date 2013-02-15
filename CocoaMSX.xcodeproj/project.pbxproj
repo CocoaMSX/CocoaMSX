@@ -315,6 +315,10 @@
 		FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE42836215FE857400ED7CB9 /* Emulator.xib */; };
 		FE42836A15FE8DF300ED7CB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42836915FE8DF300ED7CB9 /* main.m */; };
 		FE42CF80160EBF9B00D06E1D /* CMCocoaTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */; };
+		FE46C8ED16CA188E00D25801 /* icon-downloading.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8EB16CA188E00D25801 /* icon-downloading.png */; };
+		FE46C8EE16CA188E00D25801 /* icon-downloading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8EC16CA188E00D25801 /* icon-downloading@2x.png */; };
+		FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8EF16CA1DCA00D25801 /* icon-downloading-inverse.png */; };
+		FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8F016CA1DCA00D25801 /* icon-downloading-inverse@2x.png */; };
 		FE5458C2168C182A0002FA46 /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */; };
 		FE5458C3168C182A0002FA46 /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BF168C182A0002FA46 /* MGScopeBar.m */; };
 		FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */; };
@@ -1004,6 +1008,10 @@
 		FE42836215FE857400ED7CB9 /* Emulator.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Emulator.xib; sourceTree = "<group>"; };
 		FE42836915FE8DF300ED7CB9 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaTimer.m; sourceTree = "<group>"; };
+		FE46C8EB16CA188E00D25801 /* icon-downloading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-downloading.png"; sourceTree = "<group>"; };
+		FE46C8EC16CA188E00D25801 /* icon-downloading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-downloading@2x.png"; sourceTree = "<group>"; };
+		FE46C8EF16CA1DCA00D25801 /* icon-downloading-inverse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-downloading-inverse.png"; sourceTree = "<group>"; };
+		FE46C8F016CA1DCA00D25801 /* icon-downloading-inverse@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-downloading-inverse@2x.png"; sourceTree = "<group>"; };
 		FE5458BC168C182A0002FA46 /* MGRecessedPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGRecessedPopUpButtonCell.h; sourceTree = "<group>"; };
 		FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGRecessedPopUpButtonCell.m; sourceTree = "<group>"; };
 		FE5458BE168C182A0002FA46 /* MGScopeBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBar.h; sourceTree = "<group>"; };
@@ -1194,10 +1202,14 @@
 		6BCA755D164D7D09002CA211 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */,
+				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
 				FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */,
 				FEA4548C1679B65300AAECB7 /* DiskDocument.icns */,
-				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
+				FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */,
+				FE46C8EB16CA188E00D25801 /* icon-downloading.png */,
+				FE46C8EC16CA188E00D25801 /* icon-downloading@2x.png */,
+				FE46C8EF16CA1DCA00D25801 /* icon-downloading-inverse.png */,
+				FE46C8F016CA1DCA00D25801 /* icon-downloading-inverse@2x.png */,
 				FE17DBF316B3BD1A004ED68D /* logo-msx.png */,
 				FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */,
 				FE17DBF516B3BD1A004ED68D /* logo-msx2.png */,
@@ -2216,6 +2228,10 @@
 				FE17DC0016B3BD1A004ED68D /* logo-msx2p@2x.png in Resources */,
 				FE17DC0116B3BD1A004ED68D /* logo-turbor.png in Resources */,
 				FE17DC0216B3BD1A004ED68D /* logo-turbor@2x.png in Resources */,
+				FE46C8ED16CA188E00D25801 /* icon-downloading.png in Resources */,
+				FE46C8EE16CA188E00D25801 /* icon-downloading@2x.png in Resources */,
+				FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */,
+				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
