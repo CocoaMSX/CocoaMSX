@@ -22,17 +22,18 @@
  */
 #import <Foundation/Foundation.h>
 
-#define CMKeyLayoutArabic    0x01
-#define CMKeyLayoutBrazilian 0x02
-#define CMKeyLayoutEstonian  0x03
-#define CMKeyLayoutEuropean  0x04
-#define CMKeyLayoutFrench    0x05
-#define CMKeyLayoutGerman    0x06
-#define CMKeyLayoutJapanese  0x07
-#define CMKeyLayoutKorean    0x08
-#define CMKeyLayoutRussian   0x09
-#define CMKeyLayoutSpanish   0x10
-#define CMKeyLayoutSwedish   0x11
+#define CMKeyLayoutDefault      0x04 // Use EU by default
+#define CMKeyLayoutArabic       0x01
+#define CMKeyLayoutBrazilian    0x02
+#define CMKeyLayoutEstonian     0x03
+#define CMKeyLayoutEuropean     0x04
+#define CMKeyLayoutFrench       0x05
+#define CMKeyLayoutGerman       0x06
+#define CMKeyLayoutJapanese     0x07
+#define CMKeyLayoutKorean       0x08
+#define CMKeyLayoutRussian      0x09
+#define CMKeyLayoutSpanish      0x10
+#define CMKeyLayoutSwedish      0x11
 
 #define CMKeyCategoryTypewriterRowOne   1
 #define CMKeyCategoryTypewriterRowTwo   2
@@ -67,6 +68,7 @@
                            shiftState:(NSInteger)shiftState
                              layoutId:(NSInteger)layoutId;
 - (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode;
++ (NSInteger)layoutIdForMachineIdentifier:(NSString *)machineId;
 - (NSString *)nameForCategory:(NSInteger)category;
 + (NSInteger)compareKeysByOrderOfAppearance:(NSNumber *)one
                                  keyCodeTwo:(NSNumber *)two;

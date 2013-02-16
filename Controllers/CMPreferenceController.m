@@ -346,6 +346,10 @@
                                               [selected name], [selected systemName]]];
     else
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
+    
+    [keyboardScopeBar setSelected:YES
+                          forItem:@([CMCocoaKeyboard layoutIdForMachineIdentifier:[selected machineId]])
+                          inGroup:SCOPEBAR_GROUP_REGIONS];
 }
 
 - (void)performBlockOnMainThread:(void(^)(void))block
@@ -705,7 +709,6 @@
     }
     
     // Machine configurations
-//    CMMachine *selectedMachine = [[[self machineWithId:CMGetObjPref(@"machineConfiguration")] copy] autorelease];
     NSArray *foundConfigurations = [CMEmulatorController machineConfigurations];
     
     [installedMachines removeAllObjects];
@@ -725,6 +728,7 @@
     [allMachines addObjectsFromArray:availableMachines];
     [allMachines addObjectsFromArray:installedMachines];
     
+    // Sort the three arrays by 1. system, 2. name
     NSArray *arraysToSort = [NSArray arrayWithObjects:installedMachines, availableMachines, allMachines, nil];
     [arraysToSort enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
@@ -737,24 +741,26 @@
          }];
     }];
     
-    // FIXME
-//    // Selected machine is no longer available - select closest
-//    if (![installedMachines containsObject:selectedMachine])
-//    {
-//        __block CMMachine *machine = [installedMachines lastObject];
-//        [installedMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-//        {
-//            NSInteger comparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
-//            if (comparison == NSOrderedAscending || comparison == NSOrderedSame)
-//            {
-//                machine = obj;
-//                *stop = YES;
-//            }
-//        }];
-//        
-//        if (machine)
-//            CMSetObjPref(@"machineConfiguration", [machine machineId]);
-//    }
+    // If the selected machine is no longer available, select closest
+    CMMachine *selectedMachine = [[[self machineWithId:CMGetObjPref(@"machineConfiguration")] copy] autorelease];
+    if (![installedMachines containsObject:selectedMachine])
+    {
+        __block CMMachine *machine = [installedMachines lastObject];
+        [installedMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+        {
+            NSInteger systemComparison = [@([selectedMachine system]) compare:@([obj system])];
+            NSInteger nameComparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
+            
+            if (systemComparison != NSOrderedAscending && nameComparison != NSOrderedDescending)
+            {
+                machine = obj;
+                *stop = YES;
+            }
+        }];
+        
+        if (machine)
+            CMSetObjPref(@"machineConfiguration", [machine machineId]);
+    }
     
     [systemTableView reloadData];
     
