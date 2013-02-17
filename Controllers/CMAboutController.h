@@ -30,7 +30,16 @@
 {
     IBOutlet NSTextField *versionNumberField;
     IBOutlet NSTextField *appNameField;
+    
+    IBOutlet NSTextView    *scrollingTextView;
+    IBOutlet NSScrollView  *textScrollView;
+    
+    BOOL isAutoScrolling;
+    NSTimer *scrollingTimer;
+    NSDate *_scrollingStartTime;
 }
+
+@property (nonatomic, retain) NSDate *scrollingStartTime;
 
 - (IBAction)showLicense:(id)sender;
 - (IBAction)showAuthors:(id)sender;
