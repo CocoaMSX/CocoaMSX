@@ -71,7 +71,7 @@
 												<object class="NSTextView" id="246048412">
 													<reference key="NSNextResponder" ref="486275257"/>
 													<int key="NSvFlags">2322</int>
-													<string key="NSFrameSize">{249, 200}</string>
+													<string key="NSFrameSize">{234, 200}</string>
 													<reference key="NSSuperview" ref="486275257"/>
 													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView"/>
@@ -91,7 +91,7 @@
 															<nil key="NSDelegate"/>
 														</object>
 														<reference key="NSTextView" ref="246048412"/>
-														<double key="NSWidth">249</double>
+														<double key="NSWidth">234</double>
 														<int key="NSTCFlags">1</int>
 													</object>
 													<object class="NSTextViewSharedData" key="NSSharedData">
@@ -172,8 +172,8 @@
 										</object>
 										<object class="NSScroller" id="754844381">
 											<reference key="NSNextResponder" ref="450341072"/>
-											<int key="NSvFlags">-2147483392</int>
-											<string key="NSFrame">{{-100, -100}, {16, 176}}</string>
+											<int key="NSvFlags">256</int>
+											<string key="NSFrame">{{233, 0}, {16, 200}}</string>
 											<reference key="NSSuperview" ref="450341072"/>
 											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView" ref="48975519"/>
@@ -205,7 +205,7 @@
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="754844381"/>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
-									<int key="NSsFlags">133120</int>
+									<int key="NSsFlags">133136</int>
 									<reference key="NSVScroller" ref="754844381"/>
 									<reference key="NSHScroller" ref="48975519"/>
 									<reference key="NSContentView" ref="486275257"/>
@@ -387,7 +387,6 @@
 							<string key="NSFrame">{{373, 13}, {163, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="45058821">
@@ -610,10 +609,10 @@ A</bytes>
 						<reference key="object" ref="566352399"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="980919611"/>
-							<reference ref="450341072"/>
 							<reference ref="963956803"/>
 							<reference ref="210087112"/>
 							<reference ref="846336310"/>
+							<reference ref="450341072"/>
 						</array>
 						<reference key="parent" ref="1006"/>
 					</object>

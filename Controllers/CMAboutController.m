@@ -46,7 +46,7 @@
 
 #define BLANK_LINE_COUNT 15
 
-#define	PRESCROLL_DELAY_SECONDS	5.00	// time before animation starts
+#define	PRESCROLL_DELAY_SECONDS	4.00	// time before animation starts
 #define	SCROLL_DELAY_SECONDS	0.05	// time between animation frames
 #define SCROLL_AMOUNT_PIXELS	1.00	// amount to scroll in each animation frame
 
@@ -82,9 +82,6 @@
                                                object:[textScrollView contentView]];
     
     [self initializeScrollingText];
-    
-    [self setScrollingStartTime:[NSDate dateWithTimeInterval:PRESCROLL_DELAY_SECONDS
-                                                   sinceDate:[NSDate date]]];
 }
 
 - (void)windowDidLoad
@@ -202,6 +199,15 @@
     NSString *documentPath = [resourcePath stringByAppendingPathComponent:@"Documents/AUTHORS"];
     
     [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:documentPath]];
+}
+
+- (void)showWindow:(id)sender
+{
+    [super showWindow:sender];
+    
+    [self setScrollAmount:0];
+    [self setScrollingStartTime:[NSDate dateWithTimeInterval:PRESCROLL_DELAY_SECONDS
+                                                   sinceDate:[NSDate date]]];
 }
 
 @end

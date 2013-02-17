@@ -1,9 +1,6 @@
-Code:
-
 CocoaMSX is being developed by Akop Karapetyan (dev@akop.org)
-  http://cocoamsx.com/
-  http://www.akop.org/
-  Licensed under GNU GPL v3; see LICENSE for full information
+  http://www.cocoamsx.com/
+  Licensed under GNU GPL v3; see License Details for more information
 
 CocoaMSX is based on aquaMSX by Ramones & Madonna Mk 2
   http://code.google.com/p/aquamsx/
@@ -13,14 +10,19 @@ CocoaMSX is based on blueMSX by Daniel Vik & blueMSX Development Team
   http://www.bluemsx.com/
   Licensed under GNU GPL v2
 
+*THIRD PARTY COMPONENTS*
+
 CocoaMSX includes C-BIOS by C-BIOS Association
   http://cbios.sourceforge.net/
   Licensed under BSD License
 
 CocoaMSX uses MGScopeBar by Matt Gemmell
   http://mattgemmell.com
-  Licensed under a BSD-like license with attribution; see 
-  "MGScopeBar License.rtf" for more information
+  See "MGScopeBar License.rtf" for more information
+
+CocoaMSX uses SBJson toolkit by Stig Bratauset
+  http://github.com/stig/json-framework
+  See "SBJson License.txt" for licensing information
 
 CocoaMSX includes code from ShortcutRecorder by various contributors
   http://wafflesoftware.net/shortcut/
@@ -31,7 +33,7 @@ contributors
   http://www.libsdl.org
   Licensed under GNU LGPL
 
-Graphics:
+*GRAPHICS*
 
 CocoaMSX Coffee Cup icon by User:Peewack, Wikimedia Commons
   http://commons.wikimedia.org/wiki/File:Cup-o-cofee-simple.svg
