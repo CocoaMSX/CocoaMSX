@@ -92,11 +92,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
+	<key>CMMachineFeedURL</key>
+	<string>http://www.vik.cc/bluemsx/cocoamsx/downloads.json</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSMainNibFile</key>
@@ -107,8 +109,6 @@
 	<string>http://www.cocoamsx.com/updates.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>sparkle_dsa_pub.pem</string>
-	<key>CMMachineFeedURL</key>
-	<string>http://www.vik.cc/bluemsx/cocoamsx/downloads.json</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

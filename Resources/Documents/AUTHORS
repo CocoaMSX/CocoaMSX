@@ -20,6 +20,10 @@ CocoaMSX uses MGScopeBar by Matt Gemmell
   http://mattgemmell.com
   See "MGScopeBar License.rtf" for more information
 
+CocoaMSX uses Sparkle by Andy Matuschak
+  http://sparkle.andymatuschak.org/
+  See "Sparkle License.txt" for more information
+
 CocoaMSX uses SBJson toolkit by Stig Bratauset
   http://github.com/stig/json-framework
   See "SBJson License.txt" for licensing information

@@ -158,8 +158,8 @@
 										</object>
 										<object class="NSScroller" id="754844381">
 											<reference key="NSNextResponder" ref="450341072"/>
-											<int key="NSvFlags">256</int>
-											<string key="NSFrame">{{233, 0}, {16, 200}}</string>
+											<int key="NSvFlags">-2147483392</int>
+											<string key="NSFrame">{{234, 0}, {15, 200}}</string>
 											<reference key="NSSuperview" ref="450341072"/>
 											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView" ref="963203143"/>
@@ -191,7 +191,7 @@
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="48975519"/>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
-									<int key="NSsFlags">133136</int>
+									<int key="NSsFlags">133648</int>
 									<reference key="NSVScroller" ref="754844381"/>
 									<reference key="NSHScroller" ref="48975519"/>
 									<reference key="NSContentView" ref="486275257"/>
