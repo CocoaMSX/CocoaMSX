@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12C60</string>
+		<string key="IBDocument.SystemVersion">12C3006</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
@@ -74,7 +74,7 @@
 													<string key="NSFrameSize">{234, 200}</string>
 													<reference key="NSSuperview" ref="486275257"/>
 													<reference key="NSWindow"/>
-													<reference key="NSNextKeyView"/>
+													<reference key="NSNextKeyView" ref="754844381"/>
 													<string key="NSReuseIdentifierKey">_NS:13</string>
 													<object class="NSTextContainer" key="NSTextContainer" id="313493623">
 														<object class="NSLayoutManager" key="NSLayoutManager">
@@ -95,7 +95,7 @@
 														<int key="NSTCFlags">1</int>
 													</object>
 													<object class="NSTextViewSharedData" key="NSSharedData">
-														<int key="NSFlags">67120869</int>
+														<int key="NSFlags">67120868</int>
 														<int key="NSTextCheckingTypes">0</int>
 														<nil key="NSMarkedAttributes"/>
 														<object class="NSColor" key="NSBackgroundColor" id="733752596">
@@ -140,6 +140,7 @@
 													</object>
 													<int key="NSTVFlags">6</int>
 													<string key="NSMaxSize">{463, 10000000}</string>
+													<string key="NSMinize">{249, 200}</string>
 													<nil key="NSDelegate"/>
 												</object>
 											</array>
@@ -151,23 +152,8 @@
 											<reference key="NSDocView" ref="246048412"/>
 											<reference key="NSBGColor" ref="733752596"/>
 											<object class="NSCursor" key="NSCursor">
-												<string key="NSHotSpot">{4, 5}</string>
-												<object class="NSImage" key="NSImage">
-													<int key="NSImageFlags">79691776</int>
-													<array key="NSReps">
-														<array>
-															<integer value="5"/>
-															<object class="NSURL">
-																<nil key="NS.base"/>
-																<string key="NS.relative">file://localhost/Applications/Xcode.app/Contents/SharedFrameworks/DVTKit.framework/Resources/DVTIbeamCursor.tiff</string>
-															</object>
-														</array>
-													</array>
-													<object class="NSColor" key="NSColor" id="780903439">
-														<int key="NSColorSpace">3</int>
-														<bytes key="NSWhite">MCAwAA</bytes>
-													</object>
-												</object>
+												<string key="NSHotSpot">{1, -1}</string>
+												<int key="NSCursorType">0</int>
 											</object>
 										</object>
 										<object class="NSScroller" id="754844381">
@@ -176,7 +162,7 @@
 											<string key="NSFrame">{{233, 0}, {16, 200}}</string>
 											<reference key="NSSuperview" ref="450341072"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="48975519"/>
+											<reference key="NSNextKeyView" ref="963203143"/>
 											<string key="NSReuseIdentifierKey">_NS:83</string>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 											<reference key="NSTarget" ref="450341072"/>
@@ -203,7 +189,7 @@
 									<string key="NSFrame">{{281, 20}, {249, 200}}</string>
 									<reference key="NSSuperview" ref="566352399"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView" ref="754844381"/>
+									<reference key="NSNextKeyView" ref="48975519"/>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<int key="NSsFlags">133136</int>
 									<reference key="NSVScroller" ref="754844381"/>
@@ -387,6 +373,7 @@
 							<string key="NSFrame">{{373, 13}, {163, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="45058821">
@@ -472,7 +459,10 @@ A</bytes>
 											</object>
 										</array>
 									</array>
-									<reference key="NSColor" ref="780903439"/>
+									<object class="NSColor" key="NSColor">
+										<int key="NSColorSpace">3</int>
+										<bytes key="NSWhite">MCAwAA</bytes>
+									</object>
 								</object>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
@@ -487,7 +477,7 @@ A</bytes>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="566352399"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
@@ -745,6 +735,7 @@ A</bytes>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="28.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="37.CustomClassName">CMInvisibleScrollView</string>
 				<string key="37.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="38.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="39.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -769,6 +760,7 @@ A</bytes>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="showAuthors:">id</string>
 						<string key="showLicense:">id</string>
+						<string key="showWindow:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="showAuthors:">
@@ -777,6 +769,10 @@ A</bytes>
 						</object>
 						<object class="IBActionInfo" key="showLicense:">
 							<string key="name">showLicense:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showWindow:">
+							<string key="name">showWindow:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
@@ -807,6 +803,14 @@ A</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/CMAboutController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">CMInvisibleScrollView</string>
+					<string key="superclassName">NSScrollView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CMInvisibleScrollView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

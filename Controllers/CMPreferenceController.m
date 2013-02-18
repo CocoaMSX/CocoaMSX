@@ -192,6 +192,8 @@
         
         downloadQueue = [[NSOperationQueue alloc] init];
         [downloadQueue setMaxConcurrentOperationCount:1];
+        
+        jsonParser = [[SBJsonParser alloc] init];
     }
     
     return self;
@@ -290,6 +292,7 @@
                                                   object:nil];
     
     [downloadQueue release];
+    [jsonParser release];
     
     self.joystickPortPeripherals = nil;
     self.joystickPort1Selection = nil;
@@ -471,15 +474,11 @@
         return NO;
     }
     
-    NSString *content = [[[NSString alloc] initWithData:data
-                                               encoding:NSUTF8StringEncoding] autorelease];
-    
 #if DEBUG
     NSLog(@"done. Parsing JSON...");
 #endif
     
-    SBJsonParser *parser = [[[SBJsonParser alloc] init] autorelease];
-    NSDictionary *dict = [parser objectWithString:content];
+    NSDictionary *dict = [jsonParser objectWithData:data];
     
     if (!dict)
     {

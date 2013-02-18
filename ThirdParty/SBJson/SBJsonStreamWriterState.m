@@ -30,21 +30,13 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if !__has_feature(objc_arc)
-#error "This source file must be compiled with ARC enabled!"
-#endif
-
 #import "SBJsonStreamWriterState.h"
 #import "SBJsonStreamWriter.h"
 
 #define SINGLETON \
 + (id)sharedInstance { \
-    static id state = nil; \
-    if (!state) { \
-        @synchronized(self) { \
-            if (!state) state = [[self alloc] init]; \
-        } \
-    } \
+    static id state; \
+    if (!state) state = [[self alloc] init]; \
     return state; \
 }
 

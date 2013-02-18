@@ -29,6 +29,7 @@
 @class CMMsxKeyLayout;
 @class MGScopeBar;
 @class CMKeyCaptureView;
+@class SBJsonParser;
 
 @interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate>
 {
@@ -87,6 +88,7 @@
     NSInteger selectedKeyboardShiftState;
     
     NSOperationQueue *downloadQueue;
+    SBJsonParser *jsonParser;
 }
 
 @property (nonatomic, retain) CMEmulatorController *emulator;

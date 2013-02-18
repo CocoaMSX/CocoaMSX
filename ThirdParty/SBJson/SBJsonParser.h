@@ -30,16 +30,24 @@
 #import <Foundation/Foundation.h>
 
 /**
- Parse JSON Strings and NSData objects
+ @brief Parse JSON Strings and NSData objects
 
  This uses SBJsonStreamParser internally.
 
+ @see @ref objc2json
+
  */
 
-@interface SBJsonParser : NSObject
+@interface SBJsonParser : NSObject {
+
+@private
+	NSString *error;
+    NSUInteger depth, maxDepth;
+
+}
 
 /**
- The maximum recursing depth.
+ @brief The maximum recursing depth.
 
  Defaults to 32. If the input is nested deeper than this the input will be deemed to be
  malicious and the parser returns nil, signalling an error. ("Nested too deep".) You can
@@ -48,7 +56,7 @@
 @property NSUInteger maxDepth;
 
 /**
- Description of parse error
+ @brief Description of parse error
 
  This method returns the trace of the last method that failed.
  You need to check the return value of the call you're making to figure out
@@ -60,10 +68,10 @@
 @property(copy) NSString *error;
 
 /**
- Return the object represented by the given NSData object.
+ @brief Return the object represented by the given NSData object.
 
  The data *must* be UTF8 encoded.
-
+ 
  @param data An NSData containing UTF8 encoded data to parse.
  @return The NSArray or NSDictionary represented by the object, or nil if an error occured.
 
@@ -71,15 +79,28 @@
 - (id)objectWithData:(NSData*)data;
 
 /**
- Parse string and return the represented dictionary or array.
+ @brief Return the object represented by the given string
 
- Calls objectWithData: internally.
-
- @param string An NSString containing JSON text.
+ This method converts its input to an NSData object containing UTF8 and calls -objectWithData: with it.
 
  @return The NSArray or NSDictionary represented by the object, or nil if an error occured.
  */
-- (id)objectWithString:(NSString *)string;
+- (id)objectWithString:(NSString *)repr;
+
+/**
+ @brief Return the object represented by the given string
+
+ This method calls objectWithString: internally. If an error occurs, and if @p error
+ is not nil, it creates an NSError object and returns this through its second argument.
+
+ @param jsonText the json string to parse
+ @param error pointer to an NSError object to populate on error
+
+ @return The NSArray or NSDictionary represented by the object, or nil if an error occured.
+ */
+
+- (id)objectWithString:(NSString*)jsonText
+                 error:(NSError**)error;
 
 @end
 

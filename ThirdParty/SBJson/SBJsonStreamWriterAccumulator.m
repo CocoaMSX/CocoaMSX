@@ -27,10 +27,6 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if !__has_feature(objc_arc)
-#error "This source file must be compiled with ARC enabled!"
-#endif
-
 #import "SBJsonStreamWriterAccumulator.h"
 
 
@@ -46,6 +42,10 @@
     return self;
 }
 
+- (void)dealloc {
+    [data release];
+    [super dealloc];
+}
 
 #pragma mark SBJsonStreamWriterDelegate
 

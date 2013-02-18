@@ -26,6 +26,10 @@
 
 @end
 
+@interface CMInvisibleScrollView : NSScrollView
+
+@end
+
 @interface CMAboutController : NSWindowController<NSWindowDelegate>
 {
     IBOutlet NSTextField *versionNumberField;

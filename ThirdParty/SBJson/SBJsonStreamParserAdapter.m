@@ -30,10 +30,6 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if !__has_feature(objc_arc)
-#error "This source file must be compiled with ARC enabled!"
-#endif
-
 #import "SBJsonStreamParserAdapter.h"
 
 @interface SBJsonStreamParserAdapter ()
@@ -63,6 +59,11 @@
 	return self;
 }	
 
+- (void)dealloc {
+	[keyStack release];
+	[stack release];
+	[super dealloc];
+}
 
 #pragma mark Private methods
 
@@ -114,8 +115,8 @@
 #pragma mark Delegate methods
 
 - (void)parserFoundObjectStart:(SBJsonStreamParser*)parser {
-	if (++depth > self.levelsToSkip) {
-		dict = [NSMutableDictionary new];
+	if (++depth > levelsToSkip) {
+		dict = [[NSMutableDictionary new] autorelease];
 		[stack addObject:dict];
 		currentType = SBJsonStreamParserAdapterObject;
 	}
@@ -126,26 +127,28 @@
 }
 
 - (void)parserFoundObjectEnd:(SBJsonStreamParser*)parser {
-	if (depth-- > self.levelsToSkip) {
-		id value = dict;
+	if (depth-- > levelsToSkip) {
+		id value = [dict retain];
 		[self pop];
 		[self parser:parser found:value];
+		[value release];
 	}
 }
 
 - (void)parserFoundArrayStart:(SBJsonStreamParser*)parser {
-	if (++depth > self.levelsToSkip) {
-		array = [NSMutableArray new];
+	if (++depth > levelsToSkip) {
+		array = [[NSMutableArray new] autorelease];
 		[stack addObject:array];
 		currentType = SBJsonStreamParserAdapterArray;
 	}
 }
 
 - (void)parserFoundArrayEnd:(SBJsonStreamParser*)parser {
-	if (depth-- > self.levelsToSkip) {
-		id value = array;
+	if (depth-- > levelsToSkip) {
+		id value = [array retain];
 		[self pop];
 		[self parser:parser found:value];
+		[value release];
 	}
 }
 

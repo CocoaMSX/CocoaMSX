@@ -287,11 +287,6 @@
 		FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FE1C135A167DE41800CE2B6B /* AppIcon.png */; };
 		FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE1C135B167DE41800CE2B6B /* AppIcon@2x.png */; };
 		FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */; };
-		FE20DB911632783200D44ADF /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8E1632783200D44ADF /* AUTHORS */; };
-		FE20DB921632783200D44ADF /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB8F1632783200D44ADF /* COPYING */; };
-		FE20DB931632783200D44ADF /* README in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB901632783200D44ADF /* README */; };
-		FE20DB95163278AD00D44ADF /* blueMSX License.txt in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB94163278AD00D44ADF /* blueMSX License.txt */; };
-		FE20DB971632845400D44ADF /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = FE20DB961632845400D44ADF /* TODO */; };
 		FE23EAAE1636679C00AC98BF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE23EAAC1636670500AC98BF /* Carbon.framework */; };
 		FE2A2BD916240966000CCAE4 /* RepositionCassette.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */; };
 		FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2A2BDC16240DB7000CCAE4 /* CMRepositionCassetteController.m */; };
@@ -300,16 +295,16 @@
 		FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E1962164085A000BCFD53 /* CMPreferences.m */; };
 		FE2E196A1640F19900BCFD53 /* NSString+CMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E19691640F19900BCFD53 /* NSString+CMExtensions.m */; };
 		FE3754BE16B5CF54005360CC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
-		FE3754D916B638DB005360CC /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C616B638DB005360CC /* SBJsonParser.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754DA16B638DB005360CC /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C816B638DB005360CC /* SBJsonStreamParser.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754DB16B638DB005360CC /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754CA16B638DB005360CC /* SBJsonStreamParserAccumulator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754DC16B638DB005360CC /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754CC16B638DB005360CC /* SBJsonStreamParserAdapter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754DD16B638DB005360CC /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754CE16B638DB005360CC /* SBJsonStreamParserState.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754DE16B638DB005360CC /* SBJsonStreamTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D016B638DB005360CC /* SBJsonStreamTokeniser.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754DF16B638DB005360CC /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D216B638DB005360CC /* SBJsonStreamWriter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754E016B638DB005360CC /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D416B638DB005360CC /* SBJsonStreamWriterAccumulator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754E116B638DB005360CC /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D616B638DB005360CC /* SBJsonStreamWriterState.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		FE3754E216B638DB005360CC /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D816B638DB005360CC /* SBJsonWriter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		FE3754D916B638DB005360CC /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C616B638DB005360CC /* SBJsonParser.m */; };
+		FE3754DA16B638DB005360CC /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C816B638DB005360CC /* SBJsonStreamParser.m */; };
+		FE3754DB16B638DB005360CC /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754CA16B638DB005360CC /* SBJsonStreamParserAccumulator.m */; };
+		FE3754DC16B638DB005360CC /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754CC16B638DB005360CC /* SBJsonStreamParserAdapter.m */; };
+		FE3754DD16B638DB005360CC /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754CE16B638DB005360CC /* SBJsonStreamParserState.m */; };
+		FE3754DE16B638DB005360CC /* SBJsonStreamTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D016B638DB005360CC /* SBJsonStreamTokeniser.m */; };
+		FE3754DF16B638DB005360CC /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D216B638DB005360CC /* SBJsonStreamWriter.m */; };
+		FE3754E016B638DB005360CC /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D416B638DB005360CC /* SBJsonStreamWriterAccumulator.m */; };
+		FE3754E116B638DB005360CC /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D616B638DB005360CC /* SBJsonStreamWriterState.m */; };
+		FE3754E216B638DB005360CC /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D816B638DB005360CC /* SBJsonWriter.m */; };
 		FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */; };
 		FE3D5E6716AE6EBA00898DF5 /* toolbar-computer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */; };
 		FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE42836215FE857400ED7CB9 /* Emulator.xib */; };
@@ -319,10 +314,11 @@
 		FE46C8EE16CA188E00D25801 /* icon-downloading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8EC16CA188E00D25801 /* icon-downloading@2x.png */; };
 		FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8EF16CA1DCA00D25801 /* icon-downloading-inverse.png */; };
 		FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8F016CA1DCA00D25801 /* icon-downloading-inverse@2x.png */; };
-		FE46C8FB16D14DBD00D25801 /* SBJson License.txt in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8FA16D14DBD00D25801 /* SBJson License.txt */; };
 		FE5458C2168C182A0002FA46 /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */; };
 		FE5458C3168C182A0002FA46 /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BF168C182A0002FA46 /* MGScopeBar.m */; };
-		FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */; };
+		FE73719216D20F7B00ADF942 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718D16D20F7A00ADF942 /* NSObject+SBJson.m */; };
+		FE73719316D20F7B00ADF942 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */; };
+		FE73719416D20F7B00ADF942 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */; };
 		FE88FF58169B9AC5004B483B /* CMKeyCaptureView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF55169B9AC5004B483B /* CMKeyCaptureView.m */; };
 		FE88FF59169B9AC5004B483B /* CMKeyCaptureFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF57169B9AC5004B483B /* CMKeyCaptureFieldCell.m */; };
 		FE88FF5D169BAB8B004B483B /* CMHeaderRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF5C169BAB8B004B483B /* CMHeaderRowCell.m */; };
@@ -341,7 +337,6 @@
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
-		FEA6277B16A0CAD70048C05C /* cbios.txt in Resources */ = {isa = PBXBuildFile; fileRef = FEA6277A16A0CAD70048C05C /* cbios.txt */; };
 		FEA8BF1016A01007006E67D2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
@@ -1020,6 +1015,12 @@
 		FE5458BF168C182A0002FA46 /* MGScopeBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGScopeBar.m; sourceTree = "<group>"; };
 		FE5458C0168C182A0002FA46 /* MGScopeBarDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBarDelegateProtocol.h; sourceTree = "<group>"; };
 		FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "MGScopeBar License.rtf"; sourceTree = "<group>"; };
+		FE73718C16D20F6400ADF942 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
+		FE73718D16D20F7A00ADF942 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
+		FE73718E16D20F7B00ADF942 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
+		FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonTokeniser.m; sourceTree = "<group>"; };
+		FE73719016D20F7B00ADF942 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
+		FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		FE88FF54169B9AC5004B483B /* CMKeyCaptureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyCaptureView.h; sourceTree = "<group>"; };
 		FE88FF55169B9AC5004B483B /* CMKeyCaptureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyCaptureView.m; sourceTree = "<group>"; };
 		FE88FF56169B9AC5004B483B /* CMKeyCaptureFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyCaptureFieldCell.h; sourceTree = "<group>"; };
@@ -1954,6 +1955,8 @@
 		FE3754C316B638DB005360CC /* SBJson */ = {
 			isa = PBXGroup;
 			children = (
+				FE73718C16D20F6400ADF942 /* NSObject+SBJson.h */,
+				FE73718D16D20F7A00ADF942 /* NSObject+SBJson.m */,
 				FE3754C416B638DB005360CC /* SBJson.h */,
 				FE3754C516B638DB005360CC /* SBJsonParser.h */,
 				FE3754C616B638DB005360CC /* SBJsonParser.m */,
@@ -1973,6 +1976,10 @@
 				FE3754D416B638DB005360CC /* SBJsonStreamWriterAccumulator.m */,
 				FE3754D516B638DB005360CC /* SBJsonStreamWriterState.h */,
 				FE3754D616B638DB005360CC /* SBJsonStreamWriterState.m */,
+				FE73718E16D20F7B00ADF942 /* SBJsonTokeniser.h */,
+				FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */,
+				FE73719016D20F7B00ADF942 /* SBJsonUTF8Stream.h */,
+				FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */,
 				FE3754D716B638DB005360CC /* SBJsonWriter.h */,
 				FE3754D816B638DB005360CC /* SBJsonWriter.m */,
 			);
@@ -2192,11 +2199,6 @@
 				FE2CEB581622A50500E58F9A /* Databases in Resources */,
 				FE2CEB5A1622A50500E58F9A /* Machines in Resources */,
 				FE2A2BD916240966000CCAE4 /* RepositionCassette.xib in Resources */,
-				FE20DB911632783200D44ADF /* AUTHORS in Resources */,
-				FE20DB921632783200D44ADF /* COPYING in Resources */,
-				FE20DB931632783200D44ADF /* README in Resources */,
-				FE20DB95163278AD00D44ADF /* blueMSX License.txt in Resources */,
-				FE20DB971632845400D44ADF /* TODO in Resources */,
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
 				FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */,
 				6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */,
@@ -2212,7 +2214,6 @@
 				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
-				FE5458C6168C25CE0002FA46 /* MGScopeBar License.rtf in Resources */,
 				FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */,
 				FEB8DFBF1692402E009BE6E4 /* toolbar-joypad@2x.png in Resources */,
 				FEB8DFC01692402E009BE6E4 /* toolbar-keyboard.png in Resources */,
@@ -2220,7 +2221,6 @@
 				FEB8DFC21692402E009BE6E4 /* toolbar-sound.png in Resources */,
 				FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */,
 				FEACF06C16A07B9800EEF84C /* sparkle_dsa_pub.pem in Resources */,
-				FEA6277B16A0CAD70048C05C /* cbios.txt in Resources */,
 				FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */,
 				FE3D5E6716AE6EBA00898DF5 /* toolbar-computer@2x.png in Resources */,
 				FE17DBFB16B3BD1A004ED68D /* logo-msx.png in Resources */,
@@ -2235,7 +2235,6 @@
 				FE46C8EE16CA188E00D25801 /* icon-downloading@2x.png in Resources */,
 				FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */,
 				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
-				FE46C8FB16D14DBD00D25801 /* SBJson License.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2551,6 +2550,9 @@
 				FE3754E016B638DB005360CC /* SBJsonStreamWriterAccumulator.m in Sources */,
 				FE3754E116B638DB005360CC /* SBJsonStreamWriterState.m in Sources */,
 				FE3754E216B638DB005360CC /* SBJsonWriter.m in Sources */,
+				FE73719216D20F7B00ADF942 /* NSObject+SBJson.m in Sources */,
+				FE73719316D20F7B00ADF942 /* SBJsonTokeniser.m in Sources */,
+				FE73719416D20F7B00ADF942 /* SBJsonUTF8Stream.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

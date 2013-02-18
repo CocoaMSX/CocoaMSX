@@ -32,17 +32,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "SBJsonStreamTokeniser.h"
+#import "SBJsonTokeniser.h"
 #import "SBJsonStreamParser.h"
 
 @interface SBJsonStreamParserState : NSObject
 + (id)sharedInstance;
-
 - (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token;
 - (SBJsonStreamParserStatus)parserShouldReturn:(SBJsonStreamParser*)parser;
 - (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok;
 - (BOOL)needKey;
-- (BOOL)isError;
 
 - (NSString*)name;
 

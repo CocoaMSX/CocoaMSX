@@ -32,6 +32,17 @@
 
 @end
 
+@implementation CMInvisibleScrollView
+
+- (void)tile
+{
+    [[self contentView] setFrame:[self bounds]];
+    
+    [[self verticalScroller] setFrame:NSZeroRect];
+}
+
+@end
+
 @interface CMAboutController ()
 
 - (void)initializeScrollingText;
@@ -152,8 +163,9 @@
 
 - (void)initializeScrollingText
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"Documents/AboutContent"
-                                                     ofType:@"rtf"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"AboutContent"
+                                                     ofType:@"rtf"
+                                                inDirectory:@"Documents"];
     NSMutableAttributedString *content = [[[NSMutableAttributedString alloc] initWithPath:path
                                                                        documentAttributes:NULL] autorelease];
     

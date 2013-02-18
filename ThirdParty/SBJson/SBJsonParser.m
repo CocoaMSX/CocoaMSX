@@ -27,10 +27,6 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if !__has_feature(objc_arc)
-#error "This source file must be compiled with ARC enabled!"
-#endif
-
 #import "SBJsonParser.h"
 #import "SBJsonStreamParser.h"
 #import "SBJsonStreamParserAdapter.h"
@@ -48,6 +44,10 @@
     return self;
 }
 
+- (void)dealloc {
+    [error release];
+    [super dealloc];
+}
 
 #pragma mark Methods
 
@@ -58,12 +58,12 @@
         return nil;
     }
 
-	SBJsonStreamParserAccumulator *accumulator = [[SBJsonStreamParserAccumulator alloc] init];
+	SBJsonStreamParserAccumulator *accumulator = [[[SBJsonStreamParserAccumulator alloc] init] autorelease];
     
-    SBJsonStreamParserAdapter *adapter = [[SBJsonStreamParserAdapter alloc] init];
+    SBJsonStreamParserAdapter *adapter = [[[SBJsonStreamParserAdapter alloc] init] autorelease];
     adapter.delegate = accumulator;
 	
-	SBJsonStreamParser *parser = [[SBJsonStreamParser alloc] init];
+	SBJsonStreamParser *parser = [[[SBJsonStreamParser alloc] init] autorelease];
 	parser.maxDepth = self.maxDepth;
 	parser.delegate = adapter;
 	
@@ -84,8 +84,21 @@
 	return nil;
 }
 
-- (id)objectWithString:(NSString *)string {
-	return [self objectWithData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+- (id)objectWithString:(NSString *)repr {
+	return [self objectWithData:[repr dataUsingEncoding:NSUTF8StringEncoding]];
+}
+
+- (id)objectWithString:(NSString*)repr error:(NSError**)error_ {
+	id tmp = [self objectWithString:repr];
+    if (tmp)
+        return tmp;
+    
+    if (error_) {
+		NSDictionary *ui = [NSDictionary dictionaryWithObjectsAndKeys:error, NSLocalizedDescriptionKey, nil];
+        *error_ = [NSError errorWithDomain:@"org.brautaset.SBJsonParser.ErrorDomain" code:0 userInfo:ui];
+	}
+	
+    return nil;
 }
 
 @end
