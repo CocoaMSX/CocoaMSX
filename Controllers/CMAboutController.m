@@ -45,21 +45,27 @@
 
 @interface CMAboutController ()
 
-- (void)initializeScrollingText;
 - (void)startScrollingAnimation;
 - (void)stopScrollingAnimation;
+
+- (void)restartScrolling;
+- (void)continueScrolling;
+
+- (void)setScrollAmount:(CGFloat)newAmount;
+- (void)scrollOneUnit;
 
 @end
 
 @implementation CMAboutController
 
 @synthesize scrollingStartTime = _scrollingStartTime;
+@synthesize actualScrollingText = _actualScrollingText;
 
-#define BLANK_LINE_COUNT 15
+#define BLANK_LINE_COUNT 14
 
 #define	PRESCROLL_DELAY_SECONDS	4.00	// time before animation starts
-#define	SCROLL_DELAY_SECONDS	0.05	// time between animation frames
-#define SCROLL_AMOUNT_PIXELS	1.00	// amount to scroll in each animation frame
+#define	SCROLL_DELAY_SECONDS    0.05	// time between animation frames
+#define SCROLL_AMOUNT_PIXELS    1.00	// amount to scroll in each animation frame
 
 - (id)init
 {
@@ -77,22 +83,37 @@
                                                     name:NSViewBoundsDidChangeNotification
                                                   object:[textScrollView contentView]];
     
+    [self setScrollingStartTime:nil];
+    [self setActualScrollingText:nil];
+    
     [scrollingTimer release];
-    [_scrollingStartTime release];
+    [scrollingTextTemplate release];
+    [scrollingTextLeadIn release];
     
     [super dealloc];
 }
 
 - (void)awakeFromNib
 {
-    [scrollingTextView setPostsBoundsChangedNotifications:YES];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"AboutContent"
+                                                     ofType:@"rtf"
+                                                inDirectory:@"Documents"];
+    scrollingTextTemplate = [[NSMutableAttributedString alloc] initWithPath:path
+                                                         documentAttributes:NULL];
     
+    scrollingTextLeadIn = [[NSMutableAttributedString alloc] init];
+    
+    NSAttributedString *newline = [[[NSAttributedString alloc] initWithString:@"\n"] autorelease];
+    for (NSInteger i = 0; i < BLANK_LINE_COUNT; i++)
+        [scrollingTextLeadIn appendAttributedString:newline];
+    
+    [self restartScrolling];
+    
+    [scrollingTextView setPostsBoundsChangedNotifications:YES];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(boundsDidChange:)
                                                  name:NSViewBoundsDidChangeNotification
                                                object:[textScrollView contentView]];
-    
-    [self initializeScrollingText];
 }
 
 - (void)windowDidLoad
@@ -122,18 +143,21 @@
     [self setScrollAmount:(currentScrollAmount + SCROLL_AMOUNT_PIXELS)];
 }
 
-- (void)setScrollAmount:(float)newAmount
+- (void)setScrollAmount:(CGFloat)newAmount
 {
     isAutoScrolling = YES;
     
     [[textScrollView documentView] scrollPoint:NSMakePoint(0.0, newAmount)];
     
-    NSRect scrollViewFrame;
+    CGFloat contentHeight = [[textScrollView documentView] bounds].size.height;
+    CGFloat contentPosition = newAmount + [textScrollView bounds].size.height;
+    
+    if (contentPosition >= contentHeight)
+        [self continueScrolling];
     
     // Find where the scrollview’s bounds are, then convert to panel’s coordinates
-    scrollViewFrame = [textScrollView bounds];
-    scrollViewFrame = [[[self window] contentView] convertRect:scrollViewFrame
-                                                      fromView:textScrollView];
+    NSRect scrollViewFrame = [[[self window] contentView] convertRect:[textScrollView bounds]
+                                                             fromView:textScrollView];
     
     // Redraw everything which overlaps it.
     [[[self window] contentView] setNeedsDisplayInRect:scrollViewFrame];
@@ -161,19 +185,27 @@
     scrollingTimer = nil;
 }
 
-- (void)initializeScrollingText
+- (void)restartScrolling
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"AboutContent"
-                                                     ofType:@"rtf"
-                                                inDirectory:@"Documents"];
-    NSMutableAttributedString *content = [[[NSMutableAttributedString alloc] initWithPath:path
-                                                                       documentAttributes:NULL] autorelease];
+    [self setActualScrollingText:[[scrollingTextTemplate mutableCopy] autorelease]];
+    [[self actualScrollingText] appendAttributedString:scrollingTextLeadIn];
     
-    NSAttributedString *newline = [[[NSAttributedString alloc] initWithString:@"\n"] autorelease];
-    for (NSInteger i = 0; i < BLANK_LINE_COUNT; i++)
-        [content appendAttributedString:newline];
+    [[scrollingTextView textStorage] setAttributedString:[self actualScrollingText]];
     
-    [[scrollingTextView textStorage] setAttributedString:content];
+    [self setScrollAmount:0];
+    [self setScrollingStartTime:[NSDate dateWithTimeInterval:PRESCROLL_DELAY_SECONDS
+                                                   sinceDate:[NSDate date]]];
+}
+
+- (void)continueScrolling
+{
+    [self setActualScrollingText:[[scrollingTextLeadIn mutableCopy] autorelease]];
+    [[self actualScrollingText] appendAttributedString:scrollingTextTemplate];
+    [[self actualScrollingText] appendAttributedString:scrollingTextLeadIn];
+    
+    [[scrollingTextView textStorage] setAttributedString:[self actualScrollingText]];
+    
+    [self setScrollAmount:0];
 }
 
 #pragma mark - Notifications
@@ -195,31 +227,33 @@
     [self stopScrollingAnimation];
 }
 
+#pragma mark - NSWindowController
+
+- (void)showWindow:(id)sender
+{
+    [super showWindow:sender];
+    
+    [self restartScrolling];
+}
+
 #pragma mark - Actions
 
 - (void)showLicense:(id)sender
 {
-    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *documentPath = [resourcePath stringByAppendingPathComponent:@"Documents/LICENSE"];
+    NSString *documentPath = [[NSBundle mainBundle] pathForResource:@"LICENSE"
+                                                             ofType:@""
+                                                        inDirectory:@"Documents"];
     
     [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:documentPath]];
 }
 
 - (void)showAuthors:(id)sender
 {
-    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *documentPath = [resourcePath stringByAppendingPathComponent:@"Documents/AUTHORS"];
+    NSString *documentPath = [[NSBundle mainBundle] pathForResource:@"AUTHORS"
+                                                             ofType:@""
+                                                        inDirectory:@"Documents"];
     
     [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:documentPath]];
-}
-
-- (void)showWindow:(id)sender
-{
-    [super showWindow:sender];
-    
-    [self setScrollAmount:0];
-    [self setScrollingStartTime:[NSDate dateWithTimeInterval:PRESCROLL_DELAY_SECONDS
-                                                   sinceDate:[NSDate date]]];
 }
 
 @end

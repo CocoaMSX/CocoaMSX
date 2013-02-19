@@ -40,10 +40,16 @@
     
     BOOL isAutoScrolling;
     NSTimer *scrollingTimer;
+    
+    NSAttributedString *scrollingTextTemplate;
+    NSMutableAttributedString *scrollingTextLeadIn;
+    
     NSDate *_scrollingStartTime;
+    NSMutableAttributedString *_actualScrollingText;
 }
 
 @property (nonatomic, retain) NSDate *scrollingStartTime;
+@property (nonatomic, retain) NSMutableAttributedString *actualScrollingText;
 
 - (IBAction)showLicense:(id)sender;
 - (IBAction)showAuthors:(id)sender;

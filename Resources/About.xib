@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12C3006</string>
+		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
@@ -71,7 +71,7 @@
 												<object class="NSTextView" id="246048412">
 													<reference key="NSNextResponder" ref="486275257"/>
 													<int key="NSvFlags">2322</int>
-													<string key="NSFrameSize">{234, 200}</string>
+													<string key="NSFrameSize">{231, 200}</string>
 													<reference key="NSSuperview" ref="486275257"/>
 													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView" ref="754844381"/>
@@ -91,7 +91,7 @@
 															<nil key="NSDelegate"/>
 														</object>
 														<reference key="NSTextView" ref="246048412"/>
-														<double key="NSWidth">234</double>
+														<double key="NSWidth">231</double>
 														<int key="NSTCFlags">1</int>
 													</object>
 													<object class="NSTextViewSharedData" key="NSSharedData">
@@ -140,11 +140,11 @@
 													</object>
 													<int key="NSTVFlags">6</int>
 													<string key="NSMaxSize">{463, 10000000}</string>
-													<string key="NSMinize">{249, 200}</string>
+													<string key="NSMinize">{246, 200}</string>
 													<nil key="NSDelegate"/>
 												</object>
 											</array>
-											<string key="NSFrameSize">{249, 200}</string>
+											<string key="NSFrameSize">{246, 200}</string>
 											<reference key="NSSuperview" ref="450341072"/>
 											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView" ref="246048412"/>
@@ -186,7 +186,7 @@
 											<double key="NSPercent">0.94565218687057495</double>
 										</object>
 									</array>
-									<string key="NSFrame">{{281, 20}, {249, 200}}</string>
+									<string key="NSFrame">{{284, 20}, {246, 200}}</string>
 									<reference key="NSSuperview" ref="566352399"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="48975519"/>
@@ -210,7 +210,7 @@
 										<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
 										<string>NeXT TIFF v4.0 pasteboard type</string>
 									</set>
-									<string key="NSFrame">{{17, 56}, {256, 256}}</string>
+									<string key="NSFrame">{{20, 36}, {256, 256}}</string>
 									<reference key="NSSuperview" ref="566352399"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="963956803"/>
@@ -235,7 +235,7 @@
 								<object class="NSTextField" id="846336310">
 									<reference key="NSNextResponder" ref="566352399"/>
 									<int key="NSvFlags">268</int>
-									<string key="NSFrame">{{278, 228}, {232, 17}}</string>
+									<string key="NSFrame">{{281, 228}, {232, 17}}</string>
 									<reference key="NSSuperview" ref="566352399"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="450341072"/>
@@ -273,7 +273,7 @@
 								<object class="NSTextField" id="210087112">
 									<reference key="NSNextResponder" ref="566352399"/>
 									<int key="NSvFlags">268</int>
-									<string key="NSFrame">{{278, 253}, {232, 17}}</string>
+									<string key="NSFrame">{{281, 253}, {232, 17}}</string>
 									<reference key="NSSuperview" ref="566352399"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="846336310"/>
@@ -298,7 +298,7 @@
 								<object class="NSTextField" id="963956803">
 									<reference key="NSNextResponder" ref="566352399"/>
 									<int key="NSvFlags">268</int>
-									<string key="NSFrame">{{278, 265}, {232, 44}}</string>
+									<string key="NSFrame">{{281, 265}, {232, 44}}</string>
 									<reference key="NSSuperview" ref="566352399"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="210087112"/>

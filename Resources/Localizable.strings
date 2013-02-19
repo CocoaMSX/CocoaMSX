@@ -202,3 +202,4 @@ ErrorDeletingMachine = "An error occurred while cleaning up.";
 ErrorVerifyingHash = "Downloaded machine failed validation.";
 ErrorParsingMachineFeed = "An error occurred while reading the list of downloadable machines.";
 ErrorDeletingInstalledMachine = "Could not delete installed machine.";
+ErrorDownloadCritical = "Could not complete download - an unexpected error occurred.";

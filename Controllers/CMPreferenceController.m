@@ -124,6 +124,7 @@
 #define CMErrorDeleting       104
 #define CMErrorVerifyingHash  105
 #define CMErrorParsingJson    106
+#define CMErrorCritical       107
 
 #define CMInstallStartedNotification   @"com.akop.CocoaMSX.InstallStarted"
 #define CMInstallCompletedNotification @"com.akop.CocoaMSX.InstallCompleted"
@@ -144,6 +145,7 @@
 
 - (void)performBlockOnMainThread:(void(^)(void))block;
 
+- (void)requestMachineFeedUpdate;
 - (BOOL)updateMachineFeed:(NSError **)error;
 - (void)startBackgroundDownloadOfMachine:(CMMachine *)machine;
 - (BOOL)downloadAndInstallMachine:(CMMachine *)machine error:(NSError **)error;
@@ -404,41 +406,59 @@
         // We don't have any machine data (or it's expired). Refresh our list of
         // available machines
         
-        NSOperation *downloadOp = [NSBlockOperation blockOperationWithBlock:^
-                                   {
-                                       NSError *error = nil;
-                                       BOOL success = [self updateMachineFeed:&error];
-                                       
-                                       if (success)
-                                       {
-                                           [self performBlockOnMainThread:^
-                                            {
-                                                [self synchronizeMachines];
-                                            }];
-                                       }
-                                       
-                                       if (!success && error)
-                                       {
-                                           [self performBlockOnMainThread:^
-                                            {
-                                                NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
-                                                                                 defaultButton:CMLoc(@"OK")
-                                                                               alternateButton:nil
-                                                                                   otherButton:nil
-                                                                     informativeTextWithFormat:@""];
-                                                
-                                                [alert beginSheetModalForWindow:[self window]
-                                                                  modalDelegate:self
-                                                                 didEndSelector:nil
-                                                                    contextInfo:nil];
-                                            }];
-                                       }
-                                   }];
-        
-        [downloadQueue addOperation:downloadOp];
+        [self requestMachineFeedUpdate];
     }
     
     return machineList;
+}
+
+- (void)requestMachineFeedUpdate
+{
+    NSOperation *downloadOp = [NSBlockOperation blockOperationWithBlock:^
+                               {
+                                   NSError *error = nil;
+                                   BOOL success;
+                                   
+                                   @try
+                                   {
+                                       success = [self updateMachineFeed:&error];
+                                   }
+                                   @catch (NSException *e)
+                                   {
+                                       success = NO;
+                                       error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                                                   code:CMErrorCritical
+                                                               userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadCritical"
+                                                                                                           forKey:NSLocalizedDescriptionKey]];
+                                   }
+                                   
+                                   if (success)
+                                   {
+                                       [self performBlockOnMainThread:^
+                                        {
+                                            [self synchronizeMachines];
+                                        }];
+                                   }
+                                   
+                                   if (!success && error)
+                                   {
+                                       [self performBlockOnMainThread:^
+                                        {
+                                            NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
+                                                                             defaultButton:CMLoc(@"OK")
+                                                                           alternateButton:nil
+                                                                               otherButton:nil
+                                                                 informativeTextWithFormat:@""];
+                                            
+                                            [alert beginSheetModalForWindow:[self window]
+                                                              modalDelegate:self
+                                                             didEndSelector:nil
+                                                                contextInfo:nil];
+                                        }];
+                                   }
+                               }];
+    
+    [downloadQueue addOperation:downloadOp];
 }
 
 - (BOOL)updateMachineFeed:(NSError **)error
@@ -497,10 +517,9 @@
     NSLog(@"done. Creating machines...");
 #endif
     
+    NSURL *downloadRoot = [NSURL URLWithString:[dict objectForKey:@"downloadRoot"]];
     NSArray *machinesJson = [dict objectForKey:@"machines"];
     NSMutableArray *remoteMachineList = [NSMutableArray array];
-    
-    NSURL *downloadRoot = [feedUrl URLByDeletingLastPathComponent];
     
     [machinesJson enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
@@ -663,6 +682,14 @@
         @try
         {
             success = [self downloadAndInstallMachine:machine error:&error];
+        }
+        @catch (NSException *e)
+        {
+            success = NO;
+            error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                        code:CMErrorCritical
+                                    userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadCritical"
+                                                                                forKey:NSLocalizedDescriptionKey]];
         }
         @finally
         {
@@ -1075,6 +1102,12 @@
         [self setDeviceForJoystickPort:1
                             toDeviceId:[[self joystickPort2Selection] deviceId]];
     }
+}
+
+- (void)refreshMachineList:(id)sender
+{
+    [self synchronizeMachines];
+    [self requestMachineFeedUpdate];
 }
 
 - (void)alertDidEnd:(NSAlert *)alert

@@ -112,6 +112,7 @@ static NSDictionary *machineLayoutMap = nil;
                          @"MSX - Gradiente Expert DDPlus",
                          @"MSX - Gradiente Expert Plus",
                          @"MSX2 - Gradiente Expert 2.0",
+                         @"MSX2+ - Brazilian",
                          @"MSX2+ - Ciel Expert 3 IDE",
                          @"MSX2+ - Ciel Expert 3 Turbo",
                          @"MSX2+ - Gradiente Expert AC88+",
@@ -170,7 +171,9 @@ static NSDictionary *machineLayoutMap = nil;
                          @"MSX2 - Toshiba FS-TM1",
                          @"MSX2 - Toshiba HX-23I",
                          @"MSX2 - Toshiba HX-34I",
+                         @"MSX2+ - European",
                          @"MSX2+ - Spectravideo SVI-738-2+",
+                         @"MSXturboR - European",
                          // Different layout
                          @"MSX - Canon V-20E",
                          @"MSX - JVC HC-7GB",
@@ -210,7 +213,8 @@ static NSDictionary *machineLayoutMap = nil;
                          @"MSX2 - Philips NMS-8280F",
                          @"MSX2 - Philips VG-8235F",
                          @"MSX2 - Sony HB-F500F",
-                         @"MSX2 - Sony HB-F700F", nil], @CMKeyLayoutFrench,
+                         @"MSX2 - Sony HB-F700F",
+                         @"MSX2+ - French", nil], @CMKeyLayoutFrench,
                         [NSArray arrayWithObjects:
                          @"MSX - Canon V-20G",
                          @"MSX - Panasonic CF-2700G",

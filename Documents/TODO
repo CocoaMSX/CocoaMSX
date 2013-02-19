@@ -1,3 +1,7 @@
+* If there's no internet connectivity, don't download the machine feed, or
+  have some way to disable machine feed auto-updates
+* Verify MD5 hash
+
 Other:
 * Go over Caps Lock - is it being pressed/released correctly in the emulator?
 * Change how scanline enabling/disabling is handled - currently clumsy, considering
