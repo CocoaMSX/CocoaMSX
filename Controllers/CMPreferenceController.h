@@ -78,8 +78,7 @@
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
     NSMutableArray *installedMachines;
-    NSMutableArray *remoteMachines;
-    NSMutableArray *availableMachines;
+    NSMutableArray *installableMachines;
     NSMutableArray *allMachines;
     
     NSArray *virtualEmulationSpeedRange;

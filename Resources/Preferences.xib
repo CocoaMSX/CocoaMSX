@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12C60</string>
+		<string key="IBDocument.SystemVersion">12C3006</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
@@ -885,7 +885,6 @@
 														</array>
 														<reference key="NSMenuFont" ref="641679565"/>
 													</object>
-													<int key="NSSelectedIndex">-1</int>
 													<bool key="NSPullDown">YES</bool>
 													<int key="NSPreferredEdge">1</int>
 													<bool key="NSUsesItemFromMenu">YES</bool>
@@ -1167,7 +1166,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<int key="NSvFlags">18</int>
 												<string key="NSFrame">{{13, 54}, {572, 498}}</string>
 												<reference key="NSSuperview" ref="208320371"/>
-												<reference key="NSNextKeyView" ref="556331475"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<array class="NSMutableArray" key="NSTabViewItems">
 													<object class="NSTabViewItem" id="564659203">
@@ -2118,7 +2116,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																<int key="NSvFlags">256</int>
 																<string key="NSFrameSize">{556, 434}</string>
 																<reference key="NSSuperview" ref="272975415"/>
-																<reference key="NSNextKeyView" ref="721340380"/>
+																<reference key="NSNextKeyView" ref="41480693"/>
 																<string key="NSReuseIdentifierKey">_NS:13</string>
 																<bool key="NSEnabled">YES</bool>
 																<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -2266,7 +2264,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												</array>
 												<string key="NSFrame">{{20, 62}, {558, 452}}</string>
 												<reference key="NSSuperview" ref="839297894"/>
-												<reference key="NSNextKeyView" ref="41480693"/>
+												<reference key="NSNextKeyView" ref="272975415"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<int key="NSsFlags">133682</int>
 												<reference key="NSVScroller" ref="721340380"/>
@@ -2321,7 +2319,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<int key="NSvFlags">18</int>
 												<string key="NSFrame">{{13, 10}, {572, 542}}</string>
 												<reference key="NSSuperview" ref="409517432"/>
-												<reference key="NSNextKeyView" ref="536136037"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<array class="NSMutableArray" key="NSTabViewItems">
 													<object class="NSTabViewItem" id="250484541">
@@ -2424,7 +2421,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																	<int key="NSvFlags">20</int>
 																	<string key="NSFrame">{{-3, 17}, {558, 419}}</string>
 																	<reference key="NSSuperview" ref="536136037"/>
-																	<reference key="NSNextKeyView" ref="645078216"/>
 																	<string key="NSReuseIdentifierKey">_NS:9</string>
 																	<array class="NSMutableArray" key="NSTabViewItems">
 																		<object class="NSTabViewItem" id="13540971">
@@ -6276,6 +6272,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<string key="3962.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3963.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3967.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="3969.CustomClassName">CMMachineSelectionCell</string>
 				<string key="3969.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3975.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="3976.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -6374,6 +6371,14 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/CMMachineCell.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">CMMachineSelectionCell</string>
+					<string key="superclassName">NSButtonCell</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/CMMachineSelectionCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

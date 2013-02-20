@@ -179,7 +179,7 @@ static NSArray *keyCodesToIgnore;
             
             for (int keyCode = 0; keyCode < 255; keyCode++)
             {
-                NSNumber *keyCodeObj = CMMakeNumber(keyCode);
+                NSNumber *keyCodeObj = @(keyCode);
                 
                 // Skip through codes we already know
                 if ([keyCodeLookupTable objectForKey:keyCodeObj])
@@ -234,13 +234,13 @@ static NSArray *keyCodesToIgnore;
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (![keyCodesToIgnore containsObject:CMMakeNumber([theEvent keyCode])])
+    if (![keyCodesToIgnore containsObject:@([theEvent keyCode])])
         [self captureKeyCode:[theEvent keyCode]];
 }
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    if (![keyCodesToIgnore containsObject:CMMakeNumber([theEvent keyCode])])
+    if (![keyCodesToIgnore containsObject:@([theEvent keyCode])])
         [self captureKeyCode:[theEvent keyCode]];
 }
 
@@ -273,7 +273,7 @@ static NSArray *keyCodesToIgnore;
 
 - (void)captureKeyCode:(NSInteger)keyCode
 {
-    NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:CMMakeNumber(keyCode)];
+    NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:@(keyCode)];
     if (!keyName)
         keyName = @"";
     
@@ -306,7 +306,7 @@ static NSArray *keyCodesToIgnore;
             return keyCode;
     }
     
-    return CMMakeNumber(CMKeyNone);
+    return @CMKeyNone;
 }
 
 - (BOOL)canUnmap

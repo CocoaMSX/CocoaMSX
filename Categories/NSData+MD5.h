@@ -22,37 +22,8 @@
  */
 #import <Foundation/Foundation.h>
 
-extern NSString * const CMMsxMachine;
-extern NSString * const CMMsx2Machine;
-extern NSString * const CMMsx2PMachine;
-extern NSString * const CMMsxTurboRMachine;
+@interface NSData (MD5)
 
-@interface CMMachine : NSObject<NSCopying, NSCoding>
-{
-    NSString *_machineId;
-    NSString *_name;
-    NSString *_path;
-    NSString *_checksum;
-    NSInteger _system;
-    NSURL *_machineUrl;
-    BOOL _installed;
-}
-
-@property (nonatomic, copy) NSString *machineId;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *path;
-@property (nonatomic, copy) NSString *checksum;
-@property (nonatomic, retain) NSURL *machineUrl;
-@property (nonatomic, assign) NSInteger system;
-@property (nonatomic, assign) BOOL installed;
-
-- (id)initWithPath:(NSString *)path;
-- (id)initWithPath:(NSString *)path
-         machineId:(NSString *)machineId
-              name:(NSString *)name
-        systemName:(NSString *)systemName;
-
-- (NSString *)systemName;
-- (NSString *)downloadPath;
+- (NSString *)md5;
 
 @end

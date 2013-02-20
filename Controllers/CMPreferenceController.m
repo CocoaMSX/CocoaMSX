@@ -26,8 +26,8 @@
 #import "CMEmulatorController.h"
 #import "CMCocoaJoystick.h"
 #import "CMPreferences.h"
-#import "NSString+CMExtensions.h"
 
+#import "NSString+CMExtensions.h"
 
 #import "MGScopeBar.h"
 #import "SBJson.h"
@@ -37,6 +37,9 @@
 
 #import "CMKeyCaptureView.h"
 #import "CMHeaderRowCell.h"
+#import "CMMachineSelectionCell.h"
+
+#import "CMMachineInstallationOperation.h"
 
 #include "InputEvent.h"
 #include "JoystickPort.h"
@@ -117,19 +120,6 @@
 
 #define DOWNLOAD_TIMEOUT_SECONDS 10
 
-#define CMErrorDownloading    100
-#define CMErrorWriting        101
-#define CMErrorExecutingUnzip 102
-#define CMErrorUnzipping      103
-#define CMErrorDeleting       104
-#define CMErrorVerifyingHash  105
-#define CMErrorParsingJson    106
-#define CMErrorCritical       107
-
-#define CMInstallStartedNotification   @"com.akop.CocoaMSX.InstallStarted"
-#define CMInstallCompletedNotification @"com.akop.CocoaMSX.InstallCompleted"
-#define CMInstallErrorNotification     @"com.akop.CocoaMSX.InstallError"
-
 @interface CMPreferenceController ()
 
 - (void)sliderValueChanged:(id)sender;
@@ -147,8 +137,7 @@
 
 - (void)requestMachineFeedUpdate;
 - (BOOL)updateMachineFeed:(NSError **)error;
-- (void)startBackgroundDownloadOfMachine:(CMMachine *)machine;
-- (BOOL)downloadAndInstallMachine:(CMMachine *)machine error:(NSError **)error;
+- (BOOL)isDownloadQueuedForMachine:(CMMachine *)machine;
 
 - (NSArray *)machinesAvailableForDownload;
 - (void)synchronizeMachines;
@@ -186,8 +175,7 @@
         joystickTwoCategories = [[NSMutableArray alloc] init];
         allMachines = [[NSMutableArray alloc] init];
         installedMachines = [[NSMutableArray alloc] init];
-        availableMachines = [[NSMutableArray alloc] init];
-        remoteMachines = [[NSMutableArray alloc] init];
+        installableMachines = [[NSMutableArray alloc] init];
         
         // Set the virtual emulation speed range
         virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
@@ -219,6 +207,8 @@
     }];
     
     self.isSaturationEnabled = (self.emulator.colorMode == 0);
+    
+    machineDisplayMode = CMShowInstalledMachines;
     
     // Joystick devices
     self.joystickPortPeripherals = [NSMutableArray array];
@@ -256,12 +246,6 @@
     
     [self synchronizeSettings];
     
-    machineDisplayMode = CMGetIntPref(@"machineDisplayMode");
-    [[NSUserDefaults standardUserDefaults] addObserver:self
-                                            forKeyPath:@"machineDisplayMode"
-                                               options:NSKeyValueObservingOptionNew
-                                               context:NULL];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receivedInstallStartedNotification:)
                                                  name:CMInstallStartedNotification
@@ -280,9 +264,6 @@
 
 - (void)dealloc
 {
-    [[NSUserDefaults standardUserDefaults] removeObserver:self
-                                               forKeyPath:@"machineDisplayMode"];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:CMInstallStartedNotification
                                                   object:nil];
@@ -307,8 +288,7 @@
     [joystickTwoCategories release];
     [allMachines release];
     [installedMachines release];
-    [availableMachines release];
-    [remoteMachines release];
+    [installableMachines release];
     
     [virtualEmulationSpeedRange release];
     
@@ -320,7 +300,7 @@
 - (NSArray *)machinesCurrentlyVisible
 {
     if (machineDisplayMode == CMShowAvailableMachines)
-        return availableMachines;
+        return installableMachines;
     else if (machineDisplayMode == CMShowInstalledMachines)
         return installedMachines;
     else
@@ -529,6 +509,7 @@
                                                     systemName:[obj objectForKey:@"system"]] autorelease];
          
          [machine setInstalled:NO];
+         [machine setChecksum:[obj objectForKey:@"md5"]];
          [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
          
          [remoteMachineList addObject:machine];
@@ -545,217 +526,36 @@
     return YES;
 }
 
-- (BOOL)downloadAndInstallMachine:(CMMachine *)machine
-                            error:(NSError **)error
-{
-    if ([machine installed] || ![machine machineUrl])
-        return NO;
-    
-//    NSLog(@"Sleeping");
-//    [NSThread sleepForTimeInterval:5];
-    
-#ifdef DEBUG
-    NSLog(@"Downloading from %@...", [machine machineUrl]);
-#endif
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[machine machineUrl]
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                                       timeoutInterval:DOWNLOAD_TIMEOUT_SECONDS];
-    
-    [request setHTTPMethod:@"GET"];
-    
-    NSURLResponse *response = nil;
-    NSError *netError = nil;
-    NSData *data = [NSURLConnection sendSynchronousRequest:request
-                                         returningResponse:&response
-                                                     error:&netError];
-    
-    if (netError)
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorDownloading
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadingMachine"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return NO;
-    }
-    
-    NSString *downloadPath = [machine downloadPath];
-    
-#ifdef DEBUG
-    NSLog(@"done. Writing to %@...", downloadPath);
-#endif
-    
-    if (![data writeToFile:downloadPath atomically:NO])
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorWriting
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorWritingMachine"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return NO;
-    }
-    
-#ifdef DEBUG
-    NSLog(@"done. Decompressing...");
-#endif
-    
-    NSTask *unzipTask = [[[NSTask alloc] init] autorelease];
-    [unzipTask setLaunchPath:@"/usr/bin/unzip"];
-    [unzipTask setCurrentDirectoryPath:[downloadPath stringByDeletingLastPathComponent]];
-    [unzipTask setArguments:[NSArray arrayWithObjects:@"-u", @"-o", downloadPath, nil]];
-    
-    @try
-    {
-        [unzipTask launch];
-    }
-    @catch (NSException *exception)
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorExecutingUnzip
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorExecutingUnzip"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return NO;
-    }
-    
-    [unzipTask waitUntilExit];
-    if ([unzipTask terminationStatus] != 0)
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorUnzipping
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorUnzippingMachine"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return NO;
-    }
-    
-#ifdef DEBUG
-    NSLog(@"done. Deleting %@...", downloadPath);
-#endif
-    
-    NSError *deleteError = nil;
-    if (![[NSFileManager defaultManager] removeItemAtPath:downloadPath error:&deleteError])
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorDeleting
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDeletingMachine"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return YES; // No biggie
-    }
-    
-#ifdef DEBUG
-    NSLog(@"All done");
-#endif
-    
-    return YES;
-}
-
-- (void)startBackgroundDownloadOfMachine:(CMMachine *)machine
-{
-    NSOperation *downloadOp = [NSBlockOperation blockOperationWithBlock:^
-    {
-        NSError *error = nil;
-        BOOL success = NO;
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:CMInstallStartedNotification
-                                                            object:self
-                                                          userInfo:[NSDictionary dictionaryWithObject:machine
-                                                                                               forKey:@"machine"]];
-        
-        @try
-        {
-            success = [self downloadAndInstallMachine:machine error:&error];
-        }
-        @catch (NSException *e)
-        {
-            success = NO;
-            error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                        code:CMErrorCritical
-                                    userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadCritical"
-                                                                                forKey:NSLocalizedDescriptionKey]];
-        }
-        @finally
-        {
-            [machine setDownloading:NO];
-        }
-        
-        if (success)
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:CMInstallCompletedNotification
-                                                                object:self
-                                                              userInfo:[NSDictionary dictionaryWithObject:machine
-                                                                                                   forKey:@"machine"]];
-        }
-        
-        if (!success && error)
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:CMInstallErrorNotification
-                                                                object:self
-                                                              userInfo:[NSDictionary dictionaryWithObject:error
-                                                                                                   forKey:@"error"]];
-        }
-    }];
-    
-    [machine setDownloading:YES];
-    
-    [self toggleSystemSpecificButtons];
-    [systemTableView reloadData];
-    
-    [downloadQueue addOperation:downloadOp];
-}
-
 - (void)synchronizeMachines
 {
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
     
-    if ([remoteMachines count] < 1)
-    {
-        NSArray *machines = [self machinesAvailableForDownload];
-        if (machines)
-            [remoteMachines addObjectsFromArray:machines];
-    }
-    
-    // Machine configurations
-    NSArray *foundConfigurations = [CMEmulatorController machineConfigurations];
+    NSArray *downloadableMachines = [self machinesAvailableForDownload];
+    NSArray *foundMachines = [CMEmulatorController machineConfigurations];
     
     [installedMachines removeAllObjects];
-    [availableMachines removeAllObjects];
+    [installableMachines removeAllObjects];
     
-    [foundConfigurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [foundMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         CMMachine *machine = [[[CMMachine alloc] initWithPath:obj] autorelease];
         [machine setInstalled:YES];
         [installedMachines addObject:machine];
     }];
     
-    [availableMachines addObjectsFromArray:remoteMachines];
-    [availableMachines removeObjectsInArray:installedMachines];
+    if (downloadableMachines)
+        [installableMachines addObjectsFromArray:downloadableMachines];
+    
+    [installableMachines removeObjectsInArray:installedMachines];
     
     [allMachines removeAllObjects];
-    [allMachines addObjectsFromArray:availableMachines];
+    [allMachines addObjectsFromArray:installableMachines];
     [allMachines addObjectsFromArray:installedMachines];
     
     // Sort the three arrays by 1. system, 2. name
-    NSArray *arraysToSort = [NSArray arrayWithObjects:installedMachines, availableMachines, allMachines, nil];
+    NSArray *arraysToSort = [NSArray arrayWithObjects:installedMachines, installableMachines, allMachines, nil];
     [arraysToSort enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         [obj sortUsingComparator:^NSComparisonResult(CMMachine *obj1, CMMachine *obj2)
@@ -951,6 +751,26 @@
     return layout;
 }
 
+- (BOOL)isDownloadQueuedForMachine:(CMMachine *)machine
+{
+    __block BOOL machineFound = NO;
+    
+    [[downloadQueue operations] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        if ([obj isKindOfClass:[CMMachineInstallationOperation class]])
+        {
+            CMMachineInstallationOperation *installOp = (CMMachineInstallationOperation *)obj;
+            if ([[installOp machine] isEqual:machine])
+            {
+                machineFound = YES;
+                *stop = YES;
+            }
+        }
+    }];
+    
+    return machineFound;
+}
+
 - (CMMachine *)selectedMachine
 {
     NSInteger selectedRow = [systemTableView selectedRow];
@@ -971,7 +791,7 @@
         && [allMachines count] > 1; // At least one machine must remain
     BOOL isAddButtonEnabled = selectedMachine
         && ![selectedMachine installed]
-        && ![selectedMachine downloading];
+        && ![self isDownloadQueuedForMachine:selectedMachine];
     
     [addMachineButton setEnabled:isAddButtonEnabled];
     [removeMachineButton setEnabled:isRemoveButtonEnabled];
@@ -998,9 +818,13 @@
     
     if (selectedMachine
         && ![selectedMachine installed]
-        && ![selectedMachine downloading])
+        && ![self isDownloadQueuedForMachine:selectedMachine])
     {
-        [self startBackgroundDownloadOfMachine:selectedMachine];
+        CMMachineInstallationOperation *installOp = [CMMachineInstallationOperation installationOperationWithMachine:selectedMachine];
+        [downloadQueue addOperation:installOp];
+        
+        [self toggleSystemSpecificButtons];
+        [systemTableView reloadData];
     }
 }
 
@@ -1106,7 +930,6 @@
 
 - (void)refreshMachineList:(id)sender
 {
-    [self synchronizeMachines];
     [self requestMachineFeedUpdate];
 }
 
@@ -1188,12 +1011,6 @@
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-    if ([keyPath isEqualToString:@"machineDisplayMode"])
-    {
-        machineDisplayMode = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
-        [systemTableView reloadData];
-        [self toggleSystemSpecificButtons];
-    }
 }
 
 #pragma mark - NSWindowController
@@ -1342,7 +1159,7 @@
 {
     if ([item isKindOfClass:[CMKeyCategory class]])
     {
-        if ([tableColumn.identifier isEqualToString:@"CMKeyLabelColumn"])
+        if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"])
             return [((CMKeyCategory *)item) title];
     }
     else if ([item isKindOfClass:[NSNumber class]])
@@ -1350,17 +1167,17 @@
         CMInputDeviceLayout *layout = [self inputDeviceLayoutFromOutlineView:outlineView];
         NSUInteger virtualCode = [(NSNumber *)item integerValue];
         
-        if ([tableColumn.identifier isEqualToString:@"CMKeyLabelColumn"])
+        if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"])
         {
             return [self.emulator.keyboard inputNameForVirtualCode:virtualCode
                                                         shiftState:selectedKeyboardShiftState
                                                           layoutId:selectedKeyboardRegion];
         }
-        else if ([tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
+        else if ([[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"])
         {
             CMKeyboardInput *keyInput = (CMKeyboardInput *)[layout inputMethodForVirtualCode:virtualCode];
             
-            return [CMKeyCaptureView descriptionForKeyCode:CMMakeNumber([keyInput keyCode])];
+            return [CMKeyCaptureView descriptionForKeyCode:@([keyInput keyCode])];
         }
     }
     
@@ -1370,7 +1187,7 @@
 - (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
     if ([item isKindOfClass:[NSNumber class]]
-        && [tableColumn.identifier isEqualToString:@"CMKeyAssignmentColumn"])
+        && [[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"])
     {
         NSNumber *keyCode = [CMKeyCaptureView keyCodeForDescription:(NSString *)object];
         
@@ -1462,11 +1279,13 @@
 {
     if ([[aTableColumn identifier] isEqualToString:@"isSelected"])
     {
-        NSButtonCell *buttonCell = aCell;
+        CMMachineSelectionCell *buttonCell = aCell;
         CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
         
         [buttonCell setEnabled:[machine installed]];
         [buttonCell setImagePosition:[machine installed] ? NSImageOnly : NSNoImage];
+        
+        [buttonCell setDownloadingIconVisible:[self isDownloadQueuedForMachine:machine]];
     }
 }
 
@@ -1615,7 +1434,10 @@
     }
     else if (theScopeBar == machineScopeBar)
     {
-        CMSetIntPref(@"machineDisplayMode", [identifier integerValue]);
+        machineDisplayMode = [identifier integerValue];
+        
+        [systemTableView reloadData];
+        [self toggleSystemSpecificButtons];
     }
 }
 

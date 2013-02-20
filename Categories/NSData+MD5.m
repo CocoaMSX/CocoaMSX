@@ -20,39 +20,26 @@
  **
  ******************************************************************************
  */
-#import <Foundation/Foundation.h>
+#import <CommonCrypto/CommonDigest.h>
 
-extern NSString * const CMMsxMachine;
-extern NSString * const CMMsx2Machine;
-extern NSString * const CMMsx2PMachine;
-extern NSString * const CMMsxTurboRMachine;
+#import "NSData+MD5.h"
 
-@interface CMMachine : NSObject<NSCopying, NSCoding>
+@implementation NSData (MD5)
+
+- (NSString *)md5
 {
-    NSString *_machineId;
-    NSString *_name;
-    NSString *_path;
-    NSString *_checksum;
-    NSInteger _system;
-    NSURL *_machineUrl;
-    BOOL _installed;
+    // Create byte array of unsigned chars
+    unsigned char md5Buffer[CC_MD5_DIGEST_LENGTH];
+    
+    // Create 16 byte MD5 hash value, store in buffer
+    CC_MD5([self bytes], [self length], md5Buffer);
+    
+    // Convert unsigned char buffer to NSString of hex values
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", md5Buffer[i]];
+    
+    return output;
 }
-
-@property (nonatomic, copy) NSString *machineId;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *path;
-@property (nonatomic, copy) NSString *checksum;
-@property (nonatomic, retain) NSURL *machineUrl;
-@property (nonatomic, assign) NSInteger system;
-@property (nonatomic, assign) BOOL installed;
-
-- (id)initWithPath:(NSString *)path;
-- (id)initWithPath:(NSString *)path
-         machineId:(NSString *)machineId
-              name:(NSString *)name
-        systemName:(NSString *)systemName;
-
-- (NSString *)systemName;
-- (NSString *)downloadPath;
 
 @end

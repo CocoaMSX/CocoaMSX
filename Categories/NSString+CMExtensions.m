@@ -20,39 +20,33 @@
  **
  ******************************************************************************
  */
-#import <Foundation/Foundation.h>
+#import "NSString+CMExtensions.h"
 
-extern NSString * const CMMsxMachine;
-extern NSString * const CMMsx2Machine;
-extern NSString * const CMMsx2PMachine;
-extern NSString * const CMMsxTurboRMachine;
+@implementation NSString (CMExtensions)
 
-@interface CMMachine : NSObject<NSCopying, NSCoding>
+- (BOOL)isEqualToPath:(NSString *)path
 {
-    NSString *_machineId;
-    NSString *_name;
-    NSString *_path;
-    NSString *_checksum;
-    NSInteger _system;
-    NSURL *_machineUrl;
-    BOOL _installed;
+    if (!path)
+        return NO;
+    
+    return [[NSURL fileURLWithPath:self] isEqualTo:[NSURL fileURLWithPath:path]];
 }
 
-@property (nonatomic, copy) NSString *machineId;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *path;
-@property (nonatomic, copy) NSString *checksum;
-@property (nonatomic, retain) NSURL *machineUrl;
-@property (nonatomic, assign) NSInteger system;
-@property (nonatomic, assign) BOOL installed;
+- (BOOL)containsString:(NSString *)string
+               options:(NSStringCompareOptions)options
+{
+    NSRange rng = [self rangeOfString:string options:options];
+    return rng.location != NSNotFound;
+}
 
-- (id)initWithPath:(NSString *)path;
-- (id)initWithPath:(NSString *)path
-         machineId:(NSString *)machineId
-              name:(NSString *)name
-        systemName:(NSString *)systemName;
+- (BOOL)containsString:(NSString *)string
+{
+    return [self containsString:string options:0];
+}
 
-- (NSString *)systemName;
-- (NSString *)downloadPath;
+- (BOOL)isCaseInsensitiveEqualToString:(NSString *)aString
+{
+    return [self caseInsensitiveCompare:aString] == NSOrderedSame;
+}
 
 @end

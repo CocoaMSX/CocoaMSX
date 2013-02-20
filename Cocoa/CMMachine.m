@@ -48,9 +48,9 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 @synthesize name = _name;
 @synthesize machineId = _machineId;
 @synthesize machineUrl = _machineUrl;
+@synthesize checksum = _checksum;
 @synthesize installed = _installed;
 @synthesize system = _system;
-@synthesize downloading = _downloading;
 
 - (id)init
 {
@@ -60,8 +60,8 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _path = nil;
         _machineId = nil;
         _machineUrl = nil;
+        _checksum = nil;
         _installed = NO;
-        _downloading = NO;
         _system = CMUnknown;
     }
     
@@ -115,6 +115,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [self setName:nil];
     [self setMachineId:nil];
     [self setMachineUrl:nil];
+    [self setChecksum:nil];
     
     [super dealloc];
 }
@@ -181,9 +182,9 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _path = [[aDecoder decodeObjectForKey:@"path"] retain];
         _machineId = [[aDecoder decodeObjectForKey:@"machineId"] retain];
         _machineUrl = [[aDecoder decodeObjectForKey:@"machineUrl"] retain];
+        _checksum = [[aDecoder decodeObjectForKey:@"checksum"] retain];
         _installed = [aDecoder decodeBoolForKey:@"installed"];
         _system = [aDecoder decodeIntegerForKey:@"system"];
-        _downloading = [aDecoder decodeBoolForKey:@"downloading"];
     }
     
     return self;
@@ -195,9 +196,9 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [aCoder encodeObject:_path forKey:@"path"];
     [aCoder encodeObject:_machineId forKey:@"machineId"];
     [aCoder encodeObject:_machineUrl forKey:@"machineUrl"];
+    [aCoder encodeObject:_checksum forKey:@"checksum"];
     [aCoder encodeBool:_installed forKey:@"installed"];
     [aCoder encodeInteger:_system forKey:@"system"];
-    [aCoder encodeBool:_downloading forKey:@"downloading"];
 }
 
 #pragma mark - NSCopying
@@ -210,9 +211,9 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [copy setPath:_path];
     [copy setMachineId:_machineId];
     [copy setMachineUrl:_machineUrl];
+    [copy setChecksum:_checksum];
     [copy setInstalled:_installed];
     [copy setSystem:_system];
-    [copy setDownloading:_installed];
     
     return copy;
 }

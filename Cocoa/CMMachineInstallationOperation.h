@@ -20,28 +20,35 @@
  **
  ******************************************************************************
  */
-#import "NSString+CMExtensions.h"
+#import <Foundation/Foundation.h>
 
-@implementation NSString (CMExtensions)
-
-- (BOOL)isEqualToPath:(NSString *)path
+typedef NS_ENUM(NSInteger, CMMachineInstallationError)
 {
-    if (!path)
-        return NO;
-    
-    return [[NSURL fileURLWithPath:self] isEqualTo:[NSURL fileURLWithPath:path]];
+    CMErrorDownloading    = 100,
+    CMErrorWriting        = 101,
+    CMErrorExecutingUnzip = 102,
+    CMErrorUnzipping      = 103,
+    CMErrorDeleting       = 104,
+    CMErrorVerifyingHash  = 105,
+    CMErrorParsingJson    = 106,
+    CMErrorCritical       = 107,
+};
+
+extern NSString * const CMInstallStartedNotification;
+extern NSString * const CMInstallCompletedNotification;
+extern NSString * const CMInstallErrorNotification;
+
+@class CMMachine;
+
+@interface CMMachineInstallationOperation : NSOperation
+{
+    CMMachine *_machine;
 }
 
-- (BOOL)containsString:(NSString *)string
-               options:(NSStringCompareOptions)options
-{
-    NSRange rng = [self rangeOfString:string options:options];
-    return rng.location != NSNotFound;
-}
++ (CMMachineInstallationOperation *)installationOperationWithMachine:(CMMachine *)machine;
 
-- (BOOL)containsString:(NSString *)string
-{
-    return [self containsString:string options:0];
-}
+- (id)initWithMachine:(CMMachine *)machine;
+
+@property (nonatomic, retain) CMMachine *machine;
 
 @end

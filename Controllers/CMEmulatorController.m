@@ -1185,8 +1185,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     // Set options (hide dock, auto-hide menu bar)
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                             CMMakeNumber(NSApplicationPresentationHideDock
-                                          | NSApplicationPresentationAutoHideMenuBar), NSFullScreenModeApplicationPresentationOptions,
+                             @(NSApplicationPresentationHideDock
+                             | NSApplicationPresentationAutoHideMenuBar), NSFullScreenModeApplicationPresentationOptions,
                              nil];
     
     // Switch to full screen

@@ -31,18 +31,15 @@
     [controlView lockFocus];
     
     NSColor *textColor;
-    NSImage *downloadIcon;
     
     if ([self isHighlighted])
     {
         textColor = [NSColor whiteColor];
-        downloadIcon = [NSImage imageNamed:@"icon-downloading-inverse"];
     }
     else
     {
         textColor = ![machine installed]
             ? [NSColor disabledControlTextColor] : [NSColor controlTextColor];
-        downloadIcon = [NSImage imageNamed:@"icon-downloading"];
     }
     
     NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -62,19 +59,6 @@
                  withAttributes:textAttributes];
     [[machine systemName] drawAtPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y + textSize.height)
                        withAttributes:subtextAttributes];
-    
-    if ([machine downloading])
-    {
-        [downloadIcon drawInRect:NSMakeRect(cellFrame.origin.x + cellFrame.size.width - downloadIcon.size.width * 1.5,
-                                            cellFrame.origin.y + (cellFrame.size.height - downloadIcon.size.height) / 2.0,
-                                            downloadIcon.size.width,
-                                            downloadIcon.size.height)
-                        fromRect:NSMakeRect(0, 0, downloadIcon.size.width, downloadIcon.size.height)
-                       operation:NSCompositeSourceOver
-                        fraction:1.0
-                  respectFlipped:YES
-                           hints:nil];
-    }
     
     [controlView unlockFocus];
 }

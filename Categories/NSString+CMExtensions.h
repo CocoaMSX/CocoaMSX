@@ -29,5 +29,6 @@
 - (BOOL)containsString:(NSString *)string
                options:(NSStringCompareOptions)options;
 - (BOOL)containsString:(NSString *)string;
+- (BOOL)isCaseInsensitiveEqualToString:(NSString *)aString;
 
 @end

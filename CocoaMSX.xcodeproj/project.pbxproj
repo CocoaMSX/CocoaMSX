@@ -293,7 +293,6 @@
 		FE2CEB581622A50500E58F9A /* Databases in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB551622A50500E58F9A /* Databases */; };
 		FE2CEB5A1622A50500E58F9A /* Machines in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB571622A50500E58F9A /* Machines */; };
 		FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E1962164085A000BCFD53 /* CMPreferences.m */; };
-		FE2E196A1640F19900BCFD53 /* NSString+CMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E19691640F19900BCFD53 /* NSString+CMExtensions.m */; };
 		FE3754BE16B5CF54005360CC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FE3754D916B638DB005360CC /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C616B638DB005360CC /* SBJsonParser.m */; };
 		FE3754DA16B638DB005360CC /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C816B638DB005360CC /* SBJsonStreamParser.m */; };
@@ -325,6 +324,10 @@
 		FE89754D1614038D00F07D76 /* CMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE89754C1614038D00F07D76 /* CMAppDelegate.m */; };
 		FE99C53A160E58FE00843DC8 /* CMFrameCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE99C539160E58FD00843DC8 /* CMFrameCounter.m */; };
 		FE99C53D160E634200843DC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE99C53C160E634100843DC8 /* QuartzCore.framework */; };
+		FE9B86B616D458CC00623DBD /* NSData+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86B516D458CC00623DBD /* NSData+MD5.m */; };
+		FE9B86B916D45A2E00623DBD /* NSString+CMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86B816D45A2E00623DBD /* NSString+CMExtensions.m */; };
+		FE9B86BC16D4A96300623DBD /* CMMachineSelectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86BB16D4A96300623DBD /* CMMachineSelectionCell.m */; };
+		FE9B86BF16D4AC8100623DBD /* CMMachineInstallationOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */; };
 		FE9C6A27161A446B00513A6D /* CMEmulatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C6A26161A446B00513A6D /* CMEmulatorController.m */; };
 		FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C6A2B161AAD3B00513A6D /* CMCocoaMouse.m */; };
 		FE9D27AA161EDB2600ADFB0F /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */; };
@@ -976,8 +979,6 @@
 		FE2CEB571622A50500E58F9A /* Machines */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Machines; sourceTree = "<group>"; };
 		FE2E1961164085A000BCFD53 /* CMPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferences.h; sourceTree = "<group>"; };
 		FE2E1962164085A000BCFD53 /* CMPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferences.m; sourceTree = "<group>"; };
-		FE2E19681640F19900BCFD53 /* NSString+CMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CMExtensions.h"; sourceTree = "<group>"; };
-		FE2E19691640F19900BCFD53 /* NSString+CMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CMExtensions.m"; sourceTree = "<group>"; };
 		FE3754C416B638DB005360CC /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
 		FE3754C516B638DB005360CC /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
 		FE3754C616B638DB005360CC /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
@@ -1033,6 +1034,14 @@
 		FE99C538160E58FD00843DC8 /* CMFrameCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMFrameCounter.h; sourceTree = "<group>"; };
 		FE99C539160E58FD00843DC8 /* CMFrameCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMFrameCounter.m; sourceTree = "<group>"; };
 		FE99C53C160E634100843DC8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
+		FE9B86B416D458CC00623DBD /* NSData+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MD5.h"; sourceTree = "<group>"; };
+		FE9B86B516D458CC00623DBD /* NSData+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MD5.m"; sourceTree = "<group>"; };
+		FE9B86B716D45A2E00623DBD /* NSString+CMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CMExtensions.h"; sourceTree = "<group>"; };
+		FE9B86B816D45A2E00623DBD /* NSString+CMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CMExtensions.m"; sourceTree = "<group>"; };
+		FE9B86BA16D4A96300623DBD /* CMMachineSelectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineSelectionCell.h; sourceTree = "<group>"; };
+		FE9B86BB16D4A96300623DBD /* CMMachineSelectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineSelectionCell.m; sourceTree = "<group>"; };
+		FE9B86BD16D4AC8100623DBD /* CMMachineInstallationOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineInstallationOperation.h; sourceTree = "<group>"; };
+		FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineInstallationOperation.m; sourceTree = "<group>"; };
 		FE9C6A25161A446B00513A6D /* CMEmulatorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMEmulatorController.h; sourceTree = "<group>"; };
 		FE9C6A26161A446B00513A6D /* CMEmulatorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMEmulatorController.m; sourceTree = "<group>"; };
 		FE9C6A2A161AAD3B00513A6D /* CMCocoaMouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaMouse.h; sourceTree = "<group>"; };
@@ -1144,6 +1153,7 @@
 				FE1A3630165623AC0083BA21 /* icon.icns */,
 				FE89754B1614038D00F07D76 /* CMAppDelegate.h */,
 				FE89754C1614038D00F07D76 /* CMAppDelegate.m */,
+				FE9B86B316D457D200623DBD /* Categories */,
 				FEEF38AC163C82D0005F7DC8 /* Cocoa */,
 				FEC7231515FF0DD900CB508C /* Controllers */,
 				E997310D1298B4B300766C90 /* Src */,
@@ -2018,6 +2028,17 @@
 			path = MGScopeBar;
 			sourceTree = "<group>";
 		};
+		FE9B86B316D457D200623DBD /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				FE9B86B416D458CC00623DBD /* NSData+MD5.h */,
+				FE9B86B516D458CC00623DBD /* NSData+MD5.m */,
+				FE9B86B716D45A2E00623DBD /* NSString+CMExtensions.h */,
+				FE9B86B816D45A2E00623DBD /* NSString+CMExtensions.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		FE9C6A29161AA39F00513A6D /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -2031,6 +2052,8 @@
 				FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */,
 				FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */,
 				FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */,
+				FE9B86BA16D4A96300623DBD /* CMMachineSelectionCell.h */,
+				FE9B86BB16D4A96300623DBD /* CMMachineSelectionCell.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2067,10 +2090,10 @@
 				6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */,
 				FE17DC0316B3CFAF004ED68D /* CMMachine.h */,
 				FE17DC0416B3CFAF004ED68D /* CMMachine.m */,
+				FE9B86BD16D4AC8100623DBD /* CMMachineInstallationOperation.h */,
+				FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */,
 				FE2E1961164085A000BCFD53 /* CMPreferences.h */,
 				FE2E1962164085A000BCFD53 /* CMPreferences.m */,
-				FE2E19681640F19900BCFD53 /* NSString+CMExtensions.h */,
-				FE2E19691640F19900BCFD53 /* NSString+CMExtensions.m */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
@@ -2526,7 +2549,6 @@
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
-				FE2E196A1640F19900BCFD53 /* NSString+CMExtensions.m in Sources */,
 				FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */,
 				FEA01BF31656F1C2002794C6 /* CMEvent.m in Sources */,
 				FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */,
@@ -2555,6 +2577,10 @@
 				FE73719216D20F7B00ADF942 /* NSObject+SBJson.m in Sources */,
 				FE73719316D20F7B00ADF942 /* SBJsonTokeniser.m in Sources */,
 				FE73719416D20F7B00ADF942 /* SBJsonUTF8Stream.m in Sources */,
+				FE9B86B616D458CC00623DBD /* NSData+MD5.m in Sources */,
+				FE9B86B916D45A2E00623DBD /* NSString+CMExtensions.m in Sources */,
+				FE9B86BC16D4A96300623DBD /* CMMachineSelectionCell.m in Sources */,
+				FE9B86BF16D4AC8100623DBD /* CMMachineInstallationOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
