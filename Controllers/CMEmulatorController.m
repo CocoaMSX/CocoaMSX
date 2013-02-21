@@ -1641,7 +1641,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                  
                  boardCaptureStart(destination);
                  
-                 [CMPreferences preferences].videoCaptureDirectory = path;
+                 [[CMPreferences preferences] setVideoCaptureDirectory:path];
              }
          }];
     }
@@ -1651,6 +1651,20 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
     
     emulatorResume();
+}
+
+- (void)playBackGameplay:(id)sender
+{
+    NSString *currentCapture = [NSString stringWithCString:properties->filehistory.videocap
+                                                  encoding:NSUTF8StringEncoding];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:currentCapture])
+    {
+        if ([self machineState] != EMU_STOPPED)
+            [self stop];
+        
+        emulatorStart(properties->filehistory.videocap);
+    }
 }
 
 - (void)editMachineSettings:(id)sender
@@ -1984,6 +1998,13 @@ void archTrap(UInt8 value)
             menuItem.title = CMLoc(@"StopRecording");
         
         return isRunning;
+    }
+    else if (item.action == @selector(playBackGameplay:))
+    {
+        NSString *currentCapture = [NSString stringWithCString:properties->filehistory.videocap
+                                                      encoding:NSUTF8StringEncoding];
+        
+        return [[NSFileManager defaultManager] fileExistsAtPath:currentCapture];
     }
     
     return menuItem.isEnabled;
