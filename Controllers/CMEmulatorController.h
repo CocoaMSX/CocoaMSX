@@ -201,7 +201,10 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (IBAction)saveScreenshot:(id)sender;
 - (IBAction)recordAudio:(id)sender;
+
+- (IBAction)openGameplayRecording:(id)sender;
 - (IBAction)recordGameplay:(id)sender;
+- (IBAction)stopGameplayRecording:(id)sender;
 - (IBAction)playBackGameplay:(id)sender;
 
 - (IBAction)editMachineSettings:(id)sender;

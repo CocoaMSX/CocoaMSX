@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">12C60</string>
+		<string key="IBDocument.SystemVersion">12C3006</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
@@ -560,9 +560,35 @@
 									<object class="NSMenu" key="NSSubmenu" id="99021543">
 										<string key="NSTitle">Capture Gameplay</string>
 										<array class="NSMutableArray" key="NSMenuItems">
+											<object class="NSMenuItem" id="559483049">
+												<reference key="NSMenu" ref="99021543"/>
+												<string key="NSTitle">Load...</string>
+												<string key="NSKeyEquiv"/>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="229763992"/>
+												<reference key="NSMixedImage" ref="909111550"/>
+											</object>
+											<object class="NSMenuItem" id="409604614">
+												<reference key="NSMenu" ref="99021543"/>
+												<bool key="NSIsDisabled">YES</bool>
+												<bool key="NSIsSeparator">YES</bool>
+												<string key="NSTitle"/>
+												<string key="NSKeyEquiv"/>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="229763992"/>
+												<reference key="NSMixedImage" ref="909111550"/>
+											</object>
 											<object class="NSMenuItem" id="455645467">
 												<reference key="NSMenu" ref="99021543"/>
-												<string key="NSTitle">Record...</string>
+												<string key="NSTitle">Record</string>
+												<string key="NSKeyEquiv"/>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="229763992"/>
+												<reference key="NSMixedImage" ref="909111550"/>
+											</object>
+											<object class="NSMenuItem" id="26310334">
+												<reference key="NSMenu" ref="99021543"/>
+												<string key="NSTitle">Stop</string>
 												<string key="NSKeyEquiv"/>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="229763992"/>
@@ -837,7 +863,7 @@
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="244130915">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSOpenGLView" id="1005680393">
@@ -845,7 +871,6 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 32}, {640, 480}}</string>
 							<reference key="NSSuperview" ref="244130915"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="576554606"/>
 							<string key="NSReuseIdentifierKey">_NS:24</string>
 							<object class="NSOpenGLPixelFormat" key="NSPixelFormat">
@@ -867,8 +892,6 @@
 											<int key="NSvFlags">263</int>
 											<string key="NSFrame">{{224, 6}, {192, 17}}</string>
 											<reference key="NSSuperview" ref="28921300"/>
-											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:1535</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTextFieldCell" key="NSCell" id="272522322">
@@ -907,14 +930,12 @@
 									</array>
 									<string key="NSFrameSize">{640, 32}</string>
 									<reference key="NSSuperview" ref="576554606"/>
-									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="974846936"/>
 									<string key="NSReuseIdentifierKey">_NS:11</string>
 								</object>
 							</array>
 							<string key="NSFrameSize">{640, 32}</string>
 							<reference key="NSSuperview" ref="244130915"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="28921300"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<string key="NSOffsets">{0, 0}</string>
@@ -949,12 +970,10 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{640, 512}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="1005680393"/>
 					<string key="NSReuseIdentifierKey">_NS:20</string>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSAutorecalculatesContentBorderThicknessMinY">NO</bool>
 				<double key="NSContentBorderThicknessMinY">32</double>
@@ -1281,6 +1300,22 @@
 						<reference key="destination" ref="332325316"/>
 					</object>
 					<int key="connectionID">1292</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">stopGameplayRecording:</string>
+						<reference key="source" ref="1021"/>
+						<reference key="destination" ref="26310334"/>
+					</object>
+					<int key="connectionID">1294</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openGameplayRecording:</string>
+						<reference key="source" ref="1021"/>
+						<reference key="destination" ref="559483049"/>
+					</object>
+					<int key="connectionID">1298</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -2071,6 +2106,9 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="455645467"/>
 							<reference ref="332325316"/>
+							<reference ref="26310334"/>
+							<reference ref="559483049"/>
+							<reference ref="409604614"/>
 						</array>
 						<reference key="parent" ref="805484119"/>
 					</object>
@@ -2082,6 +2120,21 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">1291</int>
 						<reference key="object" ref="332325316"/>
+						<reference key="parent" ref="99021543"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1293</int>
+						<reference key="object" ref="26310334"/>
+						<reference key="parent" ref="99021543"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1295</int>
+						<reference key="object" ref="559483049"/>
+						<reference key="parent" ref="99021543"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1299</int>
+						<reference key="object" ref="409604614"/>
 						<reference key="parent" ref="99021543"/>
 					</object>
 				</array>
@@ -2133,6 +2186,9 @@
 				<string key="1289.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="129.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1291.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1293.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1295.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1299.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="130.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="131.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="134.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2200,7 +2256,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1292</int>
+			<int key="maxID">1300</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2225,6 +2281,7 @@
 						<string key="loadState:">id</string>
 						<string key="normalSize:">id</string>
 						<string key="openAbout:">id</string>
+						<string key="openGameplayRecording:">id</string>
 						<string key="openPreferences:">id</string>
 						<string key="pauseMsx:">id</string>
 						<string key="playBackGameplay:">id</string>
@@ -2237,6 +2294,7 @@
 						<string key="saveState:">id</string>
 						<string key="shutDownMsx:">id</string>
 						<string key="statusMsx:">id</string>
+						<string key="stopGameplayRecording:">id</string>
 						<string key="toggleCartAutoReset:">id</string>
 						<string key="toggleCassetteAutoRewind:">id</string>
 						<string key="toggleCassetteWriteProtect:">id</string>
@@ -2313,6 +2371,10 @@
 							<string key="name">openAbout:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="openGameplayRecording:">
+							<string key="name">openGameplayRecording:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="openPreferences:">
 							<string key="name">openPreferences:</string>
 							<string key="candidateClassName">id</string>
@@ -2359,6 +2421,10 @@
 						</object>
 						<object class="IBActionInfo" key="statusMsx:">
 							<string key="name">statusMsx:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="stopGameplayRecording:">
+							<string key="name">stopGameplayRecording:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="toggleCartAutoReset:">

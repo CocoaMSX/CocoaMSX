@@ -1625,32 +1625,66 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (!self.isInitialized || ![self isStarted])
         return;
     
-    emulatorSuspend();
-    
     if (!boardCaptureIsRecording())
     {
-        [self showSaveFileDialogWithTitle:CMLoc(@"CaptureGameplay")
-                         allowedFileTypes:captureGameplayTypes
-                          openInDirectory:[CMPreferences preferences].videoCaptureDirectory
-                        completionHandler:^(NSString *file, NSString *path)
-         {
-             if (file)
-             {
-                 const char *destination = [file UTF8String];
-                 strncpy(properties->filehistory.videocap, destination, PROP_MAXPATH - 1);
-                 
-                 boardCaptureStart(destination);
-                 
-                 [[CMPreferences preferences] setVideoCaptureDirectory:path];
-             }
-         }];
+        emulatorSuspend();
+        
+        NSString *captureFile = [NSString pathForTemporaryFileWithPrefix:@"cocoaMsxCapture"];
+        if (captureFile)
+        {
+#ifdef DEBUG
+            NSLog(@"Capturing to %@", captureFile);
+#endif
+            const char *destination = [captureFile UTF8String];
+            strncpy(properties->filehistory.videocap, destination, PROP_MAXPATH - 1);
+            
+            boardCaptureStart(properties->filehistory.videocap);
+        }
+        
+        emulatorResume();
     }
-    else
-    {
-        boardCaptureStop();
-    }
+}
+
+- (void)openGameplayRecording:(id)sender
+{
+    if (!self.isInitialized || ![self isStarted])
+        return;
     
-    emulatorResume();
+    emulatorSuspend();
+    
+    [self showOpenFileDialogWithTitle:CMLoc(@"LoadGameplayRecording")
+                     allowedFileTypes:captureGameplayTypes
+                      openInDirectory:[CMPreferences preferences].videoCaptureDirectory
+                    completionHandler:^(NSString *file, NSString *path)
+     {
+         if (file)
+         {
+             [[CMPreferences preferences] setVideoCaptureDirectory:path];
+             
+             const char *recording = [file UTF8String];
+             strncpy(properties->filehistory.videocap, recording, PROP_MAXPATH - 1);
+             
+             emulatorStop();
+             emulatorStart(recording);
+         }
+         else
+         {
+             emulatorResume();
+         }
+     }];
+}
+
+- (void)stopGameplayRecording:(id)sender
+{
+    if (!self.isInitialized || ![self isStarted])
+        return;
+    
+    if (boardCaptureIsRecording())
+    {
+        emulatorSuspend();
+        boardCaptureStop();
+        emulatorResume();
+    }
 }
 
 - (void)playBackGameplay:(id)sender
@@ -1992,12 +2026,13 @@ void archTrap(UInt8 value)
     }
     else if (item.action == @selector(recordGameplay:))
     {
-        if (!boardCaptureIsRecording())
-            menuItem.title = CMLoc(@"RecordGameplayEll");
-        else
-            menuItem.title = CMLoc(@"StopRecording");
+        [menuItem setState:boardCaptureIsRecording() ? NSOnState : NSOffState];
         
-        return isRunning;
+        return isRunning && !boardCaptureIsRecording();
+    }
+    else if (item.action == @selector(stopGameplayRecording:))
+    {
+        return boardCaptureIsRecording();
     }
     else if (item.action == @selector(playBackGameplay:))
     {

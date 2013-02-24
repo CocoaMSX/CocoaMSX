@@ -31,4 +31,6 @@
 - (BOOL)containsString:(NSString *)string;
 - (BOOL)isCaseInsensitiveEqualToString:(NSString *)aString;
 
++ (NSString *)pathForTemporaryFileWithPrefix:(NSString *)prefix;
+
 @end
