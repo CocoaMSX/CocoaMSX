@@ -147,6 +147,24 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if ((self = [super initWithWindowNibName:@"Emulator"]))
     {
         inputDeviceLayouts = [[NSMutableArray alloc] init];
+        
+        listOfPreferenceKeysToObserve = [[NSArray alloc] initWithObjects:
+                                         @"pauseWhenUnfocused",
+                                         @"emulationSpeedPercentage",
+                                         @"videoBrightness",
+                                         @"videoContrast",
+                                         @"videoSaturation",
+                                         @"videoGamma",
+                                         @"videoRfModulation",
+                                         @"videoDeInterlace",
+                                         nil];
+        
+        openRomFileTypes = [[NSArray alloc] initWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"zip", nil];
+        openDiskFileTypes = [[NSArray alloc] initWithObjects:@"dsk", @"di1", @"di2", @"360", @"720", @"sf7", @"zip", nil];
+        openCassetteFileTypes = [[NSArray alloc] initWithObjects:@"cas", @"zip", nil];
+        stateFileTypes = [[NSArray alloc] initWithObjects:@"sta", nil];
+        captureAudioTypes = [[NSArray alloc] initWithObjects:@"wav", nil];
+        captureGameplayTypes = [[NSArray alloc] initWithObjects:@"cap", nil];
     }
     
     return self;
@@ -154,15 +172,19 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)dealloc
 {
-    // Stop monitoring preferences
-    [[NSUserDefaults standardUserDefaults] removeObserver:self
-                                               forKeyPath:@"pauseWhenUnfocused"];
-    [[NSUserDefaults standardUserDefaults] removeObserver:self
-                                               forKeyPath:@"emulationSpeedPercentage"];
+    // Stop monitoring for preference key changes
+    
+    [listOfPreferenceKeysToObserve enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                                   forKeyPath:obj];
+    }];
     
     [self destroy];
     
     [self cleanupTemporaryCaptureFile];
+    
+    [listOfPreferenceKeysToObserve release];
     
     [openRomFileTypes release];
     [openDiskFileTypes release];
@@ -194,13 +216,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)awakeFromNib
 {
-    openRomFileTypes = [[NSArray alloc] initWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"zip", nil];
-    openDiskFileTypes = [[NSArray alloc] initWithObjects:@"dsk", @"di1", @"di2", @"360", @"720", @"sf7", @"zip", nil];
-    openCassetteFileTypes = [[NSArray alloc] initWithObjects:@"cas", @"zip", nil];
-    stateFileTypes = [[NSArray alloc] initWithObjects:@"sta", nil];
-    captureAudioTypes = [[NSArray alloc] initWithObjects:@"wav", nil];
-    captureGameplayTypes = [[NSArray alloc] initWithObjects:@"cap", nil];
-    
     [inputDeviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickTwoLayout]];
@@ -226,14 +241,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     // Start monitoring for preference changes
     
-    [[NSUserDefaults standardUserDefaults] addObserver:self
-                                            forKeyPath:@"pauseWhenUnfocused"
-                                               options:NSKeyValueObservingOptionNew
-                                               context:NULL];
-    [[NSUserDefaults standardUserDefaults] addObserver:self
-                                            forKeyPath:@"emulationSpeedPercentage"
-                                               options:NSKeyValueObservingOptionNew
-                                               context:NULL];
+    [listOfPreferenceKeysToObserve enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        [[NSUserDefaults standardUserDefaults] addObserver:self
+                                                forKeyPath:obj
+                                                   options:NSKeyValueObservingOptionNew
+                                                   context:NULL];
+    }];
     
     [self create];
     [self start];
@@ -274,6 +288,16 @@ CMEmulatorController *theEmulator = nil; // FIXME
     properties->emulation.speed = frequency;
     properties->emulation.vdpSyncMode = prefs.vdpSyncMode;
     properties->emulation.syncMethod = P_EMU_SYNCTOVBLANKASYNC;
+    
+    properties->video.brightness = CMGetIntPref(@"videoBrightness");
+    properties->video.contrast = CMGetIntPref(@"videoContrast");
+    properties->video.saturation = CMGetIntPref(@"videoSaturation");
+    properties->video.gamma = CMGetIntPref(@"videoGamma");
+    
+    properties->video.colorSaturationWidth = CMGetIntPref(@"videoRfModulation");
+    properties->video.colorSaturationEnable = (properties->video.colorSaturationWidth > 0);
+    
+    properties->video.deInterlace = CMGetBoolPref(@"videoDeInterlace");
     
     video = videoCreate();
     videoSetColors(video, properties->video.saturation, properties->video.brightness,
@@ -492,50 +516,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return !properties->emulation.enableFdcTiming;
 }
 
-- (void)setBrightness:(NSInteger)value
-{
-    properties->video.brightness = value;
-    videoUpdateAll(video, properties);
-}
-
-- (NSInteger)brightness
-{
-    return properties->video.brightness;
-}
-
-- (void)setContrast:(NSInteger)value
-{
-    properties->video.contrast = value;
-    videoUpdateAll(video, properties);
-}
-
-- (NSInteger)contrast
-{
-    return properties->video.contrast;
-}
-
-- (void)setSaturation:(NSInteger)value
-{
-    properties->video.saturation = value;
-    videoUpdateAll(video, properties);
-}
-
-- (NSInteger)saturation
-{
-    return properties->video.saturation;
-}
-
-- (void)setGamma:(NSInteger)value
-{
-    properties->video.gamma = value;
-    videoUpdateAll(video, properties);
-}
-
-- (NSInteger)gamma
-{
-    return properties->video.gamma;
-}
-
 - (void)setColorMode:(NSInteger)value
 {
     properties->video.monitorColor = value;
@@ -558,22 +538,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return properties->video.monitorType;
 }
 
-- (void)setRfModulation:(NSInteger)value
-{
-    properties->video.colorSaturationEnable = (value > 0);
-    properties->video.colorSaturationWidth = value;
-    
-    videoUpdateAll(video, properties);
-}
-
-- (NSInteger)rfModulation
-{
-    if (!properties->video.colorSaturationEnable)
-        return 0;
-    
-    return properties->video.colorSaturationWidth;
-}
-
 - (void)setScanlines:(NSInteger)value
 {
     if ([self isStarted])
@@ -591,17 +555,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return 0;
     
     return 100 - properties->video.scanlinesPct;
-}
-
-- (void)setDeinterlace:(BOOL)value
-{
-    properties->video.deInterlace = value;
-    videoUpdateAll(video, properties);
-}
-
-- (BOOL)deinterlace
-{
-    return properties->video.deInterlace;
 }
 
 - (BOOL)mixerEnabledForChannel:(NSInteger)channel
@@ -1854,15 +1807,60 @@ void archTrap(UInt8 value)
     {
         [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
     }
-    else if ([keyPath isEqualToString:@"emulationSpeedPercentage"])
+    
+    if ([self isInitialized])
     {
-        if ([self isInitialized])
+        if ([keyPath isEqualToString:@"emulationSpeedPercentage"])
         {
             NSInteger percentage = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
             NSInteger mhz = [self emulationFrequencyFromPercentage:percentage];
             
             properties->emulation.speed = mhz;
             emulatorSetFrequency(properties->emulation.speed, NULL);
+        }
+        else if ([keyPath isEqualToString:@"videoBrightness"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->video.brightness = newValue;
+            videoUpdateAll(video, properties);
+        }
+        else if ([keyPath isEqualToString:@"videoContrast"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->video.contrast = newValue;
+            videoUpdateAll(video, properties);
+        }
+        else if ([keyPath isEqualToString:@"videoSaturation"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->video.saturation = newValue;
+            videoUpdateAll(video, properties);
+        }
+        else if ([keyPath isEqualToString:@"videoGamma"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->video.gamma = newValue;
+            videoUpdateAll(video, properties);
+        }
+        else if ([keyPath isEqualToString:@"videoRfModulation"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->video.colorSaturationWidth = newValue;
+            properties->video.colorSaturationEnable = (newValue > 0);
+            
+            videoUpdateAll(video, properties);
+        }
+        else if ([keyPath isEqualToString:@"videoDeInterlace"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->video.deInterlace = newValue;
+            videoUpdateAll(video, properties);
         }
     }
 }

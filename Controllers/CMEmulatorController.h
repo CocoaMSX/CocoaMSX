@@ -74,6 +74,8 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSArray *captureAudioTypes;
     NSArray *captureGameplayTypes;
     
+    NSArray *listOfPreferenceKeysToObserve;
+    
     IBOutlet NSBox *statusBar;
     IBOutlet NSTextField *fpsCounter;
     IBOutlet CMMsxDisplayView *screen;
@@ -85,18 +87,12 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property (nonatomic, copy) NSString *fileToLoadAtStartup;
 @property (nonatomic, copy) NSString *currentlyLoadedCaptureFilePath;
 
-@property (nonatomic, assign) NSInteger brightness;
-@property (nonatomic, assign) NSInteger contrast;
-@property (nonatomic, assign) NSInteger saturation;
-@property (nonatomic, assign) NSInteger gamma;
 @property (nonatomic, assign) NSInteger colorMode;
 @property (nonatomic, assign) NSInteger signalMode;
-@property (nonatomic, assign) NSInteger rfModulation;
 @property (nonatomic, assign) NSInteger scanlines;
 
 @property (nonatomic, assign) BOOL isInitialized;
 
-@property (nonatomic, assign) BOOL deinterlace;
 @property (nonatomic, assign) BOOL fdcTimingDisabled;
 
 @property (nonatomic, assign) BOOL msxAudioEnabled;

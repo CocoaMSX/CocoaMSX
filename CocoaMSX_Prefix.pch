@@ -13,3 +13,5 @@
 #define CMSetObjPref(key, value) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key]
 #define CMGetBoolPref(key) [[NSUserDefaults standardUserDefaults] boolForKey:key]
 #define CMSetBoolPref(key, value) [[NSUserDefaults standardUserDefaults] setBool:value forKey:key]
+#define CMGetFloatPref(key) [[NSUserDefaults standardUserDefaults] floatForKey:key]
+#define CMSetFloatPref(key, value) [[NSUserDefaults standardUserDefaults] setFloat:value forKey:key]

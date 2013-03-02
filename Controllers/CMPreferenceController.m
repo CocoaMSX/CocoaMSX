@@ -872,16 +872,21 @@
 
 - (void)revertVideoClicked:(id)sender
 {
+    NSString *bundleResourcePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:bundleResourcePath];
+    
+    CMSetIntPref(@"videoBrightness", [[defaults objectForKey:@"videoBrightness"] integerValue]);
+    CMSetIntPref(@"videoContrast", [[defaults objectForKey:@"videoContrast"] integerValue]);
+    CMSetIntPref(@"videoSaturation", [[defaults objectForKey:@"videoSaturation"] integerValue]);
+    CMSetIntPref(@"videoGamma", [[defaults objectForKey:@"videoGamma"] integerValue]);
+    CMSetIntPref(@"videoRfModulation", [[defaults objectForKey:@"videoRfModulation"] integerValue]);
+    CMSetIntPref(@"videoScanlineAmount", [[defaults objectForKey:@"videoScanlineAmount"] integerValue]);
+    
+    CMSetBoolPref(@"videoDeInterlace", [[defaults objectForKey:@"videoDeInterlace"] boolValue]);
+    
     self.colorMode = 0;
-    self.emulator.brightness = 100;
-    self.emulator.contrast = 100;
-    self.emulator.saturation = 100;
-    self.emulator.gamma = 100;
     
     self.emulator.signalMode = 0;
-    self.emulator.rfModulation = 0;
-    self.emulator.scanlines = 0;
-    self.emulator.deinterlace = YES;
 }
 
 - (void)revertKeyboardClicked:(id)sender

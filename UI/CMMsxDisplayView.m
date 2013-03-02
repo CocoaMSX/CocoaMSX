@@ -61,7 +61,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 - (void)dealloc
 {
     [[NSUserDefaults standardUserDefaults] removeObserver:self
-                                               forKeyPath:@"scanlineAmount"];
+                                               forKeyPath:@"videoScanlineAmount"];
     
     glDeleteTextures(1, &screenTexId);
     
@@ -80,7 +80,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     [self.window setAcceptsMouseMovedEvents:YES];
     
     [[NSUserDefaults standardUserDefaults] addObserver:self
-                                            forKeyPath:@"scanlineAmount"
+                                            forKeyPath:@"videoScanlineAmount"
                                                options:NSKeyValueObservingOptionNew
                                                context:NULL];
     
@@ -100,7 +100,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-    if ([keyPath isEqualToString:@"scanlineAmount"])
+    if ([keyPath isEqualToString:@"videoScanlineAmount"])
     {
         NSNumber *newValue = [change objectForKey:NSKeyValueChangeNewKey];
         
@@ -200,7 +200,7 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
         }
         else
         {
-            NSInteger scanlineAmount = [[NSUserDefaults standardUserDefaults] integerForKey:@"scanlineAmount"];
+            NSInteger scanlineAmount = [[NSUserDefaults standardUserDefaults] integerForKey:@"videoScanlineAmount"];
             if (emulator.scanlines != scanlineAmount)
             {
                 emulator.scanlines = scanlineAmount;
