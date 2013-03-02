@@ -535,7 +535,7 @@
 								</object>
 								<object class="NSMenuItem" id="153569320">
 									<reference key="NSMenu" ref="720053764"/>
-									<string key="NSTitle">Capture Screen...</string>
+									<string key="NSTitle">Screenshot...</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="229763992"/>
@@ -562,7 +562,15 @@
 										<array class="NSMutableArray" key="NSMenuItems">
 											<object class="NSMenuItem" id="559483049">
 												<reference key="NSMenu" ref="99021543"/>
-												<string key="NSTitle">Load...</string>
+												<string key="NSTitle">Open...</string>
+												<string key="NSKeyEquiv"/>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="229763992"/>
+												<reference key="NSMixedImage" ref="909111550"/>
+											</object>
+											<object class="NSMenuItem" id="723546496">
+												<reference key="NSMenu" ref="99021543"/>
+												<string key="NSTitle">Save As...</string>
 												<string key="NSKeyEquiv"/>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="229763992"/>
@@ -578,10 +586,11 @@
 												<reference key="NSOnImage" ref="229763992"/>
 												<reference key="NSMixedImage" ref="909111550"/>
 											</object>
-											<object class="NSMenuItem" id="455645467">
+											<object class="NSMenuItem" id="332325316">
 												<reference key="NSMenu" ref="99021543"/>
-												<string key="NSTitle">Record</string>
-												<string key="NSKeyEquiv"/>
+												<string key="NSTitle">Play</string>
+												<string key="NSKeyEquiv">p</string>
+												<int key="NSKeyEquivModMask">1572864</int>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="229763992"/>
 												<reference key="NSMixedImage" ref="909111550"/>
@@ -589,15 +598,17 @@
 											<object class="NSMenuItem" id="26310334">
 												<reference key="NSMenu" ref="99021543"/>
 												<string key="NSTitle">Stop</string>
-												<string key="NSKeyEquiv"/>
+												<string key="NSKeyEquiv">.</string>
+												<int key="NSKeyEquivModMask">1572864</int>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="229763992"/>
 												<reference key="NSMixedImage" ref="909111550"/>
 											</object>
-											<object class="NSMenuItem" id="332325316">
+											<object class="NSMenuItem" id="455645467">
 												<reference key="NSMenu" ref="99021543"/>
-												<string key="NSTitle">Play</string>
-												<string key="NSKeyEquiv"/>
+												<string key="NSTitle">Record</string>
+												<string key="NSKeyEquiv">r</string>
+												<int key="NSKeyEquivModMask">1572864</int>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="229763992"/>
 												<reference key="NSMixedImage" ref="909111550"/>
@@ -1316,6 +1327,14 @@
 						<reference key="destination" ref="559483049"/>
 					</object>
 					<int key="connectionID">1298</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">saveGameplayRecording:</string>
+						<reference key="source" ref="1021"/>
+						<reference key="destination" ref="723546496"/>
+					</object>
+					<int key="connectionID">1302</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -2105,10 +2124,11 @@
 						<reference key="object" ref="99021543"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="455645467"/>
-							<reference ref="332325316"/>
-							<reference ref="26310334"/>
 							<reference ref="559483049"/>
 							<reference ref="409604614"/>
+							<reference ref="332325316"/>
+							<reference ref="26310334"/>
+							<reference ref="723546496"/>
 						</array>
 						<reference key="parent" ref="805484119"/>
 					</object>
@@ -2135,6 +2155,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">1299</int>
 						<reference key="object" ref="409604614"/>
+						<reference key="parent" ref="99021543"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1301</int>
+						<reference key="object" ref="723546496"/>
 						<reference key="parent" ref="99021543"/>
 					</object>
 				</array>
@@ -2190,6 +2215,7 @@
 				<string key="1295.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1299.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="130.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1301.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="131.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="134.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="136.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2256,7 +2282,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1300</int>
+			<int key="maxID">1302</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2290,6 +2316,7 @@
 						<string key="repositionCassette:">id</string>
 						<string key="resetMsx:">id</string>
 						<string key="rewindCassette:">id</string>
+						<string key="saveGameplayRecording:">id</string>
 						<string key="saveScreenshot:">id</string>
 						<string key="saveState:">id</string>
 						<string key="shutDownMsx:">id</string>
@@ -2405,6 +2432,10 @@
 						</object>
 						<object class="IBActionInfo" key="rewindCassette:">
 							<string key="name">rewindCassette:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveGameplayRecording:">
+							<string key="name">saveGameplayRecording:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="saveScreenshot:">

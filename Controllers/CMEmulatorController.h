@@ -46,6 +46,9 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSString *_fpsDisplay;
     NSString *_fileToLoadAtStartup;
     BOOL _isInitialized;
+    NSString *_currentlyLoadedCaptureFilePath;
+    
+    NSString *gameplayCaptureTempFilename;
     
     Mixer *mixer;
     Properties *properties;
@@ -78,10 +81,30 @@ NSString * const CMKeyboardLayoutPrefKey;
     BOOL pausedDueToLostFocus;
 }
 
-@property (nonatomic, assign) BOOL isInitialized;
-
 @property (nonatomic, copy) NSString *fpsDisplay;
 @property (nonatomic, copy) NSString *fileToLoadAtStartup;
+@property (nonatomic, copy) NSString *currentlyLoadedCaptureFilePath;
+
+@property (nonatomic, assign) NSInteger brightness;
+@property (nonatomic, assign) NSInteger contrast;
+@property (nonatomic, assign) NSInteger saturation;
+@property (nonatomic, assign) NSInteger gamma;
+@property (nonatomic, assign) NSInteger colorMode;
+@property (nonatomic, assign) NSInteger signalMode;
+@property (nonatomic, assign) NSInteger rfModulation;
+@property (nonatomic, assign) NSInteger scanlines;
+
+@property (nonatomic, assign) BOOL isInitialized;
+
+@property (nonatomic, assign) BOOL deinterlace;
+@property (nonatomic, assign) BOOL fdcTimingDisabled;
+
+@property (nonatomic, assign) BOOL msxAudioEnabled;
+@property (nonatomic, assign) BOOL msxMusicEnabled;
+@property (nonatomic, assign) BOOL moonSoundEnabled;
+
+@property (nonatomic, assign) NSInteger deviceInJoystickPort1;
+@property (nonatomic, assign) NSInteger deviceInJoystickPort2;
 
 - (Properties *)properties;
 - (Video *)video;
@@ -118,25 +141,6 @@ NSString * const CMKeyboardLayoutPrefKey;
                    slot:(NSInteger)slot;
 
 - (BOOL)insertUnknownMedia:(NSString *)media;
-
-@property NSInteger brightness;
-@property NSInteger contrast;
-@property NSInteger saturation;
-@property NSInteger gamma;
-@property NSInteger colorMode;
-@property NSInteger signalMode;
-@property NSInteger rfModulation;
-@property NSInteger scanlines;
-
-@property BOOL deinterlace;
-@property BOOL fdcTimingDisabled;
-
-@property BOOL msxAudioEnabled;
-@property BOOL msxMusicEnabled;
-@property BOOL moonSoundEnabled;
-
-@property NSInteger deviceInJoystickPort1;
-@property NSInteger deviceInJoystickPort2;
 
 + (NSArray *)machineConfigurations;
 + (BOOL)removeMachineConfiguration:(NSString *)configurationName;
@@ -203,6 +207,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)recordAudio:(id)sender;
 
 - (IBAction)openGameplayRecording:(id)sender;
+- (IBAction)saveGameplayRecording:(id)sender;
 - (IBAction)recordGameplay:(id)sender;
 - (IBAction)stopGameplayRecording:(id)sender;
 - (IBAction)playBackGameplay:(id)sender;

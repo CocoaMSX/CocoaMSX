@@ -121,6 +121,8 @@
 - (BOOL)isStatusBarVisible;
 - (void)setIsStatusBarVisible:(BOOL)isVisible;
 
+- (void)cleanupTemporaryCaptureFile;
+
 @end
 
 @implementation CMEmulatorController
@@ -128,6 +130,7 @@
 @synthesize fpsDisplay = _fpsDisplay;
 @synthesize fileToLoadAtStartup = _fileToLoadAtStartup;
 @synthesize isInitialized = _isInitialized;
+@synthesize currentlyLoadedCaptureFilePath = _currentlyLoadedCaptureFilePath;
 
 #define WIDTH_DEFAULT   272.0
 #define HEIGHT_DEFAULT  240.0
@@ -159,6 +162,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     [self destroy];
     
+    [self cleanupTemporaryCaptureFile];
+    
     [openRomFileTypes release];
     [openDiskFileTypes release];
     [openCassetteFileTypes release];
@@ -172,7 +177,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [cassetteRepositioner release];
     [preferenceController release];
     
-    self.fileToLoadAtStartup = nil;
+    [self setFileToLoadAtStartup:nil];
+    [self setCurrentlyLoadedCaptureFilePath:nil];
     
     [keyboard release];
     [mouse release];
@@ -415,6 +421,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
         emulatorSuspend();
         emulatorStop();
     }
+    
+    [self setCurrentlyLoadedCaptureFilePath:nil];
+    [self cleanupTemporaryCaptureFile];
 }
 
 - (void)pause
@@ -1321,6 +1330,21 @@ CMEmulatorController *theEmulator = nil; // FIXME
     NSEnableScreenUpdates();
 }
 
+- (void)cleanupTemporaryCaptureFile
+{
+    if (!gameplayCaptureTempFilename)
+        return;
+    
+    // Remove the temp file, if any
+    NSError *error = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:gameplayCaptureTempFilename])
+        [[NSFileManager defaultManager] removeItemAtPath:gameplayCaptureTempFilename
+                                                   error:&error];
+    
+    [gameplayCaptureTempFilename release];
+    gameplayCaptureTempFilename = nil;
+}
+
 #pragma mark - IBActions
 
 - (void)openAbout:(id)sender
@@ -1629,13 +1653,17 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         emulatorSuspend();
         
-        NSString *captureFile = [NSString pathForTemporaryFileWithPrefix:@"cocoaMsxCapture"];
-        if (captureFile)
+        [self cleanupTemporaryCaptureFile];
+        
+        gameplayCaptureTempFilename = [NSString pathForTemporaryFileWithPrefix:@"cocoaMsxCapture"];
+        if (gameplayCaptureTempFilename)
         {
 #ifdef DEBUG
-            NSLog(@"Capturing to %@", captureFile);
+            NSLog(@"Capturing to %@", gameplayCaptureTempFilename);
 #endif
-            const char *destination = [captureFile UTF8String];
+            [self setCurrentlyLoadedCaptureFilePath:gameplayCaptureTempFilename];
+            
+            const char *destination = [gameplayCaptureTempFilename UTF8String];
             strncpy(properties->filehistory.videocap, destination, PROP_MAXPATH - 1);
             
             boardCaptureStart(properties->filehistory.videocap);
@@ -1661,7 +1689,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
          {
              [[CMPreferences preferences] setVideoCaptureDirectory:path];
              
+             [self setCurrentlyLoadedCaptureFilePath:file];
+             
              const char *recording = [file UTF8String];
+             
              strncpy(properties->filehistory.videocap, recording, PROP_MAXPATH - 1);
              
              emulatorStop();
@@ -1674,12 +1705,58 @@ CMEmulatorController *theEmulator = nil; // FIXME
      }];
 }
 
+- (void)saveGameplayRecording:(id)sender
+{
+    if (!self.isInitialized || ![self isStarted])
+        return;
+    
+    if ([self currentlyLoadedCaptureFilePath] && !boardCaptureIsRecording())
+    {
+        emulatorSuspend();
+        
+        [self showSaveFileDialogWithTitle:CMLoc(@"SaveGameplayRecording")
+                         allowedFileTypes:captureGameplayTypes
+                          openInDirectory:[CMPreferences preferences].videoCaptureDirectory
+                        completionHandler:^(NSString *file, NSString *path)
+         {
+             if (file)
+             {
+                 [[CMPreferences preferences] setVideoCaptureDirectory:path];
+                 
+                 NSError *error = NULL;
+                 [[NSFileManager defaultManager] copyItemAtPath:[self currentlyLoadedCaptureFilePath]
+                                                         toPath:file
+                                                          error:&error];
+                 
+                 if (error)
+                 {
+                     NSString *message = [NSString stringWithFormat:CMLoc(@"CouldNotSaveFileToDisk_f"),
+                                          file];
+                     
+                     NSAlert *alert = [NSAlert alertWithMessageText:message
+                                                      defaultButton:CMLoc(@"OK")
+                                                    alternateButton:nil
+                                                        otherButton:nil
+                                          informativeTextWithFormat:@""];
+                     
+                     [alert beginSheetModalForWindow:[self window]
+                                       modalDelegate:self
+                                      didEndSelector:nil
+                                         contextInfo:nil];
+                 }
+             }
+             
+             emulatorResume();
+         }];
+    }
+}
+
 - (void)stopGameplayRecording:(id)sender
 {
     if (!self.isInitialized || ![self isStarted])
         return;
     
-    if (boardCaptureIsRecording())
+    if (boardCaptureIsRecording() || boardCaptureIsPlaying())
     {
         emulatorSuspend();
         boardCaptureStop();
@@ -1689,15 +1766,19 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)playBackGameplay:(id)sender
 {
-    NSString *currentCapture = [NSString stringWithCString:properties->filehistory.videocap
-                                                  encoding:NSUTF8StringEncoding];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:currentCapture])
+    if ([self currentlyLoadedCaptureFilePath] != nil &&
+        [[NSFileManager defaultManager] fileExistsAtPath:[self currentlyLoadedCaptureFilePath]])
     {
         if ([self machineState] != EMU_STOPPED)
-            [self stop];
+        {
+            emulatorSuspend();
+            emulatorStop();
+        }
         
-        emulatorStart(properties->filehistory.videocap);
+        const char *recording = [[self currentlyLoadedCaptureFilePath] UTF8String];
+        strncpy(properties->filehistory.videocap, recording, PROP_MAXPATH - 1);
+        
+        emulatorStart(recording);
     }
 }
 
@@ -2028,18 +2109,27 @@ void archTrap(UInt8 value)
     {
         [menuItem setState:boardCaptureIsRecording() ? NSOnState : NSOffState];
         
-        return isRunning && !boardCaptureIsRecording();
+        return isRunning && !boardCaptureIsRecording() && !boardCaptureIsPlaying();
     }
     else if (item.action == @selector(stopGameplayRecording:))
     {
-        return boardCaptureIsRecording();
+        return isRunning && (boardCaptureIsRecording() || boardCaptureIsPlaying());
     }
     else if (item.action == @selector(playBackGameplay:))
     {
-        NSString *currentCapture = [NSString stringWithCString:properties->filehistory.videocap
-                                                      encoding:NSUTF8StringEncoding];
+        [menuItem setState:boardCaptureIsPlaying() ? NSOnState : NSOffState];
         
-        return [[NSFileManager defaultManager] fileExistsAtPath:currentCapture];
+        return isRunning
+            && [self currentlyLoadedCaptureFilePath] != nil
+            && [[NSFileManager defaultManager] fileExistsAtPath:[self currentlyLoadedCaptureFilePath]]
+            && !boardCaptureIsPlaying();
+    }
+    else if (item.action == @selector(saveGameplayRecording:))
+    {
+        return isRunning
+            && [self currentlyLoadedCaptureFilePath] != nil
+            && [[NSFileManager defaultManager] fileExistsAtPath:[self currentlyLoadedCaptureFilePath]]
+            && !boardCaptureIsRecording();
     }
     
     return menuItem.isEnabled;
