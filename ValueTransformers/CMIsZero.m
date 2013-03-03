@@ -20,41 +20,27 @@
  **
  ******************************************************************************
  */
-#import "CMCocoaJoystick.h"
+#import "CMIsZero.h"
 
-#include "InputEvent.h"
+@implementation CMIsZero
 
-#pragma mark - JoystickDevice
-
-@implementation CMCocoaJoystick
-
-- (id)init
++ (Class)transformedValueClass
 {
-    if ((self = [super init]))
-    {
-        [self resetState];
-    }
+    return [NSNumber class];
+}
+
++ (BOOL)allowsReverseTransformation
+{
+    return NO;
+}
+
+- (id)transformedValue:(id)value
+{
+    if (!value)
+        return nil;
     
-    return self;
+    NSNumber *number = (NSNumber *)value;
+    return [NSNumber numberWithBool:([number integerValue] == 0)];
 }
-
-- (void)dealloc
-{
-    [super dealloc];
-}
-
-- (void)setEmulatorHasFocus:(BOOL)emulatorHasFocus
-{
-    
-}
-
-- (void)resetState
-{
-    inputEventReset();
-}
-
-#pragma mark - BlueMSX Callbacks
-
-UInt8 archJoystickGetState(int joystickNo) { return 0; }
 
 @end

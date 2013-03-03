@@ -25,7 +25,6 @@
 #import "MGScopeBarDelegateProtocol.h"
 
 @class CMEmulatorController;
-@class CMJoyPortDevice;
 @class CMMsxKeyLayout;
 @class MGScopeBar;
 @class CMKeyCaptureView;
@@ -34,25 +33,15 @@
 @interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate>
 {
     CMEmulatorController *_emulator;
-    BOOL _isSaturationEnabled;
-    NSInteger _colorMode;
-    NSMutableArray *_joystickPortPeripherals;
-    CMJoyPortDevice *_joystickPort1Selection;
-    CMJoyPortDevice *_joystickPort2Selection;
     
     NSInteger machineDisplayMode;
     
     IBOutlet NSButton *addMachineButton;
     IBOutlet NSButton *removeMachineButton;
     
-    IBOutlet NSPopUpButton *joystickOneDevice;
-    IBOutlet NSPopUpButton *joystickTwoDevice;
-    
     IBOutlet NSToolbar *toolbar;
     
     IBOutlet NSTabView *preferenceCategoryTabView;
-    IBOutlet NSTabView *joystickOneDeviceTabView;
-    IBOutlet NSTabView *joystickTwoDeviceTabView;
     
     IBOutlet MGScopeBar *keyboardScopeBar;
     IBOutlet MGScopeBar *machineScopeBar;
@@ -77,6 +66,7 @@
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
+    
     NSMutableArray *installedMachines;
     NSMutableArray *installableMachines;
     NSMutableArray *allMachines;
@@ -92,17 +82,9 @@
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
 
-@property (nonatomic, assign) BOOL isSaturationEnabled;
-@property (nonatomic, assign) NSInteger colorMode;
-
-@property (nonatomic, retain) NSMutableArray *joystickPortPeripherals;
-@property (nonatomic, retain) CMJoyPortDevice *joystickPort1Selection;
-@property (nonatomic, retain) CMJoyPortDevice *joystickPort2Selection;
-
 - (id)initWithEmulator:(CMEmulatorController *)emulator;
 
 - (IBAction)tabChanged:(id)sender;
-- (IBAction)joystickDeviceChanged:(id)sender;
 - (IBAction)revertVideoClicked:(id)sender;
 - (IBAction)revertKeyboardClicked:(id)sender;
 - (IBAction)revertJoystickOneClicked:(id)sender;

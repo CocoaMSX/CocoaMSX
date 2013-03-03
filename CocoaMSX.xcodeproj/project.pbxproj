@@ -292,6 +292,8 @@
 		FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2A2BDC16240DB7000CCAE4 /* CMRepositionCassetteController.m */; };
 		FE2CEB581622A50500E58F9A /* Databases in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB551622A50500E58F9A /* Databases */; };
 		FE2CEB5A1622A50500E58F9A /* Machines in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB571622A50500E58F9A /* Machines */; };
+		FE2D857D16E33140003EFB3F /* CMIsZero.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2D857C16E33140003EFB3F /* CMIsZero.m */; };
+		FE2D858016E3480C003EFB3F /* CMAsString.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2D857F16E3480C003EFB3F /* CMAsString.m */; };
 		FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E1962164085A000BCFD53 /* CMPreferences.m */; };
 		FE3754BE16B5CF54005360CC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FE3754D916B638DB005360CC /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C616B638DB005360CC /* SBJsonParser.m */; };
@@ -977,6 +979,10 @@
 		FE2A2BDC16240DB7000CCAE4 /* CMRepositionCassetteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMRepositionCassetteController.m; sourceTree = "<group>"; };
 		FE2CEB551622A50500E58F9A /* Databases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Databases; sourceTree = "<group>"; };
 		FE2CEB571622A50500E58F9A /* Machines */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Machines; sourceTree = "<group>"; };
+		FE2D857B16E33140003EFB3F /* CMIsZero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMIsZero.h; sourceTree = "<group>"; };
+		FE2D857C16E33140003EFB3F /* CMIsZero.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMIsZero.m; sourceTree = "<group>"; };
+		FE2D857E16E3480C003EFB3F /* CMAsString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMAsString.h; sourceTree = "<group>"; };
+		FE2D857F16E3480C003EFB3F /* CMAsString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMAsString.m; sourceTree = "<group>"; };
 		FE2E1961164085A000BCFD53 /* CMPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferences.h; sourceTree = "<group>"; };
 		FE2E1962164085A000BCFD53 /* CMPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferences.m; sourceTree = "<group>"; };
 		FE3754C416B638DB005360CC /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
@@ -1161,6 +1167,7 @@
 				FE9C6A29161AA39F00513A6D /* UI */,
 				FE4F9C04161CDE9400A53567 /* Supporting Files */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				FE2D857A16E330F3003EFB3F /* ValueTransformers */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				FE20DB8D1632776500D44ADF /* Documents */,
@@ -1964,6 +1971,17 @@
 			path = Documents;
 			sourceTree = "<group>";
 		};
+		FE2D857A16E330F3003EFB3F /* ValueTransformers */ = {
+			isa = PBXGroup;
+			children = (
+				FE2D857B16E33140003EFB3F /* CMIsZero.h */,
+				FE2D857C16E33140003EFB3F /* CMIsZero.m */,
+				FE2D857E16E3480C003EFB3F /* CMAsString.h */,
+				FE2D857F16E3480C003EFB3F /* CMAsString.m */,
+			);
+			path = ValueTransformers;
+			sourceTree = "<group>";
+		};
 		FE3754C316B638DB005360CC /* SBJson */ = {
 			isa = PBXGroup;
 			children = (
@@ -2581,6 +2599,8 @@
 				FE9B86B916D45A2E00623DBD /* NSString+CMExtensions.m in Sources */,
 				FE9B86BC16D4A96300623DBD /* CMMachineSelectionCell.m in Sources */,
 				FE9B86BF16D4AC8100623DBD /* CMMachineInstallationOperation.m in Sources */,
+				FE2D857D16E33140003EFB3F /* CMIsZero.m in Sources */,
+				FE2D858016E3480C003EFB3F /* CMAsString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -24,7 +24,6 @@
 
 #import "CMAppDelegate.h"
 #import "CMEmulatorController.h"
-#import "CMCocoaJoystick.h"
 #import "CMPreferences.h"
 
 #import "NSString+CMExtensions.h"
@@ -148,19 +147,11 @@
 - (void)toggleSystemSpecificButtons;
 - (void)updateCurrentConfigurationInformation;
 
-- (void)setDeviceForJoystickPort:(NSInteger)joystickPort
-                      toDeviceId:(NSInteger)deviceId;
-
 @end
 
 @implementation CMPreferenceController
 
 @synthesize emulator = _emulator;
-@synthesize isSaturationEnabled = _isSaturationEnabled;
-@synthesize colorMode = _colorMode;
-@synthesize joystickPortPeripherals = _joystickPortPeripherals;
-@synthesize joystickPort1Selection = _joystickPort1Selection;
-@synthesize joystickPort2Selection = _joystickPort2Selection;
 
 #pragma mark - Init & Dealloc
 
@@ -206,29 +197,9 @@
         slider.target = self;
     }];
     
-    self.isSaturationEnabled = (self.emulator.colorMode == 0);
-    
     machineDisplayMode = CMShowInstalledMachines;
     
     // Joystick devices
-    self.joystickPortPeripherals = [NSMutableArray array];
-    NSMutableArray *kvoProxy = [self mutableArrayValueForKey:@"joystickPortPeripherals"];
-    NSArray *supportedDevices = [CMCocoaJoystick supportedDevices];
-    
-    self.joystickPort1Selection = [supportedDevices objectAtIndex:0];
-    self.joystickPort2Selection = [supportedDevices objectAtIndex:0];
-    
-    [supportedDevices enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        CMJoyPortDevice *jd = obj;
-        if (self.emulator.deviceInJoystickPort1 == jd.deviceId)
-            self.joystickPort1Selection = jd;
-        if (self.emulator.deviceInJoystickPort2 == jd.deviceId)
-            self.joystickPort2Selection = jd;
-        
-        [kvoProxy addObject:jd];
-    }];
-    
     [self initializeInputDeviceCategories:keyCategories
                                withLayout:self.emulator.keyboardLayout];
     [self initializeInputDeviceCategories:joystickOneCategories
@@ -276,10 +247,6 @@
     
     [downloadQueue release];
     [jsonParser release];
-    
-    self.joystickPortPeripherals = nil;
-    self.joystickPort1Selection = nil;
-    self.joystickPort2Selection = nil;
     
     [keyCaptureView release];
     
@@ -607,13 +574,6 @@
     [emulationSpeedSlider setDoubleValue:[self physicalPositionOfSlider:emulationSpeedSlider
                                                             fromVirtual:CMGetIntPref(@"emulationSpeedPercentage")
                                                              usingTable:virtualEmulationSpeedRange]];
-    
-    // Update joystick device view
-    [self setDeviceForJoystickPort:0
-                        toDeviceId:[[self joystickPort1Selection] deviceId]];
-    
-    [self setDeviceForJoystickPort:1
-                        toDeviceId:[[self joystickPort2Selection] deviceId]];
 }
 
 - (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
@@ -658,29 +618,6 @@
     
     [categoryArray removeAllObjects];
     [categoryArray addObjectsFromArray:sortedCategories];
-}
-
-- (void)setDeviceForJoystickPort:(NSInteger)joystickPort
-                      toDeviceId:(NSInteger)deviceId
-{
-    NSTabView *configurationTabView = nil;
-    if (joystickPort == 0)
-    {
-        configurationTabView = joystickOneDeviceTabView;
-        [[self emulator] setDeviceInJoystickPort1:deviceId];
-    }
-    else
-    {
-        configurationTabView = joystickTwoDeviceTabView;
-        [[self emulator] setDeviceInJoystickPort2:deviceId];
-    }
-    
-    if (deviceId == JOYSTICK_PORT_JOYSTICK)
-        [configurationTabView selectTabViewItemWithIdentifier:@"twoButtonJoystick"];
-    else if (deviceId == JOYSTICK_PORT_MOUSE)
-        [configurationTabView selectTabViewItemWithIdentifier:@"mouse"];
-    else
-        [configurationTabView selectTabViewItemWithIdentifier:@"configurationless"];
 }
 
 - (NSInteger)virtualPositionOfSlider:(NSSlider *)slider
@@ -797,19 +734,6 @@
     [removeMachineButton setEnabled:isRemoveButtonEnabled];
 }
 
-#pragma mark - Properties
-
-- (void)setColorMode:(NSInteger)colorMode
-{
-    self.isSaturationEnabled = (colorMode == 0);
-    self.emulator.colorMode = colorMode;
-}
-
-- (NSInteger)colorMode
-{
-    return self.emulator.colorMode;
-}
-
 #pragma mark - Actions
 
 - (void)installMachineConfiguration:(id)sender
@@ -881,12 +805,10 @@
     CMSetIntPref(@"videoGamma", [[defaults objectForKey:@"videoGamma"] integerValue]);
     CMSetIntPref(@"videoRfModulation", [[defaults objectForKey:@"videoRfModulation"] integerValue]);
     CMSetIntPref(@"videoScanlineAmount", [[defaults objectForKey:@"videoScanlineAmount"] integerValue]);
+    CMSetIntPref(@"videoSignalMode", [[defaults objectForKey:@"videoSignalMode"] integerValue]);
+    CMSetIntPref(@"videoColorMode", [[defaults objectForKey:@"videoColorMode"] integerValue]);
     
-    CMSetBoolPref(@"videoDeInterlace", [[defaults objectForKey:@"videoDeInterlace"] boolValue]);
-    
-    self.colorMode = 0;
-    
-    self.emulator.signalMode = 0;
+    CMSetBoolPref(@"videoEnableDeInterlacing", [[defaults objectForKey:@"videoEnableDeInterlacing"] boolValue]);
 }
 
 - (void)revertKeyboardClicked:(id)sender
@@ -917,20 +839,6 @@
     [[CMPreferences preferences] setJoystickTwoLayout:layout];
     
     [joystickTwoLayoutEditor reloadData];
-}
-
-- (void)joystickDeviceChanged:(id)sender
-{
-    if (sender == joystickOneDevice)
-    {
-        [self setDeviceForJoystickPort:0
-                            toDeviceId:[[self joystickPort1Selection] deviceId]];
-    }
-    else if (sender == joystickTwoDevice)
-    {
-        [self setDeviceForJoystickPort:1
-                            toDeviceId:[[self joystickPort2Selection] deviceId]];
-    }
 }
 
 - (void)refreshMachineList:(id)sender

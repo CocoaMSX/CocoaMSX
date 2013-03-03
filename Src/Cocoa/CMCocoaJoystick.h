@@ -22,25 +22,10 @@
  */
 #import <Foundation/Foundation.h>
 
-@interface CMJoyPortDevice : NSObject
-{
-    BOOL _isKeyConfigurable;
-    NSInteger _deviceId;
-    NSString *_name;
-}
-
-@property (nonatomic, assign) BOOL isKeyConfigurable;
-@property (nonatomic, assign) NSInteger deviceId;
-@property (nonatomic, copy) NSString *name;
-
-@end
-
 @interface CMCocoaJoystick : NSObject
 {
 }
 
 - (void)setEmulatorHasFocus:(BOOL)emulatorHasFocus;
-
-+ (NSArray*)supportedDevices;
 
 @end

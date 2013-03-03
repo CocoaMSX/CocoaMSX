@@ -20,41 +20,8 @@
  **
  ******************************************************************************
  */
-#import "CMCocoaJoystick.h"
+#import <Foundation/Foundation.h>
 
-#include "InputEvent.h"
-
-#pragma mark - JoystickDevice
-
-@implementation CMCocoaJoystick
-
-- (id)init
-{
-    if ((self = [super init]))
-    {
-        [self resetState];
-    }
-    
-    return self;
-}
-
-- (void)dealloc
-{
-    [super dealloc];
-}
-
-- (void)setEmulatorHasFocus:(BOOL)emulatorHasFocus
-{
-    
-}
-
-- (void)resetState
-{
-    inputEventReset();
-}
-
-#pragma mark - BlueMSX Callbacks
-
-UInt8 archJoystickGetState(int joystickNo) { return 0; }
+@interface CMAsString : NSValueTransformer
 
 @end

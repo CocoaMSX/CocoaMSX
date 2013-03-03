@@ -100,10 +100,6 @@
 - (NSString*)fileNameFromCPath:(const char*)filePath;
 - (NSString*)fileNameNoExtensionFromCPath:(const char*)filePath;
 
-- (BOOL)mixerEnabledForChannel:(NSInteger)channel;
-- (void)toggleMixerChannel:(NSInteger)channel
-                 isEnabled:(BOOL)isEnabled;
-
 - (NSInteger)emulationSpeedPercentageFromFrequency:(NSInteger)frequency;
 - (NSInteger)emulationFrequencyFromPercentage:(NSInteger)percentage;
 
@@ -151,12 +147,20 @@ CMEmulatorController *theEmulator = nil; // FIXME
         listOfPreferenceKeysToObserve = [[NSArray alloc] initWithObjects:
                                          @"pauseWhenUnfocused",
                                          @"emulationSpeedPercentage",
+                                         @"enableFloppyTiming",
                                          @"videoBrightness",
                                          @"videoContrast",
                                          @"videoSaturation",
                                          @"videoGamma",
                                          @"videoRfModulation",
-                                         @"videoDeInterlace",
+                                         @"videoEnableDeInterlacing",
+                                         @"videoSignalMode",
+                                         @"videoColorMode",
+                                         @"audioEnableMsxAudio",
+                                         @"audioEnableMsxMusic",
+                                         @"audioEnableMoonSound",
+                                         @"joystickDevicePort1",
+                                         @"joystickDevicePort2",
                                          nil];
         
         openRomFileTypes = [[NSArray alloc] initWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"zip", nil];
@@ -286,18 +290,27 @@ CMEmulatorController *theEmulator = nil; // FIXME
     NSInteger frequency = [self emulationFrequencyFromPercentage:CMGetIntPref(@"emulationSpeedPercentage")];
     
     properties->emulation.speed = frequency;
-    properties->emulation.vdpSyncMode = prefs.vdpSyncMode;
     properties->emulation.syncMethod = P_EMU_SYNCTOVBLANKASYNC;
+    
+    properties->emulation.enableFdcTiming = CMGetBoolPref(@"enableFloppyTiming");
+    properties->emulation.vdpSyncMode = CMGetIntPref(@"vdpSyncMode");
     
     properties->video.brightness = CMGetIntPref(@"videoBrightness");
     properties->video.contrast = CMGetIntPref(@"videoContrast");
     properties->video.saturation = CMGetIntPref(@"videoSaturation");
     properties->video.gamma = CMGetIntPref(@"videoGamma");
-    
     properties->video.colorSaturationWidth = CMGetIntPref(@"videoRfModulation");
     properties->video.colorSaturationEnable = (properties->video.colorSaturationWidth > 0);
+    properties->video.deInterlace = CMGetBoolPref(@"videoEnableDeInterlacing");
+    properties->video.monitorType = CMGetIntPref(@"videoSignalMode");
+    properties->video.monitorColor = CMGetIntPref(@"videoColorMode");
     
-    properties->video.deInterlace = CMGetBoolPref(@"videoDeInterlace");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].enable = CMGetBoolPref(@"audioEnableMsxMusic");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].enable = CMGetBoolPref(@"audioEnableMsxAudio");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].enable = CMGetBoolPref(@"audioEnableMoonSound");
+    
+    properties->joy1.typeId = CMGetIntPref(@"joystickDevicePort1");
+    properties->joy2.typeId = CMGetIntPref(@"joystickDevicePort2");
     
     video = videoCreate();
     videoSetColors(video, properties->video.saturation, properties->video.brightness,
@@ -505,39 +518,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
         self.fpsDisplay = [NSString stringWithFormat:CMLoc(@"Fps_f"), fps];
 }
 
-- (void)setFdcTimingDisabled:(BOOL)fdcTimingDisabled
-{
-    properties->emulation.enableFdcTiming = !fdcTimingDisabled;
-    boardSetFdcTimingEnable(properties->emulation.enableFdcTiming);
-}
-
-- (BOOL)fdcTimingDisabled
-{
-    return !properties->emulation.enableFdcTiming;
-}
-
-- (void)setColorMode:(NSInteger)value
-{
-    properties->video.monitorColor = value;
-    videoUpdateAll(video, properties);
-}
-
-- (NSInteger)colorMode
-{
-    return properties->video.monitorColor;
-}
-
-- (void)setSignalMode:(NSInteger)value
-{
-    properties->video.monitorType = value;
-    videoUpdateAll(video, properties);
-}
-
-- (NSInteger)signalMode
-{
-    return properties->video.monitorType;
-}
-
 - (void)setScanlines:(NSInteger)value
 {
     if ([self isStarted])
@@ -555,48 +535,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return 0;
     
     return 100 - properties->video.scanlinesPct;
-}
-
-- (BOOL)mixerEnabledForChannel:(NSInteger)channel
-{
-    return properties->sound.mixerChannel[channel].enable;
-}
-
-- (void)toggleMixerChannel:(NSInteger)channel
-                 isEnabled:(BOOL)isEnabled
-{
-    properties->sound.mixerChannel[channel].enable = isEnabled;
-    mixerEnableChannelType(mixer, channel, isEnabled);
-}
-
-- (void)setMsxAudioEnabled:(BOOL)msxAudioEnabled
-{
-    [self toggleMixerChannel:MIXER_CHANNEL_MSXAUDIO isEnabled:msxAudioEnabled];
-}
-
-- (BOOL)msxAudioEnabled
-{
-    return [self mixerEnabledForChannel:MIXER_CHANNEL_MSXAUDIO];
-}
-
-- (void)setMsxMusicEnabled:(BOOL)msxMusicEnabled
-{
-    [self toggleMixerChannel:MIXER_CHANNEL_MSXMUSIC isEnabled:msxMusicEnabled];
-}
-
-- (BOOL)msxMusicEnabled
-{
-    return [self mixerEnabledForChannel:MIXER_CHANNEL_MSXMUSIC];
-}
-
-- (void)setMoonSoundEnabled:(BOOL)moonSoundEnabled
-{
-    [self toggleMixerChannel:MIXER_CHANNEL_MOONSOUND isEnabled:moonSoundEnabled];
-}
-
-- (BOOL)moonSoundEnabled
-{
-    return [self mixerEnabledForChannel:MIXER_CHANNEL_MOONSOUND];
 }
 
 - (NSInteger)emulationSpeedPercentageFromFrequency:(NSInteger)frequency
@@ -623,9 +561,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
     char **machineNames = machineGetAvailable(1);
     while (*machineNames != NULL)
     {
-        NSString *machineName =  [NSString stringWithCString:*machineNames
-                                                    encoding:NSUTF8StringEncoding];
-        [machineConfigurations addObject:machineName];
+        NSString *machineName = [NSString stringWithCString:*machineNames
+                                                   encoding:NSUTF8StringEncoding];
+        
+        if (machineName && [machineName length] > 0)
+            [machineConfigurations addObject:machineName];
         
         machineNames++;
     }
@@ -652,30 +592,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                error:&error];
     
     return (error == nil);
-}
-
-#pragma mark - Input Peripherals
-
-- (NSInteger)deviceInJoystickPort1
-{
-    return properties->joy1.typeId;
-}
-
-- (void)setDeviceInJoystickPort1:(NSInteger)deviceInJoystickPort1
-{
-    properties->joy1.typeId = deviceInJoystickPort1;
-    joystickPortSetType(0, deviceInJoystickPort1);
-}
-
-- (NSInteger)deviceInJoystickPort2
-{
-    return properties->joy2.typeId;
-}
-
-- (void)setDeviceInJoystickPort2:(NSInteger)deviceInJoystickPort2
-{
-    properties->joy2.typeId = deviceInJoystickPort2;
-    joystickPortSetType(1, deviceInJoystickPort2);
 }
 
 #pragma mark - Properties
@@ -1855,13 +1771,73 @@ void archTrap(UInt8 value)
             
             videoUpdateAll(video, properties);
         }
-        else if ([keyPath isEqualToString:@"videoDeInterlace"])
+        else if ([keyPath isEqualToString:@"videoEnableDeInterlacing"])
         {
             BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
             
             properties->video.deInterlace = newValue;
             videoUpdateAll(video, properties);
         }
+        else if ([keyPath isEqualToString:@"videoSignalMode"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->video.monitorType = newValue;
+            videoUpdateAll(video, properties);
+        }
+        else if ([keyPath isEqualToString:@"videoColorMode"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->video.monitorColor = newValue;
+            videoUpdateAll(video, properties);
+        }
+        else if ([keyPath isEqualToString:@"enableFloppyTiming"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->emulation.enableFdcTiming = newValue;
+            boardSetFdcTimingEnable(properties->emulation.enableFdcTiming);
+        }
+        else if ([keyPath isEqualToString:@"audioEnableMsxMusic"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].enable = newValue;
+            mixerEnableChannelType(mixer, MIXER_CHANNEL_MSXMUSIC, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioEnableMsxAudio"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].enable = newValue;
+            mixerEnableChannelType(mixer, MIXER_CHANNEL_MSXAUDIO, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioEnableMoonSound"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].enable = newValue;
+            mixerEnableChannelType(mixer, MIXER_CHANNEL_MOONSOUND, newValue);
+        }
+        else if ([keyPath isEqualToString:@"joystickDevicePort1"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->joy1.typeId = newValue;
+            joystickPortSetType(0, newValue);
+        }
+        else if ([keyPath isEqualToString:@"joystickDevicePort2"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->joy2.typeId = newValue;
+            joystickPortSetType(1, newValue);
+        }
+        
+#ifdef DEBUG
+        NSLog(@"pref change: %@ => %@", keyPath, [change objectForKey:NSKeyValueChangeNewKey]);
+#endif
     }
 }
 

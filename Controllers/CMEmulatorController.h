@@ -87,20 +87,9 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property (nonatomic, copy) NSString *fileToLoadAtStartup;
 @property (nonatomic, copy) NSString *currentlyLoadedCaptureFilePath;
 
-@property (nonatomic, assign) NSInteger colorMode;
-@property (nonatomic, assign) NSInteger signalMode;
 @property (nonatomic, assign) NSInteger scanlines;
 
 @property (nonatomic, assign) BOOL isInitialized;
-
-@property (nonatomic, assign) BOOL fdcTimingDisabled;
-
-@property (nonatomic, assign) BOOL msxAudioEnabled;
-@property (nonatomic, assign) BOOL msxMusicEnabled;
-@property (nonatomic, assign) BOOL moonSoundEnabled;
-
-@property (nonatomic, assign) NSInteger deviceInJoystickPort1;
-@property (nonatomic, assign) NSInteger deviceInJoystickPort2;
 
 - (Properties *)properties;
 - (Video *)video;

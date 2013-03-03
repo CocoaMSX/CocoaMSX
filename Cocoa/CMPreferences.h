@@ -61,9 +61,6 @@
 - (NSString *)snapshotDirectory;
 - (void)setSnapshotDirectory:(NSString *)directory;
 
-- (NSInteger)vdpSyncMode;
-- (void)setVdpSyncMode:(NSInteger)syncMode;
-
 - (BOOL)createAudioCaptureDirectory;
 - (BOOL)createVideoCaptureDirectory;
 - (BOOL)createSramDirectory;

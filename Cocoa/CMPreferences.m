@@ -37,7 +37,6 @@ static NSString * const CMCassetteDataDirectoryKey = @"cassetteDataDirectory";
 static NSString * const CMDatabaseDirectoryKey = @"databaseDirectory";
 static NSString * const CMMachineDirectoryKey = @"machineDirectory";
 static NSString * const CMSnapshotDirectoryKey = @"snapshotDirectory";
-static NSString * const CMVdpSyncModeKey = @"vdpSyncMode";
 
 static NSString * const CMCassetteDirectoryKey = @"cassetteDirectory";
 static NSString * const CMCartridgeDirectoryKey = @"cartridgeDirectory";
@@ -303,17 +302,6 @@ static CMPreferences *preferences = nil;
 }
 
 #pragma mark Emulation
-
-- (NSInteger)vdpSyncMode
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:CMVdpSyncModeKey];
-}
-
-- (void)setVdpSyncMode:(NSInteger)syncMode
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:syncMode
-                                               forKey:CMVdpSyncModeKey];
-}
 
 - (void)setCassetteDirectory:(NSString *)directory
 {
