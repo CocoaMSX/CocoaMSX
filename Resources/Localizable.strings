@@ -206,3 +206,10 @@ ErrorParsingMachineFeed = "An error occurred while reading the list of downloada
 ErrorDeletingInstalledMachine = "Could not delete installed machine.";
 ErrorDownloadCritical = "Could not complete download - an unexpected error occurred.";
 CouldNotSaveFileToDisk_f = "An error occurred while attempting to save to '%@'.";
+
+Psg = "PSG";
+Scc = "SCC";
+MsxMusic = "MSX-Music";
+MsxAudio = "MSX-Audio";
+Keyboard = "Keyboard";
+MoonSound = "Moonsound";

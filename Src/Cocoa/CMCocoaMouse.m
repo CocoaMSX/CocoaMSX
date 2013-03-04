@@ -103,9 +103,9 @@
     NSPoint viewOrig = [screen bounds].origin;
     NSSize viewSize = [screen bounds].size;
     
-    NSRect centerView;
-    centerView.origin.x = (viewOrig.x + viewSize.width) / 2.0;
-    centerView.origin.y = (viewOrig.y + viewSize.height) / 2.0;
+    NSRect centerView = NSMakeRect((viewOrig.x + viewSize.width) / 2.0,
+                                   (viewOrig.y + viewSize.height) / 2.0,
+                                   0, 0);
     
     // Compute screen coordinates
     NSPoint centerScreen = [CMCocoaMouse convertRectToScreen:centerView

@@ -98,13 +98,60 @@
 - (void)sortItems
 {
     NSArray *sortedItems = [items sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
-    {
-        return [CMCocoaKeyboard compareKeysByOrderOfAppearance:a
-                                                    keyCodeTwo:b];
-    }];
+                            {
+                                return [CMCocoaKeyboard compareKeysByOrderOfAppearance:a
+                                                                            keyCodeTwo:b];
+                            }];
     
     [items removeAllObjects];
     [items addObjectsFromArray:sortedItems];
+}
+
+@end
+
+#pragma mark MixerChannel
+
+@interface CMMixerChannel : NSObject
+{
+    NSString *_name;
+    NSString *_tabId;
+    NSInteger _blueMsxIdentifier;
+}
+
++ (CMMixerChannel *)mixerChannelNamed:(NSString *)name
+                    blueMsxIdentifier:(NSInteger)blueMsxIdentifier
+                                tabId:(NSString *)tabId;
+
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *tabId;
+@property (nonatomic, assign) NSInteger blueMsxIdentifier;
+
+@end
+
+@implementation CMMixerChannel
+
+@synthesize name = _name;
+@synthesize tabId = _tabId;
+@synthesize blueMsxIdentifier = _blueMsxIdentifier;
+
++ (CMMixerChannel *)mixerChannelNamed:(NSString *)name
+                    blueMsxIdentifier:(NSInteger)blueMsxIdentifier
+                                tabId:(NSString *)tabId
+{
+    CMMixerChannel *mc = [[CMMixerChannel alloc] init];
+    
+    [mc setName:name];
+    [mc setBlueMsxIdentifier:blueMsxIdentifier];
+    [mc setTabId:tabId];
+    
+    return [mc autorelease];
+}
+
+- (void)dealloc
+{
+    [self setName:nil];
+    
+    [super dealloc];
 }
 
 @end
@@ -171,6 +218,26 @@
         // Set the virtual emulation speed range
         virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
         
+        mixers = [[NSArray alloc] initWithObjects:
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Psg")
+                                  blueMsxIdentifier:MIXER_CHANNEL_PSG
+                                              tabId:@"psg"],
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Scc")
+                                  blueMsxIdentifier:MIXER_CHANNEL_SCC
+                                              tabId:@"scc"],
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MsxMusic")
+                                  blueMsxIdentifier:MIXER_CHANNEL_MSXMUSIC
+                                              tabId:@"msxmusic"],
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MsxAudio")
+                                  blueMsxIdentifier:MIXER_CHANNEL_MSXAUDIO
+                                              tabId:@"msxaudio"],
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MoonSound")
+                                  blueMsxIdentifier:MIXER_CHANNEL_MOONSOUND
+                                              tabId:@"moonsound"],
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard")
+                                  blueMsxIdentifier:MIXER_CHANNEL_KEYBOARD
+                                              tabId:@"keyboard"], nil];
+        
         downloadQueue = [[NSOperationQueue alloc] init];
         [downloadQueue setMaxConcurrentOperationCount:1];
         
@@ -185,9 +252,18 @@
     keyCaptureView = nil;
     
     // Initialize sliders
-    NSArray *sliders = [NSArray arrayWithObjects:brightnessSlider,
-                        contrastSlider, saturationSlider, gammaSlider,
-                        scanlineSlider, nil];
+    NSArray *sliders = [NSArray arrayWithObjects:
+                        brightnessSlider,
+                        contrastSlider,
+                        saturationSlider,
+                        gammaSlider,
+                        scanlineSlider,
+                        psgVolumeSlider, psgBalanceSlider,
+                        sccVolumeSlider, sccBalanceSlider,
+                        msxMusicVolumeSlider, msxMusicBalanceSlider,
+                        msxAudioVolumeSlider, msxAudioBalanceSlider,
+                        keyboardVolumeSlider, keyboardBalanceSlider,
+                        moonSoundVolumeSlider, moonSoundBalanceSlider, nil];
     
     [sliders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
@@ -231,6 +307,9 @@
                                                object:nil];
     
     [machineScopeBar setSelected:YES forItem:@(machineDisplayMode) inGroup:0];
+    
+    [mixerTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    [mixerTabView selectTabViewItemWithIdentifier:[[mixers objectAtIndex:0] tabId]];
 }
 
 - (void)dealloc
@@ -250,6 +329,7 @@
     
     [keyCaptureView release];
     
+    [mixers release];
     [keyCategories release];
     [joystickOneCategories release];
     [joystickTwoCategories release];
@@ -776,9 +856,10 @@
 - (void)tabChanged:(id)sender
 {
     NSToolbarItem *selectedItem = (NSToolbarItem *)sender;
+    NSString *tabIdentifier = [selectedItem itemIdentifier];
     
-    [toolbar setSelectedItemIdentifier:[selectedItem itemIdentifier]];
-    [preferenceCategoryTabView selectTabViewItemWithIdentifier:[selectedItem itemIdentifier]];
+    [toolbar setSelectedItemIdentifier:tabIdentifier];
+    CMSetObjPref(@"selectedPreferencesTab", tabIdentifier);
 }
 
 - (void)sliderValueChanged:(id)sender
@@ -809,6 +890,31 @@
     CMSetIntPref(@"videoColorMode", [[defaults objectForKey:@"videoColorMode"] integerValue]);
     
     CMSetBoolPref(@"videoEnableDeInterlacing", [[defaults objectForKey:@"videoEnableDeInterlacing"] boolValue]);
+}
+
+- (void)revertAudioClicked:(id)sender
+{
+    NSString *bundleResourcePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
+    NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:bundleResourcePath];
+    
+    CMSetIntPref(@"audioEnablePsg", [[defaults objectForKey:@"audioEnablePsg"] boolValue]);
+    CMSetIntPref(@"audioVolumePsg", [[defaults objectForKey:@"audioVolumePsg"] integerValue]);
+    CMSetIntPref(@"audioBalancePsg", [[defaults objectForKey:@"audioBalancePsg"] integerValue]);
+    CMSetIntPref(@"audioEnableScc", [[defaults objectForKey:@"audioEnableScc"] boolValue]);
+    CMSetIntPref(@"audioVolumeScc", [[defaults objectForKey:@"audioVolumeScc"] integerValue]);
+    CMSetIntPref(@"audioBalanceScc", [[defaults objectForKey:@"audioBalanceScc"] integerValue]);
+    CMSetIntPref(@"audioEnableMsxMusic", [[defaults objectForKey:@"audioEnableMsxMusic"] boolValue]);
+    CMSetIntPref(@"audioVolumeMsxMusic", [[defaults objectForKey:@"audioVolumeMsxMusic"] integerValue]);
+    CMSetIntPref(@"audioBalanceMsxMusic", [[defaults objectForKey:@"audioBalanceMsxMusic"] integerValue]);
+    CMSetIntPref(@"audioEnableMsxAudio", [[defaults objectForKey:@"audioEnableMsxAudio"] boolValue]);
+    CMSetIntPref(@"audioVolumeMsxAudio", [[defaults objectForKey:@"audioVolumeMsxAudio"] integerValue]);
+    CMSetIntPref(@"audioBalanceMsxAudio", [[defaults objectForKey:@"audioBalanceMsxAudio"] integerValue]);
+    CMSetIntPref(@"audioEnableKeyboard", [[defaults objectForKey:@"audioEnableKeyboard"] boolValue]);
+    CMSetIntPref(@"audioVolumeKeyboard", [[defaults objectForKey:@"audioVolumeKeyboard"] integerValue]);
+    CMSetIntPref(@"audioBalanceKeyboard", [[defaults objectForKey:@"audioBalanceKeyboard"] integerValue]);
+    CMSetIntPref(@"audioEnableMoonSound", [[defaults objectForKey:@"audioEnableMoonSound"] boolValue]);
+    CMSetIntPref(@"audioVolumeMoonSound", [[defaults objectForKey:@"audioVolumeMoonSound"] integerValue]);
+    CMSetIntPref(@"audioBalanceMoonSound", [[defaults objectForKey:@"audioBalanceMoonSound"] integerValue]);
 }
 
 - (void)revertKeyboardClicked:(id)sender
@@ -930,12 +1036,8 @@
 
 - (void)windowDidLoad
 {
-    NSToolbarItem *firstItem = (NSToolbarItem*)[toolbar.items objectAtIndex:0];
-    NSString *selectedIdentifier = firstItem.itemIdentifier;
-    
     // Select first tab
-    toolbar.selectedItemIdentifier = selectedIdentifier;
-    [preferenceCategoryTabView selectTabViewItemWithIdentifier:toolbar.selectedItemIdentifier];
+    [toolbar setSelectedItemIdentifier:CMGetObjPref(@"selectedPreferencesTab")];
 }
 
 #pragma mark - NSWindowDelegate
@@ -1153,36 +1255,55 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return [[self machinesCurrentlyVisible] count];
+    if (tableView == systemTableView)
+        return [[self machinesCurrentlyVisible] count];
+    else if (tableView == mixerTableView)
+        return [mixers count];
+    
+    return 0;
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
     NSString *columnIdentifer = [aTableColumn identifier];
     
-    if ([columnIdentifer isEqualToString:@"isSelected"])
-        return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
-    else if ([columnIdentifer isEqualToString:@"spinner"])
-        return [NSNumber numberWithBool:YES];
-    else if ([columnIdentifer isEqualToString:@"name"])
-        return machine;
+    if (aTableView == systemTableView)
+    {
+        CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
+        
+        if ([columnIdentifer isEqualToString:@"isSelected"])
+            return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
+        else if ([columnIdentifer isEqualToString:@"spinner"])
+            return [NSNumber numberWithBool:YES];
+        else if ([columnIdentifer isEqualToString:@"name"])
+            return machine;
+    }
+    else if (aTableView == mixerTableView)
+    {
+        CMMixerChannel *mixerChannel = [mixers objectAtIndex:rowIndex];
+        
+        if ([columnIdentifer isEqualToString:@"mixerName"])
+            return [mixerChannel name];
+    }
     
     return nil;
 }
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    NSString *columnIdentifer = [tableColumn identifier];
-    if ([columnIdentifer isEqualToString:@"isSelected"])
+    if (tableView == systemTableView)
     {
-        CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:row];
-        
-        CMSetObjPref(@"machineConfiguration", [machine path]);
-        [self updateCurrentConfigurationInformation];
-        
-        // This is so that the radio buttons can be deselected
-        [tableView reloadData];
+        NSString *columnIdentifer = [tableColumn identifier];
+        if ([columnIdentifer isEqualToString:@"isSelected"])
+        {
+            CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:row];
+            
+            CMSetObjPref(@"machineConfiguration", [machine path]);
+            [self updateCurrentConfigurationInformation];
+            
+            // This is so that the radio buttons can be deselected
+            [tableView reloadData];
+        }
     }
 }
 
@@ -1190,21 +1311,32 @@
 
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-    if ([[aTableColumn identifier] isEqualToString:@"isSelected"])
+    if (aTableView == systemTableView)
     {
-        CMMachineSelectionCell *buttonCell = aCell;
-        CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
-        
-        [buttonCell setEnabled:[machine installed]];
-        [buttonCell setImagePosition:[machine installed] ? NSImageOnly : NSNoImage];
-        
-        [buttonCell setDownloadingIconVisible:[self isDownloadQueuedForMachine:machine]];
+        if ([[aTableColumn identifier] isEqualToString:@"isSelected"])
+        {
+            CMMachineSelectionCell *buttonCell = aCell;
+            CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
+            
+            [buttonCell setEnabled:[machine installed]];
+            [buttonCell setImagePosition:[machine installed] ? NSImageOnly : NSNoImage];
+            
+            [buttonCell setDownloadingIconVisible:[self isDownloadQueuedForMachine:machine]];
+        }
     }
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-    [self toggleSystemSpecificButtons];
+    if ([aNotification object] == systemTableView)
+    {
+        [self toggleSystemSpecificButtons];
+    }
+    else if ([aNotification object] == mixerTableView)
+    {
+        CMMixerChannel *mixerChannel = [mixers objectAtIndex:[mixerTableView selectedRow]];
+        [mixerTabView selectTabViewItemWithIdentifier:[mixerChannel tabId]];
+    }
 }
 
 #pragma mark MGScopeBarDelegate

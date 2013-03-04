@@ -156,11 +156,26 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                          @"videoEnableDeInterlacing",
                                          @"videoSignalMode",
                                          @"videoColorMode",
-                                         @"audioEnableMsxAudio",
-                                         @"audioEnableMsxMusic",
-                                         @"audioEnableMoonSound",
                                          @"joystickDevicePort1",
                                          @"joystickDevicePort2",
+                                         @"audioEnablePsg",
+                                         @"audioVolumePsg",
+                                         @"audioBalancePsg",
+                                         @"audioEnableScc",
+                                         @"audioVolumeScc",
+                                         @"audioBalanceScc",
+                                         @"audioEnableMsxMusic",
+                                         @"audioVolumeMsxMusic",
+                                         @"audioBalanceMsxMusic",
+                                         @"audioEnableMsxAudio",
+                                         @"audioVolumeMsxAudio",
+                                         @"audioBalanceMsxAudio",
+                                         @"audioEnableKeyboard",
+                                         @"audioVolumeKeyboard",
+                                         @"audioBalanceKeyboard",
+                                         @"audioEnableMoonSound",
+                                         @"audioVolumeMoonSound",
+                                         @"audioBalanceMoonSound",
                                          nil];
         
         openRomFileTypes = [[NSArray alloc] initWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"zip", nil];
@@ -287,11 +302,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     // Initialize the emulator
     
-    NSInteger frequency = [self emulationFrequencyFromPercentage:CMGetIntPref(@"emulationSpeedPercentage")];
-    
-    properties->emulation.speed = frequency;
+    properties->emulation.speed = [self emulationFrequencyFromPercentage:CMGetIntPref(@"emulationSpeedPercentage")];
     properties->emulation.syncMethod = P_EMU_SYNCTOVBLANKASYNC;
-    
     properties->emulation.enableFdcTiming = CMGetBoolPref(@"enableFloppyTiming");
     properties->emulation.vdpSyncMode = CMGetIntPref(@"vdpSyncMode");
     
@@ -305,9 +317,24 @@ CMEmulatorController *theEmulator = nil; // FIXME
     properties->video.monitorType = CMGetIntPref(@"videoSignalMode");
     properties->video.monitorColor = CMGetIntPref(@"videoColorMode");
     
-    properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].enable = CMGetBoolPref(@"audioEnableMsxMusic");
-    properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].enable = CMGetBoolPref(@"audioEnableMsxAudio");
-    properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].enable = CMGetBoolPref(@"audioEnableMoonSound");
+    properties->sound.mixerChannel[MIXER_CHANNEL_PSG].volume = CMGetIntPref(@"audioVolumePsg");
+    properties->sound.mixerChannel[MIXER_CHANNEL_PSG].pan = CMGetIntPref(@"audioBalancePsg");
+    properties->sound.mixerChannel[MIXER_CHANNEL_PSG].enable = CMGetIntPref(@"audioEnablePsg");
+    properties->sound.mixerChannel[MIXER_CHANNEL_SCC].volume = CMGetIntPref(@"audioVolumeScc");
+    properties->sound.mixerChannel[MIXER_CHANNEL_SCC].pan = CMGetIntPref(@"audioBalanceScc");
+    properties->sound.mixerChannel[MIXER_CHANNEL_SCC].enable = CMGetIntPref(@"audioEnableScc");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].volume = CMGetIntPref(@"audioVolumeMsxMusic");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].pan = CMGetIntPref(@"audioBalanceMsxMusic");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].enable = CMGetIntPref(@"audioEnableMsxMusic");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].volume = CMGetIntPref(@"audioVolumeMsxAudio");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].pan = CMGetIntPref(@"audioBalanceMsxAudio");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].enable = CMGetIntPref(@"audioEnableMsxAudio");
+    properties->sound.mixerChannel[MIXER_CHANNEL_KEYBOARD].volume = CMGetIntPref(@"audioVolumeKeyboard");
+    properties->sound.mixerChannel[MIXER_CHANNEL_KEYBOARD].pan = CMGetIntPref(@"audioBalanceKeyboard");
+    properties->sound.mixerChannel[MIXER_CHANNEL_KEYBOARD].enable = CMGetIntPref(@"audioEnableKeyboard");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].volume = CMGetIntPref(@"audioVolumeMoonSound");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].pan = CMGetIntPref(@"audioBalanceMoonSound");
+    properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].enable = CMGetIntPref(@"audioEnableMoonSound");
     
     properties->joy1.typeId = CMGetIntPref(@"joystickDevicePort1");
     properties->joy2.typeId = CMGetIntPref(@"joystickDevicePort2");
@@ -1732,7 +1759,7 @@ void archTrap(UInt8 value)
             NSInteger mhz = [self emulationFrequencyFromPercentage:percentage];
             
             properties->emulation.speed = mhz;
-            emulatorSetFrequency(properties->emulation.speed, NULL);
+            emulatorSetFrequency(mhz, NULL);
         }
         else if ([keyPath isEqualToString:@"videoBrightness"])
         {
@@ -1797,7 +1824,63 @@ void archTrap(UInt8 value)
             BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
             
             properties->emulation.enableFdcTiming = newValue;
-            boardSetFdcTimingEnable(properties->emulation.enableFdcTiming);
+            boardSetFdcTimingEnable(newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioVolumePsg"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_PSG].volume = newValue;
+            mixerSetChannelTypeVolume(mixer, MIXER_CHANNEL_PSG, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioBalancePsg"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_PSG].pan = newValue;
+            mixerSetChannelTypePan(mixer, MIXER_CHANNEL_PSG, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioEnablePsg"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_PSG].enable = newValue;
+            mixerEnableChannelType(mixer, MIXER_CHANNEL_PSG, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioVolumeScc"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_SCC].volume = newValue;
+            mixerSetChannelTypeVolume(mixer, MIXER_CHANNEL_SCC, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioBalanceScc"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_SCC].pan = newValue;
+            mixerSetChannelTypePan(mixer, MIXER_CHANNEL_SCC, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioEnableScc"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_SCC].enable = newValue;
+            mixerEnableChannelType(mixer, MIXER_CHANNEL_SCC, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioVolumeMsxMusic"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].volume = newValue;
+            mixerSetChannelTypeVolume(mixer, MIXER_CHANNEL_MSXMUSIC, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioBalanceMsxMusic"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].pan = newValue;
+            mixerSetChannelTypePan(mixer, MIXER_CHANNEL_MSXMUSIC, newValue);
         }
         else if ([keyPath isEqualToString:@"audioEnableMsxMusic"])
         {
@@ -1806,12 +1889,61 @@ void archTrap(UInt8 value)
             properties->sound.mixerChannel[MIXER_CHANNEL_MSXMUSIC].enable = newValue;
             mixerEnableChannelType(mixer, MIXER_CHANNEL_MSXMUSIC, newValue);
         }
+        else if ([keyPath isEqualToString:@"audioVolumeMsxAudio"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].volume = newValue;
+            mixerSetChannelTypeVolume(mixer, MIXER_CHANNEL_MSXAUDIO, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioBalanceMsxAudio"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].pan = newValue;
+            mixerSetChannelTypePan(mixer, MIXER_CHANNEL_MSXAUDIO, newValue);
+        }
         else if ([keyPath isEqualToString:@"audioEnableMsxAudio"])
         {
             BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
             
             properties->sound.mixerChannel[MIXER_CHANNEL_MSXAUDIO].enable = newValue;
             mixerEnableChannelType(mixer, MIXER_CHANNEL_MSXAUDIO, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioVolumeKeyboard"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_KEYBOARD].volume = newValue;
+            mixerSetChannelTypeVolume(mixer, MIXER_CHANNEL_KEYBOARD, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioBalanceKeyboard"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_KEYBOARD].pan = newValue;
+            mixerSetChannelTypePan(mixer, MIXER_CHANNEL_KEYBOARD, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioEnableKeyboard"])
+        {
+            BOOL newValue = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_KEYBOARD].enable = newValue;
+            mixerEnableChannelType(mixer, MIXER_CHANNEL_KEYBOARD, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioVolumeMoonSound"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].volume = newValue;
+            mixerSetChannelTypeVolume(mixer, MIXER_CHANNEL_MOONSOUND, newValue);
+        }
+        else if ([keyPath isEqualToString:@"audioBalanceMoonSound"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+            
+            properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].pan = newValue;
+            mixerSetChannelTypePan(mixer, MIXER_CHANNEL_MOONSOUND, newValue);
         }
         else if ([keyPath isEqualToString:@"audioEnableMoonSound"])
         {

@@ -41,19 +41,33 @@
     
     IBOutlet NSToolbar *toolbar;
     
-    IBOutlet NSTabView *preferenceCategoryTabView;
-    
     IBOutlet MGScopeBar *keyboardScopeBar;
     IBOutlet MGScopeBar *machineScopeBar;
     
     CMKeyCaptureView *keyCaptureView;
     
     IBOutlet NSTableView *systemTableView;
+    IBOutlet NSTableView *mixerTableView;
     IBOutlet NSTextField *activeSystemTextView;
+    
+    IBOutlet NSTabView *mixerTabView;
     
     IBOutlet NSOutlineView *keyboardLayoutEditor;
     IBOutlet NSOutlineView *joystickOneLayoutEditor;
     IBOutlet NSOutlineView *joystickTwoLayoutEditor;
+    
+    IBOutlet NSSlider *psgVolumeSlider;
+    IBOutlet NSSlider *psgBalanceSlider;
+    IBOutlet NSSlider *sccVolumeSlider;
+    IBOutlet NSSlider *sccBalanceSlider;
+    IBOutlet NSSlider *msxMusicVolumeSlider;
+    IBOutlet NSSlider *msxMusicBalanceSlider;
+    IBOutlet NSSlider *msxAudioVolumeSlider;
+    IBOutlet NSSlider *msxAudioBalanceSlider;
+    IBOutlet NSSlider *keyboardVolumeSlider;
+    IBOutlet NSSlider *keyboardBalanceSlider;
+    IBOutlet NSSlider *moonSoundVolumeSlider;
+    IBOutlet NSSlider *moonSoundBalanceSlider;
     
     IBOutlet NSSlider *brightnessSlider;
     IBOutlet NSSlider *contrastSlider;
@@ -66,6 +80,7 @@
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
+    NSArray *mixers;
     
     NSMutableArray *installedMachines;
     NSMutableArray *installableMachines;
@@ -85,6 +100,7 @@
 - (id)initWithEmulator:(CMEmulatorController *)emulator;
 
 - (IBAction)tabChanged:(id)sender;
+- (IBAction)revertAudioClicked:(id)sender;
 - (IBAction)revertVideoClicked:(id)sender;
 - (IBAction)revertKeyboardClicked:(id)sender;
 - (IBAction)revertJoystickOneClicked:(id)sender;
