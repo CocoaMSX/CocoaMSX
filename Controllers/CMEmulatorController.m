@@ -377,7 +377,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     mixerSetMasterVolume(mixer, properties->sound.masterVolume);
     mixerEnableMaster(mixer, properties->sound.masterEnable);
     
-    videoSetRgbMode(video, properties->video.driver != P_VIDEO_DRVGDI);
+    videoSetRgbMode(video, 1);
     
     videoUpdateAll(video, properties);
     
@@ -1970,10 +1970,6 @@ void archTrap(UInt8 value)
             properties->joy2.typeId = newValue;
             joystickPortSetType(1, newValue);
         }
-        
-#ifdef DEBUG
-        NSLog(@"pref change: %@ => %@", keyPath, [change objectForKey:NSKeyValueChangeNewKey]);
-#endif
     }
 }
 

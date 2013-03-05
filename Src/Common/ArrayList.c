@@ -75,7 +75,7 @@ void arrayListDestroy(ArrayList *list)
 
 static ArrayListNode *arrayListFindNodeAtIndex(const ArrayList *list, int elementAt)
 {
-    if (elementAt < 0 || elementAt > list->size)
+    if (elementAt < 0 || elementAt >= list->size)
         return NULL;
     
     int index = 0;

@@ -235,13 +235,10 @@ void propInitDefaults(Properties* properties, int langType, PropKeyboardLanguage
 
     properties->emulation.statsDefDir[0]     = 0;
     properties->emulation.shortcutProfile[0] = 0;
-//    strcpy(properties->emulation.machineName, "MSX2");
-    strcpy(properties->emulation.machineName, "MSX2 - Japanese"); /* MK2 */
+    strcpy(properties->emulation.machineName, "MSX2");
     properties->emulation.speed             = 50;
-//    properties->emulation.syncMethod        = syncMode ? P_EMU_SYNCTOVBLANK : P_EMU_SYNCAUTO;
-    properties->emulation.syncMethod        = P_EMU_SYNCTOVBLANK; /* MK2 */
-//    properties->emulation.vdpSyncMode       = P_VDP_SYNCAUTO;
-    properties->emulation.vdpSyncMode       = P_VDP_SYNC60HZ; /* MK2 */
+    properties->emulation.syncMethod        = syncMode ? P_EMU_SYNCTOVBLANK : P_EMU_SYNCAUTO;
+    properties->emulation.vdpSyncMode       = P_VDP_SYNCAUTO;
     properties->emulation.enableFdcTiming   = 1;
     properties->emulation.frontSwitch       = 0;
     properties->emulation.pauseSwitch       = 0;
@@ -254,15 +251,13 @@ void propInitDefaults(Properties* properties, int langType, PropKeyboardLanguage
     properties->emulation.reverseMaxTime    = 15;
 
     properties->video.monitorColor          = P_VIDEO_COLOR;
-//    properties->video.monitorColor          = P_VIDEO_GREEN; /* MK2 */
     properties->video.monitorType           = P_VIDEO_PALMON;
     properties->video.windowSize            = P_VIDEO_SIZEX2;
     properties->video.windowSizeInitial     = properties->video.windowSize;
     properties->video.windowSizeChanged     = 0;
     properties->video.windowX               = -1;
     properties->video.windowY               = -1;
-//    properties->video.driver                = P_VIDEO_DRVDIRECTX_VIDEO;
-    properties->video.driver                = P_VIDEO_DRVSDLGL;
+    properties->video.driver                = P_VIDEO_DRVDIRECTX_VIDEO;
     properties->video.frameSkip             = 0;
     properties->video.fullscreen.width      = 640;
     properties->video.fullscreen.height     = 480;
