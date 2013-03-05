@@ -585,17 +585,21 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     NSMutableArray *machineConfigurations = [NSMutableArray array];
     
-    char **machineNames = machineGetAvailable(1);
-    while (*machineNames != NULL)
+    ArrayList *list = arrayListCreate();
+    machineFillAvailable(list, 1);
+    
+    ArrayListIterator *iterator = arrayListCreateIterator(list);
+    while (arrayListCanIterate(iterator))
     {
-        NSString *machineName = [NSString stringWithCString:*machineNames
+        NSString *machineName = [NSString stringWithCString:arrayListIterate(iterator)
                                                    encoding:NSUTF8StringEncoding];
         
         if (machineName && [machineName length] > 0)
             [machineConfigurations addObject:machineName];
-        
-        machineNames++;
     }
+    arrayListDestroyIterator(iterator);
+    
+    arrayListDestroy(list);
     
     return machineConfigurations;
 }

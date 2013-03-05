@@ -1030,35 +1030,48 @@ Properties* propCreate(int useDefault, int langType, PropKeyboardLanguage kbdLan
 #ifndef WII
     // Verify machine name
     {
-        char** machineNames = machineGetAvailable(1);
+        ArrayList *machineList = arrayListCreate();
+        machineFillAvailable(machineList, 1);
         
-        while (*machineNames != NULL) {
-            if (0 == strcmp(*machineNames, properties->emulation.machineName)) {
+        int foundMachine = 0;
+        
+        ArrayListIterator *iterator = arrayListCreateIterator(machineList);
+        while (arrayListCanIterate(iterator))
+        {
+            char *machineName = arrayListIterate(iterator);
+            if (strcmp(machineName, properties->emulation.machineName) == 0)
+            {
+                foundMachine = 1;
                 break;
             }
-            machineNames++;
         }
-
-        if (*machineNames == NULL) {
-            char** machineNames = machineGetAvailable(1);
-            int foundMSX2 = 0;
-
-            if (*machineNames != NULL) {
-                strcpy(properties->emulation.machineName, *machineNames);
-            }
-
-            while (*machineNames != NULL) {
-                if (0 == strcmp(*machineNames, "MSX2")) {
-                    strcpy(properties->emulation.machineName, *machineNames);
-                    foundMSX2 = 1;
+        arrayListDestroyIterator(iterator);
+        
+        if (!foundMachine)
+        {
+            if (arrayListGetSize(machineList) > 0)
+                strcpy(properties->emulation.machineName, arrayListGetObject(machineList, 0));
+            
+            ArrayListIterator *iterator = arrayListCreateIterator(machineList);
+            while (arrayListCanIterate(iterator))
+            {
+                char *machineName = arrayListIterate(iterator);
+                if (strcmp(machineName, "MSX2") == 0)
+                {
+                    strcpy(properties->emulation.machineName, machineName);
+                    foundMachine = 1;
                 }
-                if (!foundMSX2 && 0 == strncmp(*machineNames, "MSX2", 4)) {
-                    strcpy(properties->emulation.machineName, *machineNames);
-                    foundMSX2 = 1;
+                
+                if (!foundMachine && strncmp(machineName, "MSX2", 4))
+                {
+                    strcpy(properties->emulation.machineName, machineName);
+                    foundMachine = 1;
                 }
-                machineNames++;
             }
+            arrayListDestroyIterator(iterator);
         }
+        
+        arrayListDestroy(machineList);
     }
 #endif
     return properties;

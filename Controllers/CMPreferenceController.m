@@ -193,6 +193,7 @@
 - (NSArray *)machinesCurrentlyVisible;
 - (void)toggleSystemSpecificButtons;
 - (void)updateCurrentConfigurationInformation;
+- (void)sizeWindowToTabContent:(NSString *)tabId;
 
 @end
 
@@ -275,17 +276,13 @@
     
     machineDisplayMode = CMShowInstalledMachines;
     
-    // Joystick devices
+    // Input devices devices
     [self initializeInputDeviceCategories:keyCategories
-                               withLayout:self.emulator.keyboardLayout];
+                               withLayout:[[self emulator] keyboardLayout]];
     [self initializeInputDeviceCategories:joystickOneCategories
-                               withLayout:self.emulator.joystickOneLayout];
+                               withLayout:[[self emulator] joystickOneLayout]];
     [self initializeInputDeviceCategories:joystickTwoCategories
-                               withLayout:self.emulator.joystickTwoLayout];
-    
-    [keyboardLayoutEditor expandItem:nil expandChildren:YES];
-    [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
-    [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
+                               withLayout:[[self emulator] joystickTwoLayout]];
     
     // Scope Bar
     [keyboardScopeBar setSelected:YES forItem:@CMKeyShiftStateNormal inGroup:SCOPEBAR_GROUP_SHIFTED];
@@ -310,6 +307,16 @@
     
     [mixerTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     [mixerTabView selectTabViewItemWithIdentifier:[[mixers objectAtIndex:0] tabId]];
+    
+    [self sizeWindowToTabContent:[[contentTabView selectedTabViewItem] identifier]];
+    
+    [keyboardLayoutEditor reloadData];
+    [joystickOneLayoutEditor reloadData];
+    [joystickTwoLayoutEditor reloadData];
+    
+    [keyboardLayoutEditor expandItem:nil expandChildren:YES];
+    [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
+    [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
 }
 
 - (void)dealloc
@@ -814,6 +821,37 @@
     [removeMachineButton setEnabled:isRemoveButtonEnabled];
 }
 
+- (void)sizeWindowToTabContent:(NSString *)tabId
+{
+    NSRect contentFrame = [[self window] contentRectForFrameRect:[[self window] frame]];
+    CGFloat newHeight = contentFrame.size.height;
+    
+    if ([tabId isEqual:@"general"])
+        newHeight = 200;
+    else if ([tabId isEqual:@"system"])
+        newHeight = 500;
+    else if ([tabId isEqual:@"video"])
+        newHeight = 400;
+    else if ([tabId isEqual:@"audio"])
+        newHeight = 400;
+    else if ([tabId isEqual:@"keyboard"])
+        newHeight = 500;
+    else if ([tabId isEqual:@"joystick"])
+        newHeight = 400;
+    
+    NSRect newContentFrame = NSMakeRect(contentFrame.origin.x,
+                                        contentFrame.origin.y,
+                                        contentFrame.size.width,
+                                        newHeight);
+    
+    NSRect newWindowFrame = [[self window] frameRectForContentRect:newContentFrame];
+    newWindowFrame.origin.y -= (newWindowFrame.size.height - [[self window] frame].size.height);
+    
+    [[self window] setFrame:newWindowFrame
+                    display:YES
+                    animate:YES];
+}
+
 #pragma mark - Actions
 
 - (void)installMachineConfiguration:(id)sender
@@ -1113,6 +1151,13 @@
                                  contextInfo:nil];
          }];
     }
+}
+
+#pragma mark - NSTabViewDelegate
+
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+    [self sizeWindowToTabContent:[tabViewItem identifier]];
 }
 
 #pragma mark - NSOutlineViewDataSourceDelegate

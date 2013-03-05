@@ -294,6 +294,7 @@
 		FE2CEB5A1622A50500E58F9A /* Machines in Resources */ = {isa = PBXBuildFile; fileRef = FE2CEB571622A50500E58F9A /* Machines */; };
 		FE2D857D16E33140003EFB3F /* CMIsZero.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2D857C16E33140003EFB3F /* CMIsZero.m */; };
 		FE2D858016E3480C003EFB3F /* CMAsString.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2D857F16E3480C003EFB3F /* CMAsString.m */; };
+		FE2D858216E52FEE003EFB3F /* ArrayList.c in Sources */ = {isa = PBXBuildFile; fileRef = FE2D858116E52FED003EFB3F /* ArrayList.c */; };
 		FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E1962164085A000BCFD53 /* CMPreferences.m */; };
 		FE3754BE16B5CF54005360CC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FE3754D916B638DB005360CC /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754C616B638DB005360CC /* SBJsonParser.m */; };
@@ -983,6 +984,8 @@
 		FE2D857C16E33140003EFB3F /* CMIsZero.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMIsZero.m; sourceTree = "<group>"; };
 		FE2D857E16E3480C003EFB3F /* CMAsString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMAsString.h; sourceTree = "<group>"; };
 		FE2D857F16E3480C003EFB3F /* CMAsString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMAsString.m; sourceTree = "<group>"; };
+		FE2D858116E52FED003EFB3F /* ArrayList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ArrayList.c; sourceTree = "<group>"; };
+		FE2D858316E5300C003EFB3F /* ArrayList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArrayList.h; sourceTree = "<group>"; };
 		FE2E1961164085A000BCFD53 /* CMPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferences.h; sourceTree = "<group>"; };
 		FE2E1962164085A000BCFD53 /* CMPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferences.m; sourceTree = "<group>"; };
 		FE3754C416B638DB005360CC /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
@@ -1351,6 +1354,8 @@
 			children = (
 				E99731391298B4B300766C90 /* DebugMemory.c */,
 				E997313A1298B4B300766C90 /* MsxTypes.h */,
+				FE2D858316E5300C003EFB3F /* ArrayList.h */,
+				FE2D858116E52FED003EFB3F /* ArrayList.c */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2601,6 +2606,7 @@
 				FE9B86BF16D4AC8100623DBD /* CMMachineInstallationOperation.m in Sources */,
 				FE2D857D16E33140003EFB3F /* CMIsZero.m in Sources */,
 				FE2D858016E3480C003EFB3F /* CMAsString.m in Sources */,
+				FE2D858216E52FEE003EFB3F /* ArrayList.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

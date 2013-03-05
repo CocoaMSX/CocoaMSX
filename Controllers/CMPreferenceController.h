@@ -30,7 +30,7 @@
 @class CMKeyCaptureView;
 @class SBJsonParser;
 
-@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate>
+@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate>
 {
     CMEmulatorController *_emulator;
     
@@ -50,6 +50,7 @@
     IBOutlet NSTableView *mixerTableView;
     IBOutlet NSTextField *activeSystemTextView;
     
+    IBOutlet NSTabView *contentTabView;
     IBOutlet NSTabView *mixerTabView;
     
     IBOutlet NSOutlineView *keyboardLayoutEditor;

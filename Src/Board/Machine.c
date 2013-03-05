@@ -525,12 +525,13 @@ int machineIsValid(const char* machineName, int checkRoms)
 
 char** machineGetAvailable(int checkRoms)
 {
+    const int maxNames = 255;
     const char* machineName = appConfigGetString("singlemachine", NULL);
 
     if (machineName != NULL) {
         char filename[128];
-        static char* machineNames[256];
-        static char  names[256][64];
+        static char* machineNames[maxNames + 1];
+        static char  names[maxNames + 1][64];
         int index = 0;
 
         FILE* file;
@@ -551,8 +552,8 @@ char** machineGetAvailable(int checkRoms)
         return machineNames;
     }
     else {
-        static char* machineNames[256];
-        static char  names[256][64];
+        static char* machineNames[maxNames + 1]; // last element is NULL
+        static char  names[maxNames + 1][64];
         
         char  globPath[PROP_MAXPATH];
         sprintf(globPath, "%s/*", machinesDir);
@@ -566,7 +567,7 @@ char** machineGetAvailable(int checkRoms)
             return machineNames;
         }
 
-        for (i = 0; i < glob->count; i++) {
+        for (i = 0; i < glob->count && index <= maxNames; i++) {
             char fileName[512];
             FILE* file;
 		    sprintf(fileName, "%s/config.ini", glob->pathVector[i]);
@@ -598,6 +599,64 @@ char** machineGetAvailable(int checkRoms)
     }
 }
 
+void machineFillAvailable(ArrayList *list, int checkRoms)
+{
+    const char* machineName = appConfigGetString("singlemachine", NULL);
+    const int maxNameLength = 512;
+    
+    if (machineName != NULL) {
+        char filename[128];
+        
+        FILE* file;
+        
+        sprintf(filename, "%s/%s/config.ini", machinesDir, machineName);
+        file = fopen(filename, "rb");
+        if (file != NULL) {
+            if (machineIsValid(machineName, checkRoms)) {
+                char *name = (char *)calloc(512, sizeof(char));
+                strncpy(name, machineName, maxNameLength - 1);
+                arrayListAppend(list, name, 1);
+            }
+            fclose(file);
+        }
+    }
+    else {
+        char globPath[PROP_MAXPATH];
+        sprintf(globPath, "%s/*", machinesDir);
+        
+        ArchGlob* glob = archGlob(globPath, ARCH_GLOB_DIRS);
+        int i;
+        
+        if (glob == NULL)
+            return;
+        
+        for (i = 0; i < glob->count; i++) {
+            char fileName[512];
+            FILE* file;
+		    sprintf(fileName, "%s/config.ini", glob->pathVector[i]);
+            file = fopen(fileName, "rb");
+            if (file != NULL) {
+                const char* machineName = strrchr(glob->pathVector[i], '/');
+                if (machineName == NULL) {
+                    machineName = strrchr(glob->pathVector[i], '\\');
+                }
+                if (machineName == NULL) {
+                    machineName = glob->pathVector[i] - 1;
+                }
+                machineName++;
+                if (machineIsValid(machineName, checkRoms)) {
+                    char *name = (char *)calloc(512, sizeof(char));
+                    strncpy(name, machineName, maxNameLength - 1);
+                    arrayListAppend(list, name, 1);
+                }
+                
+                fclose(file);
+            }
+        }
+        
+        archGlobFree(glob);
+    }
+}
 
 void machineUpdate(Machine* machine)
 {

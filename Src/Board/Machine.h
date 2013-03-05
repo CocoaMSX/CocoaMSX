@@ -30,6 +30,7 @@
  
 #include "MsxTypes.h"
 #include "MediaDb.h"
+#include "ArrayList.h"
 #include "VDP.h"
 #include "AY8910.h"
 #include <stdio.h>
@@ -104,6 +105,7 @@ typedef struct {
 Machine* machineCreate(const char* machineName);
 void machineDestroy(Machine* machine);
 
+void machineFillAvailable(ArrayList *list, int checkRoms);
 char** machineGetAvailable(int checkRoms);
 
 int machineIsValid(const char* machineName, int checkRoms);
