@@ -32,8 +32,6 @@
 
 #include "InputEvent.h"
 
-#pragma mark - CMMsxKeyInfo
-
 #define CMAutoPressHoldTimeSeconds    0.04
 #define CMAutoPressReleaseTimeSeconds 0.03
 #define CMAutoPressTotalTimeSeconds \
@@ -41,6 +39,431 @@
 
 #define CMMakeMsxKeyInfo(d, s) \
     [CMMsxKeyInfo keyInfoWithDefaultStateLabel:d shiftedStateLabel:s]
+
+#pragma mark - CMKeyDatabase
+
+@interface CMKeyboardInfo : NSObject
+{
+    NSMutableDictionary *virtualCodeToKeyInfoMap;
+}
+
+- (void)setupMap;
+
+- (void)mapVirtualCode:(NSInteger)virtualCode
+   toDefaultStateLabel:(NSString *)defaultStateLabel
+     shiftedStateLabel:(NSString *)shiftedStateLabel;
+- (void)unmapVirtualCode:(NSInteger)virtualCode;
+
+@end
+
+@implementation CMKeyboardInfo
+
+- (id)init
+{
+    if ((self = [super init]))
+    {
+        virtualCodeToKeyInfoMap = [[NSMutableDictionary alloc] init];
+        
+        [self setupMap];
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    [virtualCodeToKeyInfoMap release];
+    
+    [super dealloc];
+}
+
+- (void)setupMap
+{
+}
+
+- (void)mapVirtualCode:(NSInteger)virtualCode
+   toDefaultStateLabel:(NSString *)defaultStateLabel
+     shiftedStateLabel:(NSString *)shiftedStateLabel
+{
+    [virtualCodeToKeyInfoMap setObject:CMMakeMsxKeyInfo(defaultStateLabel, shiftedStateLabel)
+                                forKey:@(virtualCode)];
+}
+
+- (void)unmapVirtualCode:(NSInteger)virtualCode
+{
+    [virtualCodeToKeyInfoMap removeObjectForKey:@(virtualCode)];
+}
+
+@end
+
+@interface CMEuropeanKeyboardInfo : CMKeyboardInfo
+
+@end
+
+@implementation CMEuropeanKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"`" shiftedStateLabel:@"~"];
+    [self mapVirtualCode:EC_1       toDefaultStateLabel:@"1" shiftedStateLabel:@"!"];
+    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"@"];
+    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"3" shiftedStateLabel:@"#"];
+    [self mapVirtualCode:EC_4       toDefaultStateLabel:@"4" shiftedStateLabel:@"$"];
+    [self mapVirtualCode:EC_5       toDefaultStateLabel:@"5" shiftedStateLabel:@"%"];
+    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"^"];
+    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"&"];
+    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"*"];
+    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@"("];
+    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:@")"];
+    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"-" shiftedStateLabel:@"_"];
+    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"=" shiftedStateLabel:@"+"];
+    
+    [self mapVirtualCode:EC_Q      toDefaultStateLabel:@"q" shiftedStateLabel:@"Q"];
+    [self mapVirtualCode:EC_W      toDefaultStateLabel:@"w" shiftedStateLabel:@"W"];
+    [self mapVirtualCode:EC_E      toDefaultStateLabel:@"e" shiftedStateLabel:@"E"];
+    [self mapVirtualCode:EC_R      toDefaultStateLabel:@"r" shiftedStateLabel:@"R"];
+    [self mapVirtualCode:EC_T      toDefaultStateLabel:@"t" shiftedStateLabel:@"T"];
+    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"y" shiftedStateLabel:@"Y"];
+    [self mapVirtualCode:EC_U      toDefaultStateLabel:@"u" shiftedStateLabel:@"U"];
+    [self mapVirtualCode:EC_I      toDefaultStateLabel:@"i" shiftedStateLabel:@"I"];
+    [self mapVirtualCode:EC_O      toDefaultStateLabel:@"o" shiftedStateLabel:@"O"];
+    [self mapVirtualCode:EC_P      toDefaultStateLabel:@"p" shiftedStateLabel:@"P"];
+    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"[" shiftedStateLabel:@"{"];
+    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"]" shiftedStateLabel:@"}"];
+    
+    [self mapVirtualCode:EC_A       toDefaultStateLabel:@"a"  shiftedStateLabel:@"A"];
+    [self mapVirtualCode:EC_S       toDefaultStateLabel:@"s"  shiftedStateLabel:@"S"];
+    [self mapVirtualCode:EC_D       toDefaultStateLabel:@"d"  shiftedStateLabel:@"D"];
+    [self mapVirtualCode:EC_F       toDefaultStateLabel:@"f"  shiftedStateLabel:@"F"];
+    [self mapVirtualCode:EC_G       toDefaultStateLabel:@"g"  shiftedStateLabel:@"G"];
+    [self mapVirtualCode:EC_H       toDefaultStateLabel:@"h"  shiftedStateLabel:@"H"];
+    [self mapVirtualCode:EC_J       toDefaultStateLabel:@"j"  shiftedStateLabel:@"J"];
+    [self mapVirtualCode:EC_K       toDefaultStateLabel:@"k"  shiftedStateLabel:@"K"];
+    [self mapVirtualCode:EC_L       toDefaultStateLabel:@"l"  shiftedStateLabel:@"L"];
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@";"  shiftedStateLabel:@":"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"'"  shiftedStateLabel:@"\""];
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"\\" shiftedStateLabel:@"|"];
+    
+    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
+    [self mapVirtualCode:EC_X       toDefaultStateLabel:@"x" shiftedStateLabel:@"X"];
+    [self mapVirtualCode:EC_C       toDefaultStateLabel:@"c" shiftedStateLabel:@"C"];
+    [self mapVirtualCode:EC_V       toDefaultStateLabel:@"v" shiftedStateLabel:@"V"];
+    [self mapVirtualCode:EC_B       toDefaultStateLabel:@"b" shiftedStateLabel:@"B"];
+    [self mapVirtualCode:EC_N       toDefaultStateLabel:@"n" shiftedStateLabel:@"N"];
+    [self mapVirtualCode:EC_M       toDefaultStateLabel:@"m" shiftedStateLabel:@"M"];
+    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@"<"];
+    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@">"];
+    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"/" shiftedStateLabel:@"?"];
+    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"`" shiftedStateLabel:@"'"];
+}
+
+@end
+
+@interface CMBrazilianKeyboardInfo : CMEuropeanKeyboardInfo
+
+@end
+
+@implementation CMBrazilianKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"ç" shiftedStateLabel:@"Ç"];
+    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
+    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"'"];
+    
+    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
+    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"[" shiftedStateLabel:@"]"];
+    
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"~" shiftedStateLabel:@"^"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"*" shiftedStateLabel:@"@"];
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"{" shiftedStateLabel:@"}"];
+    
+    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@";" shiftedStateLabel:@":"];
+    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"/" shiftedStateLabel:@"?"];
+}
+
+@end
+
+@interface CMEstonianKeyboardInfo : CMEuropeanKeyboardInfo
+
+@end
+
+@implementation CMEstonianKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"^" shiftedStateLabel:@"~"];
+    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
+    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"&"];
+    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"/"];
+    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"("];
+    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@")"];
+    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:@"="];
+    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"+" shiftedStateLabel:@"?"];
+    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
+    
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"\\" shiftedStateLabel:@"|"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"<"  shiftedStateLabel:@">"];
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"'"  shiftedStateLabel:@"*"];
+    
+    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@";"];
+    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@":"];
+    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"-" shiftedStateLabel:@"_"];
+    
+    [self unmapVirtualCode:EC_UNDSCRE];
+}
+
+@end
+
+@interface CMFrenchKeyboardInfo : CMEuropeanKeyboardInfo
+
+@end
+
+@implementation CMFrenchKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"#"  shiftedStateLabel:@"£"];
+    [self mapVirtualCode:EC_1       toDefaultStateLabel:@"&"  shiftedStateLabel:@"1"];
+    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"é"  shiftedStateLabel:@"2"];
+    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"\"" shiftedStateLabel:@"3"];
+    [self mapVirtualCode:EC_4       toDefaultStateLabel:@"'"  shiftedStateLabel:@"4"];
+    [self mapVirtualCode:EC_5       toDefaultStateLabel:@"("  shiftedStateLabel:@"5"];
+    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"§"  shiftedStateLabel:@"6"];
+    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"è"  shiftedStateLabel:@"7"];
+    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"!"  shiftedStateLabel:@"8"];
+    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"ç"  shiftedStateLabel:@"9"];
+    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"à"  shiftedStateLabel:@"0"];
+    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@")"  shiftedStateLabel:@"º"];
+    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"-"  shiftedStateLabel:@"_"];
+    
+    [self mapVirtualCode:EC_Q      toDefaultStateLabel:@"a" shiftedStateLabel:@"A"];
+    [self mapVirtualCode:EC_W      toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
+    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"`" shiftedStateLabel:@"'"];
+    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"$" shiftedStateLabel:@"*"];
+    
+    [self mapVirtualCode:EC_A       toDefaultStateLabel:@"q" shiftedStateLabel:@"Q"];
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"m" shiftedStateLabel:@"M"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"ù" shiftedStateLabel:@"%"];
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"<" shiftedStateLabel:@">"];
+    
+    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"w" shiftedStateLabel:@"W"];
+    [self mapVirtualCode:EC_M       toDefaultStateLabel:@"," shiftedStateLabel:@"?"];
+    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@";" shiftedStateLabel:@"."];
+    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@":" shiftedStateLabel:@"/"];
+    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"=" shiftedStateLabel:@"+"];
+    
+    [self unmapVirtualCode:EC_UNDSCRE];
+}
+
+@end
+
+@interface CMGermanKeyboardInfo : CMEuropeanKeyboardInfo
+
+@end
+
+@implementation CMGermanKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"#" shiftedStateLabel:@"^"];
+    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
+    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"3" shiftedStateLabel:@"§"];
+    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"&"];
+    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"/"];
+    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"("];
+    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@")"];
+    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:@"="];
+    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"ß" shiftedStateLabel:@"?"];
+    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
+    
+    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
+    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"ü" shiftedStateLabel:@"Ü"];
+    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"+" shiftedStateLabel:@"*"];
+    
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"ö" shiftedStateLabel:@"Ö"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"ä" shiftedStateLabel:@"Ä"];
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"<" shiftedStateLabel:@">"];
+    
+    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"y" shiftedStateLabel:@"Y"];
+    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@";"];
+    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@":"];
+    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"-" shiftedStateLabel:@"_"];
+    
+    [self unmapVirtualCode:EC_UNDSCRE];
+}
+
+@end
+
+@interface CMJapaneseKeyboardInfo : CMEuropeanKeyboardInfo
+
+@end
+
+@implementation CMJapaneseKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"]" shiftedStateLabel:@"}"];
+    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
+    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"&"];
+    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"'"];
+    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"("];
+    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@")"];
+    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:nil];
+    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"-" shiftedStateLabel:@"="];
+    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"^" shiftedStateLabel:@"~"];
+    
+    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"@" shiftedStateLabel:@"`"];
+    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"[" shiftedStateLabel:@"{"];
+    
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@";" shiftedStateLabel:@"+"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@":" shiftedStateLabel:@"*"];
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"¥" shiftedStateLabel:@"|"];
+    
+    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@"<"];
+    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@">"];
+    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"/" shiftedStateLabel:@"?"];
+    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:nil  shiftedStateLabel:@"_"];
+}
+
+@end
+
+@interface CMKoreanKeyboardInfo : CMJapaneseKeyboardInfo
+
+@end
+
+@implementation CMKoreanKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"￦" shiftedStateLabel:@"|"];
+}
+
+@end
+
+@interface CMRussianKeyboardInfo : CMKeyboardInfo
+
+@end
+
+@implementation CMRussianKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@">"  shiftedStateLabel:@"~"];
+    [self mapVirtualCode:EC_1       toDefaultStateLabel:@"+"  shiftedStateLabel:@"!"];
+    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"!"  shiftedStateLabel:@"1"];
+    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"\"" shiftedStateLabel:@"2"];
+    [self mapVirtualCode:EC_4       toDefaultStateLabel:@"#"  shiftedStateLabel:@"3"];
+    [self mapVirtualCode:EC_5       toDefaultStateLabel:@"Ȣ"  shiftedStateLabel:@"4"];
+    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"%"  shiftedStateLabel:@"5"];
+    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"&"  shiftedStateLabel:@"6"];
+    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"'"  shiftedStateLabel:@"7"];
+    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"("  shiftedStateLabel:@"8"];
+    [self mapVirtualCode:EC_0       toDefaultStateLabel:@")"  shiftedStateLabel:@"9"];
+    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"$"  shiftedStateLabel:@"0"];
+    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"="  shiftedStateLabel:@"_"];
+    
+    [self mapVirtualCode:EC_Q      toDefaultStateLabel:@"j" shiftedStateLabel:@"J"];
+    [self mapVirtualCode:EC_W      toDefaultStateLabel:@"c" shiftedStateLabel:@"C"];
+    [self mapVirtualCode:EC_E      toDefaultStateLabel:@"u" shiftedStateLabel:@"U"];
+    [self mapVirtualCode:EC_R      toDefaultStateLabel:@"k" shiftedStateLabel:@"K"];
+    [self mapVirtualCode:EC_T      toDefaultStateLabel:@"e" shiftedStateLabel:@"E"];
+    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"n" shiftedStateLabel:@"N"];
+    [self mapVirtualCode:EC_U      toDefaultStateLabel:@"g" shiftedStateLabel:@"G"];
+    [self mapVirtualCode:EC_I      toDefaultStateLabel:@"[" shiftedStateLabel:@"{"];
+    [self mapVirtualCode:EC_O      toDefaultStateLabel:@"]" shiftedStateLabel:@"}"];
+    [self mapVirtualCode:EC_P      toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
+    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"h" shiftedStateLabel:@"H"];
+    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"*" shiftedStateLabel:@":"];
+    
+    [self mapVirtualCode:EC_A       toDefaultStateLabel:@"f"  shiftedStateLabel:@"F"];
+    [self mapVirtualCode:EC_S       toDefaultStateLabel:@"y"  shiftedStateLabel:@"Y"];
+    [self mapVirtualCode:EC_D       toDefaultStateLabel:@"w"  shiftedStateLabel:@"W"];
+    [self mapVirtualCode:EC_F       toDefaultStateLabel:@"a"  shiftedStateLabel:@"A"];
+    [self mapVirtualCode:EC_G       toDefaultStateLabel:@"p"  shiftedStateLabel:@"P"];
+    [self mapVirtualCode:EC_H       toDefaultStateLabel:@"r"  shiftedStateLabel:@"R"];
+    [self mapVirtualCode:EC_J       toDefaultStateLabel:@"o"  shiftedStateLabel:@"O"];
+    [self mapVirtualCode:EC_K       toDefaultStateLabel:@"l"  shiftedStateLabel:@"L"];
+    [self mapVirtualCode:EC_L       toDefaultStateLabel:@"d"  shiftedStateLabel:@"D"];
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"v"  shiftedStateLabel:@"V"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"\\" shiftedStateLabel:@"\\"];
+    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"-"  shiftedStateLabel:@"^"];
+    
+    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"q" shiftedStateLabel:@"Q"];
+    [self mapVirtualCode:EC_X       toDefaultStateLabel:@"|" shiftedStateLabel:@"~"];
+    [self mapVirtualCode:EC_C       toDefaultStateLabel:@"s" shiftedStateLabel:@"S"];
+    [self mapVirtualCode:EC_V       toDefaultStateLabel:@"m" shiftedStateLabel:@"M"];
+    [self mapVirtualCode:EC_B       toDefaultStateLabel:@"i" shiftedStateLabel:@"I"];
+    [self mapVirtualCode:EC_N       toDefaultStateLabel:@"t" shiftedStateLabel:@"T"];
+    [self mapVirtualCode:EC_M       toDefaultStateLabel:@"x" shiftedStateLabel:@"X"];
+    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"b" shiftedStateLabel:@"B"];
+    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"@" shiftedStateLabel:nil];
+    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"<" shiftedStateLabel:@","];
+    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"?" shiftedStateLabel:@"/"];
+}
+
+@end
+
+@interface CMSpanishKeyboardInfo : CMEuropeanKeyboardInfo
+
+@end
+
+@implementation CMSpanishKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@";" shiftedStateLabel:@":"];
+    
+    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"ñ" shiftedStateLabel:@"Ñ"];
+    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"'" shiftedStateLabel:@"~"];
+}
+
+@end
+
+@interface CMSwedishKeyboardInfo : CMGermanKeyboardInfo
+
+@end
+
+@implementation CMSwedishKeyboardInfo
+
+- (void)setupMap
+{
+    [super setupMap];
+    
+    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"'" shiftedStateLabel:@"*"];
+    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"3" shiftedStateLabel:@"#"];
+    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"+" shiftedStateLabel:@"?"];
+    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"é" shiftedStateLabel:@"É"];
+    
+    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"y" shiftedStateLabel:@"Y"];
+    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"å" shiftedStateLabel:@"Å"];
+    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"ü" shiftedStateLabel:@"Ü"];
+    
+    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
+    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
+}
+
+@end
+
+#pragma mark - CMMsxKeyInfo
 
 @interface CMMsxKeyInfo : NSObject
 {
