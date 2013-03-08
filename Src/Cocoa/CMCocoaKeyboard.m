@@ -34,6 +34,11 @@
 
 #pragma mark - CMMsxKeyInfo
 
+#define CMAutoPressHoldTimeSeconds    0.04
+#define CMAutoPressReleaseTimeSeconds 0.03
+#define CMAutoPressTotalTimeSeconds \
+    (CMAutoPressHoldTimeSeconds + CMAutoPressReleaseTimeSeconds)
+
 #define CMMakeMsxKeyInfo(d, s) \
     [CMMsxKeyInfo keyInfoWithDefaultStateLabel:d shiftedStateLabel:s]
 
@@ -64,6 +69,19 @@
     return [info autorelease];
 }
 
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[NSString class]])
+    {
+        if ([_defaultStateLabel isEqualToString:object])
+            return YES;
+        if ([_shiftedStateLabel isEqualToString:object])
+            return YES;
+    }
+    
+    return [super isEqual:object];
+}
+
 - (void)dealloc
 {
     self.defaultStateLabel = nil;
@@ -73,9 +91,6 @@
 }
 
 @end
-
-// FIXME: this class needs to poll, and not just modify the virtual matrix
-//        whenever a key is pressed
 
 //#define DEBUG_KEY_STATE
 
@@ -950,6 +965,15 @@ static NSDictionary *machineLayoutMap = nil;
 {
     if ((self = [super init]))
     {
+        keyLock = [[NSObject alloc] init];
+        keysToPasteLock = [[NSObject alloc] init];
+        
+        keysDown = [[NSMutableSet alloc] init];
+        keysToPaste = [[NSMutableArray alloc] init];
+        
+        virtualCodeOfPressedKey = CMKeyNoCode;
+        keyPressTime = 0;
+        
         [self resetState];
     }
     
@@ -958,7 +982,11 @@ static NSDictionary *machineLayoutMap = nil;
 
 - (void)dealloc
 {
-    self.emulatorHasFocus = NO;
+    [keysDown release];
+    [keysToPaste release];
+    
+    [keyLock release];
+    [keysToPasteLock release];
     
     [super dealloc];
 }
@@ -975,10 +1003,10 @@ static NSDictionary *machineLayoutMap = nil;
 #endif
     
     // Ignore keys while Command is pressed - they don't generate keyUp
-    if ((event.modifierFlags & NSCommandKeyMask) != 0)
+    if (([event modifierFlags] & NSCommandKeyMask) != 0)
         return;
     
-    [self handleKeyEvent:event.keyCode isDown:YES];
+    [self handleKeyEvent:[event keyCode] isDown:YES];
 }
 
 - (void)keyUp:(NSEvent*)event
@@ -990,7 +1018,7 @@ static NSDictionary *machineLayoutMap = nil;
     NSLog(@"keyUp: %i", [event keyCode]);
 #endif
     
-    [self handleKeyEvent:event.keyCode isDown:NO];
+    [self handleKeyEvent:[event keyCode] isDown:NO];
 }
 
 - (void)flagsChanged:(NSEvent *)event
@@ -1000,46 +1028,53 @@ static NSDictionary *machineLayoutMap = nil;
           event.keyCode, event.modifierFlags);
 #endif
     
-    if (event.keyCode == CMKeyLeftShift)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMLeftShiftKeyMask) == CMLeftShiftKeyMask)];
-    else if (event.keyCode == CMKeyRightShift)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMRightShiftKeyMask) == CMRightShiftKeyMask)];
-    else if (event.keyCode == CMKeyLeftAlt)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMLeftAltKeyMask) == CMLeftAltKeyMask)];
-    else if (event.keyCode == CMKeyRightAlt)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMRightAltKeyMask) == CMRightAltKeyMask)];
-    else if (event.keyCode == CMKeyLeftControl)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMLeftControlKeyMask) == CMLeftControlKeyMask)];
-    else if (event.keyCode == CMKeyRightControl)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMRightControlKeyMask) == CMRightControlKeyMask)];
-    else if (event.keyCode == CMKeyLeftCommand)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMLeftCommandKeyMask) == CMLeftCommandKeyMask)];
-    else if (event.keyCode == CMKeyRightCommand)
-        [self handleKeyEvent:event.keyCode
-                      isDown:((event.modifierFlags & CMRightCommandKeyMask) == CMRightCommandKeyMask)];
-    else if (event.keyCode == CMKeyCapsLock)
+    if ([event keyCode] == CMKeyLeftShift)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMLeftShiftKeyMask) == CMLeftShiftKeyMask)];
+    else if ([event keyCode] == CMKeyRightShift)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMRightShiftKeyMask) == CMRightShiftKeyMask)];
+    else if ([event keyCode] == CMKeyLeftAlt)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMLeftAltKeyMask) == CMLeftAltKeyMask)];
+    else if ([event keyCode] == CMKeyRightAlt)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMRightAltKeyMask) == CMRightAltKeyMask)];
+    else if ([event keyCode] == CMKeyLeftControl)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMLeftControlKeyMask) == CMLeftControlKeyMask)];
+    else if ([event keyCode] == CMKeyRightControl)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMRightControlKeyMask) == CMRightControlKeyMask)];
+    else if ([event keyCode] == CMKeyLeftCommand)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMLeftCommandKeyMask) == CMLeftCommandKeyMask)];
+    else if ([event keyCode] == CMKeyRightCommand)
+        [self handleKeyEvent:[event keyCode]
+                      isDown:(([event modifierFlags] & CMRightCommandKeyMask) == CMRightCommandKeyMask)];
+    else if ([event keyCode] == CMKeyCapsLock)
     {
+        // FIXME: caps lock state is broken
         // Caps Lock has no up/down - just toggle state
-        CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:event.keyCode];
-        NSInteger virtualCode = [theEmulator.keyboardLayout virtualCodeForInputMethod:input];
+        
+        CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:[event keyCode]];
+        NSInteger virtualCode = [[theEmulator keyboardLayout] virtualCodeForInputMethod:input];
         
         if (virtualCode != CMUnknownVirtualCode)
         {
-            if (!inputEventGetState(virtualCode))
-                inputEventSet(virtualCode);
-            else
-                inputEventUnset(virtualCode);
+            NSNumber *virtualCodeObject = @(virtualCode);
+            
+            @synchronized (keyLock)
+            {
+                if ([keysDown containsObject:virtualCodeObject])
+                    [keysDown removeObject:virtualCodeObject];
+                else
+                    [keysDown addObject:virtualCodeObject];
+            }
         }
     }
     
-    if (event.keyCode == CMKeyLeftCommand || event.keyCode == CMKeyRightCommand)
+    if ([event keyCode] == CMKeyLeftCommand || [event keyCode] == CMKeyRightCommand)
     {
         // If Command is toggled while another key is down, releasing the
         // other key no longer generates a keyUp event, and the virtual key
@@ -1051,18 +1086,74 @@ static NSDictionary *machineLayoutMap = nil;
 
 #pragma mark - Public methods
 
+- (BOOL)pasteText:(NSString *)text
+      keyLayoutId:(NSInteger)keyLayoutId
+{
+    NSMutableDictionary *keyLayout = [typewriterLayouts objectForKey:@(keyLayoutId)];
+    if (!keyLayout)
+        return NO; // Invalid key layout
+    
+#ifdef DEBUG
+    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
+#endif
+    
+    NSMutableArray *textAsMsxCodes = [NSMutableArray array];
+    for (int i = 0, n = [text length]; i < n; i++)
+    {
+        NSString *character = [text substringWithRange:NSMakeRange(i, 1)];
+        
+        [keyLayout enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
+        {
+            if ([obj isEqual:character])
+            {
+                [textAsMsxCodes addObject:key];
+                *stop = YES;
+            }
+        }];
+    }
+    
+#ifdef DEBUG
+    NSLog(@"Pasting %ld keys", [textAsMsxCodes count]);
+#endif
+    
+    @synchronized(keysToPasteLock)
+    {
+        [keysToPaste addObjectsFromArray:textAsMsxCodes];
+    }
+    
+#ifdef DEBUG
+    NSLog(@"pasteText: Took %.02fms",
+          [NSDate timeIntervalSinceReferenceDate] - startTime);
+#endif
+    
+    return YES;
+}
+
 - (void)releaseAllKeys
 {
-    inputEventReset();
+    // Release the keys currently held
+    @synchronized (keyLock)
+    {
+        [keysDown removeAllObjects];
+    }
+    
+    // Clear the paste queue
+    @synchronized (keysToPasteLock)
+    {
+        [keysToPaste removeAllObjects];
+    }
+    
+    // Clear currently held keys
+    virtualCodeOfPressedKey = CMKeyNoCode;
+    keyPressTime = 0;
 }
 
 - (BOOL)areAnyKeysDown
 {
-    for (int virtualKey = 0; virtualKey < EC_KEYCOUNT; virtualKey++)
-        if (inputEventGetState(virtualKey))
-            return YES;
-    
-    return NO;
+    @synchronized(keyLock)
+    {
+        return [keysDown count] > 0;
+    }
 }
 
 - (void)resetState
@@ -1105,9 +1196,9 @@ static NSDictionary *machineLayoutMap = nil;
         if (keyInfo)
         {
             if (shiftState == CMKeyShiftStateNormal)
-                return keyInfo.defaultStateLabel;
+                return [keyInfo defaultStateLabel];
             else if (shiftState == CMKeyShiftStateShifted)
-                return keyInfo.shiftedStateLabel;
+                return [keyInfo shiftedStateLabel];
         }
     }
     
@@ -1316,22 +1407,19 @@ static NSDictionary *machineLayoutMap = nil;
 {
     CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:keyCode];
     
-    [theEmulator.inputDeviceLayouts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [[theEmulator inputDeviceLayouts] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         CMInputDeviceLayout *layout = obj;
         NSInteger virtualCode = [layout virtualCodeForInputMethod:input];
         
         if (virtualCode != CMUnknownVirtualCode)
         {
-            if (isDown)
+            @synchronized (keyLock)
             {
-                if (!inputEventGetState(virtualCode))
-                    inputEventSet(virtualCode);
-            }
-            else
-            {
-                if (inputEventGetState(virtualCode))
-                    inputEventUnset(virtualCode);
+                if (isDown)
+                    [keysDown addObject:@(virtualCode)];
+                else
+                    [keysDown removeObject:@(virtualCode)];
             }
         }
     }];
@@ -1339,7 +1427,57 @@ static NSDictionary *machineLayoutMap = nil;
 
 - (void)updateKeyboardState
 {
-    // FIXME: this is where we need to actually update the matrix
+    // Reset the key matrix
+    inputEventReset();
+    
+    // Create a copy for the keys currently down (so that we can enumerate them)
+    NSArray *keysDownNow;
+    @synchronized(keyLock)
+    {
+        keysDownNow = [keysDown allObjects];
+    }
+    
+    // Update the matrix for the keys currently down
+    [keysDownNow enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        inputEventSet([obj integerValue]);
+    }];
+    
+    NSTimeInterval timeNow = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval autoKeyPressInterval = timeNow - keyPressTime;
+    BOOL autoKeypressExpired = autoKeyPressInterval > CMAutoPressTotalTimeSeconds;
+    
+    // Check the paste queue, if there are no pending auto-keypresses
+    if ([keysToPaste count] > 0 && autoKeypressExpired)
+    {
+        @synchronized(keysToPasteLock)
+        {
+            virtualCodeOfPressedKey = [[keysToPaste objectAtIndex:0] integerValue];
+            [keysToPaste removeObjectAtIndex:0];
+        }
+        
+        keyPressTime = timeNow;
+        
+        autoKeypressExpired = NO;
+    }
+    
+    // Check for programmatically depressed keys
+    if (virtualCodeOfPressedKey != CMKeyNoCode)
+    {
+        // A key is programmatically depressed
+        if (autoKeypressExpired)
+        {
+            // Keypress has expired - release it
+            virtualCodeOfPressedKey = CMKeyNoCode;
+            keyPressTime = 0;
+        }
+        else if (autoKeyPressInterval < CMAutoPressHoldTimeSeconds)
+        {
+            // Simulate keypress, but only if we haven't passed the hold time
+            // threshold
+            inputEventSet(virtualCodeOfPressedKey);
+        }
+    }
 }
 
 #pragma mark - BlueMSX Callbacks
@@ -1350,7 +1488,7 @@ void archPollInput()
 {
     @autoreleasepool
     {
-        [theEmulator.keyboard updateKeyboardState];
+        [[theEmulator keyboard] updateKeyboardState];
     }
 }
 

@@ -141,12 +141,10 @@ NSString * const CMKeyboardLayoutPrefKey;
 // Apple menu
 
 - (IBAction)openAbout:(id)sender;
+- (IBAction)openPreferences:(id)sender;
 
 // File menu
 
-- (IBAction)openPreferences:(id)sender;
-
-// - Carts
 - (IBAction)insertCartridgeSlot1:(id)sender;
 - (IBAction)insertCartridgeSlot2:(id)sender;
 - (IBAction)insertSpecialCartridgeSlot1:(id)sender;
@@ -156,7 +154,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (IBAction)toggleCartAutoReset:(id)sender;
 
-// - Disks
 - (IBAction)insertDiskSlot1:(id)sender;
 - (IBAction)insertDiskSlot2:(id)sender;
 - (IBAction)ejectDiskSlot1:(id)sender;
@@ -164,7 +161,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (IBAction)toggleDiskAutoReset:(id)sender;
 
-// - Cassettes
 - (IBAction)insertCassette:(id)sender;
 - (IBAction)ejectCassette:(id)sender;
 - (IBAction)rewindCassette:(id)sender;
@@ -173,22 +169,11 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)toggleCassetteAutoRewind:(id)sender;
 - (IBAction)toggleCassetteWriteProtect:(id)sender;
 
-// View menu
-- (IBAction)normalSize:(id)sender;
-- (IBAction)doubleSize:(id)sender;
-- (IBAction)toggleFullScreen:(id)sender;
-- (IBAction)toggleStatusBar:(id)sender;
-
-// MSX menu
-- (IBAction)statusMsx:(id)sender;
-- (IBAction)resetMsx:(id)sender;
-- (IBAction)shutDownMsx:(id)sender;
-- (IBAction)pauseMsx:(id)sender;
-
 - (IBAction)loadState:(id)sender;
 - (IBAction)saveState:(id)sender;
 
 - (IBAction)saveScreenshot:(id)sender;
+
 - (IBAction)recordAudio:(id)sender;
 
 - (IBAction)openGameplayRecording:(id)sender;
@@ -196,6 +181,24 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)recordGameplay:(id)sender;
 - (IBAction)stopGameplayRecording:(id)sender;
 - (IBAction)playBackGameplay:(id)sender;
+
+// Edit menu
+
+- (IBAction)pasteText:(id)sender;
+
+// View menu
+
+- (IBAction)normalSize:(id)sender;
+- (IBAction)doubleSize:(id)sender;
+- (IBAction)toggleFullScreen:(id)sender;
+- (IBAction)toggleStatusBar:(id)sender;
+
+// MSX menu
+
+- (IBAction)statusMsx:(id)sender;
+- (IBAction)resetMsx:(id)sender;
+- (IBAction)shutDownMsx:(id)sender;
+- (IBAction)pauseMsx:(id)sender;
 
 - (IBAction)editMachineSettings:(id)sender;
 

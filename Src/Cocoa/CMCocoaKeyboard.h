@@ -52,6 +52,14 @@
 
 @interface CMCocoaKeyboard : NSObject
 {
+    NSObject *keyLock;
+    NSObject *keysToPasteLock;
+    
+    NSMutableSet *keysDown;
+    NSMutableArray *keysToPaste;
+    
+    NSInteger virtualCodeOfPressedKey;
+    NSTimeInterval keyPressTime;
 }
 
 - (void)setEmulatorHasFocus:(BOOL)focus;
@@ -60,6 +68,9 @@
 - (void)keyUp:(NSEvent*)event;
 - (void)flagsChanged:(NSEvent *)event;
 - (void)resetState;
+
+- (BOOL)pasteText:(NSString *)text
+      keyLayoutId:(NSInteger)keyLayoutId;
 
 - (BOOL)areAnyKeysDown;
 - (void)releaseAllKeys;

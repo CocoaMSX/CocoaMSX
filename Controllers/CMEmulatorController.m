@@ -1040,6 +1040,17 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return NO;
 }
 
+- (void)pasteText:(id)sender
+{
+    NSPasteboard *pasteBoard  = [NSPasteboard generalPasteboard];
+    NSString *text = [pasteBoard stringForType:NSPasteboardTypeString];
+    
+    NSString *runningMachineId = [self runningMachineConfiguration];
+    NSInteger layoutId = [CMCocoaKeyboard layoutIdForMachineIdentifier:runningMachineId];
+    
+    [[self keyboard] pasteText:text keyLayoutId:layoutId];
+}
+
 - (void)windowKeyDidChange:(BOOL)isKey
 {
     mouse.emulatorHasFocus = isKey;
