@@ -2,10 +2,8 @@
   have some way to disable machine feed auto-updates
 
 Other:
-* Go over Caps Lock - is it being pressed/released correctly in the emulator?
 * Change how scanline enabling/disabling is handled - currently clumsy, considering
   that blueMSX can explicitly toggle enable/disable
 
 * Add option to create new disk images
-* Add an option to paste text, and possibly figure out a way to copy 
-  (read VRAM?)
+* Figure out a way to copy text to clipboard (read VRAM?)

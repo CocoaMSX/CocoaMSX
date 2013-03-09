@@ -32,436 +32,13 @@
 
 #include "InputEvent.h"
 
-#define CMAutoPressHoldTimeSeconds    0.04
-#define CMAutoPressReleaseTimeSeconds 0.03
+#define CMAutoPressHoldDuration    0.05
+#define CMAutoPressReleaseDuration 0.05
 #define CMAutoPressTotalTimeSeconds \
-    (CMAutoPressHoldTimeSeconds + CMAutoPressReleaseTimeSeconds)
+    (CMAutoPressHoldDuration + CMAutoPressReleaseDuration)
 
 #define CMMakeMsxKeyInfo(d, s) \
     [CMMsxKeyInfo keyInfoWithDefaultStateLabel:d shiftedStateLabel:s]
-
-#pragma mark - CMKeyDatabase
-
-@interface CMKeyboardInfo : NSObject
-{
-    NSMutableDictionary *virtualCodeToKeyInfoMap;
-}
-
-- (void)setupMap;
-
-- (void)mapVirtualCode:(NSInteger)virtualCode
-   toDefaultStateLabel:(NSString *)defaultStateLabel
-     shiftedStateLabel:(NSString *)shiftedStateLabel;
-- (void)unmapVirtualCode:(NSInteger)virtualCode;
-
-@end
-
-@implementation CMKeyboardInfo
-
-- (id)init
-{
-    if ((self = [super init]))
-    {
-        virtualCodeToKeyInfoMap = [[NSMutableDictionary alloc] init];
-        
-        [self setupMap];
-    }
-    
-    return self;
-}
-
-- (void)dealloc
-{
-    [virtualCodeToKeyInfoMap release];
-    
-    [super dealloc];
-}
-
-- (void)setupMap
-{
-}
-
-- (void)mapVirtualCode:(NSInteger)virtualCode
-   toDefaultStateLabel:(NSString *)defaultStateLabel
-     shiftedStateLabel:(NSString *)shiftedStateLabel
-{
-    [virtualCodeToKeyInfoMap setObject:CMMakeMsxKeyInfo(defaultStateLabel, shiftedStateLabel)
-                                forKey:@(virtualCode)];
-}
-
-- (void)unmapVirtualCode:(NSInteger)virtualCode
-{
-    [virtualCodeToKeyInfoMap removeObjectForKey:@(virtualCode)];
-}
-
-@end
-
-@interface CMEuropeanKeyboardInfo : CMKeyboardInfo
-
-@end
-
-@implementation CMEuropeanKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"`" shiftedStateLabel:@"~"];
-    [self mapVirtualCode:EC_1       toDefaultStateLabel:@"1" shiftedStateLabel:@"!"];
-    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"@"];
-    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"3" shiftedStateLabel:@"#"];
-    [self mapVirtualCode:EC_4       toDefaultStateLabel:@"4" shiftedStateLabel:@"$"];
-    [self mapVirtualCode:EC_5       toDefaultStateLabel:@"5" shiftedStateLabel:@"%"];
-    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"^"];
-    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"&"];
-    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"*"];
-    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@"("];
-    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:@")"];
-    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"-" shiftedStateLabel:@"_"];
-    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"=" shiftedStateLabel:@"+"];
-    
-    [self mapVirtualCode:EC_Q      toDefaultStateLabel:@"q" shiftedStateLabel:@"Q"];
-    [self mapVirtualCode:EC_W      toDefaultStateLabel:@"w" shiftedStateLabel:@"W"];
-    [self mapVirtualCode:EC_E      toDefaultStateLabel:@"e" shiftedStateLabel:@"E"];
-    [self mapVirtualCode:EC_R      toDefaultStateLabel:@"r" shiftedStateLabel:@"R"];
-    [self mapVirtualCode:EC_T      toDefaultStateLabel:@"t" shiftedStateLabel:@"T"];
-    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"y" shiftedStateLabel:@"Y"];
-    [self mapVirtualCode:EC_U      toDefaultStateLabel:@"u" shiftedStateLabel:@"U"];
-    [self mapVirtualCode:EC_I      toDefaultStateLabel:@"i" shiftedStateLabel:@"I"];
-    [self mapVirtualCode:EC_O      toDefaultStateLabel:@"o" shiftedStateLabel:@"O"];
-    [self mapVirtualCode:EC_P      toDefaultStateLabel:@"p" shiftedStateLabel:@"P"];
-    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"[" shiftedStateLabel:@"{"];
-    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"]" shiftedStateLabel:@"}"];
-    
-    [self mapVirtualCode:EC_A       toDefaultStateLabel:@"a"  shiftedStateLabel:@"A"];
-    [self mapVirtualCode:EC_S       toDefaultStateLabel:@"s"  shiftedStateLabel:@"S"];
-    [self mapVirtualCode:EC_D       toDefaultStateLabel:@"d"  shiftedStateLabel:@"D"];
-    [self mapVirtualCode:EC_F       toDefaultStateLabel:@"f"  shiftedStateLabel:@"F"];
-    [self mapVirtualCode:EC_G       toDefaultStateLabel:@"g"  shiftedStateLabel:@"G"];
-    [self mapVirtualCode:EC_H       toDefaultStateLabel:@"h"  shiftedStateLabel:@"H"];
-    [self mapVirtualCode:EC_J       toDefaultStateLabel:@"j"  shiftedStateLabel:@"J"];
-    [self mapVirtualCode:EC_K       toDefaultStateLabel:@"k"  shiftedStateLabel:@"K"];
-    [self mapVirtualCode:EC_L       toDefaultStateLabel:@"l"  shiftedStateLabel:@"L"];
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@";"  shiftedStateLabel:@":"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"'"  shiftedStateLabel:@"\""];
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"\\" shiftedStateLabel:@"|"];
-    
-    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
-    [self mapVirtualCode:EC_X       toDefaultStateLabel:@"x" shiftedStateLabel:@"X"];
-    [self mapVirtualCode:EC_C       toDefaultStateLabel:@"c" shiftedStateLabel:@"C"];
-    [self mapVirtualCode:EC_V       toDefaultStateLabel:@"v" shiftedStateLabel:@"V"];
-    [self mapVirtualCode:EC_B       toDefaultStateLabel:@"b" shiftedStateLabel:@"B"];
-    [self mapVirtualCode:EC_N       toDefaultStateLabel:@"n" shiftedStateLabel:@"N"];
-    [self mapVirtualCode:EC_M       toDefaultStateLabel:@"m" shiftedStateLabel:@"M"];
-    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@"<"];
-    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@">"];
-    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"/" shiftedStateLabel:@"?"];
-    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"`" shiftedStateLabel:@"'"];
-}
-
-@end
-
-@interface CMBrazilianKeyboardInfo : CMEuropeanKeyboardInfo
-
-@end
-
-@implementation CMBrazilianKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"ç" shiftedStateLabel:@"Ç"];
-    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
-    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"'"];
-    
-    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
-    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"[" shiftedStateLabel:@"]"];
-    
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"~" shiftedStateLabel:@"^"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"*" shiftedStateLabel:@"@"];
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"{" shiftedStateLabel:@"}"];
-    
-    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@";" shiftedStateLabel:@":"];
-    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"/" shiftedStateLabel:@"?"];
-}
-
-@end
-
-@interface CMEstonianKeyboardInfo : CMEuropeanKeyboardInfo
-
-@end
-
-@implementation CMEstonianKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"^" shiftedStateLabel:@"~"];
-    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
-    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"&"];
-    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"/"];
-    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"("];
-    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@")"];
-    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:@"="];
-    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"+" shiftedStateLabel:@"?"];
-    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
-    
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"\\" shiftedStateLabel:@"|"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"<"  shiftedStateLabel:@">"];
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"'"  shiftedStateLabel:@"*"];
-    
-    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@";"];
-    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@":"];
-    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"-" shiftedStateLabel:@"_"];
-    
-    [self unmapVirtualCode:EC_UNDSCRE];
-}
-
-@end
-
-@interface CMFrenchKeyboardInfo : CMEuropeanKeyboardInfo
-
-@end
-
-@implementation CMFrenchKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"#"  shiftedStateLabel:@"£"];
-    [self mapVirtualCode:EC_1       toDefaultStateLabel:@"&"  shiftedStateLabel:@"1"];
-    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"é"  shiftedStateLabel:@"2"];
-    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"\"" shiftedStateLabel:@"3"];
-    [self mapVirtualCode:EC_4       toDefaultStateLabel:@"'"  shiftedStateLabel:@"4"];
-    [self mapVirtualCode:EC_5       toDefaultStateLabel:@"("  shiftedStateLabel:@"5"];
-    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"§"  shiftedStateLabel:@"6"];
-    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"è"  shiftedStateLabel:@"7"];
-    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"!"  shiftedStateLabel:@"8"];
-    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"ç"  shiftedStateLabel:@"9"];
-    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"à"  shiftedStateLabel:@"0"];
-    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@")"  shiftedStateLabel:@"º"];
-    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"-"  shiftedStateLabel:@"_"];
-    
-    [self mapVirtualCode:EC_Q      toDefaultStateLabel:@"a" shiftedStateLabel:@"A"];
-    [self mapVirtualCode:EC_W      toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
-    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"`" shiftedStateLabel:@"'"];
-    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"$" shiftedStateLabel:@"*"];
-    
-    [self mapVirtualCode:EC_A       toDefaultStateLabel:@"q" shiftedStateLabel:@"Q"];
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"m" shiftedStateLabel:@"M"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"ù" shiftedStateLabel:@"%"];
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"<" shiftedStateLabel:@">"];
-    
-    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"w" shiftedStateLabel:@"W"];
-    [self mapVirtualCode:EC_M       toDefaultStateLabel:@"," shiftedStateLabel:@"?"];
-    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@";" shiftedStateLabel:@"."];
-    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@":" shiftedStateLabel:@"/"];
-    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"=" shiftedStateLabel:@"+"];
-    
-    [self unmapVirtualCode:EC_UNDSCRE];
-}
-
-@end
-
-@interface CMGermanKeyboardInfo : CMEuropeanKeyboardInfo
-
-@end
-
-@implementation CMGermanKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"#" shiftedStateLabel:@"^"];
-    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
-    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"3" shiftedStateLabel:@"§"];
-    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"&"];
-    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"/"];
-    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"("];
-    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@")"];
-    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:@"="];
-    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"ß" shiftedStateLabel:@"?"];
-    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
-    
-    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
-    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"ü" shiftedStateLabel:@"Ü"];
-    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"+" shiftedStateLabel:@"*"];
-    
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"ö" shiftedStateLabel:@"Ö"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"ä" shiftedStateLabel:@"Ä"];
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"<" shiftedStateLabel:@">"];
-    
-    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"y" shiftedStateLabel:@"Y"];
-    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@";"];
-    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@":"];
-    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"-" shiftedStateLabel:@"_"];
-    
-    [self unmapVirtualCode:EC_UNDSCRE];
-}
-
-@end
-
-@interface CMJapaneseKeyboardInfo : CMEuropeanKeyboardInfo
-
-@end
-
-@implementation CMJapaneseKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"]" shiftedStateLabel:@"}"];
-    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"2" shiftedStateLabel:@"\""];
-    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"6" shiftedStateLabel:@"&"];
-    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"7" shiftedStateLabel:@"'"];
-    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"8" shiftedStateLabel:@"("];
-    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"9" shiftedStateLabel:@")"];
-    [self mapVirtualCode:EC_0       toDefaultStateLabel:@"0" shiftedStateLabel:nil];
-    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"-" shiftedStateLabel:@"="];
-    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"^" shiftedStateLabel:@"~"];
-    
-    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"@" shiftedStateLabel:@"`"];
-    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"[" shiftedStateLabel:@"{"];
-    
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@";" shiftedStateLabel:@"+"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@":" shiftedStateLabel:@"*"];
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"¥" shiftedStateLabel:@"|"];
-    
-    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"," shiftedStateLabel:@"<"];
-    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"." shiftedStateLabel:@">"];
-    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"/" shiftedStateLabel:@"?"];
-    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:nil  shiftedStateLabel:@"_"];
-}
-
-@end
-
-@interface CMKoreanKeyboardInfo : CMJapaneseKeyboardInfo
-
-@end
-
-@implementation CMKoreanKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"￦" shiftedStateLabel:@"|"];
-}
-
-@end
-
-@interface CMRussianKeyboardInfo : CMKeyboardInfo
-
-@end
-
-@implementation CMRussianKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@">"  shiftedStateLabel:@"~"];
-    [self mapVirtualCode:EC_1       toDefaultStateLabel:@"+"  shiftedStateLabel:@"!"];
-    [self mapVirtualCode:EC_2       toDefaultStateLabel:@"!"  shiftedStateLabel:@"1"];
-    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"\"" shiftedStateLabel:@"2"];
-    [self mapVirtualCode:EC_4       toDefaultStateLabel:@"#"  shiftedStateLabel:@"3"];
-    [self mapVirtualCode:EC_5       toDefaultStateLabel:@"Ȣ"  shiftedStateLabel:@"4"];
-    [self mapVirtualCode:EC_6       toDefaultStateLabel:@"%"  shiftedStateLabel:@"5"];
-    [self mapVirtualCode:EC_7       toDefaultStateLabel:@"&"  shiftedStateLabel:@"6"];
-    [self mapVirtualCode:EC_8       toDefaultStateLabel:@"'"  shiftedStateLabel:@"7"];
-    [self mapVirtualCode:EC_9       toDefaultStateLabel:@"("  shiftedStateLabel:@"8"];
-    [self mapVirtualCode:EC_0       toDefaultStateLabel:@")"  shiftedStateLabel:@"9"];
-    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"$"  shiftedStateLabel:@"0"];
-    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"="  shiftedStateLabel:@"_"];
-    
-    [self mapVirtualCode:EC_Q      toDefaultStateLabel:@"j" shiftedStateLabel:@"J"];
-    [self mapVirtualCode:EC_W      toDefaultStateLabel:@"c" shiftedStateLabel:@"C"];
-    [self mapVirtualCode:EC_E      toDefaultStateLabel:@"u" shiftedStateLabel:@"U"];
-    [self mapVirtualCode:EC_R      toDefaultStateLabel:@"k" shiftedStateLabel:@"K"];
-    [self mapVirtualCode:EC_T      toDefaultStateLabel:@"e" shiftedStateLabel:@"E"];
-    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"n" shiftedStateLabel:@"N"];
-    [self mapVirtualCode:EC_U      toDefaultStateLabel:@"g" shiftedStateLabel:@"G"];
-    [self mapVirtualCode:EC_I      toDefaultStateLabel:@"[" shiftedStateLabel:@"{"];
-    [self mapVirtualCode:EC_O      toDefaultStateLabel:@"]" shiftedStateLabel:@"}"];
-    [self mapVirtualCode:EC_P      toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
-    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"h" shiftedStateLabel:@"H"];
-    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"*" shiftedStateLabel:@":"];
-    
-    [self mapVirtualCode:EC_A       toDefaultStateLabel:@"f"  shiftedStateLabel:@"F"];
-    [self mapVirtualCode:EC_S       toDefaultStateLabel:@"y"  shiftedStateLabel:@"Y"];
-    [self mapVirtualCode:EC_D       toDefaultStateLabel:@"w"  shiftedStateLabel:@"W"];
-    [self mapVirtualCode:EC_F       toDefaultStateLabel:@"a"  shiftedStateLabel:@"A"];
-    [self mapVirtualCode:EC_G       toDefaultStateLabel:@"p"  shiftedStateLabel:@"P"];
-    [self mapVirtualCode:EC_H       toDefaultStateLabel:@"r"  shiftedStateLabel:@"R"];
-    [self mapVirtualCode:EC_J       toDefaultStateLabel:@"o"  shiftedStateLabel:@"O"];
-    [self mapVirtualCode:EC_K       toDefaultStateLabel:@"l"  shiftedStateLabel:@"L"];
-    [self mapVirtualCode:EC_L       toDefaultStateLabel:@"d"  shiftedStateLabel:@"D"];
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"v"  shiftedStateLabel:@"V"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"\\" shiftedStateLabel:@"\\"];
-    [self mapVirtualCode:EC_BKSLASH toDefaultStateLabel:@"-"  shiftedStateLabel:@"^"];
-    
-    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"q" shiftedStateLabel:@"Q"];
-    [self mapVirtualCode:EC_X       toDefaultStateLabel:@"|" shiftedStateLabel:@"~"];
-    [self mapVirtualCode:EC_C       toDefaultStateLabel:@"s" shiftedStateLabel:@"S"];
-    [self mapVirtualCode:EC_V       toDefaultStateLabel:@"m" shiftedStateLabel:@"M"];
-    [self mapVirtualCode:EC_B       toDefaultStateLabel:@"i" shiftedStateLabel:@"I"];
-    [self mapVirtualCode:EC_N       toDefaultStateLabel:@"t" shiftedStateLabel:@"T"];
-    [self mapVirtualCode:EC_M       toDefaultStateLabel:@"x" shiftedStateLabel:@"X"];
-    [self mapVirtualCode:EC_COMMA   toDefaultStateLabel:@"b" shiftedStateLabel:@"B"];
-    [self mapVirtualCode:EC_PERIOD  toDefaultStateLabel:@"@" shiftedStateLabel:nil];
-    [self mapVirtualCode:EC_DIV     toDefaultStateLabel:@"<" shiftedStateLabel:@","];
-    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"?" shiftedStateLabel:@"/"];
-}
-
-@end
-
-@interface CMSpanishKeyboardInfo : CMEuropeanKeyboardInfo
-
-@end
-
-@implementation CMSpanishKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@";" shiftedStateLabel:@":"];
-    
-    [self mapVirtualCode:EC_SEMICOL toDefaultStateLabel:@"ñ" shiftedStateLabel:@"Ñ"];
-    [self mapVirtualCode:EC_COLON   toDefaultStateLabel:@"'" shiftedStateLabel:@"~"];
-}
-
-@end
-
-@interface CMSwedishKeyboardInfo : CMGermanKeyboardInfo
-
-@end
-
-@implementation CMSwedishKeyboardInfo
-
-- (void)setupMap
-{
-    [super setupMap];
-    
-    [self mapVirtualCode:EC_RBRACK  toDefaultStateLabel:@"'" shiftedStateLabel:@"*"];
-    [self mapVirtualCode:EC_3       toDefaultStateLabel:@"3" shiftedStateLabel:@"#"];
-    [self mapVirtualCode:EC_NEG     toDefaultStateLabel:@"+" shiftedStateLabel:@"?"];
-    [self mapVirtualCode:EC_CIRCFLX toDefaultStateLabel:@"é" shiftedStateLabel:@"É"];
-    
-    [self mapVirtualCode:EC_Y      toDefaultStateLabel:@"y" shiftedStateLabel:@"Y"];
-    [self mapVirtualCode:EC_AT     toDefaultStateLabel:@"å" shiftedStateLabel:@"Å"];
-    [self mapVirtualCode:EC_LBRACK toDefaultStateLabel:@"ü" shiftedStateLabel:@"Ü"];
-    
-    [self mapVirtualCode:EC_Z       toDefaultStateLabel:@"z" shiftedStateLabel:@"Z"];
-    [self mapVirtualCode:EC_UNDSCRE toDefaultStateLabel:@"'" shiftedStateLabel:@"`"];
-}
-
-@end
 
 #pragma mark - CMMsxKeyInfo
 
@@ -520,9 +97,6 @@
 #pragma mark - CMCocoaKeyboard
 
 static NSArray *orderOfAppearance = nil;
-static NSDictionary *staticLayout = nil;
-static NSMutableDictionary *typewriterLayouts = nil;
-static NSDictionary *machineLayoutMap = nil;
 
 @interface CMCocoaKeyboard ()
 
@@ -534,255 +108,10 @@ static NSDictionary *machineLayoutMap = nil;
 
 @implementation CMCocoaKeyboard
 
+@synthesize keyCombinationToAutoPress = _keyCombinationToAutoPress;
+
 + (void)initialize
 {
-    machineLayoutMap = [[NSDictionary alloc] initWithObjectsAndKeys:
-                        [NSArray arrayWithObjects:
-                         @"MSX - Al Alamiah AX-150",
-                         @"MSX - Al Alamiah AX-170",
-                         @"MSX - Perfect 1",
-                         @"MSX - Spectravideo SVI-738 Arabic",
-                         @"MSX2 - Al Alamiah AX-350II",
-                         @"MSX2 - Al Alamiah AX-370", nil], @CMKeyLayoutArabic,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Gradiente Expert 1.1",
-                         @"MSX - Gradiente Expert 1.3",
-                         @"MSX - Gradiente Expert DDPlus",
-                         @"MSX - Gradiente Expert Plus",
-                         @"MSX2 - Gradiente Expert 2.0",
-                         @"MSX2+ - Brazilian",
-                         @"MSX2+ - Ciel Expert 3 IDE",
-                         @"MSX2+ - Ciel Expert 3 Turbo",
-                         @"MSX2+ - Gradiente Expert AC88+",
-                         @"MSX2+ - Gradiente Expert DDX+",
-                         // Different layout
-                         @"MSX - Gradiente Expert 1.0",
-                         @"MSX - Sharp Epcom HotBit 1.1",
-                         @"MSX - Sharp Epcom HotBit 1.2",
-                         @"MSX - Sharp Epcom HotBit 1.3b",
-                         @"MSX - Sharp Epcom HotBit 1.3p",
-                         @"MSX2 - Sharp Epcom HotBit 2.0", nil], @CMKeyLayoutBrazilian,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Yamaha YIS503IIR Estonian",
-                         @"MSX2 - Yamaha YIS503IIIR Estonian",
-                         @"MSX2 - Yamaha YIS805-128R2 Estonian", nil], @CMKeyLayoutEstonian,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Daewoo DPC-200E",
-                         @"MSX - Fenner DPC-200",
-                         @"MSX - Fenner FPC-500",
-                         @"MSX - Fenner SPC-800",
-                         @"MSX - Frael Bruc 100-1",
-                         @"MSX - Goldstar FC-200",
-                         @"MSX - Philips NMS-801",
-                         @"MSX - Philips VG-8000",
-                         @"MSX - Philips VG-8010",
-                         @"MSX - Philips VG-8020-00",
-                         @"MSX - Philips VG-8020-20",
-                         @"MSX - Spectravideo SVI-728",
-                         @"MSX - Spectravideo SVI-738",
-                         @"MSX - Spectravideo SVI-738 Henrik Gilvad",
-                         @"MSX - Toshiba HX-10",
-                         @"MSX - Toshiba HX-20I",
-                         @"MSX - Toshiba HX-21I",
-                         @"MSX - Toshiba HX-22I",
-                         @"MSX - Yamaha CX5M-1",
-                         @"MSX - Yamaha CX5M-2",
-                         @"MSX - Yamaha CX5MII",
-                         @"MSX - Yamaha CX5MII-128",
-                         @"MSX - Yamaha YIS303",
-                         @"MSX - Yamaha YIS503",
-                         @"MSX - Yamaha YIS503II",
-                         @"MSX - Yamaha YIS503M",
-                         @"MSX - Yashica YC-64",
-                         @"MSX2 - Fenner FPC-900",
-                         @"MSX2 - Philips NMS-8220",
-                         @"MSX2 - Philips NMS-8245",
-                         @"MSX2 - Philips NMS-8250",
-                         @"MSX2 - Philips NMS-8255",
-                         @"MSX2 - Philips NMS-8260+",
-                         @"MSX2 - Philips NMS-8280",
-                         @"MSX2 - Philips PTC MSX PC",
-                         @"MSX2 - Philips VG-8235",
-                         @"MSX2 - Philips VG-8240",
-                         @"MSX2 - Spectravideo SVI-738-2 CUC",
-                         @"MSX2 - Spectravideo SVI-738-2 JP Grobler",
-                         @"MSX2 - Toshiba FS-TM1",
-                         @"MSX2 - Toshiba HX-23I",
-                         @"MSX2 - Toshiba HX-34I",
-                         @"MSX2+ - European",
-                         @"MSX2+ - Spectravideo SVI-738-2+",
-                         @"MSXturboR - European",
-                         // Different layout
-                         @"MSX - Canon V-20E",
-                         @"MSX - JVC HC-7GB",
-                         @"MSX - Mitsubishi ML-F48",
-                         @"MSX - Mitsubishi ML-F80",
-                         @"MSX - Mitsubishi ML-FX1",
-                         @"MSX - Pioneer PX-7UK",
-                         @"MSX - Sanyo MPC-100",
-                         @"MSX - Sanyo PHC-28S",
-                         @"MSX - Sanyo Wavy MPC-10",
-                         @"MSX - Sony HB-10P",
-                         @"MSX - Sony HB-55P",
-                         @"MSX - Sony HB-75P",
-                         @"MSX - Sony HB-101P",
-                         @"MSX - Sony HB-201P",
-                         @"MSX - Sony HB-501P",
-                         @"MSX - Yamaha YIS503F",
-                         @"MSX2 - Philips VG-8230",
-                         @"MSX2 - Sony HB-F9P",
-                         @"MSX2 - Sony HB-F500P",
-                         @"MSX2 - Sony HB-F700P",
-                         @"MSX2 - Sony HB-G900AP",
-                         @"MSX2 - Sony HB-G900P", nil], @CMKeyLayoutEuropean,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Canon V-20F",
-                         @"MSX - Olympia PHC-2",
-                         @"MSX - Olympia PHC-28",
-                         @"MSX - Philips VG-8010F",
-                         @"MSX - Philips VG-8020F",
-                         @"MSX - Sanyo PHC-28L",
-                         @"MSX - Toshiba HX-10F",
-                         @"MSX - Yeno DPC-64",
-                         @"MSX - Yeno MX64",
-                         @"MSX2 - Philips NMS-8245F",
-                         @"MSX2 - Philips NMS-8250F",
-                         @"MSX2 - Philips NMS-8255F",
-                         @"MSX2 - Philips NMS-8280F",
-                         @"MSX2 - Philips VG-8235F",
-                         @"MSX2 - Sony HB-F500F",
-                         @"MSX2 - Sony HB-F700F",
-                         @"MSX2+ - French", nil], @CMKeyLayoutFrench,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Canon V-20G",
-                         @"MSX - Panasonic CF-2700G",
-                         @"MSX - Sanyo MPC-64",
-                         @"MSX - Sony HB-55D",
-                         @"MSX - Sony HB-75D",
-                         @"MSX2 - Philips NMS-8280G",
-                         @"MSX2 - Sony HB-F700D", nil], @CMKeyLayoutGerman,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Canon V-8",
-                         @"MSX - Canon V-10",
-                         @"MSX - Canon V-20",
-                         @"MSX - Casio PV-7",
-                         @"MSX - Casio PV-16",
-                         @"MSX - Fujitsu FM-X",
-                         @"MSX - Mitsubishi ML-F110",
-                         @"MSX - Mitsubishi ML-F120",
-                         @"MSX - National CF-1200",
-                         @"MSX - National CF-2000",
-                         @"MSX - National CF-2700",
-                         @"MSX - National CF-3000",
-                         @"MSX - National CF-3300",
-                         @"MSX - National FS-1300",
-                         @"MSX - National FS-4000",
-                         @"MSX - Pioneer PX-7",
-                         @"MSX - Pioneer PX-V60",
-                         @"MSX - Sony HB-10",
-                         @"MSX - Sony HB-201",
-                         @"MSX - Sony HB-501",
-                         @"MSX - Sony HB-701FD",
-                         @"MSX - Toshiba HX-10D",
-                         @"MSX - Toshiba HX-10S",
-                         @"MSX - Toshiba HX-20",
-                         @"MSX - Toshiba HX-21",
-                         @"MSX - Toshiba HX-22",
-                         @"MSX - Yamaha CX5F-1",
-                         @"MSX - Yamaha CX5F-2",
-                         @"MSX2 - Canon V-25",
-                         @"MSX2 - Canon V-30",
-                         @"MSX2 - Canon V-30F",
-                         @"MSX2 - Kawai KMC-5000",
-                         @"MSX2 - Mitsubishi ML-G10",
-                         @"MSX2 - Mitsubishi ML-G30 Model 1",
-                         @"MSX2 - Mitsubishi ML-G30 Model 2",
-                         @"MSX2 - National FS-4500",
-                         @"MSX2 - National FS-4600",
-                         @"MSX2 - National FS-4700",
-                         @"MSX2 - National FS-5000",
-                         @"MSX2 - National FS-5500F1",
-                         @"MSX2 - National FS-5500F2",
-                         @"MSX2 - Panasonic FS-A1",
-                         @"MSX2 - Panasonic FS-A1F",
-                         @"MSX2 - Panasonic FS-A1FM",
-                         @"MSX2 - Panasonic FS-A1MK2",
-                         @"MSX2 - Philips NMS-8250J",
-                         @"MSX2 - Philips VG-8230J",
-                         @"MSX2 - Sanyo Wavy MPC-25FD",
-                         @"MSX2 - Sanyo Wavy MPC-27",
-                         @"MSX2 - Sanyo Wavy PHC-23",
-                         @"MSX2 - Sanyo Wavy PHC-55FD2",
-                         @"MSX2 - Sanyo Wavy PHC-77",
-                         @"MSX2 - Sony HB-F1",
-                         @"MSX2 - Sony HB-F1II",
-                         @"MSX2 - Sony HB-F1XD",
-                         @"MSX2 - Sony HB-F1XDMK2",
-                         @"MSX2 - Sony HB-F5",
-                         @"MSX2 - Sony HB-F500",
-                         @"MSX2 - Sony HB-F750+",
-                         @"MSX2 - Sony HB-F900",
-                         @"MSX2 - Toshiba HX-23",
-                         @"MSX2 - Toshiba HX-23F",
-                         @"MSX2 - Toshiba HX-33",
-                         @"MSX2 - Toshiba HX-34",
-                         @"MSX2 - Victor HC-90",
-                         @"MSX2 - Victor HC-95",
-                         @"MSX2 - Victor HC-95A",
-                         @"MSX2 - Yamaha CX7_128",
-                         @"MSX2 - Yamaha CX7M_128",
-                         @"MSX2+ - MSXPLAYer 2003",
-                         @"MSX2+ - Panasonic FS-A1FX",
-                         @"MSX2+ - Panasonic FS-A1WSX",
-                         @"MSX2+ - Panasonic FS-A1WX",
-                         @"MSX2+ - Sanyo Wavy PHC-35J",
-                         @"MSX2+ - Sanyo Wavy PHC-70FD1",
-                         @"MSX2+ - Sanyo Wavy PHC-70FD2",
-                         @"MSX2+ - Sony HB-F1XDJ",
-                         @"MSX2+ - Sony HB-F1XV",
-                         @"MSXturboR - Panasonic FS-A1GT",
-                         @"MSXturboR - Panasonic FS-A1ST", nil], @CMKeyLayoutJapanese,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Daewoo DPC-100",
-                         @"MSX - Daewoo DPC-180",
-                         @"MSX - Daewoo DPC-200",
-                         @"MSX - Daewoo Zemmix CPC-50",
-                         @"MSX - Daewoo Zemmix CPC-51",
-                         @"MSX - Samsung SPC-800",
-                         @"MSX2 - Daewoo CPC-300",
-                         @"MSX2 - Daewoo CPC-300E",
-                         @"MSX2 - Daewoo CPC-330K",
-                         @"MSX2 - Daewoo CPC-400",
-                         @"MSX2 - Daewoo CPC-400S",
-                         @"MSX2 - Daewoo Zemmix CPC-61",
-                         @"MSX2 - Daewoo Zemmix CPG-120", nil], @CMKeyLayoutKorean,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Yamaha YIS503IIR",
-                         @"MSX2 - Sanyo MPC-2300",
-                         @"MSX2 - Sony HB-F9P Russian",
-                         @"MSX2 - Yamaha YIS503IIIR",
-                         @"MSX2 - Yamaha YIS805-128R2", nil], @CMKeyLayoutRussian,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Canon V-20S",
-                         @"MSX - Sony HB-20P",
-                         @"MSX - Talent DPC-200",
-                         @"MSX - Talent DPC-200A",
-                         @"MSX - Toshiba HX-10SA",
-                         @"MSX2 - Mitsubishi ML-G1",
-                         @"MSX2 - Mitsubishi ML-G3",
-                         @"MSX2 - Sony HB-F9S",
-                         @"MSX2 - Sony HB-F700S",
-                         @"MSX2 - Spectravideo SVI-738-2 LC Grosso",
-                         @"MSX2 - Talent TPC-310",
-                         @"MSX2 - Talent TPP-311",
-                         @"MSX2 - Talent TPS-312",
-                         @"MSX2+ - Sony HB-F9S+", nil], @CMKeyLayoutSpanish,
-                        [NSArray arrayWithObjects:
-                         @"MSX - Spectravideo SVI-738 Swedish",
-                         @"MSX - Spectravideo SVI-838",
-                         @"MSX2 - Spectravideo SVI-838-2", nil], @CMKeyLayoutSwedish,
-                        nil];
-    
     orderOfAppearance = [[NSArray alloc] initWithObjects:
                          @EC_RBRACK,
                          @EC_1,
@@ -891,497 +220,6 @@ static NSDictionary *machineLayoutMap = nil;
                          @EC_JOY2_BUTTON2,
                          
                          nil];
-    
-    staticLayout = [[NSDictionary alloc] initWithObjectsAndKeys:
-                    CMLoc(@"KeyLeftShift"),  @EC_LSHIFT,
-                    CMLoc(@"KeyRightShift"), @EC_RSHIFT,
-                    CMLoc(@"KeyCtrl"),       @EC_CTRL,
-                    CMLoc(@"KeyGraph"),      @EC_GRAPH,
-                    CMLoc(@"KeyCode"),       @EC_CODE,
-                    CMLoc(@"KeyTorike"),     @EC_TORIKE,
-                    CMLoc(@"KeyJikkou"),     @EC_JIKKOU,
-                    CMLoc(@"KeyCapsLock"),   @EC_CAPS,
-                    
-                    CMLoc(@"KeyCursorLeft"),  @EC_LEFT,
-                    CMLoc(@"KeyCursorUp"),    @EC_UP,
-                    CMLoc(@"KeyCursorRight"), @EC_RIGHT,
-                    CMLoc(@"KeyCursorDown"),  @EC_DOWN,
-                    
-                    @"F1", @EC_F1,
-                    @"F2", @EC_F2,
-                    @"F3", @EC_F3,
-                    @"F4", @EC_F4,
-                    @"F5", @EC_F5,
-                    
-                    @"*", @EC_NUMMUL,
-                    @"+", @EC_NUMADD,
-                    @"/", @EC_NUMDIV,
-                    @"-", @EC_NUMSUB,
-                    @".", @EC_NUMPER,
-                    @",", @EC_NUMCOM,
-                    @"0", @EC_NUM0,
-                    @"1", @EC_NUM1,
-                    @"2", @EC_NUM2,
-                    @"3", @EC_NUM3,
-                    @"4", @EC_NUM4,
-                    @"5", @EC_NUM5,
-                    @"6", @EC_NUM6,
-                    @"7", @EC_NUM7,
-                    @"8", @EC_NUM8,
-                    @"9", @EC_NUM9,
-                    
-                    CMLoc(@"KeyEscape"),    @EC_ESC,
-                    CMLoc(@"KeyTab"),       @EC_TAB,
-                    CMLoc(@"KeyStop"),      @EC_STOP,
-                    CMLoc(@"KeyCls"),       @EC_CLS,
-                    CMLoc(@"KeySelect"),    @EC_SELECT,
-                    CMLoc(@"KeyInsert"),    @EC_INS,
-                    CMLoc(@"KeyDelete"),    @EC_DEL,
-                    CMLoc(@"KeyBackspace"), @EC_BKSPACE,
-                    CMLoc(@"KeyReturn"),    @EC_RETURN,
-                    CMLoc(@"KeySpace"),     @EC_SPACE,
-                    CMLoc(@"KeyPrint"),     @EC_PRINT,
-                    CMLoc(@"KeyPause"),     @EC_PAUSE,
-                    
-                    CMLoc(@"JoyButtonOne"), @EC_JOY1_BUTTON1,
-                    CMLoc(@"JoyButtonTwo"), @EC_JOY1_BUTTON2,
-                    CMLoc(@"JoyUp"),        @EC_JOY1_UP,
-                    CMLoc(@"JoyDown"),      @EC_JOY1_DOWN,
-                    CMLoc(@"JoyLeft"),      @EC_JOY1_LEFT,
-                    CMLoc(@"JoyRight"),     @EC_JOY1_RIGHT,
-                    
-                    CMLoc(@"JoyButtonOne"), @EC_JOY2_BUTTON1,
-                    CMLoc(@"JoyButtonTwo"), @EC_JOY2_BUTTON2,
-                    CMLoc(@"JoyUp"),        @EC_JOY2_UP,
-                    CMLoc(@"JoyDown"),      @EC_JOY2_DOWN,
-                    CMLoc(@"JoyLeft"),      @EC_JOY2_LEFT,
-                    CMLoc(@"JoyRight"),     @EC_JOY2_RIGHT,
-                    
-                    nil];
-    
-    NSMutableDictionary *euroLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                       CMMakeMsxKeyInfo(@"`", @"~"), @EC_RBRACK,
-                                       CMMakeMsxKeyInfo(@"1", @"!"), @EC_1,
-                                       CMMakeMsxKeyInfo(@"2", @"@"), @EC_2,
-                                       CMMakeMsxKeyInfo(@"3", @"#"), @EC_3,
-                                       CMMakeMsxKeyInfo(@"4", @"$"), @EC_4,
-                                       CMMakeMsxKeyInfo(@"5", @"%"), @EC_5,
-                                       CMMakeMsxKeyInfo(@"6", @"^"), @EC_6,
-                                       CMMakeMsxKeyInfo(@"7", @"&"), @EC_7,
-                                       CMMakeMsxKeyInfo(@"8", @"*"), @EC_8,
-                                       CMMakeMsxKeyInfo(@"9", @"("), @EC_9,
-                                       CMMakeMsxKeyInfo(@"0", @")"), @EC_0,
-                                       CMMakeMsxKeyInfo(@"-", @"_"), @EC_NEG,
-                                       CMMakeMsxKeyInfo(@"=", @"+"), @EC_CIRCFLX,
-                                       
-                                       CMMakeMsxKeyInfo(@"q", @"Q"), @EC_Q,
-                                       CMMakeMsxKeyInfo(@"w", @"W"), @EC_W,
-                                       CMMakeMsxKeyInfo(@"e", @"E"), @EC_E,
-                                       CMMakeMsxKeyInfo(@"r", @"R"), @EC_R,
-                                       CMMakeMsxKeyInfo(@"t", @"T"), @EC_T,
-                                       CMMakeMsxKeyInfo(@"y", @"Y"), @EC_Y,
-                                       CMMakeMsxKeyInfo(@"u", @"U"), @EC_U,
-                                       CMMakeMsxKeyInfo(@"i", @"I"), @EC_I,
-                                       CMMakeMsxKeyInfo(@"o", @"O"), @EC_O,
-                                       CMMakeMsxKeyInfo(@"p", @"P"), @EC_P,
-                                       CMMakeMsxKeyInfo(@"[", @"{"), @EC_AT,
-                                       CMMakeMsxKeyInfo(@"]", @"}"), @EC_LBRACK,
-                                       
-                                       CMMakeMsxKeyInfo(@"a", @"A"), @EC_A,
-                                       CMMakeMsxKeyInfo(@"s", @"S"), @EC_S,
-                                       CMMakeMsxKeyInfo(@"d", @"D"), @EC_D,
-                                       CMMakeMsxKeyInfo(@"f", @"F"), @EC_F,
-                                       CMMakeMsxKeyInfo(@"g", @"G"), @EC_G,
-                                       CMMakeMsxKeyInfo(@"h", @"H"), @EC_H,
-                                       CMMakeMsxKeyInfo(@"j", @"J"), @EC_J,
-                                       CMMakeMsxKeyInfo(@"k", @"K"), @EC_K,
-                                       CMMakeMsxKeyInfo(@"l", @"L"), @EC_L,
-                                       CMMakeMsxKeyInfo(@";", @":"), @EC_SEMICOL,
-                                       CMMakeMsxKeyInfo(@"'", @"\""), @EC_COLON,
-                                       CMMakeMsxKeyInfo(@"\\", @"|"), @EC_BKSLASH,
-                                       
-                                       CMMakeMsxKeyInfo(@"z", @"Z"), @EC_Z,
-                                       CMMakeMsxKeyInfo(@"x", @"X"), @EC_X,
-                                       CMMakeMsxKeyInfo(@"c", @"C"), @EC_C,
-                                       CMMakeMsxKeyInfo(@"v", @"V"), @EC_V,
-                                       CMMakeMsxKeyInfo(@"b", @"B"), @EC_B,
-                                       CMMakeMsxKeyInfo(@"n", @"N"), @EC_N,
-                                       CMMakeMsxKeyInfo(@"m", @"M"), @EC_M,
-                                       CMMakeMsxKeyInfo(@",", @"<"), @EC_COMMA,
-                                       CMMakeMsxKeyInfo(@".", @">"), @EC_PERIOD,
-                                       CMMakeMsxKeyInfo(@"/", @"?"), @EC_DIV,
-                                       CMMakeMsxKeyInfo(@"`", @"'"), @EC_UNDSCRE,
-                                       
-                                       nil];
-    
-    NSMutableDictionary *brazilianLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                            CMMakeMsxKeyInfo(@"ç", @"Ç"), @EC_RBRACK,
-                                            CMMakeMsxKeyInfo(@"1", @"!"), @EC_1,
-                                            CMMakeMsxKeyInfo(@"2", @"\""), @EC_2,
-                                            CMMakeMsxKeyInfo(@"3", @"#"), @EC_3,
-                                            CMMakeMsxKeyInfo(@"4", @"$"), @EC_4,
-                                            CMMakeMsxKeyInfo(@"5", @"%"), @EC_5,
-                                            CMMakeMsxKeyInfo(@"6", @"^"), @EC_6,
-                                            CMMakeMsxKeyInfo(@"7", @"&"), @EC_7,
-                                            CMMakeMsxKeyInfo(@"8", @"'"), @EC_8,
-                                            CMMakeMsxKeyInfo(@"9", @"("), @EC_9,
-                                            CMMakeMsxKeyInfo(@"0", @")"), @EC_0,
-                                            CMMakeMsxKeyInfo(@"-", @"_"), @EC_NEG,
-                                            CMMakeMsxKeyInfo(@"=", @"+"), @EC_CIRCFLX,
-                                            
-                                            CMMakeMsxKeyInfo(@"q", @"Q"), @EC_Q,
-                                            CMMakeMsxKeyInfo(@"w", @"W"), @EC_W,
-                                            CMMakeMsxKeyInfo(@"e", @"E"), @EC_E,
-                                            CMMakeMsxKeyInfo(@"r", @"R"), @EC_R,
-                                            CMMakeMsxKeyInfo(@"t", @"T"), @EC_T,
-                                            CMMakeMsxKeyInfo(@"y", @"Y"), @EC_Y,
-                                            CMMakeMsxKeyInfo(@"u", @"U"), @EC_U,
-                                            CMMakeMsxKeyInfo(@"i", @"I"), @EC_I,
-                                            CMMakeMsxKeyInfo(@"o", @"O"), @EC_O,
-                                            CMMakeMsxKeyInfo(@"p", @"P"), @EC_P,
-                                            CMMakeMsxKeyInfo(@"'", @"`"), @EC_AT,
-                                            CMMakeMsxKeyInfo(@"[", @"]"), @EC_LBRACK,
-                                            
-                                            CMMakeMsxKeyInfo(@"a", @"A"), @EC_A,
-                                            CMMakeMsxKeyInfo(@"s", @"S"), @EC_S,
-                                            CMMakeMsxKeyInfo(@"d", @"D"), @EC_D,
-                                            CMMakeMsxKeyInfo(@"f", @"F"), @EC_F,
-                                            CMMakeMsxKeyInfo(@"g", @"G"), @EC_G,
-                                            CMMakeMsxKeyInfo(@"h", @"H"), @EC_H,
-                                            CMMakeMsxKeyInfo(@"j", @"J"), @EC_J,
-                                            CMMakeMsxKeyInfo(@"k", @"K"), @EC_K,
-                                            CMMakeMsxKeyInfo(@"l", @"L"), @EC_L,
-                                            CMMakeMsxKeyInfo(@"~", @"^"), @EC_SEMICOL,
-                                            CMMakeMsxKeyInfo(@"*", @"@"), @EC_COLON,
-                                            CMMakeMsxKeyInfo(@"{", @"}"), @EC_BKSLASH,
-                                            
-                                            CMMakeMsxKeyInfo(@"z", @"Z"), @EC_Z,
-                                            CMMakeMsxKeyInfo(@"x", @"X"), @EC_X,
-                                            CMMakeMsxKeyInfo(@"c", @"C"), @EC_C,
-                                            CMMakeMsxKeyInfo(@"v", @"V"), @EC_V,
-                                            CMMakeMsxKeyInfo(@"b", @"B"), @EC_B,
-                                            CMMakeMsxKeyInfo(@"n", @"N"), @EC_N,
-                                            CMMakeMsxKeyInfo(@"m", @"M"), @EC_M,
-                                            CMMakeMsxKeyInfo(@",", @"<"), @EC_COMMA,
-                                            CMMakeMsxKeyInfo(@".", @">"), @EC_PERIOD,
-                                            CMMakeMsxKeyInfo(@";", @":"), @EC_DIV,
-                                            CMMakeMsxKeyInfo(@"/", @"?"), @EC_UNDSCRE,
-                                            
-                                            nil];
-    
-    NSMutableDictionary *estonianLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                           CMMakeMsxKeyInfo(@"^", @"~"), @EC_RBRACK,
-                                           CMMakeMsxKeyInfo(@"1", @"!"), @EC_1,
-                                           CMMakeMsxKeyInfo(@"2", @"\""), @EC_2,
-                                           CMMakeMsxKeyInfo(@"3", @"#"), @EC_3,
-                                           CMMakeMsxKeyInfo(@"4", @"$"), @EC_4,
-                                           CMMakeMsxKeyInfo(@"5", @"%"), @EC_5,
-                                           CMMakeMsxKeyInfo(@"6", @"&"), @EC_6,
-                                           CMMakeMsxKeyInfo(@"7", @"/"), @EC_7,
-                                           CMMakeMsxKeyInfo(@"8", @"("), @EC_8,
-                                           CMMakeMsxKeyInfo(@"9", @")"), @EC_9,
-                                           CMMakeMsxKeyInfo(@"0", @"="), @EC_0,
-                                           CMMakeMsxKeyInfo(@"+", @"?"), @EC_NEG,
-                                           CMMakeMsxKeyInfo(@"'", @"`"), @EC_CIRCFLX,
-                                           
-                                           CMMakeMsxKeyInfo(@"q", @"Q"), @EC_Q,
-                                           CMMakeMsxKeyInfo(@"w", @"W"), @EC_W,
-                                           CMMakeMsxKeyInfo(@"e", @"E"), @EC_E,
-                                           CMMakeMsxKeyInfo(@"r", @"R"), @EC_R,
-                                           CMMakeMsxKeyInfo(@"t", @"T"), @EC_T,
-                                           CMMakeMsxKeyInfo(@"y", @"Y"), @EC_Y,
-                                           CMMakeMsxKeyInfo(@"u", @"U"), @EC_U,
-                                           CMMakeMsxKeyInfo(@"i", @"I"), @EC_I,
-                                           CMMakeMsxKeyInfo(@"o", @"O"), @EC_O,
-                                           CMMakeMsxKeyInfo(@"p", @"P"), @EC_P,
-                                           CMMakeMsxKeyInfo(@"[", @"{"), @EC_AT,
-                                           CMMakeMsxKeyInfo(@"]", @"}"), @EC_LBRACK,
-                                           
-                                           CMMakeMsxKeyInfo(@"a", @"A"), @EC_A,
-                                           CMMakeMsxKeyInfo(@"s", @"S"), @EC_S,
-                                           CMMakeMsxKeyInfo(@"d", @"D"), @EC_D,
-                                           CMMakeMsxKeyInfo(@"f", @"F"), @EC_F,
-                                           CMMakeMsxKeyInfo(@"g", @"G"), @EC_G,
-                                           CMMakeMsxKeyInfo(@"h", @"H"), @EC_H,
-                                           CMMakeMsxKeyInfo(@"j", @"J"), @EC_J,
-                                           CMMakeMsxKeyInfo(@"k", @"K"), @EC_K,
-                                           CMMakeMsxKeyInfo(@"l", @"L"), @EC_L,
-                                           CMMakeMsxKeyInfo(@"\\", @"|"), @EC_SEMICOL,
-                                           CMMakeMsxKeyInfo(@"<", @">"), @EC_COLON,
-                                           CMMakeMsxKeyInfo(@"'", @"*"), @EC_BKSLASH,
-                                           
-                                           CMMakeMsxKeyInfo(@"z", @"Z"), @EC_Z,
-                                           CMMakeMsxKeyInfo(@"x", @"X"), @EC_X,
-                                           CMMakeMsxKeyInfo(@"c", @"C"), @EC_C,
-                                           CMMakeMsxKeyInfo(@"v", @"V"), @EC_V,
-                                           CMMakeMsxKeyInfo(@"b", @"B"), @EC_B,
-                                           CMMakeMsxKeyInfo(@"n", @"N"), @EC_N,
-                                           CMMakeMsxKeyInfo(@"m", @"M"), @EC_M,
-                                           CMMakeMsxKeyInfo(@",", @";"), @EC_COMMA,
-                                           CMMakeMsxKeyInfo(@".", @":"), @EC_PERIOD,
-                                           CMMakeMsxKeyInfo(@"-", @"_"), @EC_DIV,
-                                           CMMakeMsxKeyInfo(@" ", @" "), @EC_UNDSCRE, // None
-                                           
-                                           nil];
-    
-    NSMutableDictionary *frenchLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                         CMMakeMsxKeyInfo(@"#", @"£"), @EC_RBRACK,
-                                         CMMakeMsxKeyInfo(@"&", @"1"), @EC_1,
-                                         CMMakeMsxKeyInfo(@"é", @"2"), @EC_2,
-                                         CMMakeMsxKeyInfo(@"\"", @"3"), @EC_3,
-                                         CMMakeMsxKeyInfo(@"'", @"4"), @EC_4,
-                                         CMMakeMsxKeyInfo(@"(", @"5"), @EC_5,
-                                         CMMakeMsxKeyInfo(@"§", @"6"), @EC_6,
-                                         CMMakeMsxKeyInfo(@"è", @"7"), @EC_7,
-                                         CMMakeMsxKeyInfo(@"!", @"8"), @EC_8,
-                                         CMMakeMsxKeyInfo(@"ç", @"9"), @EC_9,
-                                         CMMakeMsxKeyInfo(@"à", @"0"), @EC_0,
-                                         CMMakeMsxKeyInfo(@")", @"º"), @EC_NEG,
-                                         CMMakeMsxKeyInfo(@"-", @"_"), @EC_CIRCFLX,
-                                         
-                                         CMMakeMsxKeyInfo(@"a", @"A"), @EC_Q,
-                                         CMMakeMsxKeyInfo(@"z", @"Z"), @EC_W,
-                                         CMMakeMsxKeyInfo(@"e", @"E"), @EC_E,
-                                         CMMakeMsxKeyInfo(@"r", @"R"), @EC_R,
-                                         CMMakeMsxKeyInfo(@"t", @"T"), @EC_T,
-                                         CMMakeMsxKeyInfo(@"y", @"Y"), @EC_Y,
-                                         CMMakeMsxKeyInfo(@"u", @"U"), @EC_U,
-                                         CMMakeMsxKeyInfo(@"i", @"I"), @EC_I,
-                                         CMMakeMsxKeyInfo(@"o", @"O"), @EC_O,
-                                         CMMakeMsxKeyInfo(@"p", @"P"), @EC_P,
-                                         CMMakeMsxKeyInfo(@"`", @"'"), @EC_AT,
-                                         CMMakeMsxKeyInfo(@"$", @"*"), @EC_LBRACK,
-                                         
-                                         CMMakeMsxKeyInfo(@"q", @"Q"), @EC_A,
-                                         CMMakeMsxKeyInfo(@"s", @"S"), @EC_S,
-                                         CMMakeMsxKeyInfo(@"d", @"D"), @EC_D,
-                                         CMMakeMsxKeyInfo(@"f", @"F"), @EC_F,
-                                         CMMakeMsxKeyInfo(@"g", @"G"), @EC_G,
-                                         CMMakeMsxKeyInfo(@"h", @"H"), @EC_H,
-                                         CMMakeMsxKeyInfo(@"j", @"J"), @EC_J,
-                                         CMMakeMsxKeyInfo(@"k", @"K"), @EC_K,
-                                         CMMakeMsxKeyInfo(@"l", @"L"), @EC_L,
-                                         CMMakeMsxKeyInfo(@"m", @"M"), @EC_SEMICOL,
-                                         CMMakeMsxKeyInfo(@"ù", @"%"), @EC_COLON,
-                                         CMMakeMsxKeyInfo(@"<", @">"), @EC_BKSLASH,
-                                         
-                                         CMMakeMsxKeyInfo(@"w", @"W"), @EC_Z,
-                                         CMMakeMsxKeyInfo(@"x", @"X"), @EC_X,
-                                         CMMakeMsxKeyInfo(@"c", @"C"), @EC_C,
-                                         CMMakeMsxKeyInfo(@"v", @"V"), @EC_V,
-                                         CMMakeMsxKeyInfo(@"b", @"B"), @EC_B,
-                                         CMMakeMsxKeyInfo(@"n", @"N"), @EC_N,
-                                         CMMakeMsxKeyInfo(@",", @"?"), @EC_M,
-                                         CMMakeMsxKeyInfo(@";", @"."), @EC_COMMA,
-                                         CMMakeMsxKeyInfo(@":", @"/"), @EC_PERIOD,
-                                         CMMakeMsxKeyInfo(@"=", @"+"), @EC_DIV,
-                                         CMMakeMsxKeyInfo(@" ", @" "), @EC_UNDSCRE, // None
-                                         
-                                         nil];
-    
-    NSMutableDictionary *germanLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                         CMMakeMsxKeyInfo(@"#", @"^"), @EC_RBRACK,
-                                         CMMakeMsxKeyInfo(@"1", @"!"), @EC_1,
-                                         CMMakeMsxKeyInfo(@"2", @"\""), @EC_2,
-                                         CMMakeMsxKeyInfo(@"3", @"§"), @EC_3,
-                                         CMMakeMsxKeyInfo(@"4", @"$"), @EC_4,
-                                         CMMakeMsxKeyInfo(@"5", @"%"), @EC_5,
-                                         CMMakeMsxKeyInfo(@"6", @"&"), @EC_6,
-                                         CMMakeMsxKeyInfo(@"7", @"/"), @EC_7,
-                                         CMMakeMsxKeyInfo(@"8", @"("), @EC_8,
-                                         CMMakeMsxKeyInfo(@"9", @")"), @EC_9,
-                                         CMMakeMsxKeyInfo(@"0", @"="), @EC_0,
-                                         CMMakeMsxKeyInfo(@"ß", @"?"), @EC_NEG,
-                                         CMMakeMsxKeyInfo(@"'", @"`"), @EC_CIRCFLX,
-                                         
-                                         CMMakeMsxKeyInfo(@"q", @"Q"), @EC_Q,
-                                         CMMakeMsxKeyInfo(@"w", @"W"), @EC_W,
-                                         CMMakeMsxKeyInfo(@"e", @"E"), @EC_E,
-                                         CMMakeMsxKeyInfo(@"r", @"R"), @EC_R,
-                                         CMMakeMsxKeyInfo(@"t", @"T"), @EC_T,
-                                         CMMakeMsxKeyInfo(@"z", @"Z"), @EC_Y,
-                                         CMMakeMsxKeyInfo(@"u", @"U"), @EC_U,
-                                         CMMakeMsxKeyInfo(@"i", @"I"), @EC_I,
-                                         CMMakeMsxKeyInfo(@"o", @"O"), @EC_O,
-                                         CMMakeMsxKeyInfo(@"p", @"P"), @EC_P,
-                                         CMMakeMsxKeyInfo(@"ü", @"Ü"), @EC_AT,
-                                         CMMakeMsxKeyInfo(@"+", @"*"), @EC_LBRACK,
-                                         
-                                         CMMakeMsxKeyInfo(@"a", @"A"), @EC_A,
-                                         CMMakeMsxKeyInfo(@"s", @"S"), @EC_S,
-                                         CMMakeMsxKeyInfo(@"d", @"D"), @EC_D,
-                                         CMMakeMsxKeyInfo(@"f", @"F"), @EC_F,
-                                         CMMakeMsxKeyInfo(@"g", @"G"), @EC_G,
-                                         CMMakeMsxKeyInfo(@"h", @"H"), @EC_H,
-                                         CMMakeMsxKeyInfo(@"j", @"J"), @EC_J,
-                                         CMMakeMsxKeyInfo(@"k", @"K"), @EC_K,
-                                         CMMakeMsxKeyInfo(@"l", @"L"), @EC_L,
-                                         CMMakeMsxKeyInfo(@"ö", @"Ö"), @EC_SEMICOL,
-                                         CMMakeMsxKeyInfo(@"ä", @"Ä"), @EC_COLON,
-                                         CMMakeMsxKeyInfo(@"<", @">"), @EC_BKSLASH,
-                                         
-                                         CMMakeMsxKeyInfo(@"y", @"Y"), @EC_Z,
-                                         CMMakeMsxKeyInfo(@"x", @"X"), @EC_X,
-                                         CMMakeMsxKeyInfo(@"c", @"C"), @EC_C,
-                                         CMMakeMsxKeyInfo(@"v", @"V"), @EC_V,
-                                         CMMakeMsxKeyInfo(@"b", @"B"), @EC_B,
-                                         CMMakeMsxKeyInfo(@"n", @"N"), @EC_N,
-                                         CMMakeMsxKeyInfo(@"m", @"M"), @EC_M,
-                                         CMMakeMsxKeyInfo(@",", @";"), @EC_COMMA,
-                                         CMMakeMsxKeyInfo(@".", @":"), @EC_PERIOD,
-                                         CMMakeMsxKeyInfo(@"-", @"_"), @EC_DIV,
-                                         CMMakeMsxKeyInfo(@" ", @" "), @EC_UNDSCRE, // None
-                                         
-                                         nil];
-    
-    NSMutableDictionary *japaneseLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                           CMMakeMsxKeyInfo(@"]", @"}"), @EC_RBRACK,
-                                           CMMakeMsxKeyInfo(@"1", @"!"), @EC_1,
-                                           CMMakeMsxKeyInfo(@"2", @"\""), @EC_2,
-                                           CMMakeMsxKeyInfo(@"3", @"#"), @EC_3,
-                                           CMMakeMsxKeyInfo(@"4", @"$"), @EC_4,
-                                           CMMakeMsxKeyInfo(@"5", @"%"), @EC_5,
-                                           CMMakeMsxKeyInfo(@"6", @"&"), @EC_6,
-                                           CMMakeMsxKeyInfo(@"7", @"'"), @EC_7,
-                                           CMMakeMsxKeyInfo(@"8", @"("), @EC_8,
-                                           CMMakeMsxKeyInfo(@"9", @")"), @EC_9,
-                                           CMMakeMsxKeyInfo(@"0", @" "), @EC_0,
-                                           CMMakeMsxKeyInfo(@"-", @"="), @EC_NEG,
-                                           CMMakeMsxKeyInfo(@"^", @"~"), @EC_CIRCFLX,
-                                           
-                                           CMMakeMsxKeyInfo(@"q", @"Q"), @EC_Q,
-                                           CMMakeMsxKeyInfo(@"w", @"W"), @EC_W,
-                                           CMMakeMsxKeyInfo(@"e", @"E"), @EC_E,
-                                           CMMakeMsxKeyInfo(@"r", @"R"), @EC_R,
-                                           CMMakeMsxKeyInfo(@"t", @"T"), @EC_T,
-                                           CMMakeMsxKeyInfo(@"y", @"Y"), @EC_Y,
-                                           CMMakeMsxKeyInfo(@"u", @"U"), @EC_U,
-                                           CMMakeMsxKeyInfo(@"i", @"I"), @EC_I,
-                                           CMMakeMsxKeyInfo(@"o", @"O"), @EC_O,
-                                           CMMakeMsxKeyInfo(@"p", @"P"), @EC_P,
-                                           CMMakeMsxKeyInfo(@"@", @"`"), @EC_AT,
-                                           CMMakeMsxKeyInfo(@"[", @"{"), @EC_LBRACK,
-                                           
-                                           CMMakeMsxKeyInfo(@"a", @"A"), @EC_A,
-                                           CMMakeMsxKeyInfo(@"s", @"S"), @EC_S,
-                                           CMMakeMsxKeyInfo(@"d", @"D"), @EC_D,
-                                           CMMakeMsxKeyInfo(@"f", @"F"), @EC_F,
-                                           CMMakeMsxKeyInfo(@"g", @"G"), @EC_G,
-                                           CMMakeMsxKeyInfo(@"h", @"H"), @EC_H,
-                                           CMMakeMsxKeyInfo(@"j", @"J"), @EC_J,
-                                           CMMakeMsxKeyInfo(@"k", @"K"), @EC_K,
-                                           CMMakeMsxKeyInfo(@"l", @"L"), @EC_L,
-                                           CMMakeMsxKeyInfo(@";", @"+"), @EC_SEMICOL,
-                                           CMMakeMsxKeyInfo(@":", @"*"), @EC_COLON,
-                                           CMMakeMsxKeyInfo(@"¥", @"|"), @EC_BKSLASH,
-                                           
-                                           CMMakeMsxKeyInfo(@"z", @"Z"), @EC_Z,
-                                           CMMakeMsxKeyInfo(@"x", @"X"), @EC_X,
-                                           CMMakeMsxKeyInfo(@"c", @"C"), @EC_C,
-                                           CMMakeMsxKeyInfo(@"v", @"V"), @EC_V,
-                                           CMMakeMsxKeyInfo(@"b", @"B"), @EC_B,
-                                           CMMakeMsxKeyInfo(@"n", @"N"), @EC_N,
-                                           CMMakeMsxKeyInfo(@"m", @"M"), @EC_M,
-                                           CMMakeMsxKeyInfo(@",", @"<"), @EC_COMMA,
-                                           CMMakeMsxKeyInfo(@".", @">"), @EC_PERIOD,
-                                           CMMakeMsxKeyInfo(@"/", @"?"), @EC_DIV,
-                                           CMMakeMsxKeyInfo(@" ", @"_"), @EC_UNDSCRE,
-                                           
-                                           nil];
-    
-    // Korean is the same as Japanese, except for the currency symbol
-    
-    NSMutableDictionary *koreanLayout = [[japaneseLayout mutableCopy] autorelease];
-    [koreanLayout setObject:CMMakeMsxKeyInfo(@"￦", @"|") forKey:@EC_BKSLASH];
-    
-    NSMutableDictionary *russianLayout = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                          CMMakeMsxKeyInfo(@">", @"."), @EC_RBRACK,
-                                          CMMakeMsxKeyInfo(@"+", @";"), @EC_1,
-                                          CMMakeMsxKeyInfo(@"!", @"1"), @EC_2,
-                                          CMMakeMsxKeyInfo(@"\"", @"2"), @EC_3,
-                                          CMMakeMsxKeyInfo(@"#", @"3"), @EC_4,
-                                          CMMakeMsxKeyInfo(@"Ȣ", @"4"), @EC_5,
-                                          CMMakeMsxKeyInfo(@"%", @"5"), @EC_6,
-                                          CMMakeMsxKeyInfo(@"&", @"6"), @EC_7,
-                                          CMMakeMsxKeyInfo(@"'", @"7"), @EC_8,
-                                          CMMakeMsxKeyInfo(@"(", @"8"), @EC_9,
-                                          CMMakeMsxKeyInfo(@")", @"9"), @EC_0,
-                                          CMMakeMsxKeyInfo(@"$", @"0"), @EC_NEG,
-                                          CMMakeMsxKeyInfo(@"=", @"_"), @EC_CIRCFLX,
-                                          
-                                          CMMakeMsxKeyInfo(@"j", @"J"), @EC_Q,
-                                          CMMakeMsxKeyInfo(@"c", @"C"), @EC_W,
-                                          CMMakeMsxKeyInfo(@"u", @"U"), @EC_E,
-                                          CMMakeMsxKeyInfo(@"k", @"K"), @EC_R,
-                                          CMMakeMsxKeyInfo(@"e", @"E"), @EC_T,
-                                          CMMakeMsxKeyInfo(@"n", @"N"), @EC_Y,
-                                          CMMakeMsxKeyInfo(@"g", @"G"), @EC_U,
-                                          CMMakeMsxKeyInfo(@"[", @"{"), @EC_I,
-                                          CMMakeMsxKeyInfo(@"]", @"}"), @EC_O,
-                                          CMMakeMsxKeyInfo(@"z", @"Z"), @EC_P,
-                                          CMMakeMsxKeyInfo(@"h", @"H"), @EC_AT,
-                                          CMMakeMsxKeyInfo(@"*", @":"), @EC_LBRACK,
-                                          
-                                          CMMakeMsxKeyInfo(@"f", @"F"), @EC_A,
-                                          CMMakeMsxKeyInfo(@"y", @"Y"), @EC_S,
-                                          CMMakeMsxKeyInfo(@"w", @"W"), @EC_D,
-                                          CMMakeMsxKeyInfo(@"a", @"A"), @EC_F,
-                                          CMMakeMsxKeyInfo(@"p", @"P"), @EC_G,
-                                          CMMakeMsxKeyInfo(@"r", @"R"), @EC_H,
-                                          CMMakeMsxKeyInfo(@"o", @"O"), @EC_J,
-                                          CMMakeMsxKeyInfo(@"l", @"L"), @EC_K,
-                                          CMMakeMsxKeyInfo(@"d", @"D"), @EC_L,
-                                          CMMakeMsxKeyInfo(@"v", @"V"), @EC_SEMICOL,
-                                          CMMakeMsxKeyInfo(@"\\", @"\\"), @EC_COLON,
-                                          CMMakeMsxKeyInfo(@"-", @"^"), @EC_BKSLASH,
-                                          
-                                          CMMakeMsxKeyInfo(@"q", @"Q"), @EC_Z,
-                                          CMMakeMsxKeyInfo(@"|", @"~"), @EC_X,
-                                          CMMakeMsxKeyInfo(@"s", @"S"), @EC_C,
-                                          CMMakeMsxKeyInfo(@"m", @"M"), @EC_V,
-                                          CMMakeMsxKeyInfo(@"i", @"I"), @EC_B,
-                                          CMMakeMsxKeyInfo(@"t", @"T"), @EC_N,
-                                          CMMakeMsxKeyInfo(@"x", @"X"), @EC_M,
-                                          CMMakeMsxKeyInfo(@"b", @"B"), @EC_COMMA,
-                                          CMMakeMsxKeyInfo(@"@", @" "), @EC_PERIOD,
-                                          CMMakeMsxKeyInfo(@"<", @","), @EC_DIV,
-                                          CMMakeMsxKeyInfo(@"?", @"/"), @EC_UNDSCRE,
-                                          
-                                          nil];
-    
-    // Spanish is mostly the same as European
-    
-    NSMutableDictionary *spanishLayout = [[euroLayout mutableCopy] autorelease];
-    [spanishLayout setObject:CMMakeMsxKeyInfo(@";", @":") forKey:@EC_RBRACK];
-    [spanishLayout setObject:CMMakeMsxKeyInfo(@"ñ", @"Ñ") forKey:@EC_SEMICOL];
-    [spanishLayout setObject:CMMakeMsxKeyInfo(@"'", @"~") forKey:@EC_SEMICOL];
-    
-    // Swedish is mostly the same as German
-    
-    NSMutableDictionary *swedishLayout = [[germanLayout mutableCopy] autorelease];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"'", @"*") forKey:@EC_RBRACK];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"3", @"#") forKey:@EC_3];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"+", @"?") forKey:@EC_NEG];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"é", @"É") forKey:@EC_CIRCFLX];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"y", @"Y") forKey:@EC_Y];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"å", @"Å") forKey:@EC_AT];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"ü", @"Ü") forKey:@EC_LBRACK];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"z", @"Z") forKey:@EC_Z];
-    [swedishLayout setObject:CMMakeMsxKeyInfo(@"'", @"`") forKey:@EC_UNDSCRE];
-    
-    typewriterLayouts = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                         euroLayout, @CMKeyLayoutArabic,
-                         brazilianLayout, @CMKeyLayoutBrazilian,
-                         estonianLayout, @CMKeyLayoutEstonian,
-                         frenchLayout, @CMKeyLayoutFrench,
-                         germanLayout, @CMKeyLayoutGerman,
-                         euroLayout, @CMKeyLayoutEuropean,
-                         japaneseLayout, @CMKeyLayoutJapanese,
-                         koreanLayout, @CMKeyLayoutKorean,
-                         russianLayout, @CMKeyLayoutRussian,
-                         spanishLayout, @CMKeyLayoutSpanish,
-                         swedishLayout, @CMKeyLayoutSwedish,
-                         nil];
 }
 
 - (id)init
@@ -1394,8 +232,8 @@ static NSDictionary *machineLayoutMap = nil;
         keysDown = [[NSMutableSet alloc] init];
         keysToPaste = [[NSMutableArray alloc] init];
         
-        virtualCodeOfPressedKey = CMKeyNoCode;
-        keyPressTime = 0;
+        _keyCombinationToAutoPress = nil;
+        timeOfAutoPress = 0;
         
         [self resetState];
     }
@@ -1410,6 +248,8 @@ static NSDictionary *machineLayoutMap = nil;
     
     [keyLock release];
     [keysToPasteLock release];
+    
+    [self setKeyCombinationToAutoPress:nil];
     
     [super dealloc];
 }
@@ -1477,23 +317,19 @@ static NSDictionary *machineLayoutMap = nil;
                       isDown:(([event modifierFlags] & CMRightCommandKeyMask) == CMRightCommandKeyMask)];
     else if ([event keyCode] == CMKeyCapsLock)
     {
-        // FIXME: caps lock state is broken
-        // Caps Lock has no up/down - just toggle state
+        // Mac Caps Lock has no up/down. When it's pressed, auto-press the key
+        // (it will be released automatically)
         
         CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:[event keyCode]];
         NSInteger virtualCode = [[theEmulator keyboardLayout] virtualCodeForInputMethod:input];
         
         if (virtualCode != CMUnknownVirtualCode)
         {
-            NSNumber *virtualCodeObject = @(virtualCode);
+            CMMSXKeyCombination *keyCombination = [CMMSXKeyCombination combinationWithVirtualCode:virtualCode
+                                                                                 stateFlags:CMMSXKeyStateDefault];
             
-            @synchronized (keyLock)
-            {
-                if ([keysDown containsObject:virtualCodeObject])
-                    [keysDown removeObject:virtualCodeObject];
-                else
-                    [keysDown addObject:virtualCodeObject];
-            }
+            [self setKeyCombinationToAutoPress:keyCombination];
+            timeOfAutoPress = [NSDate timeIntervalSinceReferenceDate];
         }
     }
     
@@ -1510,38 +346,33 @@ static NSDictionary *machineLayoutMap = nil;
 #pragma mark - Public methods
 
 - (BOOL)pasteText:(NSString *)text
-      keyLayoutId:(NSInteger)keyLayoutId
+      keyLayoutId:(CMMSXKeyboardLayout)keyLayoutId
 {
-    NSMutableDictionary *keyLayout = [typewriterLayouts objectForKey:@(keyLayoutId)];
-    if (!keyLayout)
+    CMMSXKeyboard *keyboardLayout = [CMMSXKeyboard keyboardWithLayout:keyLayoutId];
+    if (!keyboardLayout)
         return NO; // Invalid key layout
     
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
     
-    NSMutableArray *textAsMsxCodes = [NSMutableArray array];
+    NSMutableArray *textAsKeyCombinations = [NSMutableArray array];
     for (int i = 0, n = [text length]; i < n; i++)
     {
         NSString *character = [text substringWithRange:NSMakeRange(i, 1)];
+        CMMSXKeyCombination *keyCombination = [keyboardLayout keyCombinationForCharacter:character];
         
-        [keyLayout enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
-        {
-            if ([obj isEqual:character])
-            {
-                [textAsMsxCodes addObject:key];
-                *stop = YES;
-            }
-        }];
+        if (keyCombination)
+            [textAsKeyCombinations addObject:keyCombination];
     }
     
 #ifdef DEBUG
-    NSLog(@"Pasting %ld keys", [textAsMsxCodes count]);
+    NSLog(@"Pasting %ld keys", [textAsKeyCombinations count]);
 #endif
     
     @synchronized(keysToPasteLock)
     {
-        [keysToPaste addObjectsFromArray:textAsMsxCodes];
+        [keysToPaste addObjectsFromArray:textAsKeyCombinations];
     }
     
 #ifdef DEBUG
@@ -1559,19 +390,9 @@ static NSDictionary *machineLayoutMap = nil;
     {
         [keysDown removeAllObjects];
     }
-    
-    // Clear the paste queue
-    @synchronized (keysToPasteLock)
-    {
-        [keysToPaste removeAllObjects];
-    }
-    
-    // Clear currently held keys
-    virtualCodeOfPressedKey = CMKeyNoCode;
-    keyPressTime = 0;
 }
 
-- (BOOL)areAnyKeysDown
+- (BOOL)isAnyKeyDown
 {
     @synchronized(keyLock)
     {
@@ -1582,6 +403,18 @@ static NSDictionary *machineLayoutMap = nil;
 - (void)resetState
 {
     [self releaseAllKeys];
+    
+    // Clear the paste queue
+    @synchronized (keysToPasteLock)
+    {
+        [keysToPaste removeAllObjects];
+    }
+    
+    // Clear currently held keys
+    [self setKeyCombinationToAutoPress:nil];
+    timeOfAutoPress = 0;
+    
+    pollCounter = 0;
 }
 
 - (void)setEmulatorHasFocus:(BOOL)focus
@@ -1592,7 +425,7 @@ static NSDictionary *machineLayoutMap = nil;
         NSLog(@"CocoaKeyboard: -Focus");
 #endif
         // Emulator has lost focus - release all virtual keys
-        [self resetState];
+        [self releaseAllKeys];
     }
     else
     {
@@ -1600,32 +433,6 @@ static NSDictionary *machineLayoutMap = nil;
         NSLog(@"CocoaKeyboard: +Focus");
 #endif
     }
-}
-
-- (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode
-                           shiftState:(NSInteger)shiftState
-                             layoutId:(NSInteger)layoutId
-{
-    // Check the list of static keys
-    NSString *staticKeyLabel = [staticLayout objectForKey:@(virtualCode)];
-    if (staticKeyLabel)
-        return staticKeyLabel;
-    
-    // Check the typewriter keys
-    NSMutableDictionary *layout = [typewriterLayouts objectForKey:@(layoutId)];
-    if (layout)
-    {
-        CMMsxKeyInfo *keyInfo = [layout objectForKey:@(virtualCode)];
-        if (keyInfo)
-        {
-            if (shiftState == CMKeyShiftStateNormal)
-                return [keyInfo defaultStateLabel];
-            else if (shiftState == CMKeyShiftStateShifted)
-                return [keyInfo shiftedStateLabel];
-        }
-    }
-    
-    return nil;
 }
 
 + (NSInteger)compareKeysByOrderOfAppearance:(NSNumber *)one
@@ -1767,31 +574,6 @@ static NSDictionary *machineLayoutMap = nil;
     }
 }
 
-+ (NSInteger)layoutIdForMachineIdentifier:(NSString *)machineId
-{
-    __block NSInteger machineLayoutId = 0;
-    
-    [machineLayoutMap enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
-    {
-        NSNumber *layoutId = key;
-        NSArray *machineIds = obj;
-        
-        [machineIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-        {
-            if ([machineId isEqualToString:obj])
-            {
-                machineLayoutId = [layoutId integerValue];
-                *stop = YES;
-            }
-        }];
-        
-        if (machineLayoutId != 0)
-            *stop = YES;
-    }];
-    
-    return (machineLayoutId == 0) ? CMKeyLayoutDefault : machineLayoutId;
-}
-
 - (NSString *)nameForCategory:(NSInteger)category
 {
     switch (category)
@@ -1850,6 +632,8 @@ static NSDictionary *machineLayoutMap = nil;
 
 - (void)updateKeyboardState
 {
+    pollCounter++;
+    
     // Reset the key matrix
     inputEventReset();
     
@@ -1867,7 +651,7 @@ static NSDictionary *machineLayoutMap = nil;
     }];
     
     NSTimeInterval timeNow = [NSDate timeIntervalSinceReferenceDate];
-    NSTimeInterval autoKeyPressInterval = timeNow - keyPressTime;
+    NSTimeInterval autoKeyPressInterval = timeNow - timeOfAutoPress;
     BOOL autoKeypressExpired = autoKeyPressInterval > CMAutoPressTotalTimeSeconds;
     
     // Check the paste queue, if there are no pending auto-keypresses
@@ -1875,30 +659,31 @@ static NSDictionary *machineLayoutMap = nil;
     {
         @synchronized(keysToPasteLock)
         {
-            virtualCodeOfPressedKey = [[keysToPaste objectAtIndex:0] integerValue];
+            [self setKeyCombinationToAutoPress:[keysToPaste objectAtIndex:0]];
             [keysToPaste removeObjectAtIndex:0];
         }
         
-        keyPressTime = timeNow;
+        timeOfAutoPress = timeNow;
         
         autoKeypressExpired = NO;
     }
     
     // Check for programmatically depressed keys
-    if (virtualCodeOfPressedKey != CMKeyNoCode)
+    if ([self keyCombinationToAutoPress])
     {
         // A key is programmatically depressed
         if (autoKeypressExpired)
         {
             // Keypress has expired - release it
-            virtualCodeOfPressedKey = CMKeyNoCode;
-            keyPressTime = 0;
+            [self setKeyCombinationToAutoPress:nil];
+            timeOfAutoPress = 0;
         }
-        else if (autoKeyPressInterval < CMAutoPressHoldTimeSeconds)
+        else if (autoKeyPressInterval < CMAutoPressHoldDuration)
         {
-            // Simulate keypress, but only if we haven't passed the hold time
-            // threshold
-            inputEventSet(virtualCodeOfPressedKey);
+            if ([[self keyCombinationToAutoPress] stateFlags] & CMMSXKeyStateShift)
+                inputEventSet(EC_LSHIFT);
+            
+            inputEventSet([[self keyCombinationToAutoPress] virtualCode]);
         }
     }
 }

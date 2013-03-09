@@ -31,6 +31,7 @@
 #import "MGScopeBar.h"
 #import "SBJson.h"
 
+#import "CMMSXJoystick.h"
 #import "CMKeyboardInput.h"
 #import "CMMachine.h"
 
@@ -285,8 +286,8 @@
                                withLayout:[[self emulator] joystickTwoLayout]];
     
     // Scope Bar
-    [keyboardScopeBar setSelected:YES forItem:@CMKeyShiftStateNormal inGroup:SCOPEBAR_GROUP_SHIFTED];
-    [keyboardScopeBar setSelected:YES forItem:@CMKeyLayoutEuropean inGroup:SCOPEBAR_GROUP_REGIONS];
+    [keyboardScopeBar setSelected:YES forItem:@(CMMSXKeyStateDefault)  inGroup:SCOPEBAR_GROUP_SHIFTED];
+    [keyboardScopeBar setSelected:YES forItem:@(CMMSXKeyboardEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
     
     [self synchronizeSettings];
     
@@ -387,7 +388,7 @@
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
     
     [keyboardScopeBar setSelected:YES
-                          forItem:@([CMCocoaKeyboard layoutIdForMachineIdentifier:[selected machineId]])
+                          forItem:@([CMMSXKeyboard layoutOfMachineWithIdentifier:[selected machineId]])
                           inGroup:SCOPEBAR_GROUP_REGIONS];
 }
 
@@ -1229,9 +1230,21 @@
         
         if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"])
         {
-            return [self.emulator.keyboard inputNameForVirtualCode:virtualCode
-                                                        shiftState:selectedKeyboardShiftState
-                                                          layoutId:selectedKeyboardRegion];
+            if (outlineView != keyboardLayoutEditor)
+            {
+                CMMSXJoystick *joystick = [CMMSXJoystick joystickWithLayout:CMMSXJoystickTwoButton];
+                if (joystick)
+                    return [joystick presentationLabelForVirtualCode:virtualCode];
+            }
+            else
+            {
+                CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayout:selectedKeyboardRegion];
+                if (keyboard)
+                    return [keyboard presentationLabelForVirtualCode:virtualCode
+                                                            keyState:selectedKeyboardShiftState];
+            }
+            
+            return nil;
         }
         else if ([[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"])
         {
@@ -1401,23 +1414,23 @@
         if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
         {
             return [NSArray arrayWithObjects:
-                    @CMKeyShiftStateNormal,
-                    @CMKeyShiftStateShifted, nil];
+                    @(CMMSXKeyStateDefault),
+                    @(CMMSXKeyStateShift), nil];
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
             return [NSArray arrayWithObjects:
-                    @CMKeyLayoutArabic,
-                    @CMKeyLayoutBrazilian,
-                    @CMKeyLayoutEstonian,
-                    @CMKeyLayoutEuropean,
-                    @CMKeyLayoutFrench,
-                    @CMKeyLayoutGerman,
-                    @CMKeyLayoutJapanese,
-                    @CMKeyLayoutKorean,
-                    @CMKeyLayoutRussian,
-                    @CMKeyLayoutSpanish,
-                    @CMKeyLayoutSwedish, nil];
+                    @(CMMSXKeyboardArabic),
+                    @(CMMSXKeyboardBrazilian),
+                    @(CMMSXKeyboardEstonian),
+                    @(CMMSXKeyboardEuropean),
+                    @(CMMSXKeyboardFrench),
+                    @(CMMSXKeyboardGerman),
+                    @(CMMSXKeyboardJapanese),
+                    @(CMMSXKeyboardKorean),
+                    @(CMMSXKeyboardRussian),
+                    @(CMMSXKeyboardSpanish),
+                    @(CMMSXKeyboardSwedish), nil];
         }
     }
     else if (theScopeBar == machineScopeBar)
@@ -1453,38 +1466,38 @@
     {
         if (groupNumber == SCOPEBAR_GROUP_SHIFTED)
         {
-            NSInteger shiftState = [identifier integerValue];
+            CMMSXKeyState shiftState = [identifier integerValue];
             
-            if (shiftState == CMKeyShiftStateNormal)
+            if (shiftState == CMMSXKeyStateDefault)
                 return CMLoc(@"KeyStateNormal");
-            if (shiftState == CMKeyShiftStateShifted)
+            if (shiftState == CMMSXKeyStateShift)
                 return CMLoc(@"KeyStateShifted");
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
-            NSInteger layoutId = [identifier integerValue];
+            CMMSXKeyboardLayout layoutId = [identifier integerValue];
             
-            if (layoutId == CMKeyLayoutArabic)
+            if (layoutId == CMMSXKeyboardArabic)
                 return CMLoc(@"MsxKeyLayoutArabic");
-            if (layoutId == CMKeyLayoutBrazilian)
+            if (layoutId == CMMSXKeyboardBrazilian)
                 return CMLoc(@"MsxKeyLayoutBrazilian");
-            if (layoutId == CMKeyLayoutEstonian)
+            if (layoutId == CMMSXKeyboardEstonian)
                 return CMLoc(@"MsxKeyLayoutEstonian");
-            if (layoutId == CMKeyLayoutEuropean)
+            if (layoutId == CMMSXKeyboardEuropean)
                 return CMLoc(@"MsxKeyLayoutEuropean");
-            if (layoutId == CMKeyLayoutFrench)
+            if (layoutId == CMMSXKeyboardFrench)
                 return CMLoc(@"MsxKeyLayoutFrench");
-            if (layoutId == CMKeyLayoutGerman)
+            if (layoutId == CMMSXKeyboardGerman)
                 return CMLoc(@"MsxKeyLayoutGerman");
-            if (layoutId == CMKeyLayoutJapanese)
+            if (layoutId == CMMSXKeyboardJapanese)
                 return CMLoc(@"MsxKeyLayoutJapanese");
-            if (layoutId == CMKeyLayoutKorean)
+            if (layoutId == CMMSXKeyboardKorean)
                 return CMLoc(@"MsxKeyLayoutKorean");
-            if (layoutId == CMKeyLayoutRussian)
+            if (layoutId == CMMSXKeyboardRussian)
                 return CMLoc(@"MsxKeyLayoutRussian");
-            if (layoutId == CMKeyLayoutSpanish)
+            if (layoutId == CMMSXKeyboardSpanish)
                 return CMLoc(@"MsxKeyLayoutSpanish");
-            if (layoutId == CMKeyLayoutSwedish)
+            if (layoutId == CMMSXKeyboardSwedish)
                 return CMLoc(@"MsxKeyLayoutSwedish");
         }
     }

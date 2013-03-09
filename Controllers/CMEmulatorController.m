@@ -1046,7 +1046,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     NSString *text = [pasteBoard stringForType:NSPasteboardTypeString];
     
     NSString *runningMachineId = [self runningMachineConfiguration];
-    NSInteger layoutId = [CMCocoaKeyboard layoutIdForMachineIdentifier:runningMachineId];
+    NSInteger layoutId = [CMMSXKeyboard layoutOfMachineWithIdentifier:runningMachineId];
     
     [[self keyboard] pasteText:text keyLayoutId:layoutId];
 }

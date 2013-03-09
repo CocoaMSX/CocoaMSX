@@ -22,18 +22,7 @@
  */
 #import <Foundation/Foundation.h>
 
-#define CMKeyLayoutDefault      0x04 // Use EU by default
-#define CMKeyLayoutArabic       0x01
-#define CMKeyLayoutBrazilian    0x02
-#define CMKeyLayoutEstonian     0x03
-#define CMKeyLayoutEuropean     0x04
-#define CMKeyLayoutFrench       0x05
-#define CMKeyLayoutGerman       0x06
-#define CMKeyLayoutJapanese     0x07
-#define CMKeyLayoutKorean       0x08
-#define CMKeyLayoutRussian      0x09
-#define CMKeyLayoutSpanish      0x10
-#define CMKeyLayoutSwedish      0x11
+#import "CMMSXKeyboard.h"
 
 #define CMKeyCategoryTypewriterRowOne   1
 #define CMKeyCategoryTypewriterRowTwo   2
@@ -47,20 +36,22 @@
 #define CMKeyCategoryJoyDirections     10
 #define CMKeyCategoryJoyButtons        11
 
-#define CMKeyShiftStateNormal  0
-#define CMKeyShiftStateShifted 1
-
 @interface CMCocoaKeyboard : NSObject
 {
+    CMMSXKeyCombination *_keyCombinationToAutoPress;
+    
+    NSUInteger pollCounter;
+    
     NSObject *keyLock;
     NSObject *keysToPasteLock;
     
     NSMutableSet *keysDown;
     NSMutableArray *keysToPaste;
     
-    NSInteger virtualCodeOfPressedKey;
-    NSTimeInterval keyPressTime;
+    NSTimeInterval timeOfAutoPress;
 }
+
+@property (nonatomic, retain) CMMSXKeyCombination *keyCombinationToAutoPress;
 
 - (void)setEmulatorHasFocus:(BOOL)focus;
 
@@ -70,16 +61,12 @@
 - (void)resetState;
 
 - (BOOL)pasteText:(NSString *)text
-      keyLayoutId:(NSInteger)keyLayoutId;
+      keyLayoutId:(CMMSXKeyboardLayout)keyLayoutId;
 
-- (BOOL)areAnyKeysDown;
+- (BOOL)isAnyKeyDown;
 - (void)releaseAllKeys;
 
-- (NSString *)inputNameForVirtualCode:(NSUInteger)virtualCode
-                           shiftState:(NSInteger)shiftState
-                             layoutId:(NSInteger)layoutId;
 - (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode;
-+ (NSInteger)layoutIdForMachineIdentifier:(NSString *)machineId;
 - (NSString *)nameForCategory:(NSInteger)category;
 + (NSInteger)compareKeysByOrderOfAppearance:(NSNumber *)one
                                  keyCodeTwo:(NSNumber *)two;

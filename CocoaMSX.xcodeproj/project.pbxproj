@@ -343,6 +343,8 @@
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
+		FEA6E8A416EB0A2800A580CF /* CMMSXKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */; };
+		FEA6E8A716EB223100A580CF /* CMMSXJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A616EB223100A580CF /* CMMSXJoystick.m */; };
 		FEA8BF1016A01007006E67D2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
@@ -1071,6 +1073,10 @@
 		FEA4548C1679B65300AAECB7 /* DiskDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DiskDocument.icns; sourceTree = "<group>"; };
 		FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CassetteDocument.icns; sourceTree = "<group>"; };
 		FEA6277A16A0CAD70048C05C /* cbios.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cbios.txt; sourceTree = "<group>"; };
+		FEA6E8A216EB0A2800A580CF /* CMMSXKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMSXKeyboard.h; sourceTree = "<group>"; };
+		FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMSXKeyboard.m; sourceTree = "<group>"; };
+		FEA6E8A516EB223100A580CF /* CMMSXJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMSXJoystick.h; sourceTree = "<group>"; };
+		FEA6E8A616EB223100A580CF /* CMMSXJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMSXJoystick.m; sourceTree = "<group>"; };
 		FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputDeviceLayout.h; sourceTree = "<group>"; };
 		FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputDeviceLayout.m; sourceTree = "<group>"; };
@@ -2115,6 +2121,10 @@
 				FE17DC0416B3CFAF004ED68D /* CMMachine.m */,
 				FE9B86BD16D4AC8100623DBD /* CMMachineInstallationOperation.h */,
 				FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */,
+				FEA6E8A516EB223100A580CF /* CMMSXJoystick.h */,
+				FEA6E8A616EB223100A580CF /* CMMSXJoystick.m */,
+				FEA6E8A216EB0A2800A580CF /* CMMSXKeyboard.h */,
+				FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */,
 				FE2E1961164085A000BCFD53 /* CMPreferences.h */,
 				FE2E1962164085A000BCFD53 /* CMPreferences.m */,
 			);
@@ -2607,6 +2617,8 @@
 				FE2D857D16E33140003EFB3F /* CMIsZero.m in Sources */,
 				FE2D858016E3480C003EFB3F /* CMAsString.m in Sources */,
 				FE2D858216E52FEE003EFB3F /* ArrayList.c in Sources */,
+				FEA6E8A416EB0A2800A580CF /* CMMSXKeyboard.m in Sources */,
+				FEA6E8A716EB223100A580CF /* CMMSXJoystick.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
