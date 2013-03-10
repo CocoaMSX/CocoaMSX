@@ -213,3 +213,5 @@ MsxMusic = "MSX-Music";
 MsxAudio = "MSX-Audio";
 Keyboard = "Keyboard";
 MoonSound = "Moonsound";
+
+Unavailable = "Unavailable";

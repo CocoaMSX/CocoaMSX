@@ -1234,14 +1234,21 @@
             {
                 CMMSXJoystick *joystick = [CMMSXJoystick joystickWithLayout:CMMSXJoystickTwoButton];
                 if (joystick)
-                    return [joystick presentationLabelForVirtualCode:virtualCode];
+                {
+                    NSString *label = [joystick presentationLabelForVirtualCode:virtualCode];
+                    return label ? label : CMLoc(@"Unavailable");
+                }
             }
             else
             {
                 CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayout:selectedKeyboardRegion];
                 if (keyboard)
-                    return [keyboard presentationLabelForVirtualCode:virtualCode
-                                                            keyState:selectedKeyboardShiftState];
+                {
+                    NSString *label = [keyboard presentationLabelForVirtualCode:virtualCode
+                                                                       keyState:selectedKeyboardShiftState];
+                    
+                    return label ? label : CMLoc(@"Unavailable");
+                }
             }
             
             return nil;
@@ -1307,6 +1314,25 @@
     }
     
     return nil;
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+    if (outlineView == keyboardLayoutEditor)
+    {
+        if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"] ||
+            [[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"])
+        {
+            CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayout:selectedKeyboardRegion];
+            BOOL isCellEditable = NO;
+            
+            if (keyboard)
+                isCellEditable = [keyboard supportsVirtualCode:[(NSNumber *)item integerValue]
+                                                      forState:selectedKeyboardShiftState];
+            
+            [cell setEnabled:isCellEditable];
+        }
+    }
 }
 
 #pragma mark - NSTableViewDataSourceDelegate

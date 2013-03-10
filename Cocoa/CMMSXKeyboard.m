@@ -36,6 +36,7 @@
 @property (nonatomic, retain) NSString *label;
 
 - (NSString *)presentationLabelForState:(CMMSXKeyState)keyState;
+- (BOOL)availableForState:(CMMSXKeyState)keyState;
 
 @end
 
@@ -47,6 +48,11 @@
 - (NSString *)presentationLabelForState:(CMMSXKeyState)keyState
 {
     return [self label];
+}
+
+- (BOOL)availableForState:(CMMSXKeyState)keyState
+{
+    return YES;
 }
 
 - (void)dealloc
@@ -86,6 +92,16 @@
         return [self shiftedStateChar];
     
     return nil;
+}
+
+- (BOOL)availableForState:(CMMSXKeyState)keyState
+{
+    if (keyState == CMMSXKeyStateDefault)
+        return [self defaultStateChar] != nil;
+    else if (keyState == CMMSXKeyStateShift)
+        return [self shiftedStateChar] != nil;
+    
+    return NO;
 }
 
 - (void)dealloc
@@ -539,6 +555,16 @@ static NSDictionary *layoutToKeyboardMap;
     return [key presentationLabelForState:keyState];
 }
 
+- (BOOL)supportsVirtualCode:(NSInteger)keyCode
+                   forState:(CMMSXKeyState)keyState
+{
+    CMKeyboardKey *key = [virtualCodeToKeyInfoMap objectForKey:@(keyCode)];
+    if (!key)
+        return NO;
+    
+    return [key availableForState:keyState];
+}
+
 - (CMMSXKeyCombination *)keyCombinationForCharacter:(NSString *)character
 {
     CMTypewriterKey *typewriterKey = [characterToVirtualCodeMap objectForKey:character];
@@ -584,20 +610,20 @@ static NSDictionary *layoutToKeyboardMap;
     [layout mapKeyWithCode:EC_F4 label:@"F4"];
     [layout mapKeyWithCode:EC_F5 label:@"F5"];
     
-    [layout mapKeyWithCode:EC_ESC     label:@"KeyEscape"];
-    [layout mapKeyWithCode:EC_STOP    label:@"KeyStop"];
-    [layout mapKeyWithCode:EC_CLS     label:@"KeyCls"];
-    [layout mapKeyWithCode:EC_SELECT  label:@"KeySelect"];
-    [layout mapKeyWithCode:EC_INS     label:@"KeyInsert"];
-    [layout mapKeyWithCode:EC_DEL     label:@"KeyDelete"];
-    [layout mapKeyWithCode:EC_BKSPACE label:@"KeyBackspace"];
-    [layout mapKeyWithCode:EC_PRINT   label:@"KeyPrint"];
-    [layout mapKeyWithCode:EC_PAUSE   label:@"KeyPause"];
+    [layout mapKeyWithCode:EC_ESC     label:CMLoc(@"KeyEscape")];
+    [layout mapKeyWithCode:EC_STOP    label:CMLoc(@"KeyStop")];
+    [layout mapKeyWithCode:EC_CLS     label:CMLoc(@"KeyCls")];
+    [layout mapKeyWithCode:EC_SELECT  label:CMLoc(@"KeySelect")];
+    [layout mapKeyWithCode:EC_INS     label:CMLoc(@"KeyInsert")];
+    [layout mapKeyWithCode:EC_DEL     label:CMLoc(@"KeyDelete")];
+    [layout mapKeyWithCode:EC_BKSPACE label:CMLoc(@"KeyBackspace")];
+    [layout mapKeyWithCode:EC_PRINT   label:CMLoc(@"KeyPrint")];
+    [layout mapKeyWithCode:EC_PAUSE   label:CMLoc(@"KeyPause")];
     
-    [layout mapKeyWithCode:EC_LEFT  label:@"KeyCursorLeft"];
-    [layout mapKeyWithCode:EC_UP    label:@"KeyCursorUp"];
-    [layout mapKeyWithCode:EC_RIGHT label:@"KeyCursorRight"];
-    [layout mapKeyWithCode:EC_DOWN  label:@"KeyCursorDown"];
+    [layout mapKeyWithCode:EC_LEFT  label:CMLoc(@"KeyCursorLeft")];
+    [layout mapKeyWithCode:EC_UP    label:CMLoc(@"KeyCursorUp")];
+    [layout mapKeyWithCode:EC_RIGHT label:CMLoc(@"KeyCursorRight")];
+    [layout mapKeyWithCode:EC_DOWN  label:CMLoc(@"KeyCursorDown")];
     
     [layout mapTypewriterKeyWithCode:EC_NUMMUL anyStateChar:@"*" label:@"*"];
     [layout mapTypewriterKeyWithCode:EC_NUMADD anyStateChar:@"+" label:@"+"];
@@ -616,12 +642,12 @@ static NSDictionary *layoutToKeyboardMap;
     [layout mapTypewriterKeyWithCode:EC_NUM8   anyStateChar:@"8" label:@"8"];
     [layout mapTypewriterKeyWithCode:EC_NUM9   anyStateChar:@"9" label:@"9"];
     
-    [layout mapKeyWithCode:EC_LSHIFT label:@"KeyLeftShift"];
-    [layout mapKeyWithCode:EC_RSHIFT label:@"KeyRightShift"];
-    [layout mapKeyWithCode:EC_CTRL   label:@"KeyCtrl"];
-    [layout mapKeyWithCode:EC_GRAPH  label:@"KeyGraph"];
-    [layout mapKeyWithCode:EC_CODE   label:@"KeyCode"];
-    [layout mapKeyWithCode:EC_CAPS   label:@"KeyCapsLock"];
+    [layout mapKeyWithCode:EC_LSHIFT label:CMLoc(@"KeyLeftShift")];
+    [layout mapKeyWithCode:EC_RSHIFT label:CMLoc(@"KeyRightShift")];
+    [layout mapKeyWithCode:EC_CTRL   label:CMLoc(@"KeyCtrl")];
+    [layout mapKeyWithCode:EC_GRAPH  label:CMLoc(@"KeyGraph")];
+    [layout mapKeyWithCode:EC_CODE   label:CMLoc(@"KeyCode")];
+    [layout mapKeyWithCode:EC_CAPS   label:CMLoc(@"KeyCapsLock")];
     
     return [layout autorelease];
 }
@@ -841,8 +867,8 @@ static NSDictionary *layoutToKeyboardMap;
     [layout mapTypewriterKeyWithCode:EC_DIV     defaultStateChar:@"/" shiftedStateChar:@"?"];
     [layout mapTypewriterKeyWithCode:EC_UNDSCRE defaultStateChar:nil  shiftedStateChar:@"_"];
     
-    [layout mapKeyWithCode:EC_TORIKE label:@"KeyTorike"];
-    [layout mapKeyWithCode:EC_JIKKOU label:@"KeyJikkou"];
+    [layout mapKeyWithCode:EC_TORIKE label:CMLoc(@"KeyTorike")];
+    [layout mapKeyWithCode:EC_JIKKOU label:CMLoc(@"KeyJikkou")];
     
     return layout;
 }

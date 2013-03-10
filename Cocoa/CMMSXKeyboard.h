@@ -78,6 +78,9 @@ typedef NSUInteger CMMSXKeyboardLayout;
 - (NSString *)presentationLabelForVirtualCode:(NSInteger)keyCode
                                      keyState:(CMMSXKeyState)keyState;
 
+- (BOOL)supportsVirtualCode:(NSInteger)keyCode
+                   forState:(CMMSXKeyState)keyState;
+
 - (CMMSXKeyCombination *)keyCombinationForCharacter:(NSString *)character;
 
 + (CMMSXKeyboard *)keyboardWithLayout:(CMMSXKeyboardLayout)layout;
