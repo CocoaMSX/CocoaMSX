@@ -113,6 +113,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (BOOL)saveStateToFile:(NSString *)file;
 
+- (void)setEmulationSpeedAsPercentage:(NSInteger)percentage;
+
 - (void)performColdReboot;
 - (BOOL)isStarted;
 - (BOOL)isPaused;

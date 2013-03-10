@@ -36,10 +36,11 @@
 #define CMKeyCategoryJoyDirections     10
 #define CMKeyCategoryJoyButtons        11
 
+extern NSString * const CMKeyPasteStarted;
+extern NSString * const CMKeyPasteEnded;
+
 @interface CMCocoaKeyboard : NSObject
 {
-    CMMSXKeyCombination *_keyCombinationToAutoPress;
-    
     NSUInteger pollCounter;
     
     NSObject *keyLock;
@@ -48,7 +49,9 @@
     NSMutableSet *keysDown;
     NSMutableArray *keysToPaste;
     
+    CMMSXKeyCombination *_keyCombinationToAutoPress;
     NSTimeInterval timeOfAutoPress;
+    BOOL autoKeyPressPasted;
 }
 
 @property (nonatomic, retain) CMMSXKeyCombination *keyCombinationToAutoPress;
@@ -62,6 +65,8 @@
 
 - (BOOL)pasteText:(NSString *)text
       keyLayoutId:(CMMSXKeyboardLayout)keyLayoutId;
+
+- (void)resetState;
 
 - (BOOL)isAnyKeyDown;
 - (void)releaseAllKeys;

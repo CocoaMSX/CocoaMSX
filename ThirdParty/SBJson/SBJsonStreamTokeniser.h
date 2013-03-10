@@ -30,6 +30,14 @@ typedef enum {
 
 
 @interface SBJsonStreamTokeniser : NSObject
+{
+    NSString *_error;
+    
+    NSMutableData *data;
+    const char *bytes;
+    NSUInteger index;
+    NSUInteger offset;
+}
 
 @property (nonatomic, readonly, copy) NSString *error;
 

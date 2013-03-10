@@ -30,10 +30,14 @@
 
 #import "CMEmulatorController.h"
 
+#include "Board.h"
 #include "InputEvent.h"
 
-#define CMAutoPressHoldDuration    0.05
-#define CMAutoPressReleaseDuration 0.05
+NSString *const CMKeyPasteStarted = @"com.akop.CocoaMSX.KeyPasteStarted";
+NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
+
+#define CMAutoPressHoldDuration    1121480
+#define CMAutoPressReleaseDuration 1121480
 #define CMAutoPressTotalTimeSeconds \
     (CMAutoPressHoldDuration + CMAutoPressReleaseDuration)
 
@@ -100,6 +104,7 @@ static NSArray *orderOfAppearance = nil;
 
 @interface CMCocoaKeyboard ()
 
+- (void)stopPasting;
 - (void)updateKeyboardState;
 - (void)handleKeyEvent:(NSInteger)keyCode
                 isDown:(BOOL)isDown;
@@ -269,6 +274,9 @@ static NSArray *orderOfAppearance = nil;
     if (([event modifierFlags] & NSCommandKeyMask) != 0)
         return;
     
+    if ([event keyCode] == 53) // Escape
+        [self stopPasting];
+    
     [self handleKeyEvent:[event keyCode] isDown:YES];
 }
 
@@ -366,19 +374,26 @@ static NSArray *orderOfAppearance = nil;
             [textAsKeyCombinations addObject:keyCombination];
     }
     
+    if ([textAsKeyCombinations count] > 0)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:CMKeyPasteStarted
+                                                            object:self
+                                                          userInfo:nil];
+        
 #ifdef DEBUG
     NSLog(@"Pasting %ld keys", [textAsKeyCombinations count]);
 #endif
-    
-    @synchronized(keysToPasteLock)
-    {
-        [keysToPaste addObjectsFromArray:textAsKeyCombinations];
-    }
-    
+        
+        @synchronized(keysToPasteLock)
+        {
+            [keysToPaste addObjectsFromArray:textAsKeyCombinations];
+        }
+        
 #ifdef DEBUG
     NSLog(@"pasteText: Took %.02fms",
           [NSDate timeIntervalSinceReferenceDate] - startTime);
 #endif
+    }
     
     return YES;
 }
@@ -403,12 +418,7 @@ static NSArray *orderOfAppearance = nil;
 - (void)resetState
 {
     [self releaseAllKeys];
-    
-    // Clear the paste queue
-    @synchronized (keysToPasteLock)
-    {
-        [keysToPaste removeAllObjects];
-    }
+    [self stopPasting];
     
     // Clear currently held keys
     [self setKeyCombinationToAutoPress:nil];
@@ -607,6 +617,24 @@ static NSArray *orderOfAppearance = nil;
 
 #pragma mark - Private methods
 
+- (void)stopPasting
+{
+    if ([keysToPaste count] > 0 || autoKeyPressPasted)
+    {
+        @synchronized(keysToPasteLock)
+        {
+            [keysToPaste removeAllObjects];
+        }
+        
+        autoKeyPressPasted = NO;
+        timeOfAutoPress = 0;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:CMKeyPasteEnded
+                                                            object:self
+                                                          userInfo:nil];
+    }
+}
+
 - (void)handleKeyEvent:(NSInteger)keyCode
                 isDown:(BOOL)isDown
 {
@@ -650,7 +678,7 @@ static NSArray *orderOfAppearance = nil;
         inputEventSet([obj integerValue]);
     }];
     
-    NSTimeInterval timeNow = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval timeNow = boardSystemTime(); //[NSDate timeIntervalSinceReferenceDate];
     NSTimeInterval autoKeyPressInterval = timeNow - timeOfAutoPress;
     BOOL autoKeypressExpired = autoKeyPressInterval > CMAutoPressTotalTimeSeconds;
     
@@ -663,6 +691,7 @@ static NSArray *orderOfAppearance = nil;
             [keysToPaste removeObjectAtIndex:0];
         }
         
+        autoKeyPressPasted = YES;
         timeOfAutoPress = timeNow;
         
         autoKeypressExpired = NO;
@@ -676,7 +705,17 @@ static NSArray *orderOfAppearance = nil;
         {
             // Keypress has expired - release it
             [self setKeyCombinationToAutoPress:nil];
+            
+            if (autoKeyPressPasted && [keysToPaste count] < 1)
+            {
+                // Post 'pasting ended' notification
+                [[NSNotificationCenter defaultCenter] postNotificationName:CMKeyPasteEnded
+                                                                    object:self
+                                                                  userInfo:nil];
+            }
+            
             timeOfAutoPress = 0;
+            autoKeyPressPasted = NO;
         }
         else if (autoKeyPressInterval < CMAutoPressHoldDuration)
         {

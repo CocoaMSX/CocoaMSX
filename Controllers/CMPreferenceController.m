@@ -672,7 +672,7 @@
     
     [layout enumerateMappingsUsingBlock:^(NSUInteger virtualCode, CMInputMethod *inputMethod, BOOL *stop)
     {
-        NSNumber *category = [NSNumber numberWithInteger:[self.emulator.keyboard categoryForVirtualCode:virtualCode]];
+        NSNumber *category = [NSNumber numberWithInteger:[[[self emulator] keyboard] categoryForVirtualCode:virtualCode]];
         
         CMKeyCategory *kc = [categoryToKeyMap objectForKey:category];
         

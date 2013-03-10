@@ -26,6 +26,8 @@
 
 @interface CMAppDelegate : NSObject <NSApplicationDelegate>
 {
+    CMEmulatorController *_emulator;
+    
     BOOL applicationDidLoad;
 }
 

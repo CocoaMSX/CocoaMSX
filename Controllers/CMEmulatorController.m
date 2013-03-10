@@ -31,6 +31,7 @@
 #import "CMMachineEditorController.h"
 
 #import "CMPreferences.h"
+#import "CMMSXKeyboard.h"
 
 #import "NSString+CMExtensions.h"
 
@@ -199,6 +200,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                    forKeyPath:obj];
     }];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:CMKeyPasteStarted
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:CMKeyPasteEnded
+                                                  object:nil];
+    
     [self destroy];
     
     [self cleanupTemporaryCaptureFile];
@@ -267,6 +275,15 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                    options:NSKeyValueObservingOptionNew
                                                    context:NULL];
     }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivedPasteStartedNotification:)
+                                                 name:CMKeyPasteStarted
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receivedPasteEndedNotification:)
+                                                 name:CMKeyPasteEnded
+                                               object:nil];
     
     [self create];
     [self start];
@@ -573,10 +590,18 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (NSInteger)emulationFrequencyFromPercentage:(NSInteger)percentage
 {
+    percentage = MIN(MAX(percentage, 0), 1000);
+    
     CGFloat frequency = percentage * 3579545.0 / 100.0;
     CGFloat logFrequency = log(frequency / 3579545.0) / log(2.0);
     
     return (NSInteger)(50.0 + 15.0515 * logFrequency);
+}
+
+- (void)setEmulationSpeedAsPercentage:(NSInteger)percentage
+{
+    properties->emulation.speed = [self emulationFrequencyFromPercentage:percentage];
+    emulatorSetFrequency(properties->emulation.speed, NULL);
 }
 
 #pragma mark - Machine Configuration
@@ -1422,13 +1447,18 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)resetMsx:(id)sender
 {
     if ([self isStarted])
+    {
+        [[self keyboard] resetState];
         actionEmuResetSoft();
+    }
 }
 
 - (void)shutDownMsx:(id)sender
 {
     if ([self isStarted])
     {
+        [[self keyboard] resetState];
+        
         [self destroy];
         [self stop];
     }
@@ -1756,6 +1786,26 @@ void archTrap(UInt8 value)
 
 #pragma mark - Notifications
 
+- (void)receivedPasteStartedNotification:(NSNotification *)notification
+{
+#ifdef DEBUG
+    NSLog(@"receivedPasteStartedNotification");
+#endif
+    
+    // Set speed to normal
+    [self setEmulationSpeedAsPercentage:100];
+}
+
+- (void)receivedPasteEndedNotification:(NSNotification *)notification
+{
+#ifdef DEBUG
+    NSLog(@"receivedPasteEndedNotification");
+#endif
+    
+    // Resume at selected speed
+    [self setEmulationSpeedAsPercentage:CMGetIntPref(@"emulationSpeedPercentage")];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
@@ -1770,11 +1820,7 @@ void archTrap(UInt8 value)
     {
         if ([keyPath isEqualToString:@"emulationSpeedPercentage"])
         {
-            NSInteger percentage = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
-            NSInteger mhz = [self emulationFrequencyFromPercentage:percentage];
-            
-            properties->emulation.speed = mhz;
-            emulatorSetFrequency(mhz, NULL);
+            [self setEmulationSpeedAsPercentage:[[change objectForKey:NSKeyValueChangeNewKey] integerValue]];
         }
         else if ([keyPath isEqualToString:@"videoBrightness"])
         {

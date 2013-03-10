@@ -11,12 +11,9 @@
 #define SBStringIsSurrogateLowCharacter(character) ((character >= 0xDC00UL) && (character <= 0xDFFFUL))
 #define SBStringIsSurrogateHighCharacter(character) ((character >= 0xD800UL) && (character <= 0xDBFFUL))
 
-@implementation SBJsonStreamTokeniser {
-    NSMutableData *data;
-    const char *bytes;
-    NSUInteger index;
-    NSUInteger offset;
-}
+@implementation SBJsonStreamTokeniser
+
+@synthesize error = _error;
 
 - (void)setError:(NSString *)error {
     _error = [NSString stringWithFormat:@"%@ at index %lu", error, (unsigned long)(offset + index)];
