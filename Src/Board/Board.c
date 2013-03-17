@@ -1001,7 +1001,7 @@ void boardSaveState(const char* stateFile, int screenshot)
     machineSaveState(boardMachine);
 
     // Call board dependent save state
-    boardInfo.saveState(stateFile);
+    boardInfo.saveState();
 
     if (screenshot) {
         bitmap = archScreenCapture(SC_SMALL, &size, 1);
