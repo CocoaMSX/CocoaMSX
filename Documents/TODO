@@ -3,6 +3,7 @@ For 1.3:
 * Add CAPS and other LED's to status bar
 * Hardware joystick support
 * Machine Editor
+* Zipped System ROM support
 
 * If there's no internet connectivity, don't download the machine feed, or
   have some way to disable machine feed auto-updates

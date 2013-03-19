@@ -30,7 +30,6 @@
 #import "CMCocoaKeyboard.h"
 #import "CMCocoaMouse.h"
 #import "CMCocoaSound.h"
-#import "CMCocoaJoystick.h"
 #import "CMInputDeviceLayout.h"
 
 #include "Properties.h"
@@ -40,6 +39,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 @class CMAboutController;
 @class CMMachineEditorController;
+@class CMGamepadManager;
 
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate>
 {
@@ -54,10 +54,11 @@ NSString * const CMKeyboardLayoutPrefKey;
     Properties *properties;
     Video *video;
     
+    CMGamepadManager *gamepadManager;
+    
     CMCocoaKeyboard *keyboard;
     CMCocoaMouse *mouse;
     CMCocoaSound *sound;
-    CMCocoaJoystick *joystick;
     
     CMAboutController *aboutController;
     CMPreferenceController *preferenceController;
@@ -97,7 +98,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (CMCocoaKeyboard *)keyboard;
 - (CMCocoaMouse *)mouse;
 - (CMCocoaSound *)sound;
-- (CMCocoaJoystick *)joystick;
 - (CMMsxDisplayView *)screen;
 
 - (CMInputDeviceLayout *)keyboardLayout;

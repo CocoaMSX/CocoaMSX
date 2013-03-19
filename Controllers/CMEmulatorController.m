@@ -32,6 +32,7 @@
 
 #import "CMPreferences.h"
 #import "CMMSXKeyboard.h"
+#import "CMGamepadManager.h"
 
 #import "NSString+CMExtensions.h"
 
@@ -207,6 +208,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                     name:CMKeyPasteEnded
                                                   object:nil];
     
+    [gamepadManager release];
+    
     [self destroy];
     
     [self cleanupTemporaryCaptureFile];
@@ -232,7 +235,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [keyboard release];
     [mouse release];
     [sound release];
-    [joystick release];
     
     [inputDeviceLayouts release];
     
@@ -250,11 +252,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
     keyboard = [[CMCocoaKeyboard alloc] init];
     mouse = [[CMCocoaMouse alloc] init];
     sound = [[CMCocoaSound alloc] init];
-    joystick = [[CMCocoaJoystick alloc] init];
     
     theEmulator = self; // FIXME
     
-    self.isInitialized = NO;
+    [self setIsInitialized:NO];
     
     pausedDueToLostFocus = NO;
     
@@ -284,6 +285,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                              selector:@selector(receivedPasteEndedNotification:)
                                                  name:CMKeyPasteEnded
                                                object:nil];
+    
+    gamepadManager = [[CMGamepadManager alloc] init];
+    [gamepadManager setDelegate:keyboard];
     
     [self create];
     [self start];
@@ -683,11 +687,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return sound;
 }
 
-- (CMCocoaJoystick *)joystick
-{
-    return joystick;
-}
-
 - (Properties *)properties
 {
     return properties;
@@ -1078,9 +1077,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)windowKeyDidChange:(BOOL)isKey
 {
-    mouse.emulatorHasFocus = isKey;
-    keyboard.emulatorHasFocus = isKey;
-    joystick.emulatorHasFocus = isKey;
+    [mouse setEmulatorHasFocus:isKey];
+    [keyboard setEmulatorHasFocus:isKey];
     
     BOOL pauseWhenUnfocused = [[NSUserDefaults standardUserDefaults] boolForKey:@"pauseWhenUnfocused"];
     

@@ -106,7 +106,6 @@ Machine* machineCreate(const char* machineName);
 void machineDestroy(Machine* machine);
 
 void machineFillAvailable(ArrayList *list, int checkRoms);
-char** machineGetAvailable(int checkRoms);
 
 int machineIsValid(const char* machineName, int checkRoms);
 

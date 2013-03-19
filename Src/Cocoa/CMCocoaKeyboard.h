@@ -24,6 +24,8 @@
 
 #import "CMMSXKeyboard.h"
 
+#import "CMGamepad.h"
+
 #define CMKeyCategoryTypewriterRowOne   1
 #define CMKeyCategoryTypewriterRowTwo   2
 #define CMKeyCategoryTypewriterRowThree 3
@@ -39,7 +41,7 @@
 extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;
 
-@interface CMCocoaKeyboard : NSObject
+@interface CMCocoaKeyboard : NSObject<CMGamepadDelegate>
 {
     NSUInteger pollCounter;
     

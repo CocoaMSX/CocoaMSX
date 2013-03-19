@@ -727,6 +727,68 @@ static NSArray *orderOfAppearance = nil;
     }
 }
 
+#pragma mark - CMGamepadDelegate
+
+// FIXME: Make Customizable
+
+- (void)gamepadDidDisconnect:(CMGamepad *)gamepad
+{
+    [keysDown removeObject:@(EC_JOY1_UP)];
+    [keysDown removeObject:@(EC_JOY1_DOWN)];
+    [keysDown removeObject:@(EC_JOY1_LEFT)];
+    [keysDown removeObject:@(EC_JOY1_RIGHT)];
+    [keysDown removeObject:@(EC_JOY1_BUTTON1)];
+    [keysDown removeObject:@(EC_JOY1_BUTTON2)];
+}
+
+- (void)gamepad:(CMGamepad *)gamepad
+       xChanged:(NSInteger)newValue
+         center:(NSInteger)center
+          event:(CMGamepadEvent *)event
+{
+    [keysDown removeObject:@(EC_JOY1_LEFT)];
+    [keysDown removeObject:@(EC_JOY1_RIGHT)];
+    
+    if (newValue < center)
+        [keysDown addObject:@(EC_JOY1_LEFT)];
+    else if (newValue > center)
+        [keysDown addObject:@(EC_JOY1_RIGHT)];
+}
+
+- (void)gamepad:(CMGamepad *)gamepad
+       yChanged:(NSInteger)newValue
+         center:(NSInteger)center
+          event:(CMGamepadEvent *)event
+{
+    [keysDown removeObject:@(EC_JOY1_DOWN)];
+    [keysDown removeObject:@(EC_JOY1_UP)];
+    
+    if (newValue < center)
+        [keysDown addObject:@(EC_JOY1_UP)];
+    else if (newValue > center)
+        [keysDown addObject:@(EC_JOY1_DOWN)];
+}
+
+- (void)gamepad:(CMGamepad *)gamepad
+     buttonDown:(NSInteger)index
+          event:(CMGamepadEvent *)event
+{
+    if (index == 1)
+        [keysDown addObject:@(EC_JOY1_BUTTON1)];
+    else if (index == 2)
+        [keysDown addObject:@(EC_JOY1_BUTTON2)];
+}
+
+- (void)gamepad:(CMGamepad *)gamepad
+       buttonUp:(NSInteger)index
+          event:(CMGamepadEvent *)event
+{
+    if (index == 1)
+        [keysDown removeObject:@(EC_JOY1_BUTTON1)];
+    else if (index == 2)
+        [keysDown removeObject:@(EC_JOY1_BUTTON2)];
+}
+
 #pragma mark - BlueMSX Callbacks
 
 extern CMEmulatorController *theEmulator;
@@ -739,6 +801,15 @@ void archPollInput()
     }
 }
 
-void archKeyboardSetSelectedKey(int keyCode) {}
+UInt8 archJoystickGetState(int joystickNo)
+{
+    // Coleco-specific; unused
+     
+    return 0;
+}
+
+void archKeyboardSetSelectedKey(int keyCode)
+{
+}
 
 @end

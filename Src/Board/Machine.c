@@ -496,7 +496,7 @@ int machineIsValid(const char* machineName, int checkRoms)
     }
     
     if (checkRoms) {
-#ifdef MSX_ONLY
+#ifdef COCOAMSX
         if ((machine->board.type & BOARD_MASK) != BOARD_MSX)
             success = 0;
 #endif
@@ -521,82 +521,6 @@ int machineIsValid(const char* machineName, int checkRoms)
     free(machine);
 
     return success;
-}
-
-char** machineGetAvailable(int checkRoms)
-{
-    const int maxNames = 255;
-    const char* machineName = appConfigGetString("singlemachine", NULL);
-
-    if (machineName != NULL) {
-        char filename[128];
-        static char* machineNames[maxNames + 1];
-        static char  names[maxNames + 1][64];
-        int index = 0;
-
-        FILE* file;
-
-        sprintf(filename, "%s/%s/config.ini", machinesDir, machineName);
-        file = fopen(filename, "rb");
-        if (file != NULL) {
-            if (machineIsValid(machineName, checkRoms)) {
-                strcpy(names[index], machineName);
-                machineNames[index] = names[index];
-                index++;
-            }
-            fclose(file);
-        }
-        
-        machineNames[index] = NULL;
-
-        return machineNames;
-    }
-    else {
-        static char* machineNames[maxNames + 1]; // last element is NULL
-        static char  names[maxNames + 1][64];
-        
-        char  globPath[PROP_MAXPATH];
-        sprintf(globPath, "%s/*", machinesDir);
-        
-        ArchGlob* glob = archGlob(globPath, ARCH_GLOB_DIRS);
-        int index = 0;
-        int i;
-
-        if (glob == NULL) {
-            machineNames[0] = NULL;
-            return machineNames;
-        }
-
-        for (i = 0; i < glob->count && index <= maxNames; i++) {
-            char fileName[512];
-            FILE* file;
-		    sprintf(fileName, "%s/config.ini", glob->pathVector[i]);
-            file = fopen(fileName, "rb");
-            if (file != NULL) {
-                const char* name = strrchr(glob->pathVector[i], '/');
-                if (name == NULL) {
-                    name = strrchr(glob->pathVector[i], '\\');
-                }
-                if (name == NULL) {
-                    name = glob->pathVector[i] - 1;
-                }
-                name++;
-                if (machineIsValid(name, checkRoms)) {
-                    strcpy(names[index], name);
-                    machineNames[index] = names[index];
-                    
-                    index++;
-                }
-                fclose(file);
-            }
-        }
-
-        archGlobFree(glob);
-        
-        machineNames[index] = NULL;
-
-        return machineNames;
-    }
 }
 
 void machineFillAvailable(ArrayList *list, int checkRoms)

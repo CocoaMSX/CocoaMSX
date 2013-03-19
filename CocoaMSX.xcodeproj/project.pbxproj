@@ -10,7 +10,6 @@
 		6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */; };
 		6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B36CC441644806B00B5FDB7 /* MainMenu.xib */; };
 		6B5D2863161F44CC0081F586 /* CMCocoaKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */; };
-		6B5D2866161F4A920081F586 /* CMCocoaJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2865161F4A920081F586 /* CMCocoaJoystick.m */; };
 		6B5D287B161F60620081F586 /* Language.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2868161F60620081F586 /* Language.c */; };
 		6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7562164D7D09002CA211 /* toolbar-video.png */; };
 		6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7563164D7D09002CA211 /* toolbar-video@2x.png */; };
@@ -321,6 +320,10 @@
 		FE73719216D20F7B00ADF942 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718D16D20F7A00ADF942 /* NSObject+SBJson.m */; };
 		FE73719316D20F7B00ADF942 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */; };
 		FE73719416D20F7B00ADF942 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */; };
+		FE81435F16F6FE31000FABC7 /* HashSet.c in Sources */ = {isa = PBXBuildFile; fileRef = FE81435E16F6FE30000FABC7 /* HashSet.c */; };
+		FE81438D16F78AEE000FABC7 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE81438C16F78AED000FABC7 /* IOKit.framework */; };
+		FE81439016F797CC000FABC7 /* CMGamepadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE81438F16F797CC000FABC7 /* CMGamepadManager.m */; };
+		FE81439316F7A191000FABC7 /* CMGamepad.m in Sources */ = {isa = PBXBuildFile; fileRef = FE81439216F7A191000FABC7 /* CMGamepad.m */; };
 		FE88FF58169B9AC5004B483B /* CMKeyCaptureView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF55169B9AC5004B483B /* CMKeyCaptureView.m */; };
 		FE88FF59169B9AC5004B483B /* CMKeyCaptureFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF57169B9AC5004B483B /* CMKeyCaptureFieldCell.m */; };
 		FE88FF5D169BAB8B004B483B /* CMHeaderRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF5C169BAB8B004B483B /* CMHeaderRowCell.m */; };
@@ -402,8 +405,6 @@
 		6B36CC441644806B00B5FDB7 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		6B5D2861161F44CC0081F586 /* CMCocoaKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaKeyboard.h; sourceTree = "<group>"; };
 		6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaKeyboard.m; sourceTree = "<group>"; };
-		6B5D2864161F4A920081F586 /* CMCocoaJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaJoystick.h; sourceTree = "<group>"; };
-		6B5D2865161F4A920081F586 /* CMCocoaJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaJoystick.m; sourceTree = "<group>"; };
 		6B5D2868161F60620081F586 /* Language.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Language.c; sourceTree = "<group>"; };
 		6B5D2869161F60620081F586 /* Language.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Language.h; sourceTree = "<group>"; };
 		6B5D286E161F60620081F586 /* LanguageEnglish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguageEnglish.h; sourceTree = "<group>"; };
@@ -1034,6 +1035,13 @@
 		FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonTokeniser.m; sourceTree = "<group>"; };
 		FE73719016D20F7B00ADF942 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
 		FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
+		FE81435E16F6FE30000FABC7 /* HashSet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HashSet.c; sourceTree = "<group>"; };
+		FE81436016F6FE40000FABC7 /* HashSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashSet.h; sourceTree = "<group>"; };
+		FE81438C16F78AED000FABC7 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
+		FE81438E16F797CC000FABC7 /* CMGamepadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMGamepadManager.h; sourceTree = "<group>"; };
+		FE81438F16F797CC000FABC7 /* CMGamepadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMGamepadManager.m; sourceTree = "<group>"; };
+		FE81439116F7A191000FABC7 /* CMGamepad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMGamepad.h; sourceTree = "<group>"; };
+		FE81439216F7A191000FABC7 /* CMGamepad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMGamepad.m; sourceTree = "<group>"; };
 		FE88FF54169B9AC5004B483B /* CMKeyCaptureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyCaptureView.h; sourceTree = "<group>"; };
 		FE88FF55169B9AC5004B483B /* CMKeyCaptureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyCaptureView.m; sourceTree = "<group>"; };
 		FE88FF56169B9AC5004B483B /* CMKeyCaptureFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyCaptureFieldCell.h; sourceTree = "<group>"; };
@@ -1121,6 +1129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE81438D16F78AEE000FABC7 /* IOKit.framework in Frameworks */,
 				FE3754BE16B5CF54005360CC /* Sparkle.framework in Frameworks */,
 				FE23EAAE1636679C00AC98BF /* Carbon.framework in Frameworks */,
 				FE9D27AA161EDB2600ADFB0F /* AudioUnit.framework in Frameworks */,
@@ -1136,6 +1145,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FE81438C16F78AED000FABC7 /* IOKit.framework */,
 				FE23EAAC1636670500AC98BF /* Carbon.framework */,
 				FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */,
 				FE99C53C160E634100843DC8 /* QuartzCore.framework */,
@@ -1148,6 +1158,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 			);
@@ -1211,7 +1222,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -1360,8 +1370,10 @@
 			children = (
 				E99731391298B4B300766C90 /* DebugMemory.c */,
 				E997313A1298B4B300766C90 /* MsxTypes.h */,
-				FE2D858316E5300C003EFB3F /* ArrayList.h */,
 				FE2D858116E52FED003EFB3F /* ArrayList.c */,
+				FE2D858316E5300C003EFB3F /* ArrayList.h */,
+				FE81435E16F6FE30000FABC7 /* HashSet.c */,
+				FE81436016F6FE40000FABC7 /* HashSet.h */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2039,8 +2051,8 @@
 		FE5458B9168C17910002FA46 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
-				FE3754C316B638DB005360CC /* SBJson */,
 				FE5458BB168C17FE0002FA46 /* MGScopeBar */,
+				FE3754C316B638DB005360CC /* SBJson */,
 			);
 			path = ThirdParty;
 			sourceTree = "<group>";
@@ -2111,6 +2123,10 @@
 			children = (
 				FE99C538160E58FD00843DC8 /* CMFrameCounter.h */,
 				FE99C539160E58FD00843DC8 /* CMFrameCounter.m */,
+				FE81439116F7A191000FABC7 /* CMGamepad.h */,
+				FE81439216F7A191000FABC7 /* CMGamepad.m */,
+				FE81438E16F797CC000FABC7 /* CMGamepadManager.h */,
+				FE81438F16F797CC000FABC7 /* CMGamepadManager.m */,
 				FEAAF3F61672942600D371CD /* CMInputMethod.h */,
 				FEAAF3F71672942700D371CD /* CMInputMethod.m */,
 				FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */,
@@ -2147,8 +2163,6 @@
 				FEF40EC9160DB83B009170A9 /* CocoaEth.c */,
 				FEF40ECA160DB83B009170A9 /* CocoaFile.c */,
 				FEF40ECB160DB83B009170A9 /* CocoaGlob.c */,
-				6B5D2864161F4A920081F586 /* CMCocoaJoystick.h */,
-				6B5D2865161F4A920081F586 /* CMCocoaJoystick.m */,
 				6B5D2861161F44CC0081F586 /* CMCocoaKeyboard.h */,
 				6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */,
 				FEF40ECC160DB83B009170A9 /* CocoaMenu.c */,
@@ -2577,7 +2591,6 @@
 				FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */,
 				FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */,
 				6B5D2863161F44CC0081F586 /* CMCocoaKeyboard.m in Sources */,
-				6B5D2866161F4A920081F586 /* CMCocoaJoystick.m in Sources */,
 				6B5D287B161F60620081F586 /* Language.c in Sources */,
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
@@ -2619,6 +2632,9 @@
 				FE2D858216E52FEE003EFB3F /* ArrayList.c in Sources */,
 				FEA6E8A416EB0A2800A580CF /* CMMSXKeyboard.m in Sources */,
 				FEA6E8A716EB223100A580CF /* CMMSXJoystick.m in Sources */,
+				FE81435F16F6FE31000FABC7 /* HashSet.c in Sources */,
+				FE81439016F797CC000FABC7 /* CMGamepadManager.m in Sources */,
+				FE81439316F7A191000FABC7 /* CMGamepad.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2663,7 +2679,7 @@
 					"-DNO_EMBEDDED_SAMPLES",
 					"-DENABLE_OPENGL",
 					"-DLSB_FIRST",
-					"-DMSX_ONLY",
+					"-DCOCOAMSX",
 				);
 				PRODUCT_NAME = CocoaMSX;
 			};
@@ -2694,7 +2710,7 @@
 					"-DNO_EMBEDDED_SAMPLES",
 					"-DENABLE_OPENGL",
 					"-DLSB_FIRST",
-					"-DMSX_ONLY",
+					"-DCOCOAMSX",
 				);
 				PRODUCT_NAME = CocoaMSX;
 			};
