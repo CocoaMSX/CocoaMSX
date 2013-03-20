@@ -1,40 +1,43 @@
 /*****************************************************************************
- ** File:        ArrayList.c
- **
- ** Author:      Akop Karapetyan
- **
- ** Description: Generic ArrayList implementation for C
- **
- ** More info:   www.bluemsx.com
- **
- ** Copyright (C) 2013 Akop Karapetyan
- **
- ** This program is free software; you can redistribute it and/or modify
- ** it under the terms of the GNU General Public License as published by
- ** the Free Software Foundation; either version 2 of the License, or
- ** (at your option) any later version.
- **
- ** This program is distributed in the hope that it will be useful,
- ** but WITHOUT ANY WARRANTY; without even the implied warranty of
- ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- ** GNU General Public License for more details.
- **
- ** You should have received a copy of the GNU General Public License
- ** along with this program; if not, write to the Free Software
- ** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- **
- ******************************************************************************
- */
-#include <stdlib.h>
+** $Source$
+**
+** $Revision$
+**
+** $Date$
+**
+** More info: http://www.bluemsx.com
+**
+** Copyright (C) 2003-2013 Daniel Vik, Akop Karapetyan
+**
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+** 
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program; if not, write to the Free Software
+** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+**
+******************************************************************************
+*/
 
 #include "ArrayList.h"
 
-typedef struct ArrayListNode
+#include <stdlib.h>
+
+struct ArrayListNode
 {
     struct ArrayListNode *next;
     void  *object;
     int    managed;
-} ArrayListNode;
+};
+
+typedef struct ArrayListNode ArrayListNode;
 
 struct ArrayList
 {
@@ -75,11 +78,13 @@ void arrayListDestroy(ArrayList *list)
 
 static ArrayListNode *arrayListFindNodeAtIndex(const ArrayList *list, int elementAt)
 {
+    int index = 0;
+	ArrayListNode *current;
+
     if (elementAt < 0 || elementAt >= list->size)
         return NULL;
     
-    int index = 0;
-    for (ArrayListNode *current = list->head; current; current = current->next, index++)
+    for (current = list->head; current; current = current->next, index++)
         if (index == elementAt)
             return current;
     
@@ -102,11 +107,12 @@ static ArrayListNode *arrayListCreateNode(void *object, int managed)
 
 static ArrayListNode *arrayListDestroyNode(ArrayListNode *node)
 {
+    ArrayListNode *next;
+
     if (!node)
         return NULL;
     
-    ArrayListNode *next = node->next;
-    
+    next = node->next;
     if (node->managed)
         free(node->object);
     
@@ -117,10 +123,12 @@ static ArrayListNode *arrayListDestroyNode(ArrayListNode *node)
 
 int arrayListInsert(ArrayList *list, int insertAt, void *object, int managed)
 {
+    ArrayListNode *newNode;
+
     if (insertAt < 0 || insertAt > list->size)
         return 0;
     
-    ArrayListNode *newNode = arrayListCreateNode(object, managed);
+    newNode = arrayListCreateNode(object, managed);
     if (!newNode)
         return 0;
     
@@ -140,8 +148,11 @@ int arrayListInsert(ArrayList *list, int insertAt, void *object, int managed)
     }
     else
     {
+		ArrayListNode *nextNode;
+		ArrayListNode *precedingNode;
+
         // Find the node previous to the location we're inserting
-        ArrayListNode *precedingNode = arrayListFindNodeAtIndex(list, insertAt - 1);
+        precedingNode = arrayListFindNodeAtIndex(list, insertAt - 1);
         if (!precedingNode)
         {
             arrayListDestroyNode(newNode);
@@ -149,7 +160,7 @@ int arrayListInsert(ArrayList *list, int insertAt, void *object, int managed)
         }
         
         // Get a reference to the current next node
-        ArrayListNode *nextNode = precedingNode->next;
+        nextNode = precedingNode->next;
         
         // Insert the element
         precedingNode->next = newNode;
@@ -194,12 +205,15 @@ int arrayListRemove(ArrayList *list, int removeAt)
     }
     else
     {
+		ArrayListNode *nodeToRemove;
+		ArrayListNode *precedingNode;
+
         // Find the node previous to the one we're removing
-        ArrayListNode *precedingNode = arrayListFindNodeAtIndex(list, removeAt - 1);
+        precedingNode = arrayListFindNodeAtIndex(list, removeAt - 1);
         if (!precedingNode)
             return 0;
         
-        ArrayListNode *nodeToRemove = precedingNode->next;
+        nodeToRemove = precedingNode->next;
         if (!nodeToRemove)
             return 0;
         
@@ -248,10 +262,12 @@ void arrayListDestroyIterator(ArrayListIterator *iterator)
 
 void *arrayListIterate(ArrayListIterator *iterator)
 {
+	void *object;
+
     if (!iterator->current)
         return NULL;
     
-    void *object = iterator->current->object;
+    object = iterator->current->object;
     iterator->current = iterator->current->next;
     
     return object;

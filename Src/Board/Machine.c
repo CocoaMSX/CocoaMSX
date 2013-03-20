@@ -163,7 +163,7 @@ int toint(char* buffer)
     return atoi(buffer);
 }
 
-static int readMachine(Machine* machine, const char* machineName, const char* file)
+static int readMachine(Machine* machine, const char* machineName, int isZipped, const char* file)
 {
     static char buffer[10000];
     char* slotBuf;
@@ -461,14 +461,34 @@ void machineSave(Machine* machine)
 
 Machine* machineCreate(const char* machineName)
 {
-    char fileName[512];
+    char configIni[512];
     Machine* machine;
     int success;
-
+    int isZipped = 0;
+    FILE *file;
+    
+    sprintf(configIni, "%s/%s/config.ini", machinesDir, machineName);
+    file = fopen(configIni, "rb");
+    
+    if (file == NULL)
+    {
+        // No config.ini. Is it compressed?
+        char zipFile[512];
+        
+        sprintf(zipFile, "%s/%s.zip", machinesDir, machineName);
+        file = fopen(zipFile, "rb");
+        
+        if (file == NULL)
+            return NULL; // Not compressed and no config.ini
+        
+        isZipped = 1;
+    }
+    
+    fclose(file);
+    
     machine = malloc(sizeof(Machine));
 
-    sprintf(fileName, "%s/%s/config.ini", machinesDir, machineName);
-    success = readMachine(machine, machineName, fileName);
+    success = readMachine(machine, machineName, isZipped, configIni);
     if (!success) {
         free(machine);
         return NULL;
@@ -546,11 +566,12 @@ void machineFillAvailable(ArrayList *list, int checkRoms)
     }
     else {
         char globPath[PROP_MAXPATH];
-        sprintf(globPath, "%s/*", machinesDir);
-        
-        ArchGlob* glob = archGlob(globPath, ARCH_GLOB_DIRS);
+        ArchGlob* glob;
         int i;
         
+        sprintf(globPath, "%s/*", machinesDir);
+        
+        glob = archGlob(globPath, ARCH_GLOB_DIRS);
         if (glob == NULL)
             return;
         
@@ -576,6 +597,70 @@ void machineFillAvailable(ArrayList *list, int checkRoms)
                 
                 fclose(file);
             }
+        }
+        
+        archGlobFree(glob);
+        
+        // Check ZIP sets
+        
+        sprintf(globPath, "%s/*.zip", machinesDir);
+        
+        glob = archGlob(globPath, ARCH_GLOB_FILES);
+        
+        if (glob == NULL)
+            return;
+        
+        for (i = 0; i < glob->count; i++) {
+            char buffer[512];
+            strcpy(buffer, glob->pathVector[i]);
+            
+            char *extension = strrchr(buffer, '.');
+            if (extension != NULL)
+                *extension = '\0';
+            
+            char *machineName = strrchr(buffer, '/');
+            if (machineName == NULL) {
+                machineName = strrchr(buffer, '\\');
+            }
+            if (machineName == NULL) {
+                machineName = buffer - 1;
+            }
+            
+            machineName++;
+            
+            if (machineIsValid(machineName, checkRoms)) {
+                fprintf(stderr, "Zipped Machine '%s' is valid!\n", machineName);
+//                char *name = (char *)calloc(512, sizeof(char));
+//                strncpy(name, machineName, maxNameLength - 1);
+//                arrayListAppend(list, name, 1);
+            }
+            else {
+                fprintf(stderr, "Zipped Machine '%s' is INvalid!\n", machineName);
+            }
+            
+            /*
+            char fileName[512];
+            FILE* file;
+		    sprintf(fileName, "%s/config.ini", glob->pathVector[i]);
+            file = fopen(fileName, "rb");
+            if (file != NULL) {
+                const char* machineName = strrchr(glob->pathVector[i], '/');
+                if (machineName == NULL) {
+                    machineName = strrchr(glob->pathVector[i], '\\');
+                }
+                if (machineName == NULL) {
+                    machineName = glob->pathVector[i] - 1;
+                }
+                machineName++;
+                if (machineIsValid(machineName, checkRoms)) {
+                    char *name = (char *)calloc(512, sizeof(char));
+                    strncpy(name, machineName, maxNameLength - 1);
+                    arrayListAppend(list, name, 1);
+                }
+                
+                fclose(file);
+            }
+             */
         }
         
         archGlobFree(glob);
