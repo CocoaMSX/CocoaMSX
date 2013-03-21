@@ -99,6 +99,8 @@ typedef struct {
     } fdc;
     int slotInfoCount;
     SlotInfo slotInfo[32];
+    int isZipped;
+    char *zipFile;
 } Machine;
 
 

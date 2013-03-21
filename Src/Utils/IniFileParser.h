@@ -8,25 +8,35 @@
 
 #define MAX_LINE_LENGTH    512 
 
+typedef struct IniFile IniFile;
 
-int iniFileOpen(const char* filename);
-int iniFileClose();
+IniFile *iniFileOpen(const char *filename);
+IniFile *iniFileOpenZipped(const char *zipFile, const char *iniFilename);
 
-int iniFileGetInt(char* section, 
-                  char* entry, 
+const char *iniFileGetFilePath(IniFile *iniFile);
+
+int iniFileClose(IniFile *iniFile);
+
+int iniFileGetInt(IniFile *iniFile,
+                  char* section,
+                  char* entry,
                   int   def);
-int iniFileGetString(char* section, 
-                     char* entry, 
-                     char* defVal, 
-                     char* buffer, 
+int iniFileGetString(IniFile *iniFile,
+                     char* section,
+                     char* entry,
+                     char* defVal,
+                     char* buffer,
                      int   bufferLen);
-int iniFileGetSection(char* section, 
-                     char* buffer, 
-                     int   bufferLen);
-int iniFileWriteString(char* section, 
-                       char* entry, 
+int iniFileGetSection(IniFile *iniFile,
+                      char* section,
+                      char* buffer,
+                      int   bufferLen);
+int iniFileWriteString(IniFile *iniFile,
+                       char* section,
+                       char* entry,
                        char* buffer);
-int iniFileWriteSection(char* section, 
+int iniFileWriteSection(IniFile *iniFile,
+                        char* section,
                         char* buffer);
 
 

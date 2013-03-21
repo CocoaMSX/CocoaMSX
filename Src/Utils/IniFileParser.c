@@ -2,63 +2,144 @@
 #include <string.h> 
 #include <stdlib.h>
 #include <ctype.h>
+
+#include "unzip.h"
 #include "IniFileParser.h"
 
 
 // PacketFileSystem.h Need to be included after all other includes
 #include "PacketFileSystem.h"
 
+struct IniFile
+{
+    char *iniBuffer;
+    char *iniPtr;
+    char *iniEnd;
+    char *wrtBuffer;
+    int   wrtBufferSize;
+    int   wrtOffset;
+    int   modified;
+    char  iniFilename[512];
+    char  zipFile[512];
+    int   isZipped;
+};
 
-static char* iniBuffer;
-static char* iniPtr;
-static char* iniEnd;
-static char* wrtBuffer;
-static int   wrtBufferSize;
-static int   wrtOffset;
-static int   modified;
-static char iniFilename[512];
-
-static int readFile(const char* filename)
+static int readFile(IniFile *iniFile)
 {
     int length;
-    FILE* f;
+    int success = 0;
+    
+    if (!iniFile->isZipped)
+    {
+        // File is not compressed
+        FILE* f = fopen(iniFile->iniFilename, "r");
+        if (f != NULL)
+        {
+            fseek(f, 0, SEEK_END);
+            length = ftell(f);
+            fseek(f, 0, SEEK_SET);
 
-    iniPtr = NULL;
-    iniEnd = NULL;
-    iniBuffer = NULL;
-
-    f = fopen(filename, "r");
-    if (f == NULL) {
-        return 0;
-    }
-
-    fseek(f, 0, SEEK_END);
-    length = ftell(f);
-    fseek(f, 0, SEEK_SET);
-
-    if (length > 0) {
-        iniBuffer = malloc(length);
-        length = fread(iniBuffer, 1, length, f);
-        if (length > 0) {
-            iniPtr = iniBuffer;
-            iniEnd = iniBuffer + length;
+            if (length > 0) {
+                iniFile->iniBuffer = malloc(length);
+                length = fread(iniFile->iniBuffer, 1, length, f);
+                if (length > 0) {
+                    iniFile->iniPtr = iniFile->iniBuffer;
+                    iniFile->iniEnd = iniFile->iniBuffer + length;
+                }
+                else {
+                    free(iniFile->iniBuffer);
+                    iniFile->iniBuffer = NULL;
+                }
+            }
+            fclose(f);
+            
+            success = 1;
         }
-        else {
-            free(iniBuffer);
-            iniBuffer = NULL;
+    }
+    else
+    {
+        // File is compressed
+        unzFile zip;
+        unz_file_info info;
+        
+        zip = unzOpen(iniFile->zipFile);
+        if (zip)
+        {
+            int err = unzGoToFirstFile(zip);
+            int fileFound = 0;
+            char szCurrentFileName[256 + 1];
+            
+            while (err == UNZ_OK)
+            {
+                char *compressedFileName;
+                
+                err = unzGetCurrentFileInfo(zip, NULL,
+                                            szCurrentFileName, sizeof(szCurrentFileName) - 1,
+                                            NULL, 0, NULL, 0);
+                
+                compressedFileName = strrchr(szCurrentFileName, '/');
+                if (compressedFileName == NULL)
+                    compressedFileName = strrchr(szCurrentFileName, '\\');
+                
+                if (compressedFileName == NULL)
+                    compressedFileName = szCurrentFileName;
+                else
+                    compressedFileName++;
+                
+                if (err == UNZ_OK)
+                {
+                    if (unzStringFileNameCompare(iniFile->iniFilename, compressedFileName, 1) == 0)
+                    {
+                        fileFound = 1;
+                        break;
+                    }
+                    
+                    err = unzGoToNextFile(zip);
+                }
+            }
+            
+            if (fileFound)
+            {
+                // Re-set the ini filename to the full path inside the compressed archive
+                strcpy(iniFile->iniFilename, szCurrentFileName);
+                
+                if (unzOpenCurrentFile(zip) == UNZ_OK)
+                {
+                    unzGetCurrentFileInfo(zip, &info,NULL,0,NULL,0,NULL,0);
+                    
+                    length = info.uncompressed_size;
+                    if (length > 0)
+                    {
+                        iniFile->iniBuffer = malloc(length);
+                        if (iniFile->iniBuffer)
+                        {
+                            unzReadCurrentFile(zip, iniFile->iniBuffer, length);
+                            
+                            iniFile->iniPtr = iniFile->iniBuffer;
+                            iniFile->iniEnd = iniFile->iniBuffer + length;
+                            
+                            success = 1;
+                        }
+                    }
+                    
+                    unzCloseCurrentFile(zip);
+                    success = 1;
+                }
+            }
+            
+            unzClose(zip);
         }
     }
-    fclose(f);
-
-    return 1;
+    
+    return success;
 }
 
-int readLine(char *line) 
+static int readLine(IniFile *iniFile, char *line)
 {   
     int i = 0; 
 
-    while (iniPtr != iniEnd) {
-        char c = *iniPtr++;
+    while (iniFile->iniPtr != iniFile->iniEnd) {
+        char c = *iniFile->iniPtr++;
         if (c == '\r') {
             continue;
         }
@@ -73,76 +154,119 @@ int readLine(char *line)
     return -1;
 }
 
-void createWriteBuffer()
+static void createWriteBuffer(IniFile *iniFile)
 {
-    wrtBufferSize = 8192;
-    wrtBuffer = malloc(wrtBufferSize);
-    wrtOffset = 0;
+    iniFile->wrtBufferSize = 8192;
+    iniFile->wrtBuffer = malloc(iniFile->wrtBufferSize);
+    iniFile->wrtOffset = 0;
 }
 
-void rewindBuffer()
+static void rewindBuffer(IniFile *iniFile)
 {
-    iniPtr = iniBuffer;
+    iniFile->iniPtr = iniFile->iniBuffer;
 }
 
-void destroyWriteBuffer()
+static void destroyWriteBuffer(IniFile *iniFile)
 {
-    if (iniBuffer) {
-        free(iniBuffer);
+    if (iniFile->iniBuffer) {
+        free(iniFile->iniBuffer);
     }
-    iniBuffer = wrtBuffer;
-    iniPtr = iniBuffer;
-    iniEnd = iniBuffer + wrtOffset;
+    iniFile->iniBuffer = iniFile->wrtBuffer;
+    iniFile->iniPtr = iniFile->iniBuffer;
+    iniFile->iniEnd = iniFile->iniBuffer + iniFile->wrtOffset;
 }
 
-void writeLine(const char* line)
+static void writeLine(IniFile *iniFile, const char* line)
 {
     int length = strlen(line);
-    if (length + wrtOffset > wrtBufferSize) {
-        wrtBufferSize += 8192;
-        wrtBuffer = realloc(wrtBuffer, wrtBufferSize);
+    if (length + iniFile->wrtOffset > iniFile->wrtBufferSize) {
+        iniFile->wrtBufferSize += 8192;
+        iniFile->wrtBuffer = realloc(iniFile->wrtBuffer, iniFile->wrtBufferSize);
     }
 
-    memcpy(wrtBuffer + wrtOffset, line, length);
-    wrtOffset += length;
+    memcpy(iniFile->wrtBuffer + iniFile->wrtOffset, line, length);
+    iniFile->wrtOffset += length;
 
-    modified = 1;
+    iniFile->modified = 1;
 }
 
-void writeFile(const char* filename)
+static void writeFile(IniFile *iniFile, const char* filename)
 {
     FILE* f = fopen(filename, "w");
     if (f == NULL) {
         return;
     }
-    fwrite(iniBuffer, 1, iniEnd - iniBuffer, f);
+    fwrite(iniFile->iniBuffer, 1, iniFile->iniEnd - iniFile->iniBuffer, f);
     fclose(f);
 }
 
-int iniFileOpen(const char *filename)
+IniFile *iniFileOpen(const char *filename)
 {
-    modified = 0;
-    strcpy(iniFilename, filename);
-    return readFile(iniFilename);
+    IniFile *iniFile = (IniFile *)malloc(sizeof(IniFile));
+    
+    if (iniFile != NULL)
+    {
+        iniFile->isZipped = 0;
+        iniFile->isZipped = NULL;
+        
+        iniFile->modified = 0;
+        
+        iniFile->iniPtr = NULL;
+        iniFile->iniEnd = NULL;
+        iniFile->iniBuffer = NULL;
+        
+        strcpy(iniFile->iniFilename, filename);
+        readFile(iniFile);
+    }
+    
+    return iniFile;
 }
 
-int iniFileClose()
+IniFile *iniFileOpenZipped(const char *zipFile, const char *iniFilename)
 {
-    if (iniBuffer == NULL) {
+    IniFile *iniFile = (IniFile *)malloc(sizeof(IniFile));
+    
+    if (iniFile != NULL)
+    {
+        iniFile->isZipped = 1;
+        iniFile->modified = 0;
+        
+        iniFile->iniPtr = NULL;
+        iniFile->iniEnd = NULL;
+        iniFile->iniBuffer = NULL;
+        
+        strcpy(iniFile->iniFilename, iniFilename);
+        strcpy(iniFile->zipFile, zipFile);
+        
+        readFile(iniFile);
+    }
+    
+    return iniFile;
+}
+
+int iniFileClose(IniFile *iniFile)
+{
+    if (iniFile->iniBuffer == NULL) {
         return 0;
     }
 
-    if (modified) {
-        writeFile(iniFilename);
+    if (iniFile->modified) {
+        writeFile(iniFile, iniFile->iniFilename);
     }
 
-    free(iniBuffer);
-    iniBuffer = NULL;
+    free(iniFile->iniBuffer);
+    iniFile->iniBuffer = NULL;
 
     return 1;
 }
 
-int iniFileGetInt(char* section, 
+const char *iniFileGetFilePath(IniFile *iniFile)
+{
+    return iniFile->iniFilename;
+}
+
+int iniFileGetInt(IniFile *iniFile,
+                  char* section,
                   char* entry, 
                   int   def) 
 {   
@@ -154,18 +278,18 @@ int iniFileGetInt(char* section,
     int len = strlen(entry); 
     int i; 
     
-    rewindBuffer();
+    rewindBuffer(iniFile);
 
     sprintf(t_section, "[%s]", section);
 
     do {   
-        if (readLine(buff) < 0) {
+        if (readLine(iniFile, buff) < 0) {
             return def; 
         } 
     } while(strcmp(buff, t_section)); 
 
     do {   
-        if (readLine(buff) < 0 || buff[0] == '[') {
+        if (readLine(iniFile, buff) < 0 || buff[0] == '[') {
             return def; 
         } 
     } while(strncmp(buff, entry, len)); 
@@ -191,7 +315,8 @@ int iniFileGetInt(char* section,
 } 
 
 
-int iniFileGetString(char* section, 
+int iniFileGetString(IniFile *iniFile,
+                     char* section,
                      char* entry, 
                      char* defVal, 
                      char* buffer, 
@@ -203,14 +328,14 @@ int iniFileGetString(char* section,
     char t_section[MAX_LINE_LENGTH]; 
     int len = strlen(entry); 
 
-    rewindBuffer();
+    rewindBuffer(iniFile);
 
     strcpy(def, defVal);
 
     sprintf(t_section, "[%s]", section);
      
     do {   
-        if (readLine(buff) < 0) {   
+        if (readLine(iniFile, buff) < 0) {
             strncpy(buffer, def, bufferLen); 
             buffer[bufferLen - 1] = '\0';
             return strlen(buffer); 
@@ -218,7 +343,7 @@ int iniFileGetString(char* section,
     } while (strcmp(buff, t_section)); 
 
     do {   
-        if (readLine(buff) < 0 || buff[0] == '[') {   
+        if (readLine(iniFile, buff) < 0 || buff[0] == '[') {
             strncpy(buffer, def, bufferLen);   
             buffer[bufferLen - 1] = '\0';  
             return strlen(buffer); 
@@ -234,7 +359,8 @@ int iniFileGetString(char* section,
     return strlen(buffer); 
 } 
 
-int iniFileGetSection(char* section, 
+int iniFileGetSection(IniFile *iniFile,
+                      char* section,
                       char* buffer, 
                       int   bufferLen)
 {
@@ -243,19 +369,19 @@ int iniFileGetSection(char* section,
     int offset = 0;
     int len;
 
-    rewindBuffer();
+    rewindBuffer(iniFile);
 
     sprintf(t_section, "[%s]", section);
 
     do {   
-        if (readLine(buff) < 0) {   
+        if (readLine(iniFile, buff) < 0) {
             buffer[offset++] = '\0';
             buffer[offset++] = '\0';
             return strlen(buffer); 
         } 
     } while (strcmp(buff, t_section)); 
     
-    while ((len = readLine(buff)) >= 0 && buff[0] != '[') {
+    while ((len = readLine(iniFile, buff)) >= 0 && buff[0] != '[') {
         if (offset + len + 2 < bufferLen) {
             strcpy(buffer + offset, buff);
             offset += len + 1;
@@ -268,7 +394,8 @@ int iniFileGetSection(char* section,
     return 1;
 }
 
-int iniFileWriteString(char* section, 
+int iniFileWriteString(IniFile *iniFile,
+                       char* section,
                        char* entry, 
                        char* buffer) 
 {
@@ -277,98 +404,99 @@ int iniFileWriteString(char* section,
     char t_entry[MAX_LINE_LENGTH]; 
     int len;
 
-    rewindBuffer();
+    rewindBuffer(iniFile);
 
-    createWriteBuffer();
+    createWriteBuffer(iniFile);
 
     sprintf(t_section, "[%s]", section);
     sprintf(t_entry, "%s=", entry);
     len = strlen(t_entry);
 
     do {  
-        if (readLine(buff) < 0) {  
-            writeLine(t_section);
-            writeLine("\n");
-            writeLine(t_entry);
-            writeLine(buffer);
-            writeLine("\n");
-            destroyWriteBuffer();
+        if (readLine(iniFile, buff) < 0) {  
+            writeLine(iniFile, t_section);
+            writeLine(iniFile, "\n");
+            writeLine(iniFile, t_entry);
+            writeLine(iniFile, buffer);
+            writeLine(iniFile, "\n");
+            destroyWriteBuffer(iniFile);
             return 1; 
         } 
-        writeLine(buff);
-        writeLine("\n");
+        writeLine(iniFile, buff);
+        writeLine(iniFile, "\n");
     } while (strcmp(buff, t_section)); 
 
     for (;;) {   
-        if (readLine(buff) < 0) { 
-            writeLine(t_entry);
-            writeLine(buffer);
-            writeLine("\n");
-            destroyWriteBuffer();
+        if (readLine(iniFile, buff) < 0) {
+            writeLine(iniFile, t_entry);
+            writeLine(iniFile, buffer);
+            writeLine(iniFile, "\n");
+            destroyWriteBuffer(iniFile);
             return 1; 
         } 
 
         if (!strncmp(buff, t_entry, len) || buff[0] == '[') {
             break; 
         }
-        writeLine(buff);
-        writeLine("\n");
+        writeLine(iniFile, buff);
+        writeLine(iniFile, "\n");
     } 
 
-    writeLine(t_entry);
-    writeLine(buffer);
-    writeLine("\n");
+    writeLine(iniFile, t_entry);
+    writeLine(iniFile, buffer);
+    writeLine(iniFile, "\n");
 
     if (strncmp(buff, t_entry, len)) {
-        writeLine(buff);
-        writeLine("\n");
+        writeLine(iniFile, buff);
+        writeLine(iniFile, "\n");
     }
-    while (readLine(buff) >= 0) {
-        writeLine(buff);
-        writeLine("\n");
+    while (readLine(iniFile, buff) >= 0) {
+        writeLine(iniFile, buff);
+        writeLine(iniFile, "\n");
     }
 
-    destroyWriteBuffer();
+    destroyWriteBuffer(iniFile);
 
     return 1; 
 } 
 
 
-int iniFileWriteSection(char* section, 
+int iniFileWriteSection(IniFile *iniFile,
+                        char* section,
                         char* buffer)
 {
     char buff[MAX_LINE_LENGTH]; 
     char t_section[MAX_LINE_LENGTH]; 
     int len; 
 
-    rewindBuffer();
+    rewindBuffer(iniFile);
 
-    createWriteBuffer();
+    createWriteBuffer(iniFile);
 
     sprintf(t_section, "[%s]", section);
 
-    while (readLine(buff) >= 0 && strcmp(buff, t_section) != 0) {
-        writeLine(buff);
-        writeLine("\n");
+    while (readLine(iniFile, buff) >= 0 && strcmp(buff, t_section) != 0) {
+        writeLine(iniFile, buff);
+        writeLine(iniFile, "\n");
     }
     
-    writeLine(t_section);
-    writeLine("\n");
+    writeLine(iniFile, t_section);
+    writeLine(iniFile, "\n");
     while (*buffer != '\0') {
-        writeLine(buffer);
-        writeLine("\n");
+        writeLine(iniFile, buffer);
+        writeLine(iniFile, "\n");
         buffer += strlen(buffer) + 1;
     }
     
-    while ((len = readLine(buff)) >= 0 && buff[0] != '\0' && buff[0] != '[');
+    while ((len = readLine(iniFile, buff)) >= 0 && buff[0] != '\0' && buff[0] != '[');
 
     while (len >= 0) {
-        writeLine(buff);
-        writeLine("\n");
-        len = readLine(buff);
+        writeLine(iniFile, buff);
+        writeLine(iniFile, "\n");
+        len = readLine(iniFile, buff);
     }
 
-    destroyWriteBuffer();
+    destroyWriteBuffer(iniFile);
 
     return 1;
 }

@@ -36,6 +36,7 @@
 #include "MediaDb.h"
 #include "TokenExtract.h"
 #include "Disk.h"
+#include "unzip.h"
 
 #include "AppConfig.h"
 
@@ -163,19 +164,26 @@ int toint(char* buffer)
     return atoi(buffer);
 }
 
-static int readMachine(Machine* machine, const char* machineName, int isZipped, const char* file)
+static int readMachine(Machine* machine, const char* machineName, const char* file)
 {
     static char buffer[10000];
     char* slotBuf;
     int value;
     int i = 0;
-
+    IniFile *configIni;
+    
+    if (machine->isZipped)
+        configIni = iniFileOpenZipped(machine->zipFile, "config.ini");
+    else
+        configIni = iniFileOpen(file);
+    
+    if (configIni == NULL)
+        return 0;
+    
     strcpy(machine->name, machineName);
-
-    iniFileOpen(file);
-
+    
     // Read board info
-    iniFileGetString("Board", "type", "none", buffer, 10000);
+    iniFileGetString(configIni, "Board", "type", "none", buffer, 10000);
     if      (0 == strcmp(buffer, "MSX"))          machine->board.type = BOARD_MSX;
     else if (0 == strcmp(buffer, "MSX-S3527"))    machine->board.type = BOARD_MSX_S3527;
     else if (0 == strcmp(buffer, "MSX-S1985"))    machine->board.type = BOARD_MSX_S1985;
@@ -191,111 +199,111 @@ static int readMachine(Machine* machine, const char* machineName, int isZipped, 
     else                                          machine->board.type = BOARD_MSX;
 
     // Read video info
-    iniFileGetString("Video", "version", "none", buffer, 10000);
+    iniFileGetString(configIni, "Video", "version", "none", buffer, 10000);
     if      (0 == strcmp(buffer, "V9938"))    machine->video.vdpVersion = VDP_V9938;
     else if (0 == strcmp(buffer, "V9958"))    machine->video.vdpVersion = VDP_V9958;
     else if (0 == strcmp(buffer, "TMS9929A")) machine->video.vdpVersion = VDP_TMS9929A;
     else if (0 == strcmp(buffer, "TMS99x8A")) machine->video.vdpVersion = VDP_TMS99x8A;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
 
-    iniFileGetString("Video", "vram size", "none", buffer, 10000);
+    iniFileGetString(configIni, "Video", "vram size", "none", buffer, 10000);
     if (0 == strcmp(buffer, "16kB")) machine->video.vramSize = 16 * 1024;
     else if (0 == strcmp(buffer, "64kB")) machine->video.vramSize = 64 * 1024;
     else if (0 == strcmp(buffer, "128kB")) machine->video.vramSize = 128 * 1024;
     else if (0 == strcmp(buffer, "192kB")) machine->video.vramSize = 192 * 1024;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
 
     // Read CMOS info
-    iniFileGetString("CMOS", "Enable CMOS", "none", buffer, 10000);
+    iniFileGetString(configIni, "CMOS", "Enable CMOS", "none", buffer, 10000);
     if (0 == strcmp(buffer, "none")) machine->cmos.enable = 1;
     else if (0 == strcmp(buffer, "0")) machine->cmos.enable = 0;
     else if (0 == strcmp(buffer, "1")) machine->cmos.enable = 1;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
 
     // Read CPU info
-    iniFileGetString("CPU", "Z80 Frequency", "none", buffer, 10000);
+    iniFileGetString(configIni, "CPU", "Z80 Frequency", "none", buffer, 10000);
     if (0 == sscanf(buffer, "%dHz", &value)) {
         value = 3579545;
     }
     machine->cpu.freqZ80 = value;
 
     // Read CPU info
-    iniFileGetString("CPU", "R800 Frequency", "none", buffer, 10000);
+    iniFileGetString(configIni, "CPU", "R800 Frequency", "none", buffer, 10000);
     if (0 == sscanf(buffer, "%dHz", &value)) {
         value = 7159090;
     }
     machine->cpu.freqR800 = value;
 
     // Read FDC info
-    iniFileGetString("FDC", "Count", "none", buffer, 10000);
+    iniFileGetString(configIni, "FDC", "Count", "none", buffer, 10000);
     if (0 == strcmp(buffer, "none")) machine->fdc.count = 2;
     else if (0 == strcmp(buffer, "0")) machine->fdc.count = 0;
     else if (0 == strcmp(buffer, "1")) machine->fdc.count = 1;
     else if (0 == strcmp(buffer, "2")) machine->fdc.count = 2;
     else if (0 == strcmp(buffer, "3")) machine->fdc.count = 3;
     else if (0 == strcmp(buffer, "4")) machine->fdc.count = 4;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
     
-    iniFileGetString("CMOS", "Battery Backed", "none", buffer, 10000);
+    iniFileGetString(configIni, "CMOS", "Battery Backed", "none", buffer, 10000);
     if (0 == strcmp(buffer, "none")) machine->cmos.batteryBacked = 1;
     else if (0 == strcmp(buffer, "0")) machine->cmos.batteryBacked = 0;
     else if (0 == strcmp(buffer, "1")) machine->cmos.batteryBacked = 1;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
 
     // Read audio info
-    iniFileGetString("AUDIO", "PSG Stereo", "none", buffer, 10000);
+    iniFileGetString(configIni, "AUDIO", "PSG Stereo", "none", buffer, 10000);
     if (0 == strcmp(buffer, "none")) machine->audio.psgstereo = 0;
     else if (0 == strcmp(buffer, "0")) machine->audio.psgstereo = 0;
     else if (0 == strcmp(buffer, "1")) machine->audio.psgstereo = 1;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
 
     for (i = 0; i < sizeof(machine->audio.psgpan) / sizeof(machine->audio.psgpan[0]); i++) {
         char s[32];
         sprintf(s, "PSG Pan channel %d", i);
-        iniFileGetString("AUDIO", s, "none", buffer, 10000);
+        iniFileGetString(configIni, "AUDIO", s, "none", buffer, 10000);
         if (0 == strcmp(buffer, "none")) machine->audio.psgpan[i] = i == 0 ? 0 : i == 1 ? -1 : 1;
         else if (0 == strcmp(buffer, "left")) machine->audio.psgpan[i] = -1;
         else if (0 == strcmp(buffer, "center")) machine->audio.psgpan[i] = 0;
         else if (0 == strcmp(buffer, "right")) machine->audio.psgpan[i] = 1;
-        else { iniFileClose(); return 0; }
+        else { iniFileClose(configIni); return 0; }
     }
 
     // Read subslot info
-    iniFileGetString("Subslotted Slots", "slot 0", "none", buffer, 10000);
+    iniFileGetString(configIni, "Subslotted Slots", "slot 0", "none", buffer, 10000);
     if (0 == strcmp(buffer, "0")) machine->slot[0].subslotted = 0;
     else if (0 == strcmp(buffer, "1")) machine->slot[0].subslotted = 1;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
     
-    iniFileGetString("Subslotted Slots", "slot 1", "none", buffer, 10000);
+    iniFileGetString(configIni, "Subslotted Slots", "slot 1", "none", buffer, 10000);
     if (0 == strcmp(buffer, "0")) machine->slot[1].subslotted = 0;
     else if (0 == strcmp(buffer, "1")) machine->slot[1].subslotted = 1;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
     
-    iniFileGetString("Subslotted Slots", "slot 2", "none", buffer, 10000);
+    iniFileGetString(configIni, "Subslotted Slots", "slot 2", "none", buffer, 10000);
     if (0 == strcmp(buffer, "0")) machine->slot[2].subslotted = 0;
     else if (0 == strcmp(buffer, "1")) machine->slot[2].subslotted = 1;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
     
-    iniFileGetString("Subslotted Slots", "slot 3", "none", buffer, 10000);
+    iniFileGetString(configIni, "Subslotted Slots", "slot 3", "none", buffer, 10000);
     if (0 == strcmp(buffer, "0")) machine->slot[3].subslotted = 0;
     else if (0 == strcmp(buffer, "1")) machine->slot[3].subslotted = 1;
-    else { iniFileClose(); return 0; }
+    else { iniFileClose(configIni); return 0; }
 
     // Read external slot info
-    iniFileGetString("External Slots", "slot A", "none", buffer, 10000);
+    iniFileGetString(configIni, "External Slots", "slot A", "none", buffer, 10000);
     machine->cart[0].slot = toint(extractToken(buffer, 0));        
     machine->cart[0].subslot = toint(extractToken(buffer, 1));    
-    if (machine->cart[0].slot < 0 || machine->cart[0].slot >= 4) { iniFileClose(); return 0; }
-    if (machine->cart[0].subslot < 0 || machine->cart[0].subslot >= 4) { iniFileClose(); return 0; }  
+    if (machine->cart[0].slot < 0 || machine->cart[0].slot >= 4) { iniFileClose(configIni); return 0; }
+    if (machine->cart[0].subslot < 0 || machine->cart[0].subslot >= 4) { iniFileClose(configIni); return 0; }  
 
-    iniFileGetString("External Slots", "slot B", "none", buffer, 10000);
+    iniFileGetString(configIni, "External Slots", "slot B", "none", buffer, 10000);
     machine->cart[1].slot = toint(extractToken(buffer, 0));        
     machine->cart[1].subslot = toint(extractToken(buffer, 1));    
-    if (machine->cart[1].slot < 0 || machine->cart[1].slot >= 4) { iniFileClose(); return 0; }
-    if (machine->cart[1].subslot < 0 || machine->cart[1].subslot >= 4) { iniFileClose(); return 0; }   
+    if (machine->cart[1].slot < 0 || machine->cart[1].slot >= 4) { iniFileClose(configIni); return 0; }
+    if (machine->cart[1].subslot < 0 || machine->cart[1].subslot >= 4) { iniFileClose(configIni); return 0; }   
 
     // Read slots
-    iniFileGetSection("Slots", buffer, 10000);
+    iniFileGetSection(configIni, "Slots", buffer, 10000);
 
     slotBuf = buffer;
     machine->cpu.hasR800 = 0;
@@ -322,34 +330,65 @@ static int readMachine(Machine* machine, const char* machineName, int isZipped, 
         arg = extractToken(slotBuf, 6);
         strcpy(machine->slotInfo[i].inZipName, arg ? arg : "");
 
-        if (machine->slotInfo[i].slot < 0 || machine->slotInfo[i].slot >= 4) { iniFileClose(); return 0; }
-        if (machine->slotInfo[i].subslot < 0 || machine->slotInfo[i].subslot >= 4) { iniFileClose(); return 0; }
-        if (machine->slotInfo[i].startPage < 0 || machine->slotInfo[i].startPage >= 8) { iniFileClose(); return 0; }
-        if (machine->slotInfo[i].pageCount == -1) { iniFileClose(); return 0; }
-        if (machine->slotInfo[i].romType < 1 || machine->slotInfo[i].romType > ROM_MAXROMID) { iniFileClose(); return 0; }
+        if (machine->slotInfo[i].slot < 0 || machine->slotInfo[i].slot >= 4) { iniFileClose(configIni); return 0; }
+        if (machine->slotInfo[i].subslot < 0 || machine->slotInfo[i].subslot >= 4) { iniFileClose(configIni); return 0; }
+        if (machine->slotInfo[i].startPage < 0 || machine->slotInfo[i].startPage >= 8) { iniFileClose(configIni); return 0; }
+        if (machine->slotInfo[i].pageCount == -1) { iniFileClose(configIni); return 0; }
+        if (machine->slotInfo[i].romType < 1 || machine->slotInfo[i].romType > ROM_MAXROMID) { iniFileClose(configIni); return 0; }
 
         slotBuf += strlen(slotBuf) + 1;
         
-        // FIXME: nicify
-        char *slotName = machine->slotInfo[i].name;
-        if (strstr(slotName, "Machines/") == slotName ||
-            strstr(slotName, "Machines\\") == slotName)
+        char slotInfoName[1024];
+        strcpy(slotInfoName, machine->slotInfo[i].name);
+        
+        char *slotFilename = strrchr(slotInfoName, '/');
+        if (slotFilename == NULL)
+            slotFilename = strrchr(slotInfoName, '\\');
+        if (slotFilename == NULL)
+            slotFilename = slotInfoName;
+        else
+            slotFilename++;
+        
+        if (!machine->isZipped)
         {
-            char expandedPath[1024];
-            sprintf(expandedPath, "%s/%s", machinesDir, slotName + 9);
-            strcpy(slotName, expandedPath);
+            // Convert the relative path into absolute
+            
+            if (strcasestr(machine->slotInfo[i].name, "Machines/") == machine->slotInfo[i].name ||
+                strcasestr(machine->slotInfo[i].name, "Machines\\") == machine->slotInfo[i].name)
+            {
+                char expandedPath[1024];
+                sprintf(expandedPath, "%s/%s", machinesDir, machine->slotInfo[i].name + 9);
+                strcpy(machine->slotInfo[i].name, expandedPath);
+            }
+        }
+        else
+        {
+            char iniFilePath[512];
+            strcpy(iniFilePath, iniFileGetFilePath(configIni));
+            
+            char *parentDir = strrchr(iniFilePath, '/');
+            if (parentDir == NULL)
+                parentDir = strrchr(iniFilePath, '\\');
+            if (parentDir == NULL)
+                parentDir = iniFilePath;
+            else
+                *(parentDir + 1) = '\0';
+            
+            strcpy(machine->slotInfo[i].name, machine->zipFile);
+            sprintf(machine->slotInfo[i].inZipName, "%s%s",
+                    iniFilePath, slotFilename);
         }
         
 #ifdef __APPLE__
         // On OS X, replace all backslashes with slashes
-        for (char *ch = slotName; *ch; ch++)
+        for (char *ch = machine->slotInfo[i].name; *ch; ch++)
             if (*ch == '\\') *ch = '/';
 #endif
     }
 
     machine->slotInfoCount = i;
  
-    iniFileClose();
+    iniFileClose(configIni);
 
     return 1;
 }
@@ -361,81 +400,84 @@ void machineSave(Machine* machine)
     char buffer[10000];
     int size = 0;
     int i;
+    IniFile *configIni;
 
     sprintf(dir, "%s/%s", machinesDir, machine->name);
     archCreateDirectory(dir);
 
     sprintf(file, "%s/%s/config.ini", machinesDir, machine->name);
 
-    iniFileOpen(file);
+    configIni = iniFileOpen(file);
+    if (configIni == NULL)
+        return;
 
     // Write CMOS info
-    iniFileWriteString("CMOS", "Enable CMOS", machine->cmos.enable ? "1" : "0");
-    iniFileWriteString("CMOS", "Battery Backed", machine->cmos.batteryBacked ? "1" : "0");
+    iniFileWriteString(configIni, "CMOS", "Enable CMOS", machine->cmos.enable ? "1" : "0");
+    iniFileWriteString(configIni, "CMOS", "Battery Backed", machine->cmos.batteryBacked ? "1" : "0");
 
     // Write Audio info
-    iniFileWriteString("AUDIO", "PSG Stereo", machine->audio.psgstereo ? "1" : "0");
+    iniFileWriteString(configIni, "AUDIO", "PSG Stereo", machine->audio.psgstereo ? "1" : "0");
     
     if (machine->audio.psgstereo) {
         for (i = 0; i < sizeof(machine->audio.psgpan) / sizeof(machine->audio.psgpan[0]); i++) {
             char s[32];
             int pan = machine->audio.psgpan[i];
             sprintf(s, "PSG Pan channel %d", i);
-            iniFileWriteString("AUDIO", s,  pan < 0 ? "left" : pan > 0 ? "right" : "center");
+            iniFileWriteString(configIni, "AUDIO", s,  pan < 0 ? "left" : pan > 0 ? "right" : "center");
         }
     }
 
     // Write FDC info
     sprintf(buffer, "%d", machine->fdc.count);
-    iniFileWriteString("FDC", "Count", buffer);
+    iniFileWriteString(configIni, "FDC", "Count", buffer);
 
     // Write CPU info
     sprintf(buffer, "%dHz", machine->cpu.freqZ80);
-    iniFileWriteString("CPU", "Z80 Frequency", buffer);
+    iniFileWriteString(configIni, "CPU", "Z80 Frequency", buffer);
     if (machine->cpu.hasR800) {
         sprintf(buffer, "%dHz", machine->cpu.freqR800);
-        iniFileWriteString("CPU", "R800 Frequency", buffer);
+        iniFileWriteString(configIni, "CPU", "R800 Frequency", buffer);
     }
 
     // Write Board info
     switch (machine->board.type) {
-    case BOARD_MSX:          iniFileWriteString("Board", "type", "MSX"); break;
-    case BOARD_MSX_S3527:    iniFileWriteString("Board", "type", "MSX-S3527"); break;
-    case BOARD_MSX_S1985:    iniFileWriteString("Board", "type", "MSX-S1985"); break;
-    case BOARD_MSX_T9769B:   iniFileWriteString("Board", "type", "MSX-T9769B"); break;
-    case BOARD_MSX_T9769C:   iniFileWriteString("Board", "type", "MSX-T9769C"); break;
-    case BOARD_MSX_FORTE_II: iniFileWriteString("Board", "type", "MSX-ForteII"); break;
-    case BOARD_SVI:          iniFileWriteString("Board", "type", "SVI"); break;
-    case BOARD_COLECO:       iniFileWriteString("Board", "type", "ColecoVision"); break;
-    case BOARD_COLECOADAM:   iniFileWriteString("Board", "type", "ColecoAdam"); break;
-    case BOARD_SG1000:       iniFileWriteString("Board", "type", "SG-1000"); break;
-    case BOARD_SF7000:       iniFileWriteString("Board", "type", "SF-7000"); break;
-    case BOARD_SC3000:       iniFileWriteString("Board", "type", "SC-3000"); break;
+    case BOARD_MSX:          iniFileWriteString(configIni, "Board", "type", "MSX"); break;
+    case BOARD_MSX_S3527:    iniFileWriteString(configIni, "Board", "type", "MSX-S3527"); break;
+    case BOARD_MSX_S1985:    iniFileWriteString(configIni, "Board", "type", "MSX-S1985"); break;
+    case BOARD_MSX_T9769B:   iniFileWriteString(configIni, "Board", "type", "MSX-T9769B"); break;
+    case BOARD_MSX_T9769C:   iniFileWriteString(configIni, "Board", "type", "MSX-T9769C"); break;
+    case BOARD_MSX_FORTE_II: iniFileWriteString(configIni, "Board", "type", "MSX-ForteII"); break;
+    case BOARD_SVI:          iniFileWriteString(configIni, "Board", "type", "SVI"); break;
+    case BOARD_COLECO:       iniFileWriteString(configIni, "Board", "type", "ColecoVision"); break;
+    case BOARD_COLECOADAM:   iniFileWriteString(configIni, "Board", "type", "ColecoAdam"); break;
+    case BOARD_SG1000:       iniFileWriteString(configIni, "Board", "type", "SG-1000"); break;
+    case BOARD_SF7000:       iniFileWriteString(configIni, "Board", "type", "SF-7000"); break;
+    case BOARD_SC3000:       iniFileWriteString(configIni, "Board", "type", "SC-3000"); break;
     default: break;
     }
 
     // Write video info
     switch (machine->video.vdpVersion) {
-    case VDP_V9958:     iniFileWriteString("Video", "version", "V9958"); break;
-    case VDP_V9938:     iniFileWriteString("Video", "version", "V9938"); break;
-    case VDP_TMS9929A:  iniFileWriteString("Video", "version", "TMS9929A"); break;
-    case VDP_TMS99x8A:  iniFileWriteString("Video", "version", "TMS99x8A"); break;
+    case VDP_V9958:     iniFileWriteString(configIni, "Video", "version", "V9958"); break;
+    case VDP_V9938:     iniFileWriteString(configIni, "Video", "version", "V9938"); break;
+    case VDP_TMS9929A:  iniFileWriteString(configIni, "Video", "version", "TMS9929A"); break;
+    case VDP_TMS99x8A:  iniFileWriteString(configIni, "Video", "version", "TMS99x8A"); break;
     }
 
     sprintf(buffer, "%dkB", machine->video.vramSize / 0x400);
-    iniFileWriteString("Video", "vram size", buffer);
+    iniFileWriteString(configIni, "Video", "vram size", buffer);
 
     // Write subslot info
-    iniFileWriteString("Subslotted Slots", "slot 0", machine->slot[0].subslotted ? "1" : "0");
-    iniFileWriteString("Subslotted Slots", "slot 1", machine->slot[1].subslotted ? "1" : "0");
-    iniFileWriteString("Subslotted Slots", "slot 2", machine->slot[2].subslotted ? "1" : "0");
-    iniFileWriteString("Subslotted Slots", "slot 3", machine->slot[3].subslotted ? "1" : "0");
+    iniFileWriteString(configIni, "Subslotted Slots", "slot 0", machine->slot[0].subslotted ? "1" : "0");
+    iniFileWriteString(configIni, "Subslotted Slots", "slot 1", machine->slot[1].subslotted ? "1" : "0");
+    iniFileWriteString(configIni, "Subslotted Slots", "slot 2", machine->slot[2].subslotted ? "1" : "0");
+    iniFileWriteString(configIni, "Subslotted Slots", "slot 3", machine->slot[3].subslotted ? "1" : "0");
 
     // Write external slot info
     sprintf(buffer, "%d %d", machine->cart[0].slot, machine->cart[0].subslot);
-    iniFileWriteString("External Slots", "slot A", buffer);
+    iniFileWriteString(configIni, "External Slots", "slot A", buffer);
     sprintf(buffer, "%d %d", machine->cart[1].slot, machine->cart[1].subslot);
-    iniFileWriteString("External Slots", "slot B", buffer);
+    iniFileWriteString(configIni, "External Slots", "slot B", buffer);
 
     // Write slots
     for (i = 0; i < machine->slotInfoCount; i++) {
@@ -454,9 +496,9 @@ void machineSave(Machine* machine)
     buffer[size++] = 0;
 
 //    iniFileWriteString("Slots", NULL, NULL);
-    iniFileWriteSection("Slots", buffer);
+    iniFileWriteSection(configIni, "Slots", buffer);
 
-    iniFileClose();
+    iniFileClose(configIni);
 }
 
 Machine* machineCreate(const char* machineName)
@@ -464,13 +506,23 @@ Machine* machineCreate(const char* machineName)
     char configIni[512];
     Machine* machine;
     int success;
-    int isZipped = 0;
     FILE *file;
+    
+    machine = malloc(sizeof(Machine));
+    if (machine == NULL)
+        return NULL;
+    
+    machine->zipFile = NULL;
+    machine->isZipped = 0;
     
     sprintf(configIni, "%s/%s/config.ini", machinesDir, machineName);
     file = fopen(configIni, "rb");
     
-    if (file == NULL)
+    if (file != NULL)
+    {
+        fclose(file);
+    }
+    else
     {
         // No config.ini. Is it compressed?
         char zipFile[512];
@@ -479,28 +531,34 @@ Machine* machineCreate(const char* machineName)
         file = fopen(zipFile, "rb");
         
         if (file == NULL)
+        {
+            free(machine);
             return NULL; // Not compressed and no config.ini
+        }
         
-        isZipped = 1;
+        machine->zipFile = calloc(strlen(zipFile) + 1, sizeof(char));
+        strcpy(machine->zipFile, zipFile);
+        
+        machine->isZipped = 1;
     }
     
-    fclose(file);
-    
-    machine = malloc(sizeof(Machine));
-
-    success = readMachine(machine, machineName, isZipped, configIni);
-    if (!success) {
+    success = readMachine(machine, machineName, configIni);
+    if (!success)
+    {
         free(machine);
         return NULL;
     }
-
+    
     machineUpdate(machine);
-
+    
     return machine;
 }
 
 void machineDestroy(Machine* machine)
 {
+    if (machine->zipFile)
+        free(machine->zipFile);
+    
     free(machine);
 }
 
@@ -515,26 +573,53 @@ int machineIsValid(const char* machineName, int checkRoms)
         return 0;
     }
     
-    if (checkRoms) {
+    if (checkRoms)
+    {
+        unzFile zippedMachine = 0;
+        
 #ifdef COCOAMSX
         if ((machine->board.type & BOARD_MASK) != BOARD_MSX)
             success = 0;
 #endif
-        for (i = 0; i < machine->slotInfoCount; i++) {
-            if (strlen(machine->slotInfo[i].name) ||
-                strlen(machine->slotInfo[i].inZipName))
-            {        
-                FILE* file = fopen(machine->slotInfo[i].name, "r");
-                if (file == NULL) {
-                    if (success) {
-    //                    printf("\n%s: Cant find rom:\n", machineName);
-                    }
-    //                printf("     %s\n", machine->slotInfo[i].name);
+        if (success)
+        {
+            if (machine->isZipped)
+            {
+                zippedMachine = unzOpen(machine->zipFile);
+                if (!zippedMachine)
                     success = 0;
-                    continue;
-                }
-                fclose(file);
             }
+            
+            if (success)
+            {
+                for (i = 0; i < machine->slotInfoCount; i++) {
+                    if (strlen(machine->slotInfo[i].name) ||
+                        strlen(machine->slotInfo[i].inZipName))
+                    {
+                        if (machine->isZipped)
+                        {
+                            int location = unzLocateFile(zippedMachine,
+                                                         machine->slotInfo[i].inZipName, 1);
+                            
+                            if (location == UNZ_END_OF_LIST_OF_FILE)
+                                success = 0;
+                        }
+                        else
+                        {
+                            FILE* file = fopen(machine->slotInfo[i].name, "r");
+                            if (file == NULL)
+                            {
+                                success = 0;
+                                continue;
+                            }
+                            fclose(file);
+                        }
+                    }
+                }
+            }
+            
+            if (zippedMachine)
+                unzClose(zippedMachine);
         }
     }
     
@@ -628,39 +713,12 @@ void machineFillAvailable(ArrayList *list, int checkRoms)
             
             machineName++;
             
-            if (machineIsValid(machineName, checkRoms)) {
-                fprintf(stderr, "Zipped Machine '%s' is valid!\n", machineName);
-//                char *name = (char *)calloc(512, sizeof(char));
-//                strncpy(name, machineName, maxNameLength - 1);
-//                arrayListAppend(list, name, 1);
+            if (machineIsValid(machineName, checkRoms))
+            {
+                char *name = (char *)calloc(512, sizeof(char));
+                strncpy(name, machineName, maxNameLength - 1);
+                arrayListAppend(list, name, 1);
             }
-            else {
-                fprintf(stderr, "Zipped Machine '%s' is INvalid!\n", machineName);
-            }
-            
-            /*
-            char fileName[512];
-            FILE* file;
-		    sprintf(fileName, "%s/config.ini", glob->pathVector[i]);
-            file = fopen(fileName, "rb");
-            if (file != NULL) {
-                const char* machineName = strrchr(glob->pathVector[i], '/');
-                if (machineName == NULL) {
-                    machineName = strrchr(glob->pathVector[i], '\\');
-                }
-                if (machineName == NULL) {
-                    machineName = glob->pathVector[i] - 1;
-                }
-                machineName++;
-                if (machineIsValid(machineName, checkRoms)) {
-                    char *name = (char *)calloc(512, sizeof(char));
-                    strncpy(name, machineName, maxNameLength - 1);
-                    arrayListAppend(list, name, 1);
-                }
-                
-                fclose(file);
-            }
-             */
         }
         
         archGlobFree(glob);
