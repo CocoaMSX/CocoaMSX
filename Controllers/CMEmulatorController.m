@@ -1070,9 +1070,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     NSString *text = [pasteBoard stringForType:NSPasteboardTypeString];
     
     NSString *runningMachineId = [self runningMachineConfiguration];
-    NSInteger layoutId = [CMMSXKeyboard layoutOfMachineWithIdentifier:runningMachineId];
+    NSString *layoutName = [CMMSXKeyboard layoutNameOfMachineWithIdentifier:runningMachineId];
     
-    [[self keyboard] pasteText:text keyLayoutId:layoutId];
+    [[self keyboard] pasteText:text layoutName:layoutName];
 }
 
 - (void)windowKeyDidChange:(BOOL)isKey

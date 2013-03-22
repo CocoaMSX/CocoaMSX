@@ -154,10 +154,7 @@ KeyCategoryNumericPad = "Numeric Pad";
 KeyCategorySpecial = "Special Keys";
 KeyCategoryJoystickDirectional = "Directions";
 KeyCategoryJoystickButtons = "Buttons";
-KeyCategoryTypewriterRowOne = "Typewriter Keys, Row 1";
-KeyCategoryTypewriterRowTwo = "Typewriter Keys, Row 2";
-KeyCategoryTypewriterRowThree = "Typewriter Keys, Row 3";
-KeyCategoryTypewriterRowFour = "Typewriter Keys, Row 4";
+KeyCategoryTypewriter = "Typewriter Keys";
 
 VersionAbout = "Version %@";
 Error = "Error";

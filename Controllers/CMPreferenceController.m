@@ -287,7 +287,7 @@
     
     // Scope Bar
     [keyboardScopeBar setSelected:YES forItem:@(CMMSXKeyStateDefault)  inGroup:SCOPEBAR_GROUP_SHIFTED];
-    [keyboardScopeBar setSelected:YES forItem:@(CMMSXKeyboardEuropean) inGroup:SCOPEBAR_GROUP_REGIONS];
+    [keyboardScopeBar setSelected:YES forItem:CMMSXKeyboardEuropean inGroup:SCOPEBAR_GROUP_REGIONS];
     
     [self synchronizeSettings];
     
@@ -388,7 +388,7 @@
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
     
     [keyboardScopeBar setSelected:YES
-                          forItem:@([CMMSXKeyboard layoutOfMachineWithIdentifier:[selected machineId]])
+                          forItem:[CMMSXKeyboard layoutNameOfMachineWithIdentifier:[selected machineId]]
                           inGroup:SCOPEBAR_GROUP_REGIONS];
 }
 
@@ -1241,7 +1241,7 @@
             }
             else
             {
-                CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayout:selectedKeyboardRegion];
+                CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayoutName:selectedKeyboardRegion];
                 if (keyboard)
                 {
                     NSString *label = [keyboard presentationLabelForVirtualCode:virtualCode
@@ -1323,7 +1323,7 @@
         if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"] ||
             [[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"])
         {
-            CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayout:selectedKeyboardRegion];
+            CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayoutName:selectedKeyboardRegion];
             BOOL isCellEditable = NO;
             
             if (keyboard)
@@ -1446,17 +1446,17 @@
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
             return [NSArray arrayWithObjects:
-                    @(CMMSXKeyboardArabic),
-                    @(CMMSXKeyboardBrazilian),
-                    @(CMMSXKeyboardEstonian),
-                    @(CMMSXKeyboardEuropean),
-                    @(CMMSXKeyboardFrench),
-                    @(CMMSXKeyboardGerman),
-                    @(CMMSXKeyboardJapanese),
-                    @(CMMSXKeyboardKorean),
-                    @(CMMSXKeyboardRussian),
-                    @(CMMSXKeyboardSpanish),
-                    @(CMMSXKeyboardSwedish), nil];
+                    CMMSXKeyboardArabic,
+                    CMMSXKeyboardBrazilian,
+                    CMMSXKeyboardEstonian,
+                    CMMSXKeyboardEuropean,
+                    CMMSXKeyboardFrench,
+                    CMMSXKeyboardGerman,
+                    CMMSXKeyboardJapanese,
+                    CMMSXKeyboardKorean,
+                    CMMSXKeyboardRussian,
+                    CMMSXKeyboardSpanish,
+                    CMMSXKeyboardSwedish, nil];
         }
     }
     else if (theScopeBar == machineScopeBar)
@@ -1501,29 +1501,29 @@
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
-            CMMSXKeyboardLayout layoutId = [identifier integerValue];
+            NSString *layoutName = identifier;
             
-            if (layoutId == CMMSXKeyboardArabic)
+            if ([layoutName isEqualToString:CMMSXKeyboardArabic])
                 return CMLoc(@"MsxKeyLayoutArabic");
-            if (layoutId == CMMSXKeyboardBrazilian)
+            if ([layoutName isEqualToString:CMMSXKeyboardBrazilian])
                 return CMLoc(@"MsxKeyLayoutBrazilian");
-            if (layoutId == CMMSXKeyboardEstonian)
+            if ([layoutName isEqualToString:CMMSXKeyboardEstonian])
                 return CMLoc(@"MsxKeyLayoutEstonian");
-            if (layoutId == CMMSXKeyboardEuropean)
+            if ([layoutName isEqualToString:CMMSXKeyboardEuropean])
                 return CMLoc(@"MsxKeyLayoutEuropean");
-            if (layoutId == CMMSXKeyboardFrench)
+            if ([layoutName isEqualToString:CMMSXKeyboardFrench])
                 return CMLoc(@"MsxKeyLayoutFrench");
-            if (layoutId == CMMSXKeyboardGerman)
+            if ([layoutName isEqualToString:CMMSXKeyboardGerman])
                 return CMLoc(@"MsxKeyLayoutGerman");
-            if (layoutId == CMMSXKeyboardJapanese)
+            if ([layoutName isEqualToString:CMMSXKeyboardJapanese])
                 return CMLoc(@"MsxKeyLayoutJapanese");
-            if (layoutId == CMMSXKeyboardKorean)
+            if ([layoutName isEqualToString:CMMSXKeyboardKorean])
                 return CMLoc(@"MsxKeyLayoutKorean");
-            if (layoutId == CMMSXKeyboardRussian)
+            if ([layoutName isEqualToString:CMMSXKeyboardRussian])
                 return CMLoc(@"MsxKeyLayoutRussian");
-            if (layoutId == CMMSXKeyboardSpanish)
+            if ([layoutName isEqualToString:CMMSXKeyboardSpanish])
                 return CMLoc(@"MsxKeyLayoutSpanish");
-            if (layoutId == CMMSXKeyboardSwedish)
+            if ([layoutName isEqualToString:CMMSXKeyboardSwedish])
                 return CMLoc(@"MsxKeyLayoutSwedish");
         }
     }
@@ -1555,8 +1555,7 @@
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
-            NSNumber *layoutId = identifier;
-            selectedKeyboardRegion = [layoutId integerValue];
+            selectedKeyboardRegion = identifier;
             
             [keyboardLayoutEditor reloadData];
         }

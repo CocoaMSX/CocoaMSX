@@ -348,6 +348,7 @@
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
 		FEA6E8A416EB0A2800A580CF /* CMMSXKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */; };
 		FEA6E8A716EB223100A580CF /* CMMSXJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A616EB223100A580CF /* CMMSXJoystick.m */; };
+		FEA74EFD16FC14B60033E2DE /* Data in Resources */ = {isa = PBXBuildFile; fileRef = FEA74EFC16FC14B60033E2DE /* Data */; };
 		FEA8BF1016A01007006E67D2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
@@ -1085,6 +1086,7 @@
 		FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMSXKeyboard.m; sourceTree = "<group>"; };
 		FEA6E8A516EB223100A580CF /* CMMSXJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMSXJoystick.h; sourceTree = "<group>"; };
 		FEA6E8A616EB223100A580CF /* CMMSXJoystick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMSXJoystick.m; sourceTree = "<group>"; };
+		FEA74EFC16FC14B60033E2DE /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
 		FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputDeviceLayout.h; sourceTree = "<group>"; };
 		FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputDeviceLayout.m; sourceTree = "<group>"; };
@@ -1198,11 +1200,12 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FEFB43B916321F2F00EAE462 /* CocoaMSX-Info.plist */,
+				FED34F3C163F320D002FCC89 /* Defaults.plist */,
 				FEACF06B16A07B9800EEF84C /* sparkle_dsa_pub.pem */,
 				6BCA755D164D7D09002CA211 /* Icons */,
 				FE1C1359167DE41800CE2B6B /* Images */,
-				FED34F3C163F320D002FCC89 /* Defaults.plist */,
-				FEFB43B916321F2F00EAE462 /* CocoaMSX-Info.plist */,
+				FEA74EFC16FC14B60033E2DE /* Data */,
 				FE1C1357167DE0D200CE2B6B /* Documents */,
 				FE2CEB551622A50500E58F9A /* Databases */,
 				FE2CEB571622A50500E58F9A /* Machines */,
@@ -2307,6 +2310,7 @@
 				FE46C8EE16CA188E00D25801 /* icon-downloading@2x.png in Resources */,
 				FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */,
 				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
+				FEA74EFD16FC14B60033E2DE /* Data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

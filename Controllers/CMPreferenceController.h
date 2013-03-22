@@ -89,7 +89,7 @@
     
     NSArray *virtualEmulationSpeedRange;
     
-    NSInteger selectedKeyboardRegion;
+    NSString *selectedKeyboardRegion;
     NSInteger selectedKeyboardShiftState;
     
     NSOperationQueue *downloadQueue;

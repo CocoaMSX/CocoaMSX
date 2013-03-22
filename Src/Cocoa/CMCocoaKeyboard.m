@@ -67,8 +67,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 {
     CMMsxKeyInfo *info = [[CMMsxKeyInfo alloc] init];
     
-    info.defaultStateLabel = defaultStateLabel;
-    info.shiftedStateLabel = shiftedStateLabel;
+    [info setDefaultStateLabel:defaultStateLabel];
+    [info setShiftedStateLabel:shiftedStateLabel];
     
     return [info autorelease];
 }
@@ -88,8 +88,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)dealloc
 {
-    self.defaultStateLabel = nil;
-    self.shiftedStateLabel = nil;
+    [self setDefaultStateLabel:nil];
+    [self setShiftedStateLabel:nil];
     
     [super dealloc];
 }
@@ -354,9 +354,9 @@ static NSArray *orderOfAppearance = nil;
 #pragma mark - Public methods
 
 - (BOOL)pasteText:(NSString *)text
-      keyLayoutId:(CMMSXKeyboardLayout)keyLayoutId
+       layoutName:(NSString *)layoutName
 {
-    CMMSXKeyboard *keyboardLayout = [CMMSXKeyboard keyboardWithLayout:keyLayoutId];
+    CMMSXKeyboard *keyboardLayout = [CMMSXKeyboard keyboardWithLayoutName:layoutName];
     if (!keyboardLayout)
         return NO; // Invalid key layout
     
@@ -476,7 +476,6 @@ static NSArray *orderOfAppearance = nil;
         case EC_0:
         case EC_NEG:
         case EC_CIRCFLX:
-            return CMKeyCategoryTypewriterRowOne;
         case EC_Q:
         case EC_W:
         case EC_E:
@@ -489,7 +488,6 @@ static NSArray *orderOfAppearance = nil;
         case EC_P:
         case EC_AT:
         case EC_LBRACK:
-            return CMKeyCategoryTypewriterRowTwo;
         case EC_A:
         case EC_S:
         case EC_D:
@@ -502,7 +500,6 @@ static NSArray *orderOfAppearance = nil;
         case EC_SEMICOL:
         case EC_COLON:
         case EC_BKSLASH:
-            return CMKeyCategoryTypewriterRowThree;
         case EC_Z:
         case EC_X:
         case EC_C:
@@ -514,7 +511,7 @@ static NSArray *orderOfAppearance = nil;
         case EC_PERIOD:
         case EC_DIV:
         case EC_UNDSCRE:
-            return CMKeyCategoryTypewriterRowFour;
+            return CMKeyCategoryTypewriter;
         case EC_LSHIFT:
         case EC_RSHIFT:
         case EC_CTRL:
@@ -594,14 +591,8 @@ static NSArray *orderOfAppearance = nil;
             return CMLoc(@"KeyCategoryDirectional");
         case CMKeyCategoryFunction:
             return CMLoc(@"KeyCategoryFunction");
-        case CMKeyCategoryTypewriterRowOne:
-            return CMLoc(@"KeyCategoryTypewriterRowOne");
-        case CMKeyCategoryTypewriterRowTwo:
-            return CMLoc(@"KeyCategoryTypewriterRowTwo");
-        case CMKeyCategoryTypewriterRowThree:
-            return CMLoc(@"KeyCategoryTypewriterRowThree");
-        case CMKeyCategoryTypewriterRowFour:
-            return CMLoc(@"KeyCategoryTypewriterRowFour");
+        case CMKeyCategoryTypewriter:
+            return CMLoc(@"KeyCategoryTypewriter");
         case CMKeyCategoryNumericPad:
             return CMLoc(@"KeyCategoryNumericPad");
         case CMKeyCategorySpecial:

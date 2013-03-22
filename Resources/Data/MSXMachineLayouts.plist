@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MSX - Al Alamiah AX-150</key>
+	<string>arabic</string>
+	<key>MSX - Al Alamiah AX-170</key>
+	<string>arabic</string>
+	<key>MSX - Canon V-10</key>
+	<string>japanese</string>
+	<key>MSX - Canon V-20</key>
+	<string>japanese</string>
+	<key>MSX - Canon V-20E</key>
+	<string>european</string>
+	<key>MSX - Canon V-20F</key>
+	<string>french</string>
+	<key>MSX - Canon V-20G</key>
+	<string>german</string>
+	<key>MSX - Canon V-20S</key>
+	<string>spanish</string>
+	<key>MSX - Canon V-8</key>
+	<string>japanese</string>
+	<key>MSX - Casio PV-16</key>
+	<string>japanese</string>
+	<key>MSX - Casio PV-7</key>
+	<string>japanese</string>
+	<key>MSX - Daewoo DPC-100</key>
+	<string>korean</string>
+	<key>MSX - Daewoo DPC-180</key>
+	<string>korean</string>
+	<key>MSX - Daewoo DPC-200</key>
+	<string>korean</string>
+	<key>MSX - Daewoo DPC-200E</key>
+	<string>european</string>
+	<key>MSX - Daewoo Zemmix CPC-50</key>
+	<string>korean</string>
+	<key>MSX - Daewoo Zemmix CPC-51</key>
+	<string>korean</string>
+	<key>MSX - Fenner DPC-200</key>
+	<string>european</string>
+	<key>MSX - Fenner FPC-500</key>
+	<string>european</string>
+	<key>MSX - Fenner SPC-800</key>
+	<string>european</string>
+	<key>MSX - Frael Bruc 100-1</key>
+	<string>european</string>
+	<key>MSX - Fujitsu FM-X</key>
+	<string>japanese</string>
+	<key>MSX - Goldstar FC-200</key>
+	<string>european</string>
+	<key>MSX - Gradiente Expert 1.0</key>
+	<string>brazilian</string>
+	<key>MSX - Gradiente Expert 1.1</key>
+	<string>brazilian</string>
+	<key>MSX - Gradiente Expert 1.3</key>
+	<string>brazilian</string>
+	<key>MSX - Gradiente Expert DDPlus</key>
+	<string>brazilian</string>
+	<key>MSX - Gradiente Expert Plus</key>
+	<string>brazilian</string>
+	<key>MSX - JVC HC-7GB</key>
+	<string>european</string>
+	<key>MSX - Mitsubishi ML-F110</key>
+	<string>japanese</string>
+	<key>MSX - Mitsubishi ML-F120</key>
+	<string>japanese</string>
+	<key>MSX - Mitsubishi ML-F48</key>
+	<string>european</string>
+	<key>MSX - Mitsubishi ML-F80</key>
+	<string>european</string>
+	<key>MSX - Mitsubishi ML-FX1</key>
+	<string>european</string>
+	<key>MSX - National CF-1200</key>
+	<string>japanese</string>
+	<key>MSX - National CF-2000</key>
+	<string>japanese</string>
+	<key>MSX - National CF-2700</key>
+	<string>japanese</string>
+	<key>MSX - National CF-3000</key>
+	<string>japanese</string>
+	<key>MSX - National CF-3300</key>
+	<string>japanese</string>
+	<key>MSX - National FS-1300</key>
+	<string>japanese</string>
+	<key>MSX - National FS-4000</key>
+	<string>japanese</string>
+	<key>MSX - Olympia PHC-2</key>
+	<string>french</string>
+	<key>MSX - Olympia PHC-28</key>
+	<string>french</string>
+	<key>MSX - Panasonic CF-2700G</key>
+	<string>german</string>
+	<key>MSX - Perfect 1</key>
+	<string>arabic</string>
+	<key>MSX - Philips NMS-801</key>
+	<string>european</string>
+	<key>MSX - Philips VG-8000</key>
+	<string>european</string>
+	<key>MSX - Philips VG-8010</key>
+	<string>european</string>
+	<key>MSX - Philips VG-8010F</key>
+	<string>french</string>
+	<key>MSX - Philips VG-8020-00</key>
+	<string>european</string>
+	<key>MSX - Philips VG-8020-20</key>
+	<string>european</string>
+	<key>MSX - Philips VG-8020F</key>
+	<string>french</string>
+	<key>MSX - Pioneer PX-7</key>
+	<string>japanese</string>
+	<key>MSX - Pioneer PX-7UK</key>
+	<string>european</string>
+	<key>MSX - Pioneer PX-V60</key>
+	<string>japanese</string>
+	<key>MSX - Samsung SPC-800</key>
+	<string>korean</string>
+	<key>MSX - Sanyo MPC-100</key>
+	<string>european</string>
+	<key>MSX - Sanyo MPC-64</key>
+	<string>german</string>
+	<key>MSX - Sanyo PHC-28L</key>
+	<string>french</string>
+	<key>MSX - Sanyo PHC-28S</key>
+	<string>european</string>
+	<key>MSX - Sanyo Wavy MPC-10</key>
+	<string>european</string>
+	<key>MSX - Sharp Epcom HotBit 1.1</key>
+	<string>brazilian</string>
+	<key>MSX - Sharp Epcom HotBit 1.2</key>
+	<string>brazilian</string>
+	<key>MSX - Sharp Epcom HotBit 1.3b</key>
+	<string>brazilian</string>
+	<key>MSX - Sharp Epcom HotBit 1.3p</key>
+	<string>brazilian</string>
+	<key>MSX - Sony HB-10</key>
+	<string>japanese</string>
+	<key>MSX - Sony HB-101P</key>
+	<string>european</string>
+	<key>MSX - Sony HB-10P</key>
+	<string>european</string>
+	<key>MSX - Sony HB-201</key>
+	<string>japanese</string>
+	<key>MSX - Sony HB-201P</key>
+	<string>european</string>
+	<key>MSX - Sony HB-20P</key>
+	<string>spanish</string>
+	<key>MSX - Sony HB-501</key>
+	<string>japanese</string>
+	<key>MSX - Sony HB-501P</key>
+	<string>european</string>
+	<key>MSX - Sony HB-55D</key>
+	<string>german</string>
+	<key>MSX - Sony HB-55P</key>
+	<string>european</string>
+	<key>MSX - Sony HB-701FD</key>
+	<string>japanese</string>
+	<key>MSX - Sony HB-75D</key>
+	<string>german</string>
+	<key>MSX - Sony HB-75P</key>
+	<string>european</string>
+	<key>MSX - Spectravideo SVI-728</key>
+	<string>european</string>
+	<key>MSX - Spectravideo SVI-738</key>
+	<string>european</string>
+	<key>MSX - Spectravideo SVI-738 Arabic</key>
+	<string>arabic</string>
+	<key>MSX - Spectravideo SVI-738 Henrik Gilvad</key>
+	<string>european</string>
+	<key>MSX - Spectravideo SVI-738 Swedish</key>
+	<string>swedish</string>
+	<key>MSX - Spectravideo SVI-838</key>
+	<string>swedish</string>
+	<key>MSX - Talent DPC-200</key>
+	<string>spanish</string>
+	<key>MSX - Talent DPC-200A</key>
+	<string>spanish</string>
+	<key>MSX - Toshiba HX-10</key>
+	<string>european</string>
+	<key>MSX - Toshiba HX-10D</key>
+	<string>japanese</string>
+	<key>MSX - Toshiba HX-10F</key>
+	<string>french</string>
+	<key>MSX - Toshiba HX-10S</key>
+	<string>japanese</string>
+	<key>MSX - Toshiba HX-10SA</key>
+	<string>spanish</string>
+	<key>MSX - Toshiba HX-20</key>
+	<string>japanese</string>
+	<key>MSX - Toshiba HX-20I</key>
+	<string>european</string>
+	<key>MSX - Toshiba HX-21</key>
+	<string>japanese</string>
+	<key>MSX - Toshiba HX-21I</key>
+	<string>european</string>
+	<key>MSX - Toshiba HX-22</key>
+	<string>japanese</string>
+	<key>MSX - Toshiba HX-22I</key>
+	<string>european</string>
+	<key>MSX - Yamaha CX5F-1</key>
+	<string>japanese</string>
+	<key>MSX - Yamaha CX5F-2</key>
+	<string>japanese</string>
+	<key>MSX - Yamaha CX5M-1</key>
+	<string>european</string>
+	<key>MSX - Yamaha CX5M-2</key>
+	<string>european</string>
+	<key>MSX - Yamaha CX5MII</key>
+	<string>european</string>
+	<key>MSX - Yamaha CX5MII-128</key>
+	<string>european</string>
+	<key>MSX - Yamaha YIS303</key>
+	<string>european</string>
+	<key>MSX - Yamaha YIS503</key>
+	<string>european</string>
+	<key>MSX - Yamaha YIS503F</key>
+	<string>european</string>
+	<key>MSX - Yamaha YIS503II</key>
+	<string>european</string>
+	<key>MSX - Yamaha YIS503IIR</key>
+	<string>russian</string>
+	<key>MSX - Yamaha YIS503IIR Estonian</key>
+	<string>estonian</string>
+	<key>MSX - Yamaha YIS503M</key>
+	<string>european</string>
+	<key>MSX - Yashica YC-64</key>
+	<string>european</string>
+	<key>MSX - Yeno DPC-64</key>
+	<string>french</string>
+	<key>MSX - Yeno MX64</key>
+	<string>french</string>
+	<key>MSX2 - Al Alamiah AX-350II</key>
+	<string>arabic</string>
+	<key>MSX2 - Al Alamiah AX-370</key>
+	<string>arabic</string>
+	<key>MSX2 - Canon V-25</key>
+	<string>japanese</string>
+	<key>MSX2 - Canon V-30</key>
+	<string>japanese</string>
+	<key>MSX2 - Canon V-30F</key>
+	<string>japanese</string>
+	<key>MSX2 - Daewoo CPC-300</key>
+	<string>korean</string>
+	<key>MSX2 - Daewoo CPC-300E</key>
+	<string>korean</string>
+	<key>MSX2 - Daewoo CPC-330K</key>
+	<string>korean</string>
+	<key>MSX2 - Daewoo CPC-400</key>
+	<string>korean</string>
+	<key>MSX2 - Daewoo CPC-400S</key>
+	<string>korean</string>
+	<key>MSX2 - Daewoo Zemmix CPC-61</key>
+	<string>korean</string>
+	<key>MSX2 - Daewoo Zemmix CPG-120</key>
+	<string>korean</string>
+	<key>MSX2 - Fenner FPC-900</key>
+	<string>european</string>
+	<key>MSX2 - Gradiente Expert 2.0</key>
+	<string>brazilian</string>
+	<key>MSX2 - Kawai KMC-5000</key>
+	<string>japanese</string>
+	<key>MSX2 - Mitsubishi ML-G1</key>
+	<string>spanish</string>
+	<key>MSX2 - Mitsubishi ML-G10</key>
+	<string>japanese</string>
+	<key>MSX2 - Mitsubishi ML-G3</key>
+	<string>spanish</string>
+	<key>MSX2 - Mitsubishi ML-G30 Model 1</key>
+	<string>japanese</string>
+	<key>MSX2 - Mitsubishi ML-G30 Model 2</key>
+	<string>japanese</string>
+	<key>MSX2 - National FS-4500</key>
+	<string>japanese</string>
+	<key>MSX2 - National FS-4600</key>
+	<string>japanese</string>
+	<key>MSX2 - National FS-4700</key>
+	<string>japanese</string>
+	<key>MSX2 - National FS-5000</key>
+	<string>japanese</string>
+	<key>MSX2 - National FS-5500F1</key>
+	<string>japanese</string>
+	<key>MSX2 - National FS-5500F2</key>
+	<string>japanese</string>
+	<key>MSX2 - Panasonic FS-A1</key>
+	<string>japanese</string>
+	<key>MSX2 - Panasonic FS-A1F</key>
+	<string>japanese</string>
+	<key>MSX2 - Panasonic FS-A1FM</key>
+	<string>japanese</string>
+	<key>MSX2 - Panasonic FS-A1MK2</key>
+	<string>japanese</string>
+	<key>MSX2 - Philips NMS-8220</key>
+	<string>european</string>
+	<key>MSX2 - Philips NMS-8245</key>
+	<string>european</string>
+	<key>MSX2 - Philips NMS-8245F</key>
+	<string>french</string>
+	<key>MSX2 - Philips NMS-8250</key>
+	<string>european</string>
+	<key>MSX2 - Philips NMS-8250F</key>
+	<string>french</string>
+	<key>MSX2 - Philips NMS-8250J</key>
+	<string>japanese</string>
+	<key>MSX2 - Philips NMS-8255</key>
+	<string>european</string>
+	<key>MSX2 - Philips NMS-8255F</key>
+	<string>french</string>
+	<key>MSX2 - Philips NMS-8260+</key>
+	<string>european</string>
+	<key>MSX2 - Philips NMS-8280</key>
+	<string>european</string>
+	<key>MSX2 - Philips NMS-8280F</key>
+	<string>french</string>
+	<key>MSX2 - Philips NMS-8280G</key>
+	<string>german</string>
+	<key>MSX2 - Philips PTC MSX PC</key>
+	<string>european</string>
+	<key>MSX2 - Philips VG-8230</key>
+	<string>european</string>
+	<key>MSX2 - Philips VG-8230J</key>
+	<string>japanese</string>
+	<key>MSX2 - Philips VG-8235</key>
+	<string>european</string>
+	<key>MSX2 - Philips VG-8235F</key>
+	<string>french</string>
+	<key>MSX2 - Philips VG-8240</key>
+	<string>european</string>
+	<key>MSX2 - Sanyo MPC-2300</key>
+	<string>russian</string>
+	<key>MSX2 - Sanyo Wavy MPC-25FD</key>
+	<string>japanese</string>
+	<key>MSX2 - Sanyo Wavy MPC-27</key>
+	<string>japanese</string>
+	<key>MSX2 - Sanyo Wavy PHC-23</key>
+	<string>japanese</string>
+	<key>MSX2 - Sanyo Wavy PHC-55FD2</key>
+	<string>japanese</string>
+	<key>MSX2 - Sanyo Wavy PHC-77</key>
+	<string>japanese</string>
+	<key>MSX2 - Sharp Epcom HotBit 2.0</key>
+	<string>brazilian</string>
+	<key>MSX2 - Sony HB-F1</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F1II</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F1XD</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F1XDMK2</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F5</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F500</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F500F</key>
+	<string>french</string>
+	<key>MSX2 - Sony HB-F500P</key>
+	<string>european</string>
+	<key>MSX2 - Sony HB-F700D</key>
+	<string>german</string>
+	<key>MSX2 - Sony HB-F700F</key>
+	<string>french</string>
+	<key>MSX2 - Sony HB-F700P</key>
+	<string>european</string>
+	<key>MSX2 - Sony HB-F700S</key>
+	<string>spanish</string>
+	<key>MSX2 - Sony HB-F750+</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F900</key>
+	<string>japanese</string>
+	<key>MSX2 - Sony HB-F9P</key>
+	<string>european</string>
+	<key>MSX2 - Sony HB-F9P Russian</key>
+	<string>russian</string>
+	<key>MSX2 - Sony HB-F9S</key>
+	<string>spanish</string>
+	<key>MSX2 - Sony HB-G900AP</key>
+	<string>european</string>
+	<key>MSX2 - Sony HB-G900P</key>
+	<string>european</string>
+	<key>MSX2 - Spectravideo SVI-738-2 CUC</key>
+	<string>european</string>
+	<key>MSX2 - Spectravideo SVI-738-2 JP Grobler</key>
+	<string>european</string>
+	<key>MSX2 - Spectravideo SVI-738-2 LC Grosso</key>
+	<string>spanish</string>
+	<key>MSX2 - Spectravideo SVI-838-2</key>
+	<string>swedish</string>
+	<key>MSX2 - Talent TPC-310</key>
+	<string>spanish</string>
+	<key>MSX2 - Talent TPP-311</key>
+	<string>spanish</string>
+	<key>MSX2 - Talent TPS-312</key>
+	<string>spanish</string>
+	<key>MSX2 - Toshiba FS-TM1</key>
+	<string>european</string>
+	<key>MSX2 - Toshiba HX-23</key>
+	<string>japanese</string>
+	<key>MSX2 - Toshiba HX-23F</key>
+	<string>japanese</string>
+	<key>MSX2 - Toshiba HX-23I</key>
+	<string>european</string>
+	<key>MSX2 - Toshiba HX-33</key>
+	<string>japanese</string>
+	<key>MSX2 - Toshiba HX-34</key>
+	<string>japanese</string>
+	<key>MSX2 - Toshiba HX-34I</key>
+	<string>european</string>
+	<key>MSX2 - Victor HC-90</key>
+	<string>japanese</string>
+	<key>MSX2 - Victor HC-95</key>
+	<string>japanese</string>
+	<key>MSX2 - Victor HC-95A</key>
+	<string>japanese</string>
+	<key>MSX2 - Yamaha CX7M_128</key>
+	<string>japanese</string>
+	<key>MSX2 - Yamaha CX7_128</key>
+	<string>japanese</string>
+	<key>MSX2 - Yamaha YIS503IIIR</key>
+	<string>russian</string>
+	<key>MSX2 - Yamaha YIS503IIIR Estonian</key>
+	<string>estonian</string>
+	<key>MSX2 - Yamaha YIS805-128R2</key>
+	<string>russian</string>
+	<key>MSX2 - Yamaha YIS805-128R2 Estonian</key>
+	<string>estonian</string>
+	<key>MSX2+ - Brazilian</key>
+	<string>brazilian</string>
+	<key>MSX2+ - Ciel Expert 3 IDE</key>
+	<string>brazilian</string>
+	<key>MSX2+ - Ciel Expert 3 Turbo</key>
+	<string>brazilian</string>
+	<key>MSX2+ - European</key>
+	<string>european</string>
+	<key>MSX2+ - French</key>
+	<string>french</string>
+	<key>MSX2+ - Gradiente Expert AC88+</key>
+	<string>brazilian</string>
+	<key>MSX2+ - Gradiente Expert DDX+</key>
+	<string>brazilian</string>
+	<key>MSX2+ - MSXPLAYer 2003</key>
+	<string>japanese</string>
+	<key>MSX2+ - Panasonic FS-A1FX</key>
+	<string>japanese</string>
+	<key>MSX2+ - Panasonic FS-A1WSX</key>
+	<string>japanese</string>
+	<key>MSX2+ - Panasonic FS-A1WX</key>
+	<string>japanese</string>
+	<key>MSX2+ - Sanyo Wavy PHC-35J</key>
+	<string>japanese</string>
+	<key>MSX2+ - Sanyo Wavy PHC-70FD1</key>
+	<string>japanese</string>
+	<key>MSX2+ - Sanyo Wavy PHC-70FD2</key>
+	<string>japanese</string>
+	<key>MSX2+ - Sony HB-F1XDJ</key>
+	<string>japanese</string>
+	<key>MSX2+ - Sony HB-F1XV</key>
+	<string>japanese</string>
+	<key>MSX2+ - Sony HB-F9S+</key>
+	<string>spanish</string>
+	<key>MSX2+ - Spectravideo SVI-738-2+</key>
+	<string>european</string>
+	<key>MSXturboR - European</key>
+	<string>european</string>
+	<key>MSXturboR - Panasonic FS-A1GT</key>
+	<string>japanese</string>
+	<key>MSXturboR - Panasonic FS-A1ST</key>
+	<string>japanese</string>
+</dict>
+</plist>

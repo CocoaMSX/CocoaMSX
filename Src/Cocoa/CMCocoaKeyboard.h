@@ -26,17 +26,14 @@
 
 #import "CMGamepad.h"
 
-#define CMKeyCategoryTypewriterRowOne   1
-#define CMKeyCategoryTypewriterRowTwo   2
-#define CMKeyCategoryTypewriterRowThree 3
-#define CMKeyCategoryTypewriterRowFour  4
-#define CMKeyCategorySpecial            5
-#define CMKeyCategoryModifier           6
-#define CMKeyCategoryFunction           7
-#define CMKeyCategoryDirectional        8
-#define CMKeyCategoryNumericPad         9
-#define CMKeyCategoryJoyDirections     10
-#define CMKeyCategoryJoyButtons        11
+#define CMKeyCategoryTypewriter    1
+#define CMKeyCategorySpecial       2
+#define CMKeyCategoryModifier      3
+#define CMKeyCategoryFunction      4
+#define CMKeyCategoryDirectional   5
+#define CMKeyCategoryNumericPad    6
+#define CMKeyCategoryJoyDirections 7
+#define CMKeyCategoryJoyButtons    8
 
 extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;
@@ -66,7 +63,7 @@ extern NSString * const CMKeyPasteEnded;
 - (void)resetState;
 
 - (BOOL)pasteText:(NSString *)text
-      keyLayoutId:(CMMSXKeyboardLayout)keyLayoutId;
+       layoutName:(NSString *)layoutName;
 
 - (void)resetState;
 
