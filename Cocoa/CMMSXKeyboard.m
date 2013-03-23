@@ -123,7 +123,7 @@
 
 @end
 
-#pragma mark - CMKeyCombination
+#pragma mark - CMMSXKeyCombination
 
 @implementation CMMSXKeyCombination
 
@@ -153,51 +153,88 @@
 
 @end
 
-#pragma mark - CMKeyboardLayout
-
-NSString *const CMMSXKeyboardArabic = @"arabic";
-NSString *const CMMSXKeyboardBrazilian = @"brazilian";
-NSString *const CMMSXKeyboardEstonian = @"estonian";
-NSString *const CMMSXKeyboardEuropean = @"european";
-NSString *const CMMSXKeyboardFrench = @"french";
-NSString *const CMMSXKeyboardGerman = @"german";
-NSString *const CMMSXKeyboardJapanese = @"japanese";
-NSString *const CMMSXKeyboardKorean = @"korean";
-NSString *const CMMSXKeyboardRussian = @"russian";
-NSString *const CMMSXKeyboardSpanish = @"spanish";
-NSString *const CMMSXKeyboardSwedish = @"swedish";
+#pragma mark - CMMSXKeyboard
 
 @implementation CMMSXKeyboard
 
-static NSDictionary *machineToLayoutMap;
+@synthesize name = _name;
+@synthesize label = _label;
+
+static NSArray *layoutNames;
+static NSMutableDictionary *machineToLayoutMap;
 static NSMutableDictionary *layoutToKeyboardMap;
+static NSMutableDictionary *virtualCodeToCategoryMap;
 
 + (void)initialize
 {
-    // Load the "machine->layout" map
+    machineToLayoutMap = [[NSMutableDictionary alloc] init];
+    virtualCodeToCategoryMap = [[NSMutableDictionary alloc] init];
+    layoutToKeyboardMap = [[NSMutableDictionary alloc] init];
     
-    NSString *bundleResourcePath = [[NSBundle mainBundle] pathForResource:@"MSXMachineLayouts"
-                                                                   ofType:@"plist"
-                                                              inDirectory:@"Data"];
-    machineToLayoutMap = [[NSDictionary alloc] initWithContentsOfFile:bundleResourcePath];
+    // Load the master layout map
+    NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"MSXKeyLayouts"
+                                                             ofType:@"plist"
+                                                        inDirectory:@"Data"];
+    NSDictionary *layoutDictionary = [NSDictionary dictionaryWithContentsOfFile:resourcePath];
     
-    // Get a list of all layouts
+    // Get a list of all layout names
+    layoutNames = [[NSArray alloc] initWithArray:[layoutDictionary allKeys]];
     
-    NSArray *layoutNames = [[machineToLayoutMap allValues] valueForKeyPath:@"@distinctUnionOfObjects.self"];
+    // Parse layout-specific information
+    NSMutableDictionary *layoutPlists = [NSMutableDictionary dictionary];
+    NSMutableDictionary *layoutLabels = [NSMutableDictionary dictionary];
+    
+    [layoutDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
+    {
+        NSString *layoutName = key;
+        NSDictionary *layoutData = obj;
+        
+        // Build a dictionary of each layout's property list
+        [layoutPlists setObject:[layoutData objectForKey:@"layoutPlist"]
+                         forKey:layoutName];
+        
+        // Localization labels...
+        [layoutLabels setObject:CMLoc([layoutData objectForKey:@"nameLocalization"])
+                         forKey:layoutName];
+        
+        // Build a dictionary of each machine's layout
+        NSArray *machines = [layoutData objectForKey:@"machines"];
+        [machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+        {
+            [machineToLayoutMap setObject:layoutName forKey:obj];
+        }];
+    }];
     
     // Initialize individual layouts
-    
-    layoutToKeyboardMap = [[NSMutableDictionary alloc] init];
     [layoutNames enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
-        NSString *layoutResourcePath = [[NSBundle mainBundle] pathForResource:obj
+        // Load dictionary containing layout data
+        NSString *layoutResourcePath = [[NSBundle mainBundle] pathForResource:[layoutPlists objectForKey:obj]
                                                                        ofType:@"plist"
                                                                   inDirectory:@"Data/Layouts"];
         NSDictionary *layoutDictionary = [NSDictionary dictionaryWithContentsOfFile:layoutResourcePath];
         
+        // For each layout, initialize MSXKeyboard object with contents of dictionary
         CMMSXKeyboard *keyboard = [[[CMMSXKeyboard alloc] initWithDictionary:layoutDictionary] autorelease];
+        [keyboard setName:obj];
+        [keyboard setLabel:[layoutLabels objectForKey:obj]];
+        
         [layoutToKeyboardMap setObject:keyboard
                                 forKey:obj];
+    }];
+    
+    // Initialize key category map
+    resourcePath = [[NSBundle mainBundle] pathForResource:@"MSXKeyCategories"
+                                                   ofType:@"plist"
+                                              inDirectory:@"Data"];
+    NSDictionary *keyCategoryDictionary = [[NSDictionary alloc] initWithContentsOfFile:resourcePath];
+    [keyCategoryDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
+    {
+        NSString *categoryName = key;
+        [obj enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+        {
+            [virtualCodeToCategoryMap setObject:categoryName forKey:@([obj integerValue])];
+        }];
     }];
 }
 
@@ -205,6 +242,9 @@ static NSMutableDictionary *layoutToKeyboardMap;
 {
     if ((self = [super init]))
     {
+        _label = nil;
+        _name = nil;
+        
         virtualCodeToKeyInfoMap = [[NSMutableDictionary alloc] init];
         characterToVirtualCodeMap = [[NSMutableDictionary alloc] init];
     }
@@ -239,6 +279,9 @@ static NSMutableDictionary *layoutToKeyboardMap;
 
 - (void)dealloc
 {
+    [_name release];
+    [_label release];
+    
     [virtualCodeToKeyInfoMap release];
     [characterToVirtualCodeMap release];
     
@@ -255,6 +298,11 @@ static NSMutableDictionary *layoutToKeyboardMap;
     }];
     
     return dictionary;
+}
+
++ (NSString *)defaultLayoutName
+{
+    return @"european";
 }
 
 + (NSString *)layoutNameOfMachineWithIdentifier:(NSString *)machineId
@@ -308,6 +356,26 @@ static NSMutableDictionary *layoutToKeyboardMap;
 + (CMMSXKeyboard *)keyboardWithLayoutName:(NSString *)layoutName
 {
     return [layoutToKeyboardMap objectForKey:layoutName];
+}
+
++ (NSString *)categoryNameForVirtualCode:(NSInteger)keyCode
+{
+    return [virtualCodeToCategoryMap objectForKey:@(keyCode)];
+}
+
++ (NSString *)categoryLabelForVirtualCode:(NSInteger)keyCode
+{
+    NSString *categoryName = [virtualCodeToCategoryMap objectForKey:@(keyCode)];
+    if (!categoryName)
+        return nil;
+    
+    NSString *localizationId = [NSString stringWithFormat:@"KeyCategory%@", categoryName];
+    return CMLoc(localizationId);
+}
+
++ (NSArray *)availableLayoutNames
+{
+    return layoutNames;
 }
 
 @end

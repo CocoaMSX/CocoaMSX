@@ -26,15 +26,6 @@
 
 #import "CMGamepad.h"
 
-#define CMKeyCategoryTypewriter    1
-#define CMKeyCategorySpecial       2
-#define CMKeyCategoryModifier      3
-#define CMKeyCategoryFunction      4
-#define CMKeyCategoryDirectional   5
-#define CMKeyCategoryNumericPad    6
-#define CMKeyCategoryJoyDirections 7
-#define CMKeyCategoryJoyButtons    8
-
 extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;
 
@@ -66,13 +57,6 @@ extern NSString * const CMKeyPasteEnded;
        layoutName:(NSString *)layoutName;
 
 - (void)resetState;
-
-- (BOOL)isAnyKeyDown;
 - (void)releaseAllKeys;
-
-- (NSInteger)categoryForVirtualCode:(NSUInteger)virtualCode;
-- (NSString *)nameForCategory:(NSInteger)category;
-+ (NSInteger)compareKeysByOrderOfAppearance:(NSNumber *)one
-                                 keyCodeTwo:(NSNumber *)two;
 
 @end

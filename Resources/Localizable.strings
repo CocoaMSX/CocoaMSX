@@ -147,14 +147,14 @@ YouHaveNotSelectedAnySystem = "You have not selected a system, or the selected s
 Yes = "Yes";
 No = "No";
 SaveScreenshot = "Save Screenshot";
-KeyCategoryModifier = "Modifier Keys";
-KeyCategoryDirectional = "Cursor Keys";
-KeyCategoryFunction = "Function Keys";
+
+KeyCategoryCursorKeys = "Cursor Keys";
+KeyCategoryFunctionKeys = "Function Keys";
+KeyCategoryJoystick = "Joystick";
+KeyCategoryModifierKeys = "Modifier Keys";
 KeyCategoryNumericPad = "Numeric Pad";
-KeyCategorySpecial = "Special Keys";
-KeyCategoryJoystickDirectional = "Directions";
-KeyCategoryJoystickButtons = "Buttons";
-KeyCategoryTypewriter = "Typewriter Keys";
+KeyCategorySpecialKeys = "Special Keys";
+KeyCategoryTypewriterKeys = "Typewriter Keys";
 
 VersionAbout = "Version %@";
 Error = "Error";

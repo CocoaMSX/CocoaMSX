@@ -33,18 +33,6 @@ enum
 
 typedef NSUInteger CMMSXKeyState;
 
-extern NSString * const CMMSXKeyboardArabic;
-extern NSString * const CMMSXKeyboardBrazilian;
-extern NSString * const CMMSXKeyboardEstonian;
-extern NSString * const CMMSXKeyboardEuropean;
-extern NSString * const CMMSXKeyboardFrench;
-extern NSString * const CMMSXKeyboardGerman;
-extern NSString * const CMMSXKeyboardJapanese;
-extern NSString * const CMMSXKeyboardKorean;
-extern NSString * const CMMSXKeyboardRussian;
-extern NSString * const CMMSXKeyboardSpanish;
-extern NSString * const CMMSXKeyboardSwedish;
-
 @interface CMMSXKeyCombination : NSObject
 {
     NSInteger _virtualCode;
@@ -63,14 +51,26 @@ extern NSString * const CMMSXKeyboardSwedish;
 
 @interface CMMSXKeyboard : NSObject
 {
+    NSString *_name;
+    NSString *_label;
+    
     NSMutableDictionary *virtualCodeToKeyInfoMap;
     NSMutableDictionary *characterToVirtualCodeMap;
 }
 
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *label;
+
++ (NSArray *)availableLayoutNames;
++ (NSString *)defaultLayoutName;
++ (NSString *)layoutNameOfMachineWithIdentifier:(NSString *)machineId;
++ (CMMSXKeyboard *)keyboardWithLayoutName:(NSString *)layoutName;
+
++ (NSString *)categoryNameForVirtualCode:(NSInteger)keyCode;
++ (NSString *)categoryLabelForVirtualCode:(NSInteger)keyCode;
+
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 - (NSDictionary *)asDictionary;
-
-+ (NSString *)layoutNameOfMachineWithIdentifier:(NSString *)machineId;
 
 - (NSString *)presentationLabelForVirtualCode:(NSInteger)keyCode
                                      keyState:(CMMSXKeyState)keyState;
@@ -79,8 +79,6 @@ extern NSString * const CMMSXKeyboardSwedish;
                    forState:(CMMSXKeyState)keyState;
 
 - (CMMSXKeyCombination *)keyCombinationForCharacter:(NSString *)character;
-
-+ (CMMSXKeyboard *)keyboardWithLayoutName:(NSString *)layoutName;
 
 @end
 

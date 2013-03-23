@@ -52,13 +52,13 @@
 
 @interface CMKeyCategory : NSObject
 {
-    NSNumber *_category;
+    NSString *_categoryName;
     NSString *_title;
     
     NSMutableArray *items;
 }
 
-@property (nonatomic, copy) NSNumber *category;
+@property (nonatomic, copy) NSString *categoryName;
 @property (nonatomic, copy) NSString *title;
 
 - (NSMutableArray *)items;
@@ -68,8 +68,19 @@
 
 @implementation CMKeyCategory
 
-@synthesize category = _category;
+@synthesize categoryName = _categoryName;
 @synthesize title = _title;
+
+static NSArray *keysInOrderOfAppearance;
+
++ (void)initialize
+{
+    NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"MSXKeysInOrderOfAppearance"
+                                                             ofType:@"plist"
+                                                        inDirectory:@"Data"];
+    
+    keysInOrderOfAppearance = [[NSArray alloc] initWithContentsOfFile:resourcePath];
+}
 
 - (id)init
 {
@@ -88,8 +99,8 @@
 
 - (void)dealloc
 {
-    self.title = nil;
-    self.category = nil;
+    [self setTitle:nil];
+    [self setCategoryName:nil];
     
     [items release];
     
@@ -100,8 +111,7 @@
 {
     NSArray *sortedItems = [items sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
                             {
-                                return [CMCocoaKeyboard compareKeysByOrderOfAppearance:a
-                                                                            keyCodeTwo:b];
+                                return [keysInOrderOfAppearance indexOfObject:a] - [keysInOrderOfAppearance indexOfObject:b];
                             }];
     
     [items removeAllObjects];
@@ -287,7 +297,7 @@
     
     // Scope Bar
     [keyboardScopeBar setSelected:YES forItem:@(CMMSXKeyStateDefault)  inGroup:SCOPEBAR_GROUP_SHIFTED];
-    [keyboardScopeBar setSelected:YES forItem:CMMSXKeyboardEuropean inGroup:SCOPEBAR_GROUP_REGIONS];
+    [keyboardScopeBar setSelected:YES forItem:[CMMSXKeyboard defaultLayoutName] inGroup:SCOPEBAR_GROUP_REGIONS];
     
     [self synchronizeSettings];
     
@@ -387,8 +397,12 @@
     else
         [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
     
+    NSString *layoutName = [CMMSXKeyboard layoutNameOfMachineWithIdentifier:[selected machineId]];
+    if (!layoutName)
+        layoutName = [CMMSXKeyboard defaultLayoutName];
+    
     [keyboardScopeBar setSelected:YES
-                          forItem:[CMMSXKeyboard layoutNameOfMachineWithIdentifier:[selected machineId]]
+                          forItem:layoutName
                           inGroup:SCOPEBAR_GROUP_REGIONS];
 }
 
@@ -672,17 +686,16 @@
     
     [layout enumerateMappingsUsingBlock:^(NSUInteger virtualCode, CMInputMethod *inputMethod, BOOL *stop)
     {
-        NSNumber *category = [NSNumber numberWithInteger:[[[self emulator] keyboard] categoryForVirtualCode:virtualCode]];
-        
-        CMKeyCategory *kc = [categoryToKeyMap objectForKey:category];
+        NSString *categoryName = [CMMSXKeyboard categoryNameForVirtualCode:virtualCode];
+        CMKeyCategory *kc = [categoryToKeyMap objectForKey:categoryName];
         
         if (!kc)
         {
             kc = [[[CMKeyCategory alloc] init] autorelease];
-            [categoryToKeyMap setObject:kc forKey:category];
+            [categoryToKeyMap setObject:kc forKey:categoryName];
             
-            kc.category = category;
-            kc.title = [self.emulator.keyboard nameForCategory:[category integerValue]];
+            [kc setCategoryName:categoryName];
+            [kc setTitle:[CMMSXKeyboard categoryLabelForVirtualCode:virtualCode]];
             
             [unsortedCategories addObject:kc];
         }
@@ -692,16 +705,16 @@
     
     [unsortedCategories enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
-        CMKeyCategory *keyCategory = obj;
-        [keyCategory sortItems];
+        [obj sortItems];
     }];
     
+    NSArray *categoriesInSortedOrder = @[@"TypewriterKeys", @"SpecialKeys", @"ModifierKeys", @"FunctionKeys", @"CursorKeys", @"NumericPad", @"Joystick" ];
     NSArray *sortedCategories = [unsortedCategories sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
                                 {
-                                    CMKeyCategory *first = a;
-                                    CMKeyCategory *second = b;
+                                    int orderIndexA = [categoriesInSortedOrder indexOfObject:[a categoryName]];
+                                    int orderIndexB = [categoriesInSortedOrder indexOfObject:[b categoryName]];
                                     
-                                    return [first.category compare:second.category];
+                                    return orderIndexA - orderIndexB;
                                 }];
     
     [categoryArray removeAllObjects];
@@ -1445,18 +1458,7 @@
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
-            return [NSArray arrayWithObjects:
-                    CMMSXKeyboardArabic,
-                    CMMSXKeyboardBrazilian,
-                    CMMSXKeyboardEstonian,
-                    CMMSXKeyboardEuropean,
-                    CMMSXKeyboardFrench,
-                    CMMSXKeyboardGerman,
-                    CMMSXKeyboardJapanese,
-                    CMMSXKeyboardKorean,
-                    CMMSXKeyboardRussian,
-                    CMMSXKeyboardSpanish,
-                    CMMSXKeyboardSwedish, nil];
+            return [CMMSXKeyboard availableLayoutNames];
         }
     }
     else if (theScopeBar == machineScopeBar)
@@ -1501,30 +1503,7 @@
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
-            NSString *layoutName = identifier;
-            
-            if ([layoutName isEqualToString:CMMSXKeyboardArabic])
-                return CMLoc(@"MsxKeyLayoutArabic");
-            if ([layoutName isEqualToString:CMMSXKeyboardBrazilian])
-                return CMLoc(@"MsxKeyLayoutBrazilian");
-            if ([layoutName isEqualToString:CMMSXKeyboardEstonian])
-                return CMLoc(@"MsxKeyLayoutEstonian");
-            if ([layoutName isEqualToString:CMMSXKeyboardEuropean])
-                return CMLoc(@"MsxKeyLayoutEuropean");
-            if ([layoutName isEqualToString:CMMSXKeyboardFrench])
-                return CMLoc(@"MsxKeyLayoutFrench");
-            if ([layoutName isEqualToString:CMMSXKeyboardGerman])
-                return CMLoc(@"MsxKeyLayoutGerman");
-            if ([layoutName isEqualToString:CMMSXKeyboardJapanese])
-                return CMLoc(@"MsxKeyLayoutJapanese");
-            if ([layoutName isEqualToString:CMMSXKeyboardKorean])
-                return CMLoc(@"MsxKeyLayoutKorean");
-            if ([layoutName isEqualToString:CMMSXKeyboardRussian])
-                return CMLoc(@"MsxKeyLayoutRussian");
-            if ([layoutName isEqualToString:CMMSXKeyboardSpanish])
-                return CMLoc(@"MsxKeyLayoutSpanish");
-            if ([layoutName isEqualToString:CMMSXKeyboardSwedish])
-                return CMLoc(@"MsxKeyLayoutSwedish");
+            return [[CMMSXKeyboard keyboardWithLayoutName:identifier] label];
         }
     }
     else if (theScopeBar == machineScopeBar)
