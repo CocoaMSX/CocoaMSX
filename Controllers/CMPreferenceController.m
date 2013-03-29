@@ -420,9 +420,9 @@ static NSArray *keysInOrderOfAppearance;
 
 - (NSArray *)machinesAvailableForDownload
 {
-    NSDate *feedLastLoaded = CMGetObjPref(@"machineFeedLastLoaded");
-    if (!feedLastLoaded)
-        feedLastLoaded = [NSDate distantPast];
+    NSDate *feedLastDownloaded = CMGetObjPref(@"machineFeedLastDownloaded");
+    if (!feedLastDownloaded)
+        feedLastDownloaded = [NSDate distantPast];
     
     NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
     [components setMinute:-CMGetIntPref(@"machineFeedExpirationInMinutes")];
@@ -438,16 +438,16 @@ static NSArray *keysInOrderOfAppearance;
     if (machineListAsData)
     {
 #if DEBUG
-        NSLog(@"Have an existing machine list, updated %@", feedLastLoaded);
+        NSLog(@"Have an existing machine list, downloaded %@", feedLastDownloaded);
 #endif
         machineList = [NSKeyedUnarchiver unarchiveObjectWithData:machineListAsData];
     }
     
-    if ([feedLastLoaded isLessThan:feedFreshnessThreshold])
+    if ([feedLastDownloaded isLessThan:feedFreshnessThreshold])
     {
 #if DEBUG
         if (machineList)
-            NSLog(@"Machine list expired (loaded %@); requesting update", feedLastLoaded);
+            NSLog(@"Machine list expired (downloaded %@); requesting update", feedLastDownloaded);
         else
             NSLog(@"Machine list not found; requesting download");
 #endif
@@ -491,6 +491,9 @@ static NSArray *keysInOrderOfAppearance;
                                    
                                    if (!success && error)
                                    {
+                                       // Prevent feed from being auto-loaded too soon
+                                       CMSetObjPref(@"machineFeedLastDownloaded", [NSDate date]);
+                                       
                                        [self performBlockOnMainThread:^
                                         {
                                             NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
@@ -570,27 +573,41 @@ static NSArray *keysInOrderOfAppearance;
     NSArray *machinesJson = [dict objectForKey:@"machines"];
     NSMutableArray *remoteMachineList = [NSMutableArray array];
     
-    [machinesJson enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-     {
-         CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
-                                                     machineId:[obj objectForKey:@"id"]
-                                                          name:[obj objectForKey:@"name"]
-                                                    systemName:[obj objectForKey:@"system"]] autorelease];
-         
-         [machine setInstalled:NO];
-         [machine setChecksum:[obj objectForKey:@"md5"]];
-         [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
-         
-         [remoteMachineList addObject:machine];
-     }];
+    NSDate *lastModified = [NSDate dateWithNaturalLanguageString:[dict objectForKey:@"lastModified"]];
     
+    if (![CMGetObjPref(@"machineFeedLastModified") isEqualToDate:lastModified])
+    {
+        [machinesJson enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+         {
+             CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
+                                                         machineId:[obj objectForKey:@"id"]
+                                                              name:[obj objectForKey:@"name"]
+                                                        systemName:[obj objectForKey:@"system"]] autorelease];
+             
+             [machine setInstalled:NO];
+             [machine setChecksum:[obj objectForKey:@"md5"]];
+             [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
+             
+             [remoteMachineList addObject:machine];
+         }];
+        
 #if DEBUG
-    NSLog(@"All done.");
+        NSLog(@"All done.");
 #endif
     
-    CMSetObjPref(@"machineList",
-                 [NSKeyedArchiver archivedDataWithRootObject:remoteMachineList]);
-    CMSetObjPref(@"machineFeedLastLoaded", [NSDate date]);
+        CMSetObjPref(@"machineList",
+                     [NSKeyedArchiver archivedDataWithRootObject:remoteMachineList]);
+        CMSetObjPref(@"machineFeedLastModified", lastModified);
+    }
+#if DEBUG
+    else
+    {
+        NSLog(@"Will not update machine list - feed not modified (have: %@; received: %@)",
+              CMGetObjPref(@"machineFeedLastModified"), lastModified);
+    }
+#endif
+    
+    CMSetObjPref(@"machineFeedLastDownloaded", [NSDate date]);
     
     return YES;
 }

@@ -55,7 +55,7 @@ typedef enum {
 
 typedef struct {
     RomType romType;
-    char name[1024];
+    char name[512];
     char inZipName[128];
     int slot;
     int subslot;
@@ -120,8 +120,8 @@ int machineInitialize(Machine* machine, UInt8** mainRam, UInt32* mainRamSize, UI
 void machineLoadState(Machine* machine);
 void machineSaveState(Machine* machine);
 
-void machineSetMachineDirectory(const char* dir);
-void machineBuildPath(char *path, const char *format);
+const char* machineGetDirectory();
+void machineSetDirectory(const char* dir);
 
 #endif
 

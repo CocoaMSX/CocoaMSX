@@ -313,7 +313,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     boardSetDirectory((char*)[prefs.sramDirectory UTF8String]);
     tapeSetDirectory((char*)[prefs.cassetteDataDirectory UTF8String], "");
     mediaDbLoad((char*)[prefs.databaseDirectory UTF8String]);
-    machineSetMachineDirectory([prefs.machineDirectory UTF8String]);
+    machineSetDirectory([prefs.machineDirectory UTF8String]);
     
     properties = propCreate(0, 0, P_KBD_EUROPEAN, 0, "");
     
@@ -642,13 +642,30 @@ CMEmulatorController *theEmulator = nil; // FIXME
 + (NSString *)pathForMachineConfigurationNamed:(NSString *)name
 {
     NSString *machinesPath = [[CMPreferences preferences] machineDirectory];
-    return [machinesPath stringByAppendingPathComponent:name];
+    
+    // First, check for a zip file
+    NSString *zipFile = [machinesPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.zip", name]];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:zipFile])
+        return zipFile;
+    
+    // Next, check for a directory
+    BOOL isDirectory = NO;
+    NSString *directory = [machinesPath stringByAppendingPathComponent:name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:directory isDirectory:&isDirectory] && isDirectory)
+        return directory;
+    
+    return nil;
 }
 
 + (BOOL)removeMachineConfiguration:(NSString *)configurationName
 {
     NSError *error = nil;
-    [[NSFileManager defaultManager] removeItemAtPath:[self pathForMachineConfigurationNamed:configurationName]
+    NSString *machinePath = [self pathForMachineConfigurationNamed:configurationName];
+    
+    if (!machinePath)
+        return NO;
+    
+    [[NSFileManager defaultManager] removeItemAtPath:machinePath
                                                error:&error];
     
     return (error == nil);

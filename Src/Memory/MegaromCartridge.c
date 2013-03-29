@@ -282,7 +282,7 @@ int cartridgeInsert(int cartNo, RomType romType, char* cart, char* cartZip)
 
     case ROM_FMPAC:
         if (cart[strlen(cart) - 4] != '.') {
-            machineBuildPath(romPath, "%s/Shared Roms/FMPAC.rom");
+            sprintf(romPath, "%s/Shared Roms/FMPAC.rom", machineGetDirectory());
             buf = romLoad(romPath, "", &size);
             if (buf != NULL) {
                 success &= romMapperFMPACCreate("FmPacA.rom", buf, size, slot, sslot, 2);
@@ -303,7 +303,7 @@ int cartridgeInsert(int cartNo, RomType romType, char* cart, char* cartZip)
     default:
         // Load roms for Special Carts
         if (strcmp(cart, "Sunrise IDE") == 0) {
-            machineBuildPath(romPath, "%s/Shared Roms/sunriseide.rom");
+            sprintf(romPath, "%s/Shared Roms/sunriseide.rom", machineGetDirectory());
             buf = romLoad(romPath, cartZip, &size);
             if (buf == 0) {
                 success &= romMapperSunriseIdeCreate(cartNo, romName, NULL, 0, slot, sslot, 0);
@@ -312,7 +312,7 @@ int cartridgeInsert(int cartNo, RomType romType, char* cart, char* cartZip)
         }
         // Load roms for Special Carts
         else if (strcmp(cart, "Beer IDE") == 0) {
-            machineBuildPath(romPath, "%s/Shared Roms/beeride.rom");
+            sprintf(romPath, "%s/Shared Roms/beeride.rom", machineGetDirectory());
             buf = romLoad(romPath, cartZip, &size);
             if (buf == 0) {
                 success &= romMapperBeerIdeCreate(cartNo, romName, NULL, 0, slot, sslot, 0);
@@ -321,7 +321,7 @@ int cartridgeInsert(int cartNo, RomType romType, char* cart, char* cartZip)
         }
         // Load roms for Special Carts
         else if (strcmp(cart, "Gouda SCSI") == 0) {
-            machineBuildPath(romPath, "%s/Shared Roms/novaxis.rom");
+            sprintf(romPath, "%s/Shared Roms/novaxis.rom", machineGetDirectory());
             buf = romLoad(romPath, cartZip, &size);
             if (buf == 0) {
                 success &= romMapperGoudaSCSICreate(cartNo, romName, NULL, 0, slot, sslot, 2);
@@ -330,12 +330,12 @@ int cartridgeInsert(int cartNo, RomType romType, char* cart, char* cartZip)
         }
         // Load roms for Special Carts
         else if (strcmp(cart, "Nowind MSXDOS1") == 0) {
-            machineBuildPath(romPath, "%s/Shared Roms/nowindDos1.rom");
+            sprintf(romPath, "%s/Shared Roms/nowindDos1.rom", machineGetDirectory());
             buf = romLoad(romPath, cartZip, &size);
         }
         // Load roms for Special Carts
         else if (strcmp(cart, "Nowind MSXDOS2") == 0) {
-            machineBuildPath(romPath, "%s/Shared Roms/nowindDos2.rom");
+            sprintf(romPath, "%s/Shared Roms/nowindDos2.rom", machineGetDirectory());
             buf = romLoad(romPath, cartZip, &size);
         }
         else {

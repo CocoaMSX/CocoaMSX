@@ -203,64 +203,6 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
     }
     
 #ifdef DEBUG
-    NSLog(@"done. Decompressing...");
-#endif
-    
-    NSTask *unzipTask = [[[NSTask alloc] init] autorelease];
-    [unzipTask setLaunchPath:@"/usr/bin/unzip"];
-    [unzipTask setCurrentDirectoryPath:[downloadPath stringByDeletingLastPathComponent]];
-    [unzipTask setArguments:[NSArray arrayWithObjects:@"-u", @"-o", downloadPath, nil]];
-    
-    @try
-    {
-        [unzipTask launch];
-    }
-    @catch (NSException *exception)
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorExecutingUnzip
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorExecutingUnzip"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return NO;
-    }
-    
-    [unzipTask waitUntilExit];
-    if ([unzipTask terminationStatus] != 0)
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorUnzipping
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorUnzippingMachine"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return NO;
-    }
-    
-#ifdef DEBUG
-    NSLog(@"done. Deleting %@...", downloadPath);
-#endif
-    
-    NSError *deleteError = nil;
-    if (![[NSFileManager defaultManager] removeItemAtPath:downloadPath error:&deleteError])
-    {
-        if (error)
-        {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
-                                         code:CMErrorDeleting
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDeletingMachine"
-                                                                                 forKey:NSLocalizedDescriptionKey]];
-        }
-        
-        return YES; // No biggie
-    }
-    
-#ifdef DEBUG
     NSLog(@"All done");
 #endif
     

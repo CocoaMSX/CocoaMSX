@@ -164,6 +164,44 @@ int toint(char* buffer)
     return atoi(buffer);
 }
 
+#ifdef _MSC_VER
+
+static char *strcasestr(const char *str1, const char *str2)
+{
+	char *str1copy;
+	char *str2copy;
+	char *ptr;
+	int offset;
+
+	if (str1 == NULL || str2 == NULL)
+		return NULL;
+
+	// Create a copy of each
+	str1copy = _strdup(str1);
+	str2copy = _strdup(str2);
+
+	// Convert both to lowercase
+	_strlwr(str1copy);
+	_strlwr(str2copy);
+
+	// Find the occurrence in the lowercased version
+	ptr = strstr(str1copy, str2copy);
+
+	// Now that we have the position, contents are not needed
+	free(str1copy);
+	free(str2copy);
+	
+	if (ptr == NULL)
+		return NULL; // No match
+
+	// Compute the offset in the lowercased version
+	offset = ptr - str1copy;
+
+	return (char *)(str1 + offset); // Return the original version + offset
+}
+
+#endif
+
 static int readMachine(Machine* machine, const char* machineName, const char* file)
 {
     static char buffer[10000];
@@ -310,6 +348,8 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
     machine->fdc.enabled = 0;
     for (i = 0; i < sizeof(machine->slotInfo) / sizeof(SlotInfo) && *slotBuf; i++) {
         char* arg;
+        char slotInfoName[512];
+		char *slotFilename;
 
         machine->slotInfo[i].slot = toint(extractToken(slotBuf, 0));    
         machine->slotInfo[i].subslot = toint(extractToken(slotBuf, 1));
@@ -325,8 +365,10 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
                                 machine->slotInfo[i].romType == ROM_PHILIPSFDC  ||
                                 machine->slotInfo[i].romType == ROM_SVI328FDC   ||
                                 machine->slotInfo[i].romType == ROM_SVI738FDC;
+
         arg = extractToken(slotBuf, 5);
         strcpy(machine->slotInfo[i].name, arg ? arg : "");
+
         arg = extractToken(slotBuf, 6);
         strcpy(machine->slotInfo[i].inZipName, arg ? arg : "");
 
@@ -338,10 +380,9 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
 
         slotBuf += strlen(slotBuf) + 1;
         
-        char slotInfoName[1024];
         strcpy(slotInfoName, machine->slotInfo[i].name);
         
-        char *slotFilename = strrchr(slotInfoName, '/');
+        slotFilename = strrchr(slotInfoName, '/');
         if (slotFilename == NULL)
             slotFilename = strrchr(slotInfoName, '\\');
         if (slotFilename == NULL)
@@ -352,7 +393,7 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
         if (!machine->isZipped)
         {
             // Convert the relative path into absolute
-            
+			
             if (strcasestr(machine->slotInfo[i].name, "Machines/") == machine->slotInfo[i].name ||
                 strcasestr(machine->slotInfo[i].name, "Machines\\") == machine->slotInfo[i].name)
             {
@@ -364,9 +405,11 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
         else
         {
             char iniFilePath[512];
+			char *parentDir;
+
             strcpy(iniFilePath, iniFileGetFilePath(configIni));
             
-            char *parentDir = strrchr(iniFilePath, '/');
+            parentDir = strrchr(iniFilePath, '/');
             if (parentDir == NULL)
                 parentDir = strrchr(iniFilePath, '\\');
             if (parentDir == NULL)
@@ -508,7 +551,7 @@ Machine* machineCreate(const char* machineName)
     int success;
     FILE *file;
     
-    machine = malloc(sizeof(Machine));
+    machine = (Machine *)malloc(sizeof(Machine));
     if (machine == NULL)
         return NULL;
     
@@ -532,11 +575,11 @@ Machine* machineCreate(const char* machineName)
         
         if (file == NULL)
         {
-            free(machine);
+		    machineDestroy(machine);
             return NULL; // Not compressed and no config.ini
         }
         
-        machine->zipFile = calloc(strlen(zipFile) + 1, sizeof(char));
+        machine->zipFile = (char *)calloc(strlen(zipFile) + 1, sizeof(char));
         strcpy(machine->zipFile, zipFile);
         
         machine->isZipped = 1;
@@ -545,7 +588,7 @@ Machine* machineCreate(const char* machineName)
     success = readMachine(machine, machineName, configIni);
     if (!success)
     {
-        free(machine);
+		machineDestroy(machine);
         return NULL;
     }
     
@@ -623,7 +666,7 @@ int machineIsValid(const char* machineName, int checkRoms)
         }
     }
     
-    free(machine);
+    machineDestroy(machine);
 
     return success;
 }
@@ -632,7 +675,7 @@ void machineFillAvailable(ArrayList *list, int checkRoms)
 {
     const char* machineName = appConfigGetString("singlemachine", NULL);
     const int maxNameLength = 512;
-    
+ 
     if (machineName != NULL) {
         char filename[128];
         
@@ -697,13 +740,16 @@ void machineFillAvailable(ArrayList *list, int checkRoms)
         
         for (i = 0; i < glob->count; i++) {
             char buffer[512];
+			char *extension;
+			char *machineName;
+
             strcpy(buffer, glob->pathVector[i]);
             
-            char *extension = strrchr(buffer, '.');
+            extension = strrchr(buffer, '.');
             if (extension != NULL)
                 *extension = '\0';
             
-            char *machineName = strrchr(buffer, '/');
+            machineName = strrchr(buffer, '/');
             if (machineName == NULL) {
                 machineName = strrchr(buffer, '\\');
             }
@@ -1720,12 +1766,12 @@ int machineInitialize(Machine* machine, UInt8** mainRam, UInt32* mainRamSize, UI
     return success;
 }
 
-void machineSetMachineDirectory(const char* dir)
+const char* machineGetDirectory()
 {
-    strcpy(machinesDir, dir);
+    return machinesDir;
 }
 
-void machineBuildPath(char *path, const char *format)
+void machineSetDirectory(const char* dir)
 {
-    sprintf(path, format, machinesDir);
+    strcpy(machinesDir, dir);
 }
