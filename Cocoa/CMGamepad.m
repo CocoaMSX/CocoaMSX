@@ -1,11 +1,25 @@
-//
-//  CMGamepad.m
-//  CocoaMSX
-//
-//  Created by Akop Karapetyan on 3/18/13.
-//  Copyright (c) 2013 Akop Karapetyan. All rights reserved.
-//
-
+/*****************************************************************************
+ **
+ ** CocoaMSX: MSX Emulator for Mac OS X
+ ** http://www.cocoamsx.com
+ ** Copyright (C) 2012-2013 Akop Karapetyan
+ **
+ ** This program is free software; you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation; either version 2 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program; if not, write to the Free Software
+ ** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ **
+ ******************************************************************************
+ */
 #import "CMGamepad.h"
 
 #define AXIS_CENTER 127
@@ -70,7 +84,8 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 
 @interface CMGamepad()
 
-- (void)registerForEvents;
+- (NSInteger)locationId;
+
 - (void)unregisterFromEvents;
 
 - (void)gamepadDidConnect:(CMGamepad *)gamepad;
@@ -99,10 +114,52 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 @implementation CMGamepad
 
 @synthesize delegate = _delegate;
+@synthesize gamepadId = _gamepadId;
 
-+ (id)gamepadWithHidDevice:(IOHIDDeviceRef)device
++ (NSArray *)allGamepads
 {
-    return [[[CMGamepad alloc] initWithHidDevice:device] autorelease];
+    NSUInteger usagePage = kHIDPage_GenericDesktop;
+    NSUInteger usageId = kHIDUsage_GD_GamePad;
+    
+    CFMutableDictionaryRef hidMatchDictionary = IOServiceMatching(kIOHIDDeviceKey);
+    NSMutableDictionary *objcMatchDictionary = (NSMutableDictionary *)hidMatchDictionary;
+    
+    [objcMatchDictionary setObject:@(usagePage)
+                            forKey:[NSString stringWithUTF8String:kIOHIDDeviceUsagePageKey]];
+    [objcMatchDictionary setObject:@(usageId)
+                            forKey:[NSString stringWithUTF8String:kIOHIDDeviceUsageKey]];
+    
+    io_iterator_t hidObjectIterator = MACH_PORT_NULL;
+    NSMutableArray *gamepads = [NSMutableArray array];
+    
+    @try
+    {
+        IOServiceGetMatchingServices(kIOMasterPortDefault,
+                                     hidMatchDictionary,
+                                     &hidObjectIterator);
+        
+        if (hidObjectIterator == 0)
+            return [NSArray array];
+        
+        io_object_t hidDevice;
+        while ((hidDevice = IOIteratorNext(hidObjectIterator)))
+        {
+            CMGamepad *gamepad = [[CMGamepad alloc] initWithHidDevice:hidDevice];
+            [gamepad autorelease];
+            
+            if ([gamepad locationId] == 0)
+                continue;
+            
+            [gamepads addObject:gamepad];
+        }
+    }
+    @finally
+    {
+        if (hidObjectIterator != MACH_PORT_NULL)
+            IOObjectRelease(hidObjectIterator);
+    }
+    
+    return gamepads;
 }
 
 - (id)initWithHidDevice:(IOHIDDeviceRef)device
@@ -117,8 +174,10 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         deviceProperties = [[NSMutableDictionary alloc] init];
         [deviceProperties setObject:(NSString *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDProductKey))
                              forKey:@"productKey"];
-        
-        [self registerForEvents];
+//        [deviceProperties setObject:(NSNumber *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDSerialNumberKey))
+//                             forKey:@"serialNumber"];
+        [deviceProperties setObject:(NSString *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDLocationIDKey))
+                             forKey:@"locationId"];
     }
     
     return self;
@@ -151,6 +210,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 {
     if (registeredForEvents)
     {
+        // FIXME: why does this crash the emulator?
 //        IOHIDDeviceClose(hidDevice, kIOHIDOptionsTypeNone);
         
         registeredForEvents = NO;
@@ -159,9 +219,19 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     }
 }
 
+- (NSInteger)locationId
+{
+    return [[deviceProperties objectForKey:@"locationId"] integerValue];
+}
+
 - (NSString *)name
 {
     return [deviceProperties objectForKey:@"productKey"];
+}
+
+- (NSString *)serialNumber
+{
+    return [deviceProperties objectForKey:@"serialNumber"];
 }
 
 - (void)gamepadDidConnect:(CMGamepad *)gamepad

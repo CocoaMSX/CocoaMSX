@@ -27,7 +27,7 @@
 #import "CMPreferenceController.h"
 #import "CMMsxDisplayView.h"
 
-#import "CMCocoaKeyboard.h"
+#import "CMCocoaInput.h"
 #import "CMCocoaMouse.h"
 #import "CMCocoaSound.h"
 #import "CMInputDeviceLayout.h"
@@ -56,7 +56,7 @@ NSString * const CMKeyboardLayoutPrefKey;
     
     CMGamepadManager *gamepadManager;
     
-    CMCocoaKeyboard *keyboard;
+    CMCocoaInput *input;
     CMCocoaMouse *mouse;
     CMCocoaSound *sound;
     
@@ -95,7 +95,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (Properties *)properties;
 - (Video *)video;
 
-- (CMCocoaKeyboard *)keyboard;
+- (CMCocoaInput *)input;
 - (CMCocoaMouse *)mouse;
 - (CMCocoaSound *)sound;
 - (CMMsxDisplayView *)screen;

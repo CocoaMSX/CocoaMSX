@@ -1,11 +1,25 @@
-//
-//  CMGamepadManager.m
-//  CocoaMSX
-//
-//  Created by Akop Karapetyan on 3/18/13.
-//  Copyright (c) 2013 Akop Karapetyan. All rights reserved.
-//
-
+/*****************************************************************************
+ **
+ ** CocoaMSX: MSX Emulator for Mac OS X
+ ** http://www.cocoamsx.com
+ ** Copyright (C) 2012-2013 Akop Karapetyan
+ **
+ ** This program is free software; you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation; either version 2 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program; if not, write to the Free Software
+ ** Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ **
+ ******************************************************************************
+ */
 #import "CMGamepadManager.h"
 #import "CMGamepad.h"
 
@@ -29,14 +43,18 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
     {
         gamepads = [[NSMutableDictionary alloc] init];
         
-        hidManager = IOHIDManagerCreate( kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+        hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
         
-        NSMutableDictionary* criterion = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+        NSMutableDictionary *gamepadCriterion = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                           @(kHIDPage_GenericDesktop), (NSString *)CFSTR(kIOHIDDeviceUsagePageKey),
                                           @(kHIDUsage_GD_GamePad), (NSString *)CFSTR(kIOHIDDeviceUsageKey),
                                           nil];
+        NSMutableDictionary *joystickCriterion = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                         @(kHIDPage_GenericDesktop), (NSString *)CFSTR(kIOHIDDeviceUsagePageKey),
+                                         @(kHIDUsage_GD_Joystick), (NSString *)CFSTR(kIOHIDDeviceUsageKey),
+                                         nil];
         
-        IOHIDManagerSetDeviceMatching(hidManager, (CFDictionaryRef)criterion);
+        IOHIDManagerSetDeviceMatchingMultiple(hidManager, (CFArrayRef)[NSArray arrayWithObjects:gamepadCriterion, joystickCriterion, nil]);
         IOHIDManagerRegisterDeviceMatchingCallback(hidManager, gamepadWasAdded, (void *)self);
         IOHIDManagerRegisterDeviceRemovalCallback(hidManager, gamepadWasRemoved, (void *)self);
         
@@ -53,7 +71,6 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
     [gamepads release];
     
     IOHIDManagerUnscheduleFromRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    
     CFRelease(hidManager);
     
     [super dealloc];
@@ -61,11 +78,13 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 
 - (void)deviceDidConnect:(IOHIDDeviceRef)device
 {
-    CMGamepad *gamepad = [CMGamepad gamepadWithHidDevice:device];
+    CMGamepad *gamepad = [[[CMGamepad alloc] initWithHidDevice:device] autorelease];
     [gamepad setDelegate:self];
+    [gamepad setGamepadId:@((NSInteger)device)];
+    [gamepad registerForEvents];
     
     [gamepads setObject:gamepad
-                 forKey:@((NSInteger)device)];
+                 forKey:[gamepad gamepadId]];
 }
 
 - (void)deviceDidDisconnect:(IOHIDDeviceRef)device

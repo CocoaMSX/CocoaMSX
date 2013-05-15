@@ -228,53 +228,53 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    [emulator.keyboard keyDown:theEvent];
+    [[emulator input] keyDown:theEvent];
 }
 
 - (void)keyUp:(NSEvent *)theEvent
 {
-    [emulator.keyboard keyUp:theEvent];
+    [[emulator input] keyUp:theEvent];
 }
 
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    [emulator.keyboard flagsChanged:theEvent];
+    [[emulator input] flagsChanged:theEvent];
 }
 
 #pragma mark - Mouse Callbacks
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-    [emulator.mouse mouseMoved:theEvent
+    [[emulator mouse] mouseMoved:theEvent
                     withinView:self];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    [emulator.mouse mouseMoved:theEvent
+    [[emulator mouse] mouseMoved:theEvent
                     withinView:self];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    [emulator.mouse mouseDown:theEvent
+    [[emulator mouse] mouseDown:theEvent
                    withinView:self];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-    [emulator.mouse mouseUp:theEvent
+    [[emulator mouse] mouseUp:theEvent
                  withinView:self];
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
-    [emulator.mouse rightMouseDown:theEvent];
+    [[emulator mouse] rightMouseDown:theEvent];
 }
 
 - (void)rightMouseUp:(NSEvent *)theEvent
 {
-    [emulator.mouse rightMouseUp:theEvent];
+    [[emulator mouse] rightMouseUp:theEvent];
 }
 
 - (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime

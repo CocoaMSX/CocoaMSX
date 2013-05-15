@@ -232,7 +232,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self setFileToLoadAtStartup:nil];
     [self setCurrentlyLoadedCaptureFilePath:nil];
     
-    [keyboard release];
+    [input release];
     [mouse release];
     [sound release];
     
@@ -249,7 +249,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickTwoLayout]];
     
-    keyboard = [[CMCocoaKeyboard alloc] init];
+    input = [[CMCocoaInput alloc] init];
     mouse = [[CMCocoaMouse alloc] init];
     sound = [[CMCocoaSound alloc] init];
     
@@ -287,7 +287,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                object:nil];
     
     gamepadManager = [[CMGamepadManager alloc] init];
-    [gamepadManager setDelegate:keyboard];
+    [gamepadManager setDelegate:input];
     
     [self create];
     [self start];
@@ -689,9 +689,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return emulatorGetState();
 }
 
-- (CMCocoaKeyboard *)keyboard
+- (CMCocoaInput *)input
 {
-    return keyboard;
+    return input;
 }
 
 - (CMCocoaMouse *)mouse
@@ -1089,13 +1089,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
     NSString *runningMachineId = [self runningMachineConfiguration];
     NSString *layoutName = [CMMSXKeyboard layoutNameOfMachineWithIdentifier:runningMachineId];
     
-    [[self keyboard] pasteText:text layoutName:layoutName];
+    [[self input] pasteText:text layoutName:layoutName];
 }
 
 - (void)windowKeyDidChange:(BOOL)isKey
 {
     [mouse setEmulatorHasFocus:isKey];
-    [keyboard setEmulatorHasFocus:isKey];
+    [input setEmulatorHasFocus:isKey];
     
     BOOL pauseWhenUnfocused = [[NSUserDefaults standardUserDefaults] boolForKey:@"pauseWhenUnfocused"];
     
@@ -1463,7 +1463,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     if ([self isStarted])
     {
-        [[self keyboard] resetState];
+        [[self input] resetState];
         actionEmuResetSoft();
     }
 }
@@ -1472,7 +1472,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     if ([self isStarted])
     {
-        [[self keyboard] resetState];
+        [[self input] resetState];
         
         [self destroy];
         [self stop];

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */; };
 		6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B36CC441644806B00B5FDB7 /* MainMenu.xib */; };
-		6B5D2863161F44CC0081F586 /* CMCocoaKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */; };
+		6B5D2863161F44CC0081F586 /* CMCocoaInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2862161F44CC0081F586 /* CMCocoaInput.m */; };
 		6B5D287B161F60620081F586 /* Language.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2868161F60620081F586 /* Language.c */; };
 		6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7562164D7D09002CA211 /* toolbar-video.png */; };
 		6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7563164D7D09002CA211 /* toolbar-video@2x.png */; };
@@ -404,8 +404,8 @@
 		6B1C25AA1672972F004DD618 /* CMKeyboardInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyboardInput.h; sourceTree = "<group>"; };
 		6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyboardInput.m; sourceTree = "<group>"; };
 		6B36CC441644806B00B5FDB7 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
-		6B5D2861161F44CC0081F586 /* CMCocoaKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaKeyboard.h; sourceTree = "<group>"; };
-		6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaKeyboard.m; sourceTree = "<group>"; };
+		6B5D2861161F44CC0081F586 /* CMCocoaInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaInput.h; sourceTree = "<group>"; };
+		6B5D2862161F44CC0081F586 /* CMCocoaInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaInput.m; sourceTree = "<group>"; };
 		6B5D2868161F60620081F586 /* Language.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Language.c; sourceTree = "<group>"; };
 		6B5D2869161F60620081F586 /* Language.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Language.h; sourceTree = "<group>"; };
 		6B5D286E161F60620081F586 /* LanguageEnglish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguageEnglish.h; sourceTree = "<group>"; };
@@ -2166,8 +2166,8 @@
 				FEF40EC9160DB83B009170A9 /* CocoaEth.c */,
 				FEF40ECA160DB83B009170A9 /* CocoaFile.c */,
 				FEF40ECB160DB83B009170A9 /* CocoaGlob.c */,
-				6B5D2861161F44CC0081F586 /* CMCocoaKeyboard.h */,
-				6B5D2862161F44CC0081F586 /* CMCocoaKeyboard.m */,
+				6B5D2861161F44CC0081F586 /* CMCocoaInput.h */,
+				6B5D2862161F44CC0081F586 /* CMCocoaInput.m */,
 				FEF40ECC160DB83B009170A9 /* CocoaMenu.c */,
 				FEF40ECD160DB83B009170A9 /* CocoaMidi.c */,
 				FE9C6A2A161AAD3B00513A6D /* CMCocoaMouse.h */,
@@ -2594,7 +2594,7 @@
 				FE9C6A27161A446B00513A6D /* CMEmulatorController.m in Sources */,
 				FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */,
 				FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */,
-				6B5D2863161F44CC0081F586 /* CMCocoaKeyboard.m in Sources */,
+				6B5D2863161F44CC0081F586 /* CMCocoaInput.m in Sources */,
 				6B5D287B161F60620081F586 /* Language.c in Sources */,
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,

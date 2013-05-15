@@ -29,7 +29,7 @@
 extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;
 
-@interface CMCocoaKeyboard : NSObject<CMGamepadDelegate>
+@interface CMCocoaInput : NSObject<CMGamepadDelegate>
 {
     NSUInteger pollCounter;
     
@@ -38,6 +38,9 @@ extern NSString * const CMKeyPasteEnded;
     
     NSMutableSet *keysDown;
     NSMutableArray *keysToPaste;
+    
+    NSInteger joypadOneId;
+    NSInteger joypadTwoId;
     
     CMMSXKeyCombination *_keyCombinationToAutoPress;
     NSTimeInterval timeOfAutoPress;
