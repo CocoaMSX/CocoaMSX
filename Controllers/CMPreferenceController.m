@@ -868,7 +868,7 @@ static NSArray *keysInOrderOfAppearance;
     else if ([tabId isEqual:@"keyboard"])
         newHeight = 500;
     else if ([tabId isEqual:@"joystick"])
-        newHeight = 400;
+        newHeight = 460;
     
     NSRect newContentFrame = NSMakeRect(contentFrame.origin.x,
                                         contentFrame.origin.y,
