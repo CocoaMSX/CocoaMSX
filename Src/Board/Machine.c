@@ -579,6 +579,8 @@ Machine* machineCreate(const char* machineName)
             return NULL; // Not compressed and no config.ini
         }
         
+        fclose(file);
+        
         machine->zipFile = (char *)calloc(strlen(zipFile) + 1, sizeof(char));
         strcpy(machine->zipFile, zipFile);
         
@@ -641,7 +643,7 @@ int machineIsValid(const char* machineName, int checkRoms)
                     {
                         if (machine->isZipped)
                         {
-#ifdef COCOAMSX
+#ifdef __APPLE__
                             int location = unzLocateFile(zippedMachine,
                                                          machine->slotInfo[i].inZipName, 2);
 #else
