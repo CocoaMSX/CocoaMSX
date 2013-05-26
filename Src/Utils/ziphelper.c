@@ -271,7 +271,12 @@ void* _zipLoadFile(const char* zipName, const char* fileName, int* size, zlib_fi
         return NULL;
     }
 
+#ifdef COCOAMSX
+    // Most OS X installs are on a case-insensitive FS
+    if (unzLocateFile(zip, name, 2) == UNZ_END_OF_LIST_OF_FILE) {
+#else
     if (unzLocateFile(zip, name, 1) == UNZ_END_OF_LIST_OF_FILE) {
+#endif
         unzClose(zip);
         return NULL;
     }
@@ -465,7 +470,12 @@ int zipFileExists(const char* zipName, const char* fileName)
         return 0;
     }
 
+#ifdef COCOAMSX
+    // Most OS X installs are on a case-insensitive FS
+    if (unzLocateFile(zip, name, 2) == UNZ_END_OF_LIST_OF_FILE) {
+#else
     if (unzLocateFile(zip, name, 1) == UNZ_END_OF_LIST_OF_FILE) {
+#endif
         unzClose(zip);
         return 0;
     }else{

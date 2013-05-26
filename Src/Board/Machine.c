@@ -641,9 +641,13 @@ int machineIsValid(const char* machineName, int checkRoms)
                     {
                         if (machine->isZipped)
                         {
+#ifdef COCOAMSX
                             int location = unzLocateFile(zippedMachine,
-                                                         machine->slotInfo[i].inZipName, 1);
-                            
+                                                         machine->slotInfo[i].inZipName, 2);
+#else
+                            int location = unzLocateFile(zippedMachine,
+                                                         machine->slotInfo[i].inZipName, 0);
+#endif
                             if (location == UNZ_END_OF_LIST_OF_FILE)
                                 success = 0;
                         }
