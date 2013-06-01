@@ -229,6 +229,11 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     return [deviceProperties objectForKey:@"productKey"];
 }
 
+- (NSString *)description
+{
+    return [self name];
+}
+
 - (NSString *)serialNumber
 {
     return [deviceProperties objectForKey:@"serialNumber"];

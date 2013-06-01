@@ -41,6 +41,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 #define CMPreferredMacDeviceJoystickThenKeyboard 1
 #define CMPreferredMacDeviceKeyboard             2
 
+#define CMJoystickDeadzoneWidth 50
+
 #define CMAutoPressHoldDuration    1121480
 #define CMAutoPressReleaseDuration 1121480
 #define CMAutoPressTotalTimeSeconds \
@@ -556,15 +558,20 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
+#if DEBUG
+    NSLog(@"Joystick X: %ld (center: %ld) on gamepad %@",
+          newValue, center, gamepad);
+#endif
+    
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
     {
         [keysDown removeObject:@(leftVirtualCode)];
         [keysDown removeObject:@(rightVirtualCode)];
         
-        if (newValue < center)
+        if (center - newValue > CMJoystickDeadzoneWidth)
             [keysDown addObject:@(leftVirtualCode)];
-        else if (newValue > center)
+        else if (newValue - center > CMJoystickDeadzoneWidth)
             [keysDown addObject:@(rightVirtualCode)];
     }
 }
@@ -593,15 +600,20 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
+#if DEBUG
+    NSLog(@"Joystick Y: %ld (center: %ld) on gamepad %@",
+          newValue, center, gamepad);
+#endif
+    
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
     {
         [keysDown removeObject:@(upVirtualCode)];
         [keysDown removeObject:@(downVirtualCode)];
         
-        if (newValue < center)
+        if (center - newValue > CMJoystickDeadzoneWidth)
             [keysDown addObject:@(upVirtualCode)];
-        else if (newValue > center)
+        else if (newValue - center > CMJoystickDeadzoneWidth)
             [keysDown addObject:@(downVirtualCode)];
     }
 }
@@ -628,6 +640,10 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
+    
+#if DEBUG
+    NSLog(@"Pressed button %ld on gamepad %@", index, gamepad);
+#endif
     
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
@@ -661,6 +677,10 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
+    
+#if DEBUG
+    NSLog(@"Released button %ld on gamepad %@", index, gamepad);
+#endif
     
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
