@@ -269,6 +269,8 @@
 		E99734781298B4B500766C90 /* R800Dasm.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733621298B4B500766C90 /* R800Dasm.c */; };
 		E99734791298B4B500766C90 /* R800Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733641298B4B500766C90 /* R800Debug.c */; };
 		E997347A1298B4B500766C90 /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
+		FE05CAD1176CD17C00D6CAC0 /* ConfigureJoystick.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */; };
+		FE05CAD4176CD21200D6CAC0 /* CMConfigureJoystickController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */; };
 		FE17DBF116B3B9A7004ED68D /* CMMachineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */; };
 		FE17DBFB16B3BD1A004ED68D /* logo-msx.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF316B3BD1A004ED68D /* logo-msx.png */; };
 		FE17DBFC16B3BD1A004ED68D /* logo-msx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */; };
@@ -952,6 +954,9 @@
 		E99733651298B4B500766C90 /* R800Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R800Debug.h; sourceTree = "<group>"; };
 		E99733661298B4B500766C90 /* R800SaveState.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = R800SaveState.c; sourceTree = "<group>"; };
 		E99733671298B4B500766C90 /* R800SaveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R800SaveState.h; sourceTree = "<group>"; };
+		FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigureJoystick.xib; sourceTree = "<group>"; };
+		FE05CAD2176CD21200D6CAC0 /* CMConfigureJoystickController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMConfigureJoystickController.h; sourceTree = "<group>"; };
+		FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConfigureJoystickController.m; sourceTree = "<group>"; };
 		FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineCell.h; sourceTree = "<group>"; };
 		FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineCell.m; sourceTree = "<group>"; };
 		FE17DBF316B3BD1A004ED68D /* logo-msx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx.png"; sourceTree = "<group>"; };
@@ -1212,6 +1217,7 @@
 				FEA01B361620C7720066FDD8 /* Localizable.strings */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				FE1C134E167DCF8900CE2B6B /* About.xib */,
+				FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */,
 				FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */,
 				FE42836215FE857400ED7CB9 /* Emulator.xib */,
 				FEC7232115FF133700CB508C /* Preferences.xib */,
@@ -2107,6 +2113,8 @@
 			children = (
 				FE1C1354167DD08E00CE2B6B /* CMAboutController.h */,
 				FE1C1355167DD08E00CE2B6B /* CMAboutController.m */,
+				FE05CAD2176CD21200D6CAC0 /* CMConfigureJoystickController.h */,
+				FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */,
 				FE9C6A25161A446B00513A6D /* CMEmulatorController.h */,
 				FE9C6A26161A446B00513A6D /* CMEmulatorController.m */,
 				FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */,
@@ -2311,6 +2319,7 @@
 				FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */,
 				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
 				FEA74EFD16FC14B60033E2DE /* Data in Resources */,
+				FE05CAD1176CD17C00D6CAC0 /* ConfigureJoystick.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2639,6 +2648,7 @@
 				FE81435F16F6FE31000FABC7 /* HashSet.c in Sources */,
 				FE81439016F797CC000FABC7 /* CMGamepadManager.m in Sources */,
 				FE81439316F7A191000FABC7 /* CMGamepad.m in Sources */,
+				FE05CAD4176CD21200D6CAC0 /* CMConfigureJoystickController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

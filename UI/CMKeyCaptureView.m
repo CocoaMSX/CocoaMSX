@@ -230,38 +230,6 @@ static NSArray *keyCodesToIgnore;
     }];
 }
 
-#pragma mark - CMGamepadDelegate
-
-- (void)gamepad:(CMGamepad *)gamepad
-       xChanged:(NSInteger)newValue
-         center:(NSInteger)center
-          event:(CMGamepadEvent *)event
-{
-    NSLog(@"(%@) x changed: %ld/%ld", [gamepad name], newValue, center);
-}
-
-- (void)gamepad:(CMGamepad *)gamepad
-       yChanged:(NSInteger)newValue
-         center:(NSInteger)center
-          event:(CMGamepadEvent *)event
-{
-    NSLog(@"(%@) y changed: %ld/%ld", [gamepad name], newValue, center);
-}
-
-- (void)gamepad:(CMGamepad *)gamepad
-     buttonDown:(NSInteger)index
-          event:(CMGamepadEvent *)event
-{
-    NSLog(@"(%@) button down", [gamepad name]);
-}
-
-- (void)gamepad:(CMGamepad *)gamepad
-       buttonUp:(NSInteger)index
-          event:(CMGamepadEvent *)event
-{
-    NSLog(@"(%@) button up", [gamepad name]);
-}
-
 #pragma mark - Input events
 
 - (void)keyDown:(NSEvent *)theEvent
@@ -282,22 +250,6 @@ static NSArray *keyCodesToIgnore;
     {
         [self setEditable:NO];
         [self setSelectable:NO];
-        
-        NSLog(@"CMKeyCaptureView: Starting gamepad observation ...");
-        [[CMGamepadManager sharedInstance] addObserver:self];
-        
-        return YES;
-    }
-    
-    return NO;
-}
-
-- (BOOL)resignFirstResponder
-{
-    if ([super resignFirstResponder])
-    {
-        NSLog(@"CMKeyCaptureView: Stopping gamepad observation ...");
-        [[CMGamepadManager sharedInstance] removeObserver:self];
         
         return YES;
     }

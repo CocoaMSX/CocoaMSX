@@ -2,7 +2,7 @@
  **
  ** CocoaMSX: MSX Emulator for Mac OS X
  ** http://www.cocoamsx.com
- ** Copyright (C) 2013 Akop Karapetyan
+ ** Copyright (C) 2012-2013 Akop Karapetyan
  **
  ** This program is free software; you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,13 +22,15 @@
  */
 #import <Cocoa/Cocoa.h>
 
-@interface CMKeyCaptureView : NSTextView
+#import "CMGamepadManager.h"
+
+@interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, CMGamepadDelegate>
 {
+    NSInteger currentState;
+    
+    IBOutlet NSTextField *directionField;
 }
 
-#define CMKeyNone (-1)
-
-+ (NSString *)descriptionForKeyCode:(NSNumber *)keyCode;
-+ (NSNumber *)keyCodeForDescription:(NSString *)description;
+- (void)restartConfiguration;
 
 @end

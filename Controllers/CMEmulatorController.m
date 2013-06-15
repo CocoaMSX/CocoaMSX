@@ -883,7 +883,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     [cartChooser release];
     cartChooser = [[CMSpecialCartChooserController alloc] init];
-    cartChooser.delegate = self;
+    [cartChooser setDelegate:self];
     
     [cartChooser showSheetForWindow:self.window cartridgeSlot:slot];
 }

@@ -24,6 +24,8 @@
 
 #import "CMAppDelegate.h"
 #import "CMEmulatorController.h"
+#import "CMConfigureJoystickController.h"
+
 #import "CMPreferences.h"
 
 #import "NSString+CMExtensions.h"
@@ -218,7 +220,9 @@ static NSArray *keysInOrderOfAppearance;
 {
     if ((self = [super initWithWindowNibName:@"Preferences"]))
     {
-        self.emulator = emulator;
+        [self setEmulator:emulator];
+        
+        joystickConfigurator = nil;
         
         keyCategories = [[NSMutableArray alloc] init];
         joystickOneCategories = [[NSMutableArray alloc] init];
@@ -344,6 +348,8 @@ static NSArray *keysInOrderOfAppearance;
     
     [downloadQueue release];
     [jsonParser release];
+    
+    [joystickConfigurator release];
     
     [keyCaptureView release];
     
@@ -920,6 +926,15 @@ static NSArray *keysInOrderOfAppearance;
                          didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
                             contextInfo:(void *)ALERT_REMOVE_SYSTEM];
     }
+}
+
+- (void)configureJoystick:(id)sender
+{
+    if (!joystickConfigurator)
+        joystickConfigurator = [[CMConfigureJoystickController alloc] init];
+    
+    [joystickConfigurator showWindow:self];
+    [joystickConfigurator restartConfiguration];
 }
 
 - (void)tabChanged:(id)sender

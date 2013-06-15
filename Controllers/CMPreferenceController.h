@@ -29,15 +29,20 @@
 @class MGScopeBar;
 @class CMKeyCaptureView;
 @class SBJsonParser;
+@class CMConfigureJoystickController;
 
 @interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate>
 {
     CMEmulatorController *_emulator;
     
+    CMConfigureJoystickController *joystickConfigurator;
+    
     NSInteger machineDisplayMode;
     
     IBOutlet NSButton *addMachineButton;
     IBOutlet NSButton *removeMachineButton;
+    
+    IBOutlet NSButton *configureJoystickButton;
     
     IBOutlet NSToolbar *toolbar;
     
@@ -111,6 +116,8 @@
 - (IBAction)refreshMachineList:(id)sender;
 - (IBAction)installMachineConfiguration:(id)sender;
 - (IBAction)removeMachineConfiguration:(id)sender;
+
+- (IBAction)configureJoystick:(id)sender;
 
 - (IBAction)performColdRebootClicked:(id)sender;
 
