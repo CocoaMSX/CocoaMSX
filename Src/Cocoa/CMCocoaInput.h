@@ -24,7 +24,7 @@
 
 #import "CMMSXKeyboard.h"
 
-#import "CMGamepad.h"
+#import "CMGamepadManager.h"
 
 extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;

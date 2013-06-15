@@ -23,6 +23,8 @@
 #import "CMGamepadManager.h"
 #import "CMGamepad.h"
 
+static CMGamepadManager *singletonManager = nil;
+
 void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
 void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
 
@@ -35,13 +37,20 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 
 @implementation CMGamepadManager
 
-@synthesize delegate = _delegate;
++ (CMGamepadManager *)sharedInstance
+{
+    if (!singletonManager)
+        singletonManager = [[CMGamepadManager alloc] init];
+    
+    return singletonManager;
+}
 
 - (id)init
 {
     if ((self = [super init]))
     {
         gamepads = [[NSMutableDictionary alloc] init];
+        observers = [[NSMutableArray alloc] init];
         
         hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
         
@@ -66,9 +75,8 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 
 - (void)dealloc
 {
-    _delegate = nil;
-    
     [gamepads release];
+    [observers release];
     
     IOHIDManagerUnscheduleFromRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     CFRelease(hidManager);
@@ -96,14 +104,20 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 
 - (void)gamepadDidConnect:(CMGamepad *)gamepad
 {
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepadDidConnect:gamepad];
+    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         if ([obj respondsToSelector:_cmd])
+             [obj gamepadDidConnect:gamepad];
+     }];
 }
 
 - (void)gamepadDidDisconnect:(CMGamepad *)gamepad
 {
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepadDidDisconnect:gamepad];
+    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         if ([obj respondsToSelector:_cmd])
+             [obj gamepadDidDisconnect:gamepad];
+     }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
@@ -111,8 +125,11 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
          center:(NSInteger)center
           event:(CMGamepadEvent *)event
 {
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad xChanged:newValue center:center event:event];
+    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         if ([obj respondsToSelector:_cmd])
+             [obj gamepad:gamepad xChanged:newValue center:center event:event];
+     }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
@@ -120,24 +137,43 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
          center:(NSInteger)center
           event:(CMGamepadEvent *)event
 {
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad yChanged:newValue center:center event:event];
+    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         if ([obj respondsToSelector:_cmd])
+             [obj gamepad:gamepad yChanged:newValue center:center event:event];
+     }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
      buttonDown:(NSInteger)index
           event:(CMGamepadEvent *)event
 {
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad buttonDown:index event:event];
+    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         if ([obj respondsToSelector:_cmd])
+             [obj gamepad:gamepad buttonDown:index event:event];
+     }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
        buttonUp:(NSInteger)index
           event:(CMGamepadEvent *)event
 {
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad buttonUp:index event:event];
+    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         if ([obj respondsToSelector:_cmd])
+             [obj gamepad:gamepad buttonUp:index event:event];
+     }];
+}
+
+- (void)addObserver:(id<CMGamepadDelegate>)observer
+{
+    [observers addObject:observer];
+}
+
+- (void)removeObserver:(id<CMGamepadDelegate>)observer
+{
+    [observers removeObject:observer];
 }
 
 @end

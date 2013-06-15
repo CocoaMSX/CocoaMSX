@@ -208,8 +208,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                     name:CMKeyPasteEnded
                                                   object:nil];
     
-    [gamepadManager release];
-    
     [self destroy];
     
     [self cleanupTemporaryCaptureFile];
@@ -286,9 +284,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                  name:CMKeyPasteEnded
                                                object:nil];
     
-    gamepadManager = [[CMGamepadManager alloc] init];
-    [gamepadManager setDelegate:input];
-    
     [self create];
     [self start];
 }
@@ -300,7 +295,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)create
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
         return;
     
     CMPreferences *prefs = [CMPreferences preferences];

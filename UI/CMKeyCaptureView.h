@@ -22,7 +22,9 @@
  */
 #import <Cocoa/Cocoa.h>
 
-@interface CMKeyCaptureView : NSTextView
+#import "CMGamepadManager.h"
+
+@interface CMKeyCaptureView : NSTextView<CMGamepadDelegate>
 {
 }
 

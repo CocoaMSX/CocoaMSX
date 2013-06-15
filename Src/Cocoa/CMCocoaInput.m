@@ -105,7 +105,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 //#define DEBUG_KEY_STATE
 
-#pragma mark - CMCocoaKeyboard
+#pragma mark - CMCocoaInput
 
 @interface CMCocoaInput ()
 
@@ -136,6 +136,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         joypadOneId = 0;
         joypadTwoId = 0;
         
+        [[CMGamepadManager sharedInstance] addObserver:self];
+        
         [self resetState];
     }
     
@@ -144,6 +146,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)dealloc
 {
+    [[CMGamepadManager sharedInstance] removeObserver:self];
+    
     [keysDown release];
     [keysToPaste release];
     

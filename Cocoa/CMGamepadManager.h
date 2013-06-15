@@ -29,10 +29,12 @@
 {
     IOHIDManagerRef hidManager;
     NSMutableDictionary *gamepads;
-    
-    id _delegate;
+    NSMutableArray *observers;
 }
 
-@property (nonatomic, assign) id delegate;
++ (CMGamepadManager *)sharedInstance;
+
+- (void)addObserver:(id<CMGamepadDelegate>)observer;
+- (void)removeObserver:(id<CMGamepadDelegate>)observer;
 
 @end

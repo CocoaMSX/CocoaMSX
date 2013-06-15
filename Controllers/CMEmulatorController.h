@@ -54,8 +54,6 @@ NSString * const CMKeyboardLayoutPrefKey;
     Properties *properties;
     Video *video;
     
-    CMGamepadManager *gamepadManager;
-    
     CMCocoaInput *input;
     CMCocoaMouse *mouse;
     CMCocoaSound *sound;
