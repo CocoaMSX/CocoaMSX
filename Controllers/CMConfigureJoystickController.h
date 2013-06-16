@@ -24,9 +24,38 @@
 
 #import "CMGamepadManager.h"
 
+@interface CMGamepadConfiguration : NSObject
+{
+    NSInteger _minX;
+    NSInteger _centerX;
+    NSInteger _maxX;
+    
+    NSInteger _minY;
+    NSInteger _centerY;
+    NSInteger _maxY;
+    
+    NSInteger _buttonAIndex;
+    NSInteger _buttonBIndex;
+}
+
+@property (nonatomic, assign) NSInteger minX;
+@property (nonatomic, assign) NSInteger centerX;
+@property (nonatomic, assign) NSInteger maxX;
+
+@property (nonatomic, assign) NSInteger minY;
+@property (nonatomic, assign) NSInteger centerY;
+@property (nonatomic, assign) NSInteger maxY;
+
+@property (nonatomic, assign) NSInteger buttonAIndex;
+@property (nonatomic, assign) NSInteger buttonBIndex;
+
+
+@end
+
 @interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, CMGamepadDelegate>
 {
     NSInteger currentState;
+    CMGamepadConfiguration *configuration;
     
     IBOutlet NSTextField *directionField;
 }

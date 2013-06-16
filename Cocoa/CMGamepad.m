@@ -24,60 +24,6 @@
 
 #define AXIS_CENTER 127
 
-#pragma mark - CMGamepadEvent
-
-@interface CMGamepadEvent ()
-
-+ (CMGamepadEvent *)gamepadEventWithUsagePage:(NSInteger)usagePage
-                                        usage:(NSInteger)usage
-                                        value:(NSInteger)value;
-
-@end
-
-@implementation CMGamepadEvent
-
-+ (CMGamepadEvent *)gamepadEventWithUsagePage:(NSInteger)usagePage
-                                        usage:(NSInteger)usage
-                                        value:(NSInteger)value
-{
-    CMGamepadEvent *gamepadEvent = [[CMGamepadEvent alloc] initWithUsagePage:usagePage
-                                                                       usage:usage
-                                                                       value:value];
-    
-    return [gamepadEvent autorelease];
-}
-
-- (id)initWithUsagePage:(NSInteger)usagePage
-                  usage:(NSInteger)usage
-                  value:(NSInteger)value
-{
-    if ((self = [self init]))
-    {
-        _usagePage = usagePage;
-        _usage = usage;
-        _value = value;
-    }
-    
-    return self;
-}
-
-- (NSInteger)usagePage
-{
-    return _usagePage;
-}
-
-- (NSInteger)usage
-{
-    return _usage;
-}
-
-- (NSInteger)value
-{
-    return _value;
-}
-
-@end
-
 #pragma mark - CMGamepad
 
 static void gamepadInputValueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
@@ -87,25 +33,6 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 - (NSInteger)locationId;
 
 - (void)unregisterFromEvents;
-
-- (void)gamepadDidConnect:(CMGamepad *)gamepad;
-- (void)gamepadDidDisconnect:(CMGamepad *)gamepad;
-
-- (void)gamepad:(CMGamepad *)gamepad
-       xChanged:(NSInteger)newValue
-         center:(NSInteger)center
-          event:(CMGamepadEvent *)event;
-- (void)gamepad:(CMGamepad *)gamepad
-       yChanged:(NSInteger)newValue
-         center:(NSInteger)center
-          event:(CMGamepadEvent *)event;
-
-- (void)gamepad:(CMGamepad *)gamepad
-     buttonDown:(NSInteger)index
-          event:(CMGamepadEvent *)event;
-- (void)gamepad:(CMGamepad *)gamepad
-       buttonUp:(NSInteger)index
-          event:(CMGamepadEvent *)event;
 
 - (void)didReceiveInputValue:(IOHIDValueRef)valueRef;
 
@@ -202,7 +129,8 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         
         registeredForEvents = YES;
         
-        [self gamepadDidConnect:self];
+        if ([_delegate respondsToSelector:@selector(gamepadDidConnect:)])
+            [_delegate gamepadDidConnect:self];
     }
 }
 
@@ -215,7 +143,8 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         
         registeredForEvents = NO;
         
-        [self gamepadDidDisconnect:self];
+        if ([_delegate respondsToSelector:@selector(gamepadDidDisconnect:)])
+            [_delegate gamepadDidDisconnect:self];
     }
 }
 
@@ -239,62 +168,6 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     return [deviceProperties objectForKey:@"serialNumber"];
 }
 
-- (void)gamepadDidConnect:(CMGamepad *)gamepad
-{
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepadDidConnect:gamepad];
-}
-
-- (void)gamepadDidDisconnect:(CMGamepad *)gamepad
-{
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepadDidDisconnect:gamepad];
-}
-
-- (void)gamepad:(CMGamepad *)gamepad
-       xChanged:(NSInteger)newValue
-         center:(NSInteger)center
-          event:(CMGamepadEvent *)event
-{
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad
-                  xChanged:newValue
-                    center:center
-                     event:event];
-}
-
-- (void)gamepad:(CMGamepad *)gamepad
-       yChanged:(NSInteger)newValue
-         center:(NSInteger)center
-          event:(CMGamepadEvent *)event
-{
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad
-                  yChanged:newValue
-                    center:center
-                     event:event];
-}
-
-- (void)gamepad:(CMGamepad *)gamepad
-     buttonDown:(NSInteger)index
-          event:(CMGamepadEvent *)event
-{
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad
-                buttonDown:index
-                     event:event];
-}
-
-- (void)gamepad:(CMGamepad *)gamepad
-       buttonUp:(NSInteger)index
-          event:(CMGamepadEvent *)event
-{
-    if ([_delegate respondsToSelector:_cmd])
-        [_delegate gamepad:gamepad
-                  buttonUp:index
-                     event:event];
-}
-
 - (void)didReceiveInputValue:(IOHIDValueRef)valueRef
 {
     IOHIDElementRef element = IOHIDValueGetElement(valueRef);
@@ -303,40 +176,36 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     NSInteger usage = IOHIDElementGetUsage(element);
     NSInteger value = IOHIDValueGetIntegerValue(valueRef);
     
-    CMGamepadEvent *event = [CMGamepadEvent gamepadEventWithUsagePage:usagePage
-                                                                usage:usage
-                                                                value:value];
-    
     if (usagePage == kHIDPage_GenericDesktop)
     {
         if (usage == kHIDUsage_GD_X)
         {
-            [self gamepad:self
-                 xChanged:value
-                   center:AXIS_CENTER
-                    event:event];
+            if ([_delegate respondsToSelector:@selector(gamepad:xChanged:center:)])
+                [_delegate gamepad:self
+                          xChanged:value
+                            center:AXIS_CENTER];
         }
         else if (usage == kHIDUsage_GD_Y)
         {
-            [self gamepad:self
-                 yChanged:value
-                   center:AXIS_CENTER
-                    event:event];
+            if ([_delegate respondsToSelector:@selector(gamepad:yChanged:center:)])
+                [_delegate gamepad:self
+                          yChanged:value
+                            center:AXIS_CENTER];
         }
     }
     else if (usagePage == kHIDPage_Button)
     {
         if (!value)
         {
-            [self gamepad:self
-                 buttonUp:usage
-                    event:event];
+            if ([_delegate respondsToSelector:@selector(gamepad:buttonUp:)])
+                [_delegate gamepad:self
+                          buttonUp:usage];
         }
         else
         {
-            [self gamepad:self
-               buttonDown:usage
-                    event:event];
+            if ([_delegate respondsToSelector:@selector(gamepad:buttonDown:)])
+                [_delegate gamepad:self
+                        buttonDown:usage];
         }
     }
 }

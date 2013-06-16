@@ -211,5 +211,10 @@ Keyboard = "Keyboard";
 MoonSound = "Moonsound";
 Unavailable = "Unavailable";
 
-"Press button A on the gamepad" = "Press button A on the gamepad";
-"Press button B on the gamepad" = "Press button B on the gamepad";
+"Release all directional buttons and press any button" = "Release all directional buttons and press any button";
+"Press Up" = "Press Up";
+"Press Down" = "Press Down";
+"Press Left" = "Press Left";
+"Press Right" = "Press Right";
+"Press button A" = "Press button A";
+"Press button B" = "Press button B";

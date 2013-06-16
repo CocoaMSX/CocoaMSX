@@ -123,46 +123,42 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 - (void)gamepad:(CMGamepad *)gamepad
        xChanged:(NSInteger)newValue
          center:(NSInteger)center
-          event:(CMGamepadEvent *)event
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad xChanged:newValue center:center event:event];
+             [obj gamepad:gamepad xChanged:newValue center:center];
      }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
        yChanged:(NSInteger)newValue
          center:(NSInteger)center
-          event:(CMGamepadEvent *)event
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad yChanged:newValue center:center event:event];
+             [obj gamepad:gamepad yChanged:newValue center:center];
      }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
      buttonDown:(NSInteger)index
-          event:(CMGamepadEvent *)event
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad buttonDown:index event:event];
+             [obj gamepad:gamepad buttonDown:index];
      }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
        buttonUp:(NSInteger)index
-          event:(CMGamepadEvent *)event
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad buttonUp:index event:event];
+             [obj gamepad:gamepad buttonUp:index];
      }];
 }
 

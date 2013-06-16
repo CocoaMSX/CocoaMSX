@@ -541,7 +541,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 - (void)gamepad:(CMGamepad *)gamepad
        xChanged:(NSInteger)newValue
          center:(NSInteger)center
-          event:(CMGamepadEvent *)event
 {
     NSInteger preferredDevice = -1;
     NSInteger leftVirtualCode;
@@ -583,7 +582,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 - (void)gamepad:(CMGamepad *)gamepad
        yChanged:(NSInteger)newValue
          center:(NSInteger)center
-          event:(CMGamepadEvent *)event
 {
     NSInteger preferredDevice = -1;
     NSInteger upVirtualCode;
@@ -624,7 +622,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)gamepad:(CMGamepad *)gamepad
      buttonDown:(NSInteger)index
-          event:(CMGamepadEvent *)event
 {
     NSInteger preferredDevice = -1;
     NSInteger button1VirtualCode;
@@ -661,7 +658,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)gamepad:(CMGamepad *)gamepad
        buttonUp:(NSInteger)index
-          event:(CMGamepadEvent *)event
 {
     NSInteger preferredDevice = -1;
     NSInteger button1VirtualCode;
