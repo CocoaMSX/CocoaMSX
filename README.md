@@ -40,7 +40,7 @@ Support and Updates
 
 Get support and follow development news at the [Google+ Community] [3] page.
 
-  [1]: http://en.wikipedia.org/wiki/MSX/
+  [1]: http://en.wikipedia.org/wiki/MSX
   [2]: http://www.bluemsx.com/
   [3]: https://plus.google.com/u/0/communities/104314701960403368876
   [4]: https://code.google.com/p/cocoa-msx/downloads/list  
