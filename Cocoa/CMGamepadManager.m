@@ -87,17 +87,23 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 - (void)deviceDidConnect:(IOHIDDeviceRef)device
 {
     CMGamepad *gamepad = [[[CMGamepad alloc] initWithHidDevice:device] autorelease];
+    
     [gamepad setDelegate:self];
-    [gamepad setGamepadId:@((NSInteger)device)];
+    [gamepad setGamepadId:(NSInteger)device];
     [gamepad registerForEvents];
     
     [gamepads setObject:gamepad
-                 forKey:[gamepad gamepadId]];
+                 forKey:@([gamepad gamepadId])];
 }
 
 - (void)deviceDidDisconnect:(IOHIDDeviceRef)device
 {
     [gamepads removeObjectForKey:@((NSInteger)device)];
+}
+
+- (CMGamepad *)gamepadWithId:(NSInteger)gamepadId
+{
+    return [gamepads objectForKey:@(gamepadId)];
 }
 
 #pragma mark - CMGamepadDelegate
@@ -123,42 +129,56 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 - (void)gamepad:(CMGamepad *)gamepad
        xChanged:(NSInteger)newValue
          center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad xChanged:newValue center:center];
+             [obj gamepad:gamepad
+                 xChanged:newValue
+                   center:center
+                eventData:eventData];
      }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
        yChanged:(NSInteger)newValue
          center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad yChanged:newValue center:center];
+             [obj gamepad:gamepad
+                 yChanged:newValue
+                   center:center
+                eventData:eventData];
      }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
      buttonDown:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad buttonDown:index];
+             [obj gamepad:gamepad
+               buttonDown:index
+                eventData:eventData];
      }];
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
        buttonUp:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData
 {
     [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          if ([obj respondsToSelector:_cmd])
-             [obj gamepad:gamepad buttonUp:index];
+             [obj gamepad:gamepad
+                 buttonUp:index
+                eventData:eventData];
      }];
 }
 

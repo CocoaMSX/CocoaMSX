@@ -24,14 +24,15 @@
 
 #import "MGScopeBarDelegateProtocol.h"
 
+#import "CMConfigureJoystickController.h"
+
 @class CMEmulatorController;
 @class CMMsxKeyLayout;
 @class MGScopeBar;
 @class CMKeyCaptureView;
 @class SBJsonParser;
-@class CMConfigureJoystickController;
 
-@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate>
+@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate>
 {
     CMEmulatorController *_emulator;
     
@@ -42,7 +43,8 @@
     IBOutlet NSButton *addMachineButton;
     IBOutlet NSButton *removeMachineButton;
     
-    IBOutlet NSButton *configureJoystickButton;
+    IBOutlet NSButton *configureJoypadOneButton;
+    IBOutlet NSButton *configureJoypadTwoButton;
     
     IBOutlet NSToolbar *toolbar;
     
@@ -117,7 +119,8 @@
 - (IBAction)installMachineConfiguration:(id)sender;
 - (IBAction)removeMachineConfiguration:(id)sender;
 
-- (IBAction)configureJoystick:(id)sender;
+- (IBAction)configureJoypadOne:(id)sender;
+- (IBAction)configureJoypadTwo:(id)sender;
 
 - (IBAction)performColdRebootClicked:(id)sender;
 

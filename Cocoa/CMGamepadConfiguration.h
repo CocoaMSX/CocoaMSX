@@ -21,22 +21,37 @@
  ******************************************************************************
  */
 #import <Foundation/Foundation.h>
-#import <IOKit/hid/IOHIDLib.h>
 
-#import "CMGamepad.h"
-
-@interface CMGamepadManager : NSObject<CMGamepadDelegate>
+@interface CMGamepadConfiguration : NSObject<NSCoding, NSCopying>
 {
-    IOHIDManagerRef hidManager;
-    NSMutableDictionary *gamepads;
-    NSMutableArray *observers;
+    NSInteger _vendorProductId;
+    
+    NSInteger _minX;
+    NSInteger _centerX;
+    NSInteger _maxX;
+    
+    NSInteger _minY;
+    NSInteger _centerY;
+    NSInteger _maxY;
+    
+    NSInteger _buttonAIndex;
+    NSInteger _buttonBIndex;
 }
 
-+ (CMGamepadManager *)sharedInstance;
+@property (nonatomic, assign) NSInteger vendorProductId;
 
-- (CMGamepad *)gamepadWithId:(NSInteger)gamepadId;
+@property (nonatomic, assign) NSInteger minX;
+@property (nonatomic, assign) NSInteger centerX;
+@property (nonatomic, assign) NSInteger maxX;
 
-- (void)addObserver:(id<CMGamepadDelegate>)observer;
-- (void)removeObserver:(id<CMGamepadDelegate>)observer;
+@property (nonatomic, assign) NSInteger minY;
+@property (nonatomic, assign) NSInteger centerY;
+@property (nonatomic, assign) NSInteger maxY;
+
+@property (nonatomic, assign) NSInteger buttonAIndex;
+@property (nonatomic, assign) NSInteger buttonBIndex;
+
+- (void)clear;
+- (void)dump;
 
 @end

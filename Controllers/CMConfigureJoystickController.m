@@ -22,6 +22,8 @@
  */
 #import "CMConfigureJoystickController.h"
 
+#import "CMGamepadConfiguration.h"
+
 #define STATE_CENTER         0
 #define STATE_PRESS_UP       1
 #define STATE_PRESS_DOWN     2
@@ -29,35 +31,9 @@
 #define STATE_PRESS_RIGHT    4
 #define STATE_PRESS_BUTTON_A 5
 #define STATE_PRESS_BUTTON_B 6
+#define STATE_DONE           7
 
-#define STATE_INITIAL        STATE_CENTER
-
-@implementation CMGamepadConfiguration
-
-@synthesize minX = _minX;
-@synthesize centerX = _centerX;
-@synthesize maxX = _maxX;
-@synthesize minY = _minY;
-@synthesize centerY = _centerY;
-@synthesize maxY = _maxY;
-@synthesize buttonAIndex = _buttonAIndex;
-@synthesize buttonBIndex = _buttonBIndex;
-
-- (id)init
-{
-    if ((self = [super init]))
-    {
-    }
-    
-    return self;
-}
-
-- (void)dealloc
-{
-    [super dealloc];
-}
-
-@end
+#define STATE_INVALID        -1
 
 @interface CMConfigureJoystickController ()
 
@@ -68,11 +44,14 @@
 
 @implementation CMConfigureJoystickController
 
+@synthesize delegate = _delegate;
+
 - (id)init
 {
     if ((self = [super initWithWindowNibName:@"ConfigureJoystick"]))
     {
-        configuration = nil;
+        configuration = [[CMGamepadConfiguration alloc] init];
+        allAxisValues = [[NSMutableDictionary alloc] init];
     }
     
     return self;
@@ -80,6 +59,7 @@
 
 - (void)dealloc
 {
+    [allAxisValues release];
     [configuration release];
     
     [super dealloc];
@@ -106,77 +86,126 @@
 
 #pragma mark - CMGamepadDelegate
 
+- (void)gamepadDidDisconnect:(CMGamepad *)gamepad
+{
+    if ([gamepad gamepadId] == selectedJoypadId)
+    {
+        currentState = STATE_INVALID;
+        [self updateStateVisuals];
+    }
+}
+
 - (void)gamepad:(CMGamepad *)gamepad
        xChanged:(NSInteger)newValue
          center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData
 {
-    if (currentState == STATE_PRESS_LEFT)
+    if ([gamepad gamepadId] == selectedJoypadId)
     {
-        [configuration setMinX:newValue];
-        [self proceedToNextState];
+        if (currentState == STATE_PRESS_LEFT || currentState == STATE_PRESS_RIGHT)
+        {
+            if ([configuration centerX] == NSIntegerMin)
+            {
+                NSNumber *centerValue = [allAxisValues objectForKey:@([eventData sourceId])];
+                if (centerValue)
+                    [configuration setCenterX:[centerValue integerValue]];
+            }
+            
+            if ([configuration centerX] != NSIntegerMin)
+            {
+                if (currentState == STATE_PRESS_LEFT && newValue < [configuration centerX])
+                {
+                    [configuration setMinX:newValue];
+                    [self proceedToNextState];
+                }
+                else if (currentState == STATE_PRESS_RIGHT  && newValue > [configuration centerX])
+                {
+                    [configuration setMaxX:newValue];
+                    [self proceedToNextState];
+                }
+            }
+        }
     }
-    else if (currentState == STATE_PRESS_RIGHT)
-    {
-        [configuration setMaxX:newValue];
-        [self proceedToNextState];
-    }
-    
-    NSLog(@"(%@) x changed: %ld/%ld", [gamepad name], newValue, center);
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
        yChanged:(NSInteger)newValue
          center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData
 {
-    if (currentState == STATE_PRESS_UP)
+    if ([gamepad gamepadId] == selectedJoypadId)
     {
-        [configuration setMinY:newValue];
-        [self proceedToNextState];
+        if (currentState == STATE_PRESS_UP || currentState == STATE_PRESS_DOWN)
+        {
+            if ([configuration centerY] == NSIntegerMin)
+            {
+                NSNumber *centerValue = [allAxisValues objectForKey:@([eventData sourceId])];
+                if (centerValue)
+                    [configuration setCenterY:[centerValue integerValue]];
+            }
+            
+            if ([configuration centerY] != NSIntegerMin)
+            {
+                if (currentState == STATE_PRESS_UP && newValue < [configuration centerY])
+                {
+                    [configuration setMinY:newValue];
+                    [self proceedToNextState];
+                }
+                else if (currentState == STATE_PRESS_DOWN  && newValue > [configuration centerY])
+                {
+                    [configuration setMaxY:newValue];
+                    [self proceedToNextState];
+                }
+            }
+        }
     }
-    else if (currentState == STATE_PRESS_DOWN)
-    {
-        [configuration setMaxY:newValue];
-        [self proceedToNextState];
-    }
-    
-    NSLog(@"(%@) y changed: %ld/%ld", [gamepad name], newValue, center);
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
      buttonDown:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData
 {
-    if (currentState == STATE_CENTER)
+    if ([gamepad gamepadId] == selectedJoypadId)
     {
-        // FIXME!
-//        [configuration setButtonAIndex:index];
-        [self proceedToNextState];
-    }
-    else if (currentState == STATE_PRESS_BUTTON_A)
-    {
-        [configuration setButtonAIndex:index];
-        [self proceedToNextState];
-    }
-    else if (currentState == STATE_PRESS_BUTTON_B)
-    {
-        [configuration setButtonBIndex:index];
-        [self proceedToNextState];
+        if (currentState == STATE_CENTER)
+        {
+            CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:selectedJoypadId];
+            
+            [allAxisValues removeAllObjects];
+            [allAxisValues addEntriesFromDictionary:[gamepad currentAxisValues]];
+            
+            [self proceedToNextState];
+        }
+        else if (currentState == STATE_PRESS_BUTTON_A)
+        {
+            [configuration setButtonAIndex:index];
+            [self proceedToNextState];
+        }
+        else if (currentState == STATE_PRESS_BUTTON_B)
+        {
+            [configuration setButtonBIndex:index];
+            [self proceedToNextState];
+        }
     }
 }
 
-- (void)gamepad:(CMGamepad *)gamepad
-       buttonUp:(NSInteger)index
-{
-    NSLog(@"(%@) button %ld up", [gamepad name], index);
-}
+#pragma mark - Private methods
 
-- (void)restartConfiguration
+- (void)restartConfiguration:(NSInteger)joypadId
 {
-    currentState = STATE_INITIAL;
+    currentState = 0;
+    selectedJoypadId = joypadId;
     
-    [configuration release];
-    configuration = [[CMGamepadConfiguration alloc] init];
+    [configuration clear];
+    
+    [allAxisValues removeAllObjects];
     
     [self updateStateVisuals];
+    
+    CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:selectedJoypadId];
+    [configuration setVendorProductId:[gamepad vendorProductId]];
+    
+    [[self window] setTitle:[gamepad name]];
 }
 
 - (void)proceedToNextState
@@ -190,7 +219,7 @@
     switch(currentState)
     {
         case STATE_CENTER:
-            [directionField setStringValue:CMLoc(@"Release all directional buttons and press any button")];
+            [directionField setStringValue:CMLoc(@"Release the directional controls then press any button")];
             break;
         case STATE_PRESS_UP:
             [directionField setStringValue:CMLoc(@"Press Up")];
@@ -210,7 +239,35 @@
         case STATE_PRESS_BUTTON_B:
             [directionField setStringValue:CMLoc(@"Press button B")];
             break;
+        case STATE_INVALID:
+            [directionField setStringValue:CMLoc(@"Configuration canceled.")];
+            break;
+        case STATE_DONE:
+            [directionField setStringValue:CMLoc(@"Configuration complete.")];
+            break;
     }
+    
+    [saveButton setEnabled:(currentState == STATE_DONE)];
+}
+
+#pragma mark - Actions
+
+- (void)onCancelClicked:(id)sender
+{
+    [[self window] close];
+}
+
+- (void)onSaveClicked:(id)sender
+{
+    if (_delegate)
+    {
+        CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:selectedJoypadId];
+        if (gamepad)
+            [_delegate gamepadDidConfigure:gamepad
+                             configuration:[[configuration copy] autorelease]];
+    }
+    
+    [[self window] close];
 }
 
 @end

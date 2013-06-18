@@ -28,6 +28,7 @@
 #import "CMInputDeviceLayout.h"
 #import "CMPreferences.h"
 
+#import "CMGamepadConfiguration.h"
 #import "CMEmulatorController.h"
 
 #include "Board.h"
@@ -109,6 +110,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 @interface CMCocoaInput ()
 
+- (void)reloadConfigurations;
 - (void)stopPasting;
 - (void)updateKeyboardState;
 - (void)handleKeyEvent:(NSInteger)keyCode
@@ -119,6 +121,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 @implementation CMCocoaInput
 
 @synthesize keyCombinationToAutoPress = _keyCombinationToAutoPress;
+@synthesize joypadOneId = _joypadOneId;
+@synthesize joypadTwoId = _joypadTwoId;
 
 - (id)init
 {
@@ -129,16 +133,23 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         
         keysDown = [[NSMutableSet alloc] init];
         keysToPaste = [[NSMutableArray alloc] init];
+        joypadConfigurations = [[NSMutableDictionary alloc] init];
         
         _keyCombinationToAutoPress = nil;
         timeOfAutoPress = 0;
         
-        joypadOneId = 0;
-        joypadTwoId = 0;
+        _joypadOneId = 0;
+        _joypadTwoId = 0;
         
         [[CMGamepadManager sharedInstance] addObserver:self];
         
+        [self reloadConfigurations];
         [self resetState];
+        
+        [[NSUserDefaults standardUserDefaults] addObserver:self
+                                                forKeyPath:@"joypadConfigurations"
+                                                   options:0
+                                                   context:NULL];
     }
     
     return self;
@@ -146,8 +157,12 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)dealloc
 {
+    [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                               forKeyPath:@"joypadConfigurations"];
+    
     [[CMGamepadManager sharedInstance] removeObserver:self];
     
+    [joypadConfigurations release];
     [keysDown release];
     [keysToPaste release];
     
@@ -157,6 +172,18 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     [self setKeyCombinationToAutoPress:nil];
     
     [super dealloc];
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+    NSLog(@"CMCocoaInput: reloading configuration");
+    
+    [self reloadConfigurations];
 }
 
 #pragma mark - Key event methods
@@ -249,6 +276,23 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         
         [self releaseAllKeys];
     }
+}
+
+#pragma mark - Private methods
+
+- (void)reloadConfigurations
+{
+    [joypadConfigurations removeAllObjects];
+    
+    NSDictionary *configurations = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"joypadConfigurations"];
+    [configurations enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
+    {
+        CMGamepadConfiguration *config = [NSKeyedUnarchiver unarchiveObjectWithData:obj];
+        [joypadConfigurations setObject:config
+                                 forKey:@([config vendorProductId])];
+    }];
+    
+    NSLog(@"CMCocoaInput: Loaded %ld gamepad configurations", [configurations count]);
 }
 
 #pragma mark - Public methods
@@ -387,7 +431,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     NSInteger joyPort1PreferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort1"];
     
     if (joyPort1PreferredDevice == CMPreferredMacDeviceKeyboard ||
-        (joyPort1PreferredDevice == CMPreferredMacDeviceJoystickThenKeyboard && joypadOneId == 0))
+        (joyPort1PreferredDevice == CMPreferredMacDeviceJoystickThenKeyboard && _joypadOneId == 0))
     {
         [self handleKeyEventForInput:input
                               layout:[theEmulator joystickOneLayout]
@@ -397,7 +441,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     NSInteger joyPort2PreferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     
     if (joyPort2PreferredDevice == CMPreferredMacDeviceKeyboard ||
-        (joyPort2PreferredDevice == CMPreferredMacDeviceJoystickThenKeyboard && joypadTwoId == 0))
+        (joyPort2PreferredDevice == CMPreferredMacDeviceJoystickThenKeyboard && _joypadTwoId == 0))
     {
         [self handleKeyEventForInput:input
                               layout:[theEmulator joystickTwoLayout]
@@ -478,12 +522,12 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)gamepadDidConnect:(CMGamepad *)gamepad
 {
-    if (joypadOneId == 0)
+    if (_joypadOneId == 0)
     {
 #if DEBUG
         NSLog(@"Gamepad \"%@\" connected to port 1", [gamepad name]);
 #endif
-        joypadOneId = [gamepad gamepadId];
+        _joypadOneId = [gamepad gamepadId];
         
         [keysDown removeObject:@(EC_JOY1_UP)];
         [keysDown removeObject:@(EC_JOY1_DOWN)];
@@ -492,12 +536,12 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         [keysDown removeObject:@(EC_JOY1_BUTTON1)];
         [keysDown removeObject:@(EC_JOY1_BUTTON2)];
     }
-    else if (joypadTwoId == 0)
+    else if (_joypadTwoId == 0)
     {
 #if DEBUG
         NSLog(@"Gamepad \"%@\" connected to port 2", [gamepad name]);
 #endif
-        joypadTwoId = [gamepad gamepadId];
+        _joypadTwoId = [gamepad gamepadId];
         
         [keysDown removeObject:@(EC_JOY2_UP)];
         [keysDown removeObject:@(EC_JOY2_DOWN)];
@@ -514,9 +558,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     NSLog(@"Gamepad \"%@\" disconnected", [gamepad name]);
 #endif
     
-    if (joypadOneId == [gamepad gamepadId])
+    if (_joypadOneId == [gamepad gamepadId])
     {
-        joypadOneId = 0;
+        _joypadOneId = 0;
         
         [keysDown removeObject:@(EC_JOY1_UP)];
         [keysDown removeObject:@(EC_JOY1_DOWN)];
@@ -525,9 +569,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         [keysDown removeObject:@(EC_JOY1_BUTTON1)];
         [keysDown removeObject:@(EC_JOY1_BUTTON2)];
     }
-    else if (joypadTwoId == [gamepad gamepadId])
+    else if (_joypadTwoId == [gamepad gamepadId])
     {
-        joypadTwoId = 0;
+        _joypadTwoId = 0;
         
         [keysDown removeObject:@(EC_JOY2_UP)];
         [keysDown removeObject:@(EC_JOY2_DOWN)];
@@ -541,19 +585,24 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 - (void)gamepad:(CMGamepad *)gamepad
        xChanged:(NSInteger)newValue
          center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData
 {
     NSInteger preferredDevice = -1;
     NSInteger leftVirtualCode;
     NSInteger rightVirtualCode;
     
-    if (joypadOneId == [gamepad gamepadId])
+    CMGamepadConfiguration *config = [joypadConfigurations objectForKey:@([gamepad vendorProductId])];
+    if (config)
+        center = [config centerX];
+    
+    if (_joypadOneId == [gamepad gamepadId])
     {
         leftVirtualCode = EC_JOY1_LEFT;
         rightVirtualCode = EC_JOY1_RIGHT;
         
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort1"];
     }
-    else if (joypadTwoId == [gamepad gamepadId])
+    else if (_joypadTwoId == [gamepad gamepadId])
     {
         leftVirtualCode = EC_JOY2_LEFT;
         rightVirtualCode = EC_JOY2_RIGHT;
@@ -561,7 +610,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#if DEBUG
+#ifdef DEBUG_KEY_STATE
     NSLog(@"Joystick X: %ld (center: %ld) on gamepad %@",
           newValue, center, gamepad);
 #endif
@@ -582,19 +631,24 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 - (void)gamepad:(CMGamepad *)gamepad
        yChanged:(NSInteger)newValue
          center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData
 {
     NSInteger preferredDevice = -1;
     NSInteger upVirtualCode;
     NSInteger downVirtualCode;
     
-    if (joypadOneId == [gamepad gamepadId])
+    CMGamepadConfiguration *config = [joypadConfigurations objectForKey:@([gamepad vendorProductId])];
+    if (config)
+        center = [config centerY];
+    
+    if (_joypadOneId == [gamepad gamepadId])
     {
         upVirtualCode = EC_JOY1_UP;
         downVirtualCode = EC_JOY1_DOWN;
         
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort1"];
     }
-    else if (joypadTwoId == [gamepad gamepadId])
+    else if (_joypadTwoId == [gamepad gamepadId])
     {
         upVirtualCode = EC_JOY2_UP;
         downVirtualCode = EC_JOY2_DOWN;
@@ -602,7 +656,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#if DEBUG
+#ifdef DEBUG_KEY_STATE
     NSLog(@"Joystick Y: %ld (center: %ld) on gamepad %@",
           newValue, center, gamepad);
 #endif
@@ -622,19 +676,22 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)gamepad:(CMGamepad *)gamepad
      buttonDown:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData
 {
     NSInteger preferredDevice = -1;
     NSInteger button1VirtualCode;
     NSInteger button2VirtualCode;
     
-    if (joypadOneId == [gamepad gamepadId])
+    CMGamepadConfiguration *config = [joypadConfigurations objectForKey:@([gamepad vendorProductId])];
+    
+    if (_joypadOneId == [gamepad gamepadId])
     {
         button1VirtualCode = EC_JOY1_BUTTON1;
         button2VirtualCode = EC_JOY1_BUTTON2;
         
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort1"];
     }
-    else if (joypadTwoId == [gamepad gamepadId])
+    else if (_joypadTwoId == [gamepad gamepadId])
     {
         button1VirtualCode = EC_JOY2_BUTTON1;
         button2VirtualCode = EC_JOY2_BUTTON2;
@@ -642,35 +699,40 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#if DEBUG
+#ifdef DEBUG_KEY_STATE
     NSLog(@"Pressed button %ld on gamepad %@", index, gamepad);
 #endif
     
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
     {
-        if (index == 1)
+        NSInteger button1Index = (config) ? [config buttonAIndex] : 1;
+        NSInteger button2Index = (config) ? [config buttonBIndex] : 2;
+        
+        if (index == button1Index)
             [keysDown addObject:@(button1VirtualCode)];
-        else if (index == 2)
+        else if (index == button2Index)
             [keysDown addObject:@(button2VirtualCode)];
     }
 }
 
 - (void)gamepad:(CMGamepad *)gamepad
        buttonUp:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData
 {
     NSInteger preferredDevice = -1;
     NSInteger button1VirtualCode;
     NSInteger button2VirtualCode;
+    CMGamepadConfiguration *config = [joypadConfigurations objectForKey:@([gamepad vendorProductId])];
     
-    if (joypadOneId == [gamepad gamepadId])
+    if (_joypadOneId == [gamepad gamepadId])
     {
         button1VirtualCode = EC_JOY1_BUTTON1;
         button2VirtualCode = EC_JOY1_BUTTON2;
         
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort1"];
     }
-    else if (joypadTwoId == [gamepad gamepadId])
+    else if (_joypadTwoId == [gamepad gamepadId])
     {
         button1VirtualCode = EC_JOY2_BUTTON1;
         button2VirtualCode = EC_JOY2_BUTTON2;
@@ -678,16 +740,19 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#if DEBUG
+#ifdef DEBUG_KEY_STATE
     NSLog(@"Released button %ld on gamepad %@", index, gamepad);
 #endif
     
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
     {
-        if (index == 1)
+        NSInteger button1Index = (config) ? [config buttonAIndex] : 1;
+        NSInteger button2Index = (config) ? [config buttonBIndex] : 2;
+        
+        if (index == button1Index)
             [keysDown removeObject:@(button1VirtualCode)];
-        else if (index == 2)
+        else if (index == button2Index)
             [keysDown removeObject:@(button2VirtualCode)];
     }
 }

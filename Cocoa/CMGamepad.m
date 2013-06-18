@@ -22,15 +22,23 @@
  */
 #import "CMGamepad.h"
 
+#import <IOKit/hid/IOHIDLib.h>
+
 #define AXIS_CENTER 127
+
+#pragma mark - CMGamepadEventData
+
+@implementation CMGamepadEventData : NSObject
+
+@synthesize sourceId = _sourceId;
+
+@end
 
 #pragma mark - CMGamepad
 
 static void gamepadInputValueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
 
 @interface CMGamepad()
-
-- (NSInteger)locationId;
 
 - (void)unregisterFromEvents;
 
@@ -42,6 +50,10 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 
 @synthesize delegate = _delegate;
 @synthesize gamepadId = _gamepadId;
+@synthesize vendorId = _vendorId;
+@synthesize productId = _productId;
+@synthesize locationId = _locationId;
+@synthesize name = _name;
 
 + (NSArray *)allGamepads
 {
@@ -98,13 +110,25 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         
         IOObjectRetain(hidDevice);
         
-        deviceProperties = [[NSMutableDictionary alloc] init];
-        [deviceProperties setObject:(NSString *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDProductKey))
-                             forKey:@"productKey"];
-//        [deviceProperties setObject:(NSNumber *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDSerialNumberKey))
-//                             forKey:@"serialNumber"];
-        [deviceProperties setObject:(NSString *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDLocationIDKey))
-                             forKey:@"locationId"];
+        _vendorId = 0;
+        _productId = 0;
+        
+        CFTypeRef tCFTypeRef;
+        CFTypeID numericTypeId = CFNumberGetTypeID();
+        
+        tCFTypeRef = IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDVendorIDKey));
+		if (tCFTypeRef && CFGetTypeID(tCFTypeRef) == numericTypeId)
+            CFNumberGetValue((CFNumberRef)tCFTypeRef, kCFNumberSInt32Type, &_vendorId);
+        
+        tCFTypeRef = IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDProductIDKey));
+		if (tCFTypeRef && CFGetTypeID(tCFTypeRef) == numericTypeId)
+            CFNumberGetValue((CFNumberRef)tCFTypeRef, kCFNumberSInt32Type, &_productId);
+        
+        tCFTypeRef = IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDLocationIDKey));
+		if (tCFTypeRef && CFGetTypeID(tCFTypeRef) == numericTypeId)
+            CFNumberGetValue((CFNumberRef)tCFTypeRef, kCFNumberSInt32Type, &_locationId);
+        
+        _name = [(NSString *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDProductKey)) retain];
     }
     
     return self;
@@ -115,7 +139,8 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     [self unregisterFromEvents];
     
     IOObjectRelease(hidDevice);
-    [deviceProperties release];
+    
+    [_name release];
     
     [super dealloc];
 }
@@ -148,24 +173,21 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     }
 }
 
-- (NSInteger)locationId
+- (NSString *)vendorProductString
 {
-    return [[deviceProperties objectForKey:@"locationId"] integerValue];
+    return [NSString stringWithFormat:@"%04lx:%04lx",
+            [self vendorId], [self productId]];
 }
 
-- (NSString *)name
+- (NSInteger)vendorProductId
 {
-    return [deviceProperties objectForKey:@"productKey"];
+    return (_vendorId << 16) | _productId;
 }
 
 - (NSString *)description
 {
-    return [self name];
-}
-
-- (NSString *)serialNumber
-{
-    return [deviceProperties objectForKey:@"serialNumber"];
+    return [NSString stringWithFormat:@"%@ (0x%04lx:0x%04lx)",
+            [self name], [self vendorId], [self productId]];
 }
 
 - (void)didReceiveInputValue:(IOHIDValueRef)valueRef
@@ -180,34 +202,96 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     {
         if (usage == kHIDUsage_GD_X)
         {
-            if ([_delegate respondsToSelector:@selector(gamepad:xChanged:center:)])
+            if ([_delegate respondsToSelector:@selector(gamepad:xChanged:center:eventData:)])
+            {
+                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                [eventData setSourceId:IOHIDElementGetCookie(element)];
+                
                 [_delegate gamepad:self
                           xChanged:value
-                            center:AXIS_CENTER];
+                            center:AXIS_CENTER
+                         eventData:eventData];
+            }
         }
         else if (usage == kHIDUsage_GD_Y)
         {
-            if ([_delegate respondsToSelector:@selector(gamepad:yChanged:center:)])
+            if ([_delegate respondsToSelector:@selector(gamepad:yChanged:center:eventData:)])
+            {
+                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                [eventData setSourceId:IOHIDElementGetCookie(element)];
+                
                 [_delegate gamepad:self
                           yChanged:value
-                            center:AXIS_CENTER];
+                            center:AXIS_CENTER
+                         eventData:eventData];
+            }
         }
     }
     else if (usagePage == kHIDPage_Button)
     {
         if (!value)
         {
-            if ([_delegate respondsToSelector:@selector(gamepad:buttonUp:)])
+            if ([_delegate respondsToSelector:@selector(gamepad:buttonUp:eventData:)])
+            {
+                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                [eventData setSourceId:IOHIDElementGetCookie(element)];
+                
                 [_delegate gamepad:self
-                          buttonUp:usage];
+                          buttonUp:usage
+                         eventData:eventData];
+            }
         }
         else
         {
-            if ([_delegate respondsToSelector:@selector(gamepad:buttonDown:)])
+            if ([_delegate respondsToSelector:@selector(gamepad:buttonDown:eventData:)])
+            {
+                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                [eventData setSourceId:IOHIDElementGetCookie(element)];
+                
                 [_delegate gamepad:self
-                        buttonDown:usage];
+                        buttonDown:usage
+                         eventData:eventData];
+            }
         }
     }
+}
+
+- (NSMutableDictionary *)currentAxisValues
+{
+    CFArrayRef elements = IOHIDDeviceCopyMatchingElements(hidDevice, NULL, kIOHIDOptionsTypeNone);
+    NSArray *elementArray = (NSArray *)elements;
+    
+    NSMutableDictionary *axesAndValues = [[[NSMutableDictionary alloc] init] autorelease];
+    
+    [elementArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         IOHIDElementRef element = (IOHIDElementRef)obj;
+         
+         NSInteger usagePage = IOHIDElementGetUsagePage(element);
+         if (usagePage == kHIDPage_GenericDesktop)
+         {
+             IOHIDElementType type = IOHIDElementGetType(element);
+             if (type == kIOHIDElementTypeInput_Misc ||
+                 type == kIOHIDElementTypeInput_Axis)
+             {
+                 NSInteger usage = IOHIDElementGetUsage(element);
+                 if (usage == kHIDUsage_GD_X || usage == kHIDUsage_GD_Y)
+                 {
+                     IOHIDValueRef tIOHIDValueRef;
+                     if (IOHIDDeviceGetValue(hidDevice, element, &tIOHIDValueRef) == kIOReturnSuccess)
+                     {
+                         IOHIDElementCookie cookie = IOHIDElementGetCookie(element);
+                         NSInteger integerValue = IOHIDValueGetIntegerValue(tIOHIDValueRef);
+                         
+                         [axesAndValues setObject:@(integerValue)
+                                           forKey:@(cookie)];
+                     }
+                 }
+             }
+         }
+     }];
+    
+    return axesAndValues;
 }
 
 @end

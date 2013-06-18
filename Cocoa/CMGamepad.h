@@ -23,6 +23,15 @@
 #import <Foundation/Foundation.h>
 #import <IOKit/hid/IOHIDLib.h>
 
+@interface CMGamepadEventData : NSObject
+{
+    NSInteger _sourceId;
+}
+
+@property (nonatomic, assign) NSInteger sourceId;
+
+@end
+
 @interface CMGamepad : NSObject
 {
     id _delegate;
@@ -30,11 +39,20 @@
     
     BOOL registeredForEvents;
     IOHIDDeviceRef hidDevice;
-    NSMutableDictionary *deviceProperties;
+    
+    NSInteger _locationId;
+    NSInteger _vendorId;
+    NSInteger _productId;
+    NSString *_name;
 }
 
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, assign) NSInteger gamepadId;
+
+@property (nonatomic, readonly) NSInteger locationId;
+@property (nonatomic, readonly) NSInteger vendorId;
+@property (nonatomic, readonly) NSInteger productId;
+@property (nonatomic, readonly) NSString *name;
 
 + (NSArray *)allGamepads;
 
@@ -42,8 +60,10 @@
 
 - (void)registerForEvents;
 
-- (NSString *)name;
-- (NSString *)serialNumber;
+- (NSInteger)vendorProductId;
+- (NSString *)vendorProductString;
+
+- (NSMutableDictionary *)currentAxisValues;
 
 @end
 
@@ -55,14 +75,18 @@
 
 - (void)gamepad:(CMGamepad *)gamepad
        xChanged:(NSInteger)newValue
-         center:(NSInteger)center;
+         center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData;
 - (void)gamepad:(CMGamepad *)gamepad
        yChanged:(NSInteger)newValue
-         center:(NSInteger)center;
+         center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData;
 
 - (void)gamepad:(CMGamepad *)gamepad
-     buttonDown:(NSInteger)index;
+     buttonDown:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData;
 - (void)gamepad:(CMGamepad *)gamepad
-       buttonUp:(NSInteger)index;
+       buttonUp:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData;
 
 @end

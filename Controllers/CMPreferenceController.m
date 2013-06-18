@@ -37,6 +37,7 @@
 #import "CMKeyboardInput.h"
 #import "CMMachine.h"
 
+#import "CMCocoaInput.h"
 #import "CMKeyCaptureView.h"
 #import "CMHeaderRowCell.h"
 #import "CMMachineSelectionCell.h"
@@ -207,6 +208,8 @@ static NSArray *keysInOrderOfAppearance;
 - (void)toggleSystemSpecificButtons;
 - (void)updateCurrentConfigurationInformation;
 - (void)sizeWindowToTabContent:(NSString *)tabId;
+
+- (void)configureJoypad:(NSInteger)joypadId;
 
 @end
 
@@ -928,13 +931,42 @@ static NSArray *keysInOrderOfAppearance;
     }
 }
 
-- (void)configureJoystick:(id)sender
+- (void)configureJoypadOne:(id)sender
+{
+    [self configureJoypad:[[[self emulator] input] joypadOneId]];
+}
+
+- (void)configureJoypadTwo:(id)sender
+{
+    [self configureJoypad:[[[self emulator] input] joypadTwoId]];
+}
+
+- (void)configureJoypad:(NSInteger)joypadId
 {
     if (!joystickConfigurator)
+    {
         joystickConfigurator = [[CMConfigureJoystickController alloc] init];
+        [joystickConfigurator setDelegate:self];
+    }
     
-    [joystickConfigurator showWindow:self];
-    [joystickConfigurator restartConfiguration];
+    if (joypadId != 0)
+    {
+        [joystickConfigurator showWindow:self];
+        [joystickConfigurator restartConfiguration:joypadId];
+    }
+    else
+    {
+        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port")
+                                         defaultButton:CMLoc(@"OK")
+                                       alternateButton:nil
+                                           otherButton:nil
+                             informativeTextWithFormat:@""];
+        
+        [alert beginSheetModalForWindow:[self window]
+                          modalDelegate:self
+                         didEndSelector:nil
+                            contextInfo:nil];
+    }
 }
 
 - (void)tabChanged:(id)sender
@@ -1578,6 +1610,23 @@ static NSArray *keysInOrderOfAppearance;
         [systemTableView reloadData];
         [self toggleSystemSpecificButtons];
     }
+}
+
+#pragma mark - CMGamepadConfigurationDelegate
+
+- (void)gamepadDidConfigure:(CMGamepad *)gamepad configuration:(CMGamepadConfiguration *)configuration
+{
+    NSDictionary *currentConfigurations = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"joypadConfigurations"];
+    NSMutableDictionary *newConfigurations = [NSMutableDictionary dictionary];
+    
+    if (currentConfigurations)
+        [newConfigurations addEntriesFromDictionary:currentConfigurations];
+    
+    [newConfigurations setObject:[NSKeyedArchiver archivedDataWithRootObject:configuration]
+                          forKey:[gamepad vendorProductString]];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:newConfigurations
+                                              forKey:@"joypadConfigurations"];
 }
 
 @end

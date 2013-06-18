@@ -24,42 +24,35 @@
 
 #import "CMGamepadManager.h"
 
-@interface CMGamepadConfiguration : NSObject
-{
-    NSInteger _minX;
-    NSInteger _centerX;
-    NSInteger _maxX;
-    
-    NSInteger _minY;
-    NSInteger _centerY;
-    NSInteger _maxY;
-    
-    NSInteger _buttonAIndex;
-    NSInteger _buttonBIndex;
-}
-
-@property (nonatomic, assign) NSInteger minX;
-@property (nonatomic, assign) NSInteger centerX;
-@property (nonatomic, assign) NSInteger maxX;
-
-@property (nonatomic, assign) NSInteger minY;
-@property (nonatomic, assign) NSInteger centerY;
-@property (nonatomic, assign) NSInteger maxY;
-
-@property (nonatomic, assign) NSInteger buttonAIndex;
-@property (nonatomic, assign) NSInteger buttonBIndex;
-
-
-@end
+@class CMGamepadConfiguration;
 
 @interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, CMGamepadDelegate>
 {
+    NSInteger selectedJoypadId;
     NSInteger currentState;
+    
     CMGamepadConfiguration *configuration;
+    NSMutableDictionary *allAxisValues;
+    
+    id _delegate;
     
     IBOutlet NSTextField *directionField;
+    IBOutlet NSButton *saveButton;
 }
 
-- (void)restartConfiguration;
+@property (nonatomic, assign) id delegate;
+
+- (void)restartConfiguration:(NSInteger)joypadId;
+
+- (IBAction)onCancelClicked:(id)sender;
+- (IBAction)onSaveClicked:(id)sender;
+
+@end
+
+@protocol CMGamepadConfigurationDelegate
+
+@required
+- (void)gamepadDidConfigure:(CMGamepad *)gamepad
+              configuration:(CMGamepadConfiguration *)configuration;
 
 @end

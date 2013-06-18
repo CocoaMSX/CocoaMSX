@@ -26,6 +26,8 @@
 
 #import "CMGamepadManager.h"
 
+#define CMJoypadNone 0
+
 extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;
 
@@ -39,13 +41,18 @@ extern NSString * const CMKeyPasteEnded;
     NSMutableSet *keysDown;
     NSMutableArray *keysToPaste;
     
-    NSInteger joypadOneId;
-    NSInteger joypadTwoId;
+    NSInteger _joypadOneId;
+    NSInteger _joypadTwoId;
     
     CMMSXKeyCombination *_keyCombinationToAutoPress;
     NSTimeInterval timeOfAutoPress;
     BOOL autoKeyPressPasted;
+    
+    NSMutableDictionary *joypadConfigurations;
 }
+
+@property (nonatomic, assign, readonly) NSInteger joypadOneId;
+@property (nonatomic, assign, readonly) NSInteger joypadTwoId;
 
 @property (nonatomic, retain) CMMSXKeyCombination *keyCombinationToAutoPress;
 
