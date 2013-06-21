@@ -181,8 +181,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
                         change:(NSDictionary *)change
                        context:(void *)context
 {
+#ifdef DEBUG
     NSLog(@"CMCocoaInput: reloading configuration");
-    
+#endif
     [self reloadConfigurations];
 }
 
@@ -291,8 +292,10 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         [joypadConfigurations setObject:config
                                  forKey:@([config vendorProductId])];
     }];
-    
-    NSLog(@"CMCocoaInput: Loaded %ld gamepad configurations", [configurations count]);
+#ifdef DEBUG
+    NSLog(@"CMCocoaInput: Loaded %ld gamepad configurations",
+          (NSInteger)[configurations count]);
+#endif
 }
 
 #pragma mark - Public methods

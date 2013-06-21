@@ -176,7 +176,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 - (NSString *)vendorProductString
 {
     return [NSString stringWithFormat:@"%04lx:%04lx",
-            [self vendorId], [self productId]];
+            (long)[self vendorId], (long)[self productId]];
 }
 
 - (NSInteger)vendorProductId
@@ -187,7 +187,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"%@ (0x%04lx:0x%04lx)",
-            [self name], [self vendorId], [self productId]];
+            [self name], (long)[self vendorId], (long)[self productId]];
 }
 
 - (void)didReceiveInputValue:(IOHIDValueRef)valueRef
@@ -284,7 +284,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
                          NSInteger integerValue = IOHIDValueGetIntegerValue(tIOHIDValueRef);
                          
                          [axesAndValues setObject:@(integerValue)
-                                           forKey:@(cookie)];
+                                           forKey:@((NSInteger)cookie)];
                      }
                  }
              }

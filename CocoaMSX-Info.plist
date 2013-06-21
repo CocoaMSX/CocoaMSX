@@ -92,11 +92,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3rc2</string>
+	<string>1.3rc3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>6</string>
 	<key>CMMachineFeedURL</key>
 	<string>http://www.vik.cc/bluemsx/cocoamsx/downloads.json</string>
 	<key>LSApplicationCategoryType</key>

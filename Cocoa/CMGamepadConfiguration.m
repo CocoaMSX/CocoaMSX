@@ -72,11 +72,15 @@
 
 - (void)dump
 {
-    NSLog(@"X: %ld < %ld > %ld", [self minX], [self centerX], [self maxX]);
-    NSLog(@"Y: %ld < %ld > %ld", [self minY], [self centerY], [self maxY]);
+#ifdef DEBUG
+    NSLog(@"X: %ld < %ld > %ld",
+          (long)[self minX], (long)[self centerX], (long)[self maxX]);
+    NSLog(@"Y: %ld < %ld > %ld",
+          (long)[self minY], (long)[self centerY], (long)[self maxY]);
     
     NSLog(@"Buttons: A (%ld) B (%ld)",
-          [self buttonAIndex], [self buttonBIndex]);
+          (long)[self buttonAIndex], (long)[self buttonBIndex]);
+#endif
 }
 
 #pragma mark - NSCoding
