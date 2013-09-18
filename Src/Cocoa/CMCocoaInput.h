@@ -33,12 +33,11 @@ extern NSString * const CMKeyPasteEnded;
 
 @interface CMCocoaInput : NSObject<CMGamepadDelegate>
 {
+    int virtualCodeMap[256];
     NSUInteger pollCounter;
     
-    NSObject *keyLock;
     NSObject *keysToPasteLock;
     
-    NSMutableSet *keysDown;
     NSMutableArray *keysToPaste;
     
     NSInteger _joypadOneId;

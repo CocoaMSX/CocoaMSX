@@ -124,14 +124,16 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 @synthesize joypadOneId = _joypadOneId;
 @synthesize joypadTwoId = _joypadTwoId;
 
+#define virtualCodeSet(eventCode) self->virtualCodeMap[eventCode] = 1
+#define virtualCodeUnset(eventCode) self->virtualCodeMap[eventCode] = 0
+#define virtualCodeClear() memset(self->virtualCodeMap, 0, sizeof(self->virtualCodeMap));
+
 - (id)init
 {
     if ((self = [super init]))
     {
-        keyLock = [[NSObject alloc] init];
         keysToPasteLock = [[NSObject alloc] init];
         
-        keysDown = [[NSMutableSet alloc] init];
         keysToPaste = [[NSMutableArray alloc] init];
         joypadConfigurations = [[NSMutableDictionary alloc] init];
         
@@ -163,10 +165,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     [[CMGamepadManager sharedInstance] removeObserver:self];
     
     [joypadConfigurations release];
-    [keysDown release];
     [keysToPaste release];
     
-    [keyLock release];
     [keysToPasteLock release];
     
     [self setKeyCombinationToAutoPress:nil];
@@ -347,11 +347,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 - (void)releaseAllKeys
 {
-    // Release the keys currently held
-    @synchronized (keyLock)
-    {
-        [keysDown removeAllObjects];
-    }
+    virtualCodeClear();
 }
 
 - (void)resetState
@@ -412,13 +408,10 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     
     if (virtualCode != CMUnknownVirtualCode)
     {
-        @synchronized (keyLock)
-        {
-            if (isDown)
-                [keysDown addObject:@(virtualCode)];
-            else
-                [keysDown removeObject:@(virtualCode)];
-        }
+        if (isDown)
+            virtualCodeSet(virtualCode);
+        else
+            virtualCodeUnset(virtualCode);
     }
 }
 
@@ -457,20 +450,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     pollCounter++;
     
     // Reset the key matrix
-    inputEventReset();
     
-    // Create a copy for the keys currently down (so that we can enumerate them)
-    NSArray *keysDownNow;
-    @synchronized(keyLock)
-    {
-        keysDownNow = [keysDown allObjects];
-    }
-    
-    // Update the matrix for the keys currently down
-    [keysDownNow enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        inputEventSet([obj integerValue]);
-    }];
+    memcpy(eventMap, self->virtualCodeMap, sizeof(self->virtualCodeMap));
     
     NSTimeInterval timeNow = boardSystemTime(); //[NSDate timeIntervalSinceReferenceDate];
     NSTimeInterval autoKeyPressInterval = timeNow - timeOfAutoPress;
@@ -514,9 +495,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         else if (autoKeyPressInterval < CMAutoPressHoldDuration)
         {
             if ([[self keyCombinationToAutoPress] stateFlags] & CMMSXKeyStateShift)
-                inputEventSet(EC_LSHIFT);
+                virtualCodeSet(EC_LSHIFT);
             
-            inputEventSet([[self keyCombinationToAutoPress] virtualCode]);
+            virtualCodeSet([[self keyCombinationToAutoPress] virtualCode]);
         }
     }
 }
@@ -532,12 +513,12 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 #endif
         _joypadOneId = [gamepad gamepadId];
         
-        [keysDown removeObject:@(EC_JOY1_UP)];
-        [keysDown removeObject:@(EC_JOY1_DOWN)];
-        [keysDown removeObject:@(EC_JOY1_LEFT)];
-        [keysDown removeObject:@(EC_JOY1_RIGHT)];
-        [keysDown removeObject:@(EC_JOY1_BUTTON1)];
-        [keysDown removeObject:@(EC_JOY1_BUTTON2)];
+        virtualCodeUnset(EC_JOY1_UP);
+        virtualCodeUnset(EC_JOY1_DOWN);
+        virtualCodeUnset(EC_JOY1_LEFT);
+        virtualCodeUnset(EC_JOY1_RIGHT);
+        virtualCodeUnset(EC_JOY1_BUTTON1);
+        virtualCodeUnset(EC_JOY1_BUTTON2);
     }
     else if (_joypadTwoId == 0)
     {
@@ -546,12 +527,12 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 #endif
         _joypadTwoId = [gamepad gamepadId];
         
-        [keysDown removeObject:@(EC_JOY2_UP)];
-        [keysDown removeObject:@(EC_JOY2_DOWN)];
-        [keysDown removeObject:@(EC_JOY2_LEFT)];
-        [keysDown removeObject:@(EC_JOY2_RIGHT)];
-        [keysDown removeObject:@(EC_JOY2_BUTTON1)];
-        [keysDown removeObject:@(EC_JOY2_BUTTON2)];
+        virtualCodeUnset(EC_JOY2_UP);
+        virtualCodeUnset(EC_JOY2_DOWN);
+        virtualCodeUnset(EC_JOY2_LEFT);
+        virtualCodeUnset(EC_JOY2_RIGHT);
+        virtualCodeUnset(EC_JOY2_BUTTON1);
+        virtualCodeUnset(EC_JOY2_BUTTON2);
     }
 }
 
@@ -565,23 +546,23 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     {
         _joypadOneId = 0;
         
-        [keysDown removeObject:@(EC_JOY1_UP)];
-        [keysDown removeObject:@(EC_JOY1_DOWN)];
-        [keysDown removeObject:@(EC_JOY1_LEFT)];
-        [keysDown removeObject:@(EC_JOY1_RIGHT)];
-        [keysDown removeObject:@(EC_JOY1_BUTTON1)];
-        [keysDown removeObject:@(EC_JOY1_BUTTON2)];
+        virtualCodeUnset(EC_JOY1_UP);
+        virtualCodeUnset(EC_JOY1_DOWN);
+        virtualCodeUnset(EC_JOY1_LEFT);
+        virtualCodeUnset(EC_JOY1_RIGHT);
+        virtualCodeUnset(EC_JOY1_BUTTON1);
+        virtualCodeUnset(EC_JOY1_BUTTON2);
     }
     else if (_joypadTwoId == [gamepad gamepadId])
     {
         _joypadTwoId = 0;
         
-        [keysDown removeObject:@(EC_JOY2_UP)];
-        [keysDown removeObject:@(EC_JOY2_DOWN)];
-        [keysDown removeObject:@(EC_JOY2_LEFT)];
-        [keysDown removeObject:@(EC_JOY2_RIGHT)];
-        [keysDown removeObject:@(EC_JOY2_BUTTON1)];
-        [keysDown removeObject:@(EC_JOY2_BUTTON2)];
+        virtualCodeUnset(EC_JOY2_UP);
+        virtualCodeUnset(EC_JOY2_DOWN);
+        virtualCodeUnset(EC_JOY2_LEFT);
+        virtualCodeUnset(EC_JOY2_RIGHT);
+        virtualCodeUnset(EC_JOY2_BUTTON1);
+        virtualCodeUnset(EC_JOY2_BUTTON2);
     }
 }
 
@@ -621,13 +602,13 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
     {
-        [keysDown removeObject:@(leftVirtualCode)];
-        [keysDown removeObject:@(rightVirtualCode)];
+        virtualCodeUnset(leftVirtualCode);
+        virtualCodeUnset(rightVirtualCode);
         
         if (center - newValue > CMJoystickDeadzoneWidth)
-            [keysDown addObject:@(leftVirtualCode)];
+            virtualCodeSet(leftVirtualCode);
         else if (newValue - center > CMJoystickDeadzoneWidth)
-            [keysDown addObject:@(rightVirtualCode)];
+            virtualCodeSet(rightVirtualCode);
     }
 }
 
@@ -667,13 +648,13 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
         preferredDevice == CMPreferredMacDeviceJoystickThenKeyboard)
     {
-        [keysDown removeObject:@(upVirtualCode)];
-        [keysDown removeObject:@(downVirtualCode)];
+        virtualCodeUnset(upVirtualCode);
+        virtualCodeUnset(downVirtualCode);
         
         if (center - newValue > CMJoystickDeadzoneWidth)
-            [keysDown addObject:@(upVirtualCode)];
+            virtualCodeSet(upVirtualCode);
         else if (newValue - center > CMJoystickDeadzoneWidth)
-            [keysDown addObject:@(downVirtualCode)];
+            virtualCodeSet(downVirtualCode);
     }
 }
 
@@ -713,9 +694,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         NSInteger button2Index = (config) ? [config buttonBIndex] : 2;
         
         if (index == button1Index)
-            [keysDown addObject:@(button1VirtualCode)];
+            virtualCodeSet(button1VirtualCode);
         else if (index == button2Index)
-            [keysDown addObject:@(button2VirtualCode)];
+            virtualCodeSet(button2VirtualCode);
     }
 }
 
@@ -754,9 +735,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         NSInteger button2Index = (config) ? [config buttonBIndex] : 2;
         
         if (index == button1Index)
-            [keysDown removeObject:@(button1VirtualCode)];
+            virtualCodeUnset(button1VirtualCode);
         else if (index == button2Index)
-            [keysDown removeObject:@(button2VirtualCode)];
+            virtualCodeUnset(button2VirtualCode);
     }
 }
 
