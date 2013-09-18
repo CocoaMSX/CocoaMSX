@@ -29,7 +29,7 @@
 + (CMKeyboardInput *)keyboardInputWithKeyCode:(NSInteger)keyCode
 {
     CMKeyboardInput *key = [[CMKeyboardInput alloc] init];
-    key.keyCode = keyCode;
+    [key setKeyCode:keyCode];
     
     return [key autorelease];
 }
@@ -40,7 +40,7 @@
 {
     if ((self = [super init]))
     {
-        self.keyCode = CMKeyNoCode;
+        [self setKeyCode:CMKeyNoCode];
     }
     
     return self;
@@ -57,7 +57,7 @@
 {
     if ((self = [super initWithCoder:decoder]))
     {
-        self.keyCode = [decoder decodeIntegerForKey:@"keyCode"];
+        [self setKeyCode:[decoder decodeIntegerForKey:@"keyCode"]];
     }
     
     return self;
@@ -67,7 +67,7 @@
 {
     [super encodeWithCoder:encoder];
 
-    [encoder encodeInteger:self.keyCode forKey:@"keyCode"];
+    [encoder encodeInteger:[self keyCode] forKey:@"keyCode"];
 }
 
 #pragma mark - NSCopying
@@ -75,8 +75,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
     CMKeyboardInput *copy = [[super copyWithZone:zone] init];
-    
-    copy.keyCode = self.keyCode;
+    [copy setKeyCode:[self keyCode]];
     
     return copy;
 }
@@ -88,7 +87,7 @@
     if (![inputMethod isKindOfClass:[CMKeyboardInput class]])
         return NO;
     
-    return ((CMKeyboardInput *)inputMethod).keyCode == self.keyCode;
+    return [((CMKeyboardInput *)inputMethod) keyCode] == [self keyCode];
 }
 
 @end
