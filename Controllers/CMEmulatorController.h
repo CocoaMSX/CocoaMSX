@@ -75,9 +75,14 @@ NSString * const CMKeyboardLayoutPrefKey;
     
     NSArray *listOfPreferenceKeysToObserve;
     
+    IBOutlet NSView *openPanelAccessoryView;
+    IBOutlet NSButton *openAnyFile;
     IBOutlet NSBox *statusBar;
     IBOutlet NSTextField *fpsCounter;
     IBOutlet CMMsxDisplayView *screen;
+    
+    NSOpenPanel *currentlyActiveOpenPanel;
+    NSArray *currentlySupportedFileTypes;
     
     BOOL pausedDueToLostFocus;
 }
@@ -138,6 +143,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (BOOL)canInsertDiskettes;
 - (BOOL)canInsertCassettes;
 
+- (IBAction)openAnyFile:(id)sender;
+
 // Apple menu
 
 - (IBAction)openAbout:(id)sender;
@@ -197,6 +204,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (IBAction)statusMsx:(id)sender;
 - (IBAction)resetMsx:(id)sender;
+- (IBAction)hardResetMsx:(id)sender;
 - (IBAction)shutDownMsx:(id)sender;
 - (IBAction)pauseMsx:(id)sender;
 

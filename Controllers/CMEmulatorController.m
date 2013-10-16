@@ -76,6 +76,7 @@
                    allowedFileTypes:(NSArray *)allowedFileTypes
                     openInDirectory:(NSString *)initialDirectory
                canChooseDirectories:(BOOL)canChooseDirectories
+                   useAccessoryView:(BOOL)useAccessoryView
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
 - (void)showSaveFileDialogWithTitle:(NSString*)title
@@ -749,6 +750,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:allowedFileTypes
                       openInDirectory:nil
                  canChooseDirectories:NO
+                     useAccessoryView:NO
                     completionHandler:handler];
 }
 
@@ -761,6 +763,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:allowedFileTypes
                       openInDirectory:initialDirectory
                  canChooseDirectories:NO
+                     useAccessoryView:NO
                     completionHandler:handler];
 }
 
@@ -768,20 +771,34 @@ CMEmulatorController *theEmulator = nil; // FIXME
                    allowedFileTypes:(NSArray *)allowedFileTypes
                     openInDirectory:(NSString *)initialDirectory
                canChooseDirectories:(BOOL)canChooseDirectories
+                   useAccessoryView:(BOOL)useAccessoryView
                   completionHandler:(void (^)(NSString *file, NSString *path))handler
 {
-    NSOpenPanel* dialog = [NSOpenPanel openPanel];
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
     
-    dialog.title = title;
-    dialog.canChooseFiles = YES;
-    dialog.canChooseDirectories = canChooseDirectories;
-    dialog.canCreateDirectories = YES;
-    dialog.allowedFileTypes = allowedFileTypes;
+    [panel setTitle:title];
+    [panel setCanChooseFiles:YES];
+    [panel setCanChooseDirectories:canChooseDirectories];
+    [panel setCanCreateDirectories:YES];
+    
+    BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
+    
+    if (useAccessoryView)
+    {
+        [panel setAccessoryView:openPanelAccessoryView];
+        [openAnyFile setState:canOpenAnyFile];
+    }
+    
+    if (!useAccessoryView || !canOpenAnyFile)
+        [panel setAllowedFileTypes:allowedFileTypes];
+    
+    currentlyActiveOpenPanel = panel;
+    currentlySupportedFileTypes = allowedFileTypes;
     
     if (initialDirectory)
-        dialog.directoryURL = [NSURL fileURLWithPath:initialDirectory];
+        [panel setDirectoryURL:[NSURL fileURLWithPath:initialDirectory]];
     
-    [dialog beginSheetModalForWindow:[self activeWindow]
+    [panel beginSheetModalForWindow:[self activeWindow]
                    completionHandler:^(NSInteger result)
      {
          NSString *file = nil;
@@ -789,8 +806,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
          
          if (result == NSFileHandlingPanelOKButton)
          {
-             file = [dialog URL].path;
-             filePath = dialog.directoryURL.path;
+             file = [panel URL].path;
+             filePath = panel.directoryURL.path;
          }
          
          handler(file, filePath);
@@ -839,12 +856,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)insertCartridgeIntoSlot:(NSInteger)slot
 {
-    if (!self.isInitialized)
+    if (![self isInitialized])
         return;
     
     [self showOpenFileDialogWithTitle:CMLoc(@"InsertCartridge")
                      allowedFileTypes:openRomFileTypes
                       openInDirectory:[[CMPreferences preferences] cartridgeDirectory]
+                 canChooseDirectories:NO
+                     useAccessoryView:YES
                     completionHandler:^(NSString *file, NSString *path)
     {
         if (file)
@@ -858,7 +877,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (BOOL)insertCartridge:(NSString *)cartridge
                    slot:(NSInteger)slot
 {
-    if (!self.isInitialized || ![[NSFileManager defaultManager] fileExistsAtPath:cartridge])
+    if (![self isInitialized] || ![[NSFileManager defaultManager] fileExistsAtPath:cartridge])
         return NO;
     
     emulatorSuspend();
@@ -939,7 +958,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:openDiskFileTypes
                       openInDirectory:[[CMPreferences preferences] diskDirectory]
                  canChooseDirectories:YES
+                     useAccessoryView:YES
                     completionHandler:^(NSString *file, NSString *path)
+     
      {
          if (file)
          {
@@ -1293,6 +1314,18 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 #pragma mark - IBActions
 
+- (void)openAnyFile:(id)sender
+{
+    BOOL canOpenAnyFile = [sender state];
+    CMSetBoolPref(@"openAnyFile", canOpenAnyFile);
+    
+    if (canOpenAnyFile)
+        [currentlyActiveOpenPanel setAllowedFileTypes:nil];
+    else
+        [currentlyActiveOpenPanel setAllowedFileTypes:currentlySupportedFileTypes];
+    
+}
+
 - (void)openAbout:(id)sender
 {
     if (!aboutController)
@@ -1378,12 +1411,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)insertCassette:(id)sender
 {
-    if (!self.isInitialized)
+    if (![self isInitialized])
         return;
     
     [self showOpenFileDialogWithTitle:CMLoc(@"InsertCassette")
                      allowedFileTypes:openCassetteFileTypes
                       openInDirectory:[[CMPreferences preferences] cassetteDirectory]
+                 canChooseDirectories:NO
+                     useAccessoryView:YES
                     completionHandler:^(NSString *file, NSString *path)
     {
         if (file)
@@ -1452,6 +1487,15 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)statusMsx:(id)sender
 {
+}
+
+- (void)hardResetMsx:(id)sender
+{
+    if ([self isStarted])
+    {
+        [[self input] resetState];
+        actionEmuResetHard();
+    }
 }
 
 - (void)resetMsx:(id)sender
@@ -2244,7 +2288,8 @@ void archTrap(UInt8 value)
         
         return NO; // always disabled
     }
-    else if (item.action == @selector(resetMsx:))
+    else if (item.action == @selector(resetMsx:) ||
+             item.action == @selector(hardResetMsx:))
     {
         // Resetting while paused leads to some odd behavior
         return (machineState == EMU_RUNNING);
