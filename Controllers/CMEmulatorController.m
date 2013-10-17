@@ -76,7 +76,7 @@
                    allowedFileTypes:(NSArray *)allowedFileTypes
                     openInDirectory:(NSString *)initialDirectory
                canChooseDirectories:(BOOL)canChooseDirectories
-                   useAccessoryView:(BOOL)useAccessoryView
+                   useAccessoryView:(NSView *)accessoryView
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
 - (void)showSaveFileDialogWithTitle:(NSString*)title
@@ -750,7 +750,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:allowedFileTypes
                       openInDirectory:nil
                  canChooseDirectories:NO
-                     useAccessoryView:NO
+                     useAccessoryView:nil
                     completionHandler:handler];
 }
 
@@ -763,7 +763,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:allowedFileTypes
                       openInDirectory:initialDirectory
                  canChooseDirectories:NO
-                     useAccessoryView:NO
+                     useAccessoryView:nil
                     completionHandler:handler];
 }
 
@@ -771,7 +771,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                    allowedFileTypes:(NSArray *)allowedFileTypes
                     openInDirectory:(NSString *)initialDirectory
                canChooseDirectories:(BOOL)canChooseDirectories
-                   useAccessoryView:(BOOL)useAccessoryView
+                   useAccessoryView:(NSView *)accessoryView
                   completionHandler:(void (^)(NSString *file, NSString *path))handler
 {
     NSOpenPanel* panel = [NSOpenPanel openPanel];
@@ -783,13 +783,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
     
-    if (useAccessoryView)
+    if (accessoryView)
     {
-        [panel setAccessoryView:openPanelAccessoryView];
-        [openAnyFile setState:canOpenAnyFile];
+        [panel setAccessoryView:accessoryView];
+        [openAnyFileCheckbox setState:canOpenAnyFile];
+        [openAnyRomFileCheckbox setState:canOpenAnyFile];
     }
     
-    if (!useAccessoryView || !canOpenAnyFile)
+    if (!accessoryView || !canOpenAnyFile)
         [panel setAllowedFileTypes:allowedFileTypes];
     
     currentlyActiveOpenPanel = panel;
@@ -863,7 +864,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:openRomFileTypes
                       openInDirectory:[[CMPreferences preferences] cartridgeDirectory]
                  canChooseDirectories:NO
-                     useAccessoryView:YES
+                     useAccessoryView:romSelectionAccessoryView
                     completionHandler:^(NSString *file, NSString *path)
     {
         if (file)
@@ -958,7 +959,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:openDiskFileTypes
                       openInDirectory:[[CMPreferences preferences] diskDirectory]
                  canChooseDirectories:YES
-                     useAccessoryView:YES
+                     useAccessoryView:unrecognizedFileAccessoryView
                     completionHandler:^(NSString *file, NSString *path)
      
      {
@@ -1418,7 +1419,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:openCassetteFileTypes
                       openInDirectory:[[CMPreferences preferences] cassetteDirectory]
                  canChooseDirectories:NO
-                     useAccessoryView:YES
+                     useAccessoryView:unrecognizedFileAccessoryView
                     completionHandler:^(NSString *file, NSString *path)
     {
         if (file)

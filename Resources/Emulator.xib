@@ -8,10 +8,12 @@
         <customObject id="-2" userLabel="File's Owner" customClass="CMEmulatorController">
             <connections>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
-                <outlet property="openAnyFile" destination="4TM-8o-xw7" id="Shi-vj-g45"/>
-                <outlet property="openPanelAccessoryView" destination="Fx0-7u-Jdr" id="Z2B-Aa-4n5"/>
+                <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
+                <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
+                <outlet property="romSelectionAccessoryView" destination="hW8-CE-guM" id="dMw-A1-gUe"/>
                 <outlet property="screen" destination="812" id="1223"/>
                 <outlet property="statusBar" destination="1277" id="1278"/>
+                <outlet property="unrecognizedFileAccessoryView" destination="Fx0-7u-Jdr" id="zUh-Xk-9bz"/>
                 <outlet property="window" destination="796" id="1216"/>
             </connections>
         </customObject>
@@ -485,6 +487,47 @@
                         <action selector="openAnyFile:" target="-2" id="wGT-p8-T9f"/>
                     </connections>
                 </button>
+            </subviews>
+        </customView>
+        <customView id="hW8-CE-guM">
+            <rect key="frame" x="0.0" y="0.0" width="503" height="82"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button id="BSh-vI-6Xe">
+                    <rect key="frame" x="157" y="18" width="328" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Open unsupported or unrecognized files" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="rHS-M4-pxw">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="openAnyFile:" target="-2" id="Apy-qT-q9R"/>
+                    </connections>
+                </button>
+                <popUpButton verticalHuggingPriority="750" id="uq1-SV-s8z">
+                    <rect key="frame" x="157" y="38" width="202" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="GdP-jc-glb" id="OR4-Bz-asV">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <menu key="menu" title="OtherViews" id="ByH-B6-K7X">
+                            <items>
+                                <menuItem title="Item 1" state="on" id="GdP-jc-glb"/>
+                                <menuItem title="Item 2" id="Fkd-uE-dn0"/>
+                                <menuItem title="Item 3" id="sof-wO-zQU"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                </popUpButton>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="LIM-qj-pca">
+                    <rect key="frame" x="18" y="44" width="135" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Cartridge Type" id="4wh-5p-4G3">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
         </customView>
     </objects>

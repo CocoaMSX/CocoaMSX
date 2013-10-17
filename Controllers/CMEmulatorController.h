@@ -75,8 +75,12 @@ NSString * const CMKeyboardLayoutPrefKey;
     
     NSArray *listOfPreferenceKeysToObserve;
     
-    IBOutlet NSView *openPanelAccessoryView;
-    IBOutlet NSButton *openAnyFile;
+    IBOutlet NSView *unrecognizedFileAccessoryView;
+    IBOutlet NSView *romSelectionAccessoryView;
+    
+    IBOutlet NSButton *openAnyFileCheckbox;
+    IBOutlet NSButton *openAnyRomFileCheckbox;
+    
     IBOutlet NSBox *statusBar;
     IBOutlet NSTextField *fpsCounter;
     IBOutlet CMMsxDisplayView *screen;
