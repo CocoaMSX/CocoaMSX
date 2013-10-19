@@ -41,7 +41,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 @class CMMachineEditorController;
 @class CMGamepadManager;
 
-@interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate>
+@interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate>
 {
     NSString *_fpsDisplay;
     NSString *_fileToLoadAtStartup;
@@ -75,11 +75,16 @@ NSString * const CMKeyboardLayoutPrefKey;
     
     NSArray *listOfPreferenceKeysToObserve;
     
+    NSMutableDictionary *romTypeIndices;
+    NSMutableDictionary *romTypes;
+    NSMutableArray *romTypeNames;
+    
     IBOutlet NSView *unrecognizedFileAccessoryView;
     IBOutlet NSView *romSelectionAccessoryView;
     
     IBOutlet NSButton *openAnyFileCheckbox;
     IBOutlet NSButton *openAnyRomFileCheckbox;
+    IBOutlet NSPopUpButton *romTypeDropdown;
     
     IBOutlet NSBox *statusBar;
     IBOutlet NSTextField *fpsCounter;
@@ -132,7 +137,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (void)updateFps:(CGFloat)fps;
 
 - (BOOL)insertCartridge:(NSString *)cartridge
-                   slot:(NSInteger)slot;
+                   slot:(NSInteger)slot
+                   type:(RomType)type;
 
 - (BOOL)insertUnknownMedia:(NSString *)media;
 

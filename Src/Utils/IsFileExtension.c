@@ -30,7 +30,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int isFileExtension(const char* fileName, char* extension) {
+int isFileExtension(const char* fileName, const char* extension) {
     int flen = strlen(fileName);
     int elen = strlen(extension);
 

@@ -24,9 +24,13 @@
 
 #import "CMPreferences.h"
 
+#import <IOKit/pwr_mgt/IOPMLib.h>
+
 @interface CMAppDelegate ()
 
 - (void)initializeResources;
+- (void)disableScreenSaver;
+- (void)enableScreenSaver;
 
 @end
 
@@ -47,7 +51,8 @@
 
 - (void)awakeFromNib
 {
-    applicationDidLoad = NO;
+    didApplicationLoad = NO;
+    self->preventSleepAssertionID = kIOPMNullAssertionID;
 }
 
 - (void)dealloc
@@ -59,7 +64,54 @@
 
 #pragma mark - NSManagedObjectContext
 
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+    if ([keyPath isEqualToString:@"preventSleep"])
+    {
+        BOOL preventSleep = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+        if (preventSleep)
+            [self disableScreenSaver];
+        else
+            [self enableScreenSaver];
+    }
+}
+
 #pragma mark - Private Methods
+
+- (void)disableScreenSaver
+{
+    CFStringRef reasonForActivity = (__bridge CFStringRef)CMLoc(@"CocoaMSX is running");
+    if (self->preventSleepAssertionID != kIOPMNullAssertionID)
+        return;
+
+    // In case the new assertion fails
+    self->preventSleepAssertionID = kIOPMNullAssertionID;
+    
+    IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
+                                kIOPMAssertionLevelOn,
+                                reasonForActivity,
+                                &self->preventSleepAssertionID);
+    
+#if DEBUG
+    NSLog(@"Screensaver disabled");
+#endif
+}
+
+- (void)enableScreenSaver
+{
+    if (self->preventSleepAssertionID == kIOPMNullAssertionID)
+        return;
+    
+    IOPMAssertionRelease(self->preventSleepAssertionID);
+    self->preventSleepAssertionID = kIOPMNullAssertionID;
+    
+#if DEBUG
+    NSLog(@"Screensaver enabled");
+#endif
+}
 
 - (void)initializeResources
 {
@@ -245,37 +297,59 @@
 
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename
 {
-    if (!self.emulator || ![[NSFileManager defaultManager] fileExistsAtPath:filename])
+    if (![self emulator] || ![[NSFileManager defaultManager] fileExistsAtPath:filename])
         return NO;
     
-    if (!applicationDidLoad)
+    if (!didApplicationLoad)
     {
         // Ask the emulator to load the file when initialization completes
-        self.emulator.fileToLoadAtStartup = filename;
+        [[self emulator] setFileToLoadAtStartup:filename];
         return YES;
     }
     
     // Load it now
-    return [self.emulator insertUnknownMedia:filename];
+    return [[self emulator] insertUnknownMedia:filename];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
     [self initializeResources];
     
-    self.emulator = [[[CMEmulatorController alloc] init] autorelease];
+    [self setEmulator:[[[CMEmulatorController alloc] init] autorelease]];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    [self.emulator showWindow:self];
+    [[self emulator] showWindow:self];
     
-    applicationDidLoad = YES;
+    didApplicationLoad = YES;
+    
+    [[NSUserDefaults standardUserDefaults] addObserver:self
+                                            forKeyPath:@"preventSleep"
+                                               options:NSKeyValueObservingOptionNew
+                                               context:NULL];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+    [[NSUserDefaults standardUserDefaults] removeObserver:self
+                                               forKeyPath:@"preventSleep"];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
 {
     return YES;
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    if (CMGetBoolPref(@"preventSleep"))
+        [self disableScreenSaver];
+}
+
+- (void)applicationDidResignActive:(NSNotification *)notification
+{
+    [self enableScreenSaver];
 }
 
 @end

@@ -11,6 +11,7 @@
                 <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
                 <outlet property="romSelectionAccessoryView" destination="hW8-CE-guM" id="dMw-A1-gUe"/>
+                <outlet property="romTypeDropdown" destination="uq1-SV-s8z" id="5pP-zH-Q9U"/>
                 <outlet property="screen" destination="812" id="1223"/>
                 <outlet property="statusBar" destination="1277" id="1278"/>
                 <outlet property="unrecognizedFileAccessoryView" destination="Fx0-7u-Jdr" id="zUh-Xk-9bz"/>
@@ -505,18 +506,12 @@
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" id="uq1-SV-s8z">
-                    <rect key="frame" x="157" y="38" width="202" height="26"/>
+                    <rect key="frame" x="157" y="38" width="203" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="GdP-jc-glb" id="OR4-Bz-asV">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="OR4-Bz-asV">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                        <menu key="menu" title="OtherViews" id="ByH-B6-K7X">
-                            <items>
-                                <menuItem title="Item 1" state="on" id="GdP-jc-glb"/>
-                                <menuItem title="Item 2" id="Fkd-uE-dn0"/>
-                                <menuItem title="Item 3" id="sof-wO-zQU"/>
-                            </items>
-                        </menu>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="ByH-B6-K7X"/>
                     </popUpButtonCell>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="LIM-qj-pca">

@@ -61,7 +61,7 @@
                             <tabViewItem label="General" identifier="general" id="82">
                                 <view key="view" id="85">
                                     <rect key="frame" x="0.0" y="0.0" width="598" height="558"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField verticalHuggingPriority="750" id="1811">
                                             <rect key="frame" x="148" y="521" width="121" height="17"/>
@@ -223,7 +223,7 @@
                                                 <rect key="frame" x="1" y="273" width="556" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="37" id="3931">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="3931">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -259,7 +259,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="3962" id="3960">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
+                                                <font key="font" metaFont="menu"/>
                                                 <menu key="menu" title="OtherViews" id="3961">
                                                     <items>
                                                         <menuItem state="on" image="NSActionTemplate" hidden="YES" id="3962"/>
@@ -351,9 +351,9 @@
                             <tabViewItem label="Video" identifier="video" id="83">
                                 <view key="view" id="84">
                                     <rect key="frame" x="0.0" y="0.0" width="598" height="558"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tabView autoresizesSubviews="NO" initialItem="392" id="391">
+                                        <tabView initialItem="392" id="391">
                                             <rect key="frame" x="13" y="54" width="572" height="498"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -361,7 +361,7 @@
                                                 <tabViewItem label="Monitor" identifier="1" id="392">
                                                     <view key="view" id="395">
                                                         <rect key="frame" x="10" y="33" width="552" height="452"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <textField verticalHuggingPriority="750" id="102">
                                                                 <rect key="frame" x="148" y="414" width="125" height="17"/>
@@ -375,9 +375,9 @@
                                                             <popUpButton verticalHuggingPriority="750" id="120">
                                                                 <rect key="frame" x="275" y="409" width="212" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" title="Color" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="121">
+                                                                <popUpButtonCell key="cell" type="push" title="Color" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="123" id="121">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                                    <font key="font" metaFont="system"/>
+                                                                    <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="122">
                                                                         <items>
                                                                             <menuItem title="Color" state="on" id="123"/>
@@ -527,12 +527,12 @@
                                                             <popUpButton verticalHuggingPriority="750" id="542">
                                                                 <rect key="frame" x="275" y="409" width="212" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" title="Unfiltered" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="543">
+                                                                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="543">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                                    <font key="font" metaFont="system"/>
+                                                                    <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="545">
                                                                         <items>
-                                                                            <menuItem title="Unfiltered" state="on" id="546"/>
+                                                                            <menuItem title="Unfiltered" id="546"/>
                                                                             <menuItem title="RGB Cable" tag="1" id="587"/>
                                                                             <menuItem title="S-Video Cable" tag="2" id="547"/>
                                                                             <menuItem title="Noisy S-Video Cable" tag="3" id="548"/>
@@ -659,14 +659,14 @@
                             <tabViewItem label="Audio" identifier="audio" id="981">
                                 <view key="view" id="982">
                                     <rect key="frame" x="0.0" y="0.0" width="598" height="558"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="4123">
                                             <rect key="frame" x="20" y="381" width="558" height="132"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="jgr-EG-h86">
                                                 <rect key="frame" x="1" y="17" width="556" height="114"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" headerView="4126" id="4124">
                                                         <rect key="frame" x="0.0" y="0.0" width="556" height="114"/>
@@ -701,7 +701,7 @@
                                                 <rect key="frame" x="1" y="119" width="223" height="15"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="37" id="4127">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="4127">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -710,7 +710,7 @@
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </tableHeaderView>
                                         </scrollView>
-                                        <tabView autoresizesSubviews="NO" drawsBackground="NO" type="noTabsNoBorder" id="4135">
+                                        <tabView drawsBackground="NO" type="noTabsNoBorder" id="4135">
                                             <rect key="frame" x="20" y="203" width="558" height="130"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -718,7 +718,7 @@
                                                 <tabViewItem label="PSG" identifier="psg" id="4136">
                                                     <view key="view" id="4139">
                                                         <rect key="frame" x="0.0" y="0.0" width="558" height="130"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <textField verticalHuggingPriority="750" id="4161">
                                                                 <rect key="frame" x="54" y="113" width="118" height="17"/>
@@ -1202,7 +1202,7 @@
                             <tabViewItem label="Keyboard" identifier="keyboard" id="1273">
                                 <view key="view" id="1274">
                                     <rect key="frame" x="0.0" y="0.0" width="598" height="558"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <customView id="3739" customClass="MGScopeBar">
                                             <rect key="frame" x="20" y="513" width="558" height="25"/>
@@ -1216,7 +1216,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="bu1-l2-shO">
                                                 <rect key="frame" x="1" y="17" width="556" height="434"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3625" indentationPerLevel="16" outlineTableColumn="3633" id="3623">
                                                         <rect key="frame" x="0.0" y="0.0" width="556" height="434"/>
@@ -1265,7 +1265,7 @@
                                                 <rect key="frame" x="1" y="177" width="358" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="37" id="3626">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="3626">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -1317,7 +1317,7 @@
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <popUpButtonCell key="cell" type="push" title="Arkanoid Pad" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="8" imageScaling="proportionallyDown" inset="2" selectedItem="4077" id="3765">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                                    <font key="font" metaFont="system"/>
+                                                                    <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="3766">
                                                                         <items>
                                                                             <menuItem title="None" id="3769"/>
@@ -1461,7 +1461,7 @@
                                                                                         <rect key="frame" x="1" y="248" width="309" height="16"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="37" id="3771">
+                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="3771">
                                                                                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
@@ -1609,12 +1609,12 @@
                                                             <popUpButton verticalHuggingPriority="750" id="3800">
                                                                 <rect key="frame" x="212" y="453" width="244" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="3801">
+                                                                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="3801">
                                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                                    <font key="font" metaFont="system"/>
+                                                                    <font key="font" metaFont="menu"/>
                                                                     <menu key="menu" title="OtherViews" id="3802">
                                                                         <items>
-                                                                            <menuItem title="None" state="on" id="3803"/>
+                                                                            <menuItem title="None" id="3803"/>
                                                                             <menuItem title="Two-Button Joystick" tag="1" id="3804"/>
                                                                             <menuItem title="Mouse" tag="2" id="3805"/>
                                                                             <menuItem title="Tetris 2 Dongle" tag="3" id="4078">
@@ -1755,7 +1755,7 @@
                                                                                         <rect key="frame" x="1" y="248" width="309" height="16"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="37" id="3811">
+                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="3811">
                                                                                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>

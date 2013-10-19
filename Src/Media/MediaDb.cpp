@@ -34,6 +34,9 @@ extern "C" {
 #include "ArchGlob.h"
 #include "Board.h"
 #include "Language.h"
+#include "ziphelper.h"
+#include "IsFileExtension.h"
+#include "RomLoader.h"
 }
 
 #include "tinyxml.h"
@@ -999,6 +1002,74 @@ int romTypeIsFmPac(RomType romType) {
     return 0;
 }
 
+static UInt8 *loadPlainOrCompressedRom(const char *path, int *size)
+{
+    UInt8* buf = NULL;
+    
+    if (isFileExtension(path, ".zip"))
+    {
+        int countRom;
+        int countRi;
+        int countMx1;
+        int countMx2;
+        int countSms;
+        int countCol;
+        int countSg;
+        int countSc;
+        char* fileListRom = zipGetFileList(path, ".rom", &countRom);
+        char* fileListRi  = zipGetFileList(path, ".ri",  &countRi);
+        char* fileListMx1 = zipGetFileList(path, ".mx1", &countMx1);
+        char* fileListMx2 = zipGetFileList(path, ".mx2", &countMx2);
+        char* fileListSms = zipGetFileList(path, ".sms", &countSms);
+        char* fileListCol = zipGetFileList(path, ".col", &countCol);
+        char* fileListSg  = zipGetFileList(path, ".sg", &countSg);
+        char* fileListSc  = zipGetFileList(path, ".sc", &countSc);
+        int count = countRom + countRi + countMx1 + countMx2 + countSms + countCol + countSg + countSc;
+        
+        if (count == 1) {
+            if (countRom == 1) {
+                buf = romLoad(path, fileListRom, size);
+            }
+            if (countRi == 1) {
+                buf = romLoad(path, fileListRi, size);
+            }
+            if (countMx1 == 1) {
+                buf = romLoad(path, fileListMx1, size);
+            }
+            if (countMx2 == 1) {
+                buf = romLoad(path, fileListMx2, size);
+            }
+            if (countSms == 1) {
+                buf = romLoad(path, fileListSms, size);
+            }
+            if (countCol == 1) {
+                buf = romLoad(path, fileListCol, size);
+            }
+            if (countSg == 1) {
+                buf = romLoad(path, fileListSg, size);
+            }
+            if (countSc == 1) {
+                buf = romLoad(path, fileListSc, size);
+            }
+        }
+        
+        if (fileListRom) free(fileListRom);
+        if (fileListRi)  free(fileListRi);
+        if (fileListMx1) free(fileListMx1);
+        if (fileListMx2) free(fileListMx2);
+        if (fileListSms) free(fileListSms);
+        if (fileListCol) free(fileListCol);
+        if (fileListSg)  free(fileListSg);
+        if (fileListSc)  free(fileListSc);
+    }
+    else
+    {
+        buf = romLoad(path, NULL, size);
+    }
+    
+    return buf;
+}
+
 extern "C" void mediaDbLoad(const char* directory)
 {
     if (romdb == NULL) {
@@ -1026,7 +1097,20 @@ extern "C" void mediaDbLoad(const char* directory)
     }
 }
 
-extern "C" MediaType* mediaDbLookupRom(const void *buffer, int size) 
+extern "C" MediaType* mediaDbLookupRomByPath(const char *path)
+{
+    int size;
+    UInt8 *buffer = loadPlainOrCompressedRom(path, &size);
+    if (!buffer)
+        return NULL;
+    
+    MediaType *type = mediaDbLookupRom(buffer, size);
+    free(buffer);
+    
+    return type;
+}
+
+extern "C" MediaType* mediaDbLookupRom(const void *buffer, int size)
 {
     const char* romData = (const char*)buffer;
     static MediaType defaultColeco(ROM_COLECO, "Unknown Coleco rom");
@@ -1046,13 +1130,13 @@ extern "C" MediaType* mediaDbLookupRom(const void *buffer, int size)
     }
 
     if (mediaType == NULL &&
-        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA) 
+        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA)
     {
         mediaType = &defaultColeco;
     }
 #if 0
     if (mediaType == NULL &&
-        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA) 
+        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA)
     {
         mediaType = &defaultSg1000;
     }
@@ -1158,7 +1242,20 @@ extern "C" void mediaDbSetDefaultRomType(RomType romType)
     romdbDefaultType = romType;
 }
 
-extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size) 
+extern "C" MediaType* mediaDbGuessRomByPath(const char *path)
+{
+    int size;
+    UInt8 *buffer = loadPlainOrCompressedRom(path, &size);
+    if (!buffer)
+        return NULL;
+    
+    MediaType *type = mediaDbGuessRom(buffer, size);
+    free(buffer);
+    
+    return type;
+}
+
+extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size)
 {
     static MediaType staticMediaType(ROM_UNKNOWN, "Unknown MSX rom");
 

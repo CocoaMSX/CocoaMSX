@@ -23,12 +23,14 @@
 #import <Cocoa/Cocoa.h>
 
 #import "CMEmulatorController.h"
+#import <IOKit/pwr_mgt/IOPMLib.h>
 
 @interface CMAppDelegate : NSObject <NSApplicationDelegate>
 {
     CMEmulatorController *_emulator;
     
-    BOOL applicationDidLoad;
+    BOOL didApplicationLoad;
+    IOPMAssertionID preventSleepAssertionID;
 }
 
 @property (nonatomic, retain) CMEmulatorController *emulator;

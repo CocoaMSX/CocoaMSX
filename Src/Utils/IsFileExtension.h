@@ -28,6 +28,6 @@
 #ifndef IS_FILE_EXTENSION_H
 #define IS_FILE_EXTENSION_H
 
-int isFileExtension(const char* fileName, char* extension);
+int isFileExtension(const char* fileName, const char* extension);
 
 #endif

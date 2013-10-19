@@ -207,6 +207,8 @@ void mediaDbCreateCasdb();
 
 MediaType* mediaDbLookupRom(const void *buffer, int size);
 MediaType* mediaDbGuessRom(const void *buffer, int size);
+MediaType* mediaDbLookupRomByPath(const char *path);
+MediaType* mediaDbGuessRomByPath(const char *path);
 MediaType* mediaDbLookupDisk(const void *buffer, int size);
 MediaType* mediaDbLookupCas(const void *buffer, int size);
 

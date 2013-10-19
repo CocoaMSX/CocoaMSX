@@ -187,6 +187,40 @@ CMEmulatorController *theEmulator = nil; // FIXME
         stateFileTypes = [[NSArray alloc] initWithObjects:@"sta", nil];
         captureAudioTypes = [[NSArray alloc] initWithObjects:@"wav", nil];
         captureGameplayTypes = [[NSArray alloc] initWithObjects:@"cap", nil];
+        
+        NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"RomTypes"
+                                                                 ofType:@"plist"
+                                                            inDirectory:@"Data"];
+        
+        NSDictionary *romTypeMap = [NSDictionary dictionaryWithContentsOfFile:resourcePath];
+        
+        // Sort ROM type ID's by name
+        NSArray *sortedRomTypeIds = [[romTypeMap allKeys] sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
+                                     {
+                                         if ([a isEqualTo:@"0"])
+                                             return -1;
+                                         else if ([b isEqualTo:@"0"])
+                                             return 1;
+                                         
+                                         NSString *titleA = [romTypeMap objectForKey:a];
+                                         NSString *titleB = [romTypeMap objectForKey:b];
+                                         
+                                         return [titleA caseInsensitiveCompare:titleB];
+                                     }];
+        
+        romTypes = [[NSMutableDictionary alloc] init];
+        romTypeIndices = [[NSMutableDictionary alloc] init];
+        romTypeNames = [[NSMutableArray alloc] init];
+        
+        [sortedRomTypeIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+         {
+             NSNumber *index = @(idx);
+             NSNumber *type = [NSNumber numberWithInt:[obj intValue]];
+             
+             [romTypes setObject:type forKey:index];
+             [romTypeIndices setObject:index forKey:type];
+             [romTypeNames addObject:[romTypeMap valueForKey:obj]];
+         }];
     }
     
     return self;
@@ -214,6 +248,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self cleanupTemporaryCaptureFile];
     
     [listOfPreferenceKeysToObserve release];
+    
+    [romTypes release];
+    [romTypeIndices release];
+    [romTypeNames release];
     
     [openRomFileTypes release];
     [openDiskFileTypes release];
@@ -244,6 +282,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)awakeFromNib
 {
+    [romTypeDropdown addItemsWithTitles:romTypeNames];
+    
     [inputDeviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickTwoLayout]];
@@ -455,7 +495,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)destroy
 {
-    if (!self.isInitialized)
+    if (![self isInitialized])
         return;
     
     if ([self isStarted])
@@ -787,7 +827,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         [panel setAccessoryView:accessoryView];
         [openAnyFileCheckbox setState:canOpenAnyFile];
-        [openAnyRomFileCheckbox setState:canOpenAnyFile];
     }
     
     if (!accessoryView || !canOpenAnyFile)
@@ -860,29 +899,59 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (![self isInitialized])
         return;
     
-    [self showOpenFileDialogWithTitle:CMLoc(@"InsertCartridge")
-                     allowedFileTypes:openRomFileTypes
-                      openInDirectory:[[CMPreferences preferences] cartridgeDirectory]
-                 canChooseDirectories:NO
-                     useAccessoryView:romSelectionAccessoryView
-                    completionHandler:^(NSString *file, NSString *path)
-    {
-        if (file)
-        {
-            [[CMPreferences preferences] setCartridgeDirectory:path];
-            [self insertCartridge:file slot:slot];
-        }
-    }];
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    
+    [panel setTitle:CMLoc(@"InsertCartridge")];
+    [panel setCanChooseFiles:YES];
+    [panel setCanChooseDirectories:NO];
+    [panel setCanCreateDirectories:YES];
+    [panel setAccessoryView:romSelectionAccessoryView];
+    [panel setDelegate:self];
+    
+    BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
+    
+    [openAnyRomFileCheckbox setState:canOpenAnyFile];
+    [romTypeDropdown selectItemAtIndex:0];
+    
+    if (!canOpenAnyFile)
+        [panel setAllowedFileTypes:openRomFileTypes];
+    
+    currentlyActiveOpenPanel = panel;
+    currentlySupportedFileTypes = openRomFileTypes;
+    
+    NSString *initialDir = [[CMPreferences preferences] cartridgeDirectory];
+    if (initialDir)
+        [panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
+    
+    [panel beginSheetModalForWindow:[self activeWindow]
+                  completionHandler:^(NSInteger result)
+     {
+         if (result == NSFileHandlingPanelOKButton)
+         {
+             [[CMPreferences preferences] setCartridgeDirectory:[[panel directoryURL] path]];
+             
+             RomType type = ROM_UNKNOWN;
+             
+             if ([romTypeDropdown isEnabled])
+             {
+                 int romTypeIndex = [romTypeDropdown indexOfItem:[romTypeDropdown selectedItem]];
+                 type = [[romTypes objectForKey:@(romTypeIndex)] intValue];
+             }
+             
+             [self insertCartridge:[[panel URL] path] slot:slot type:type];
+         }
+     }];
 }
 
 - (BOOL)insertCartridge:(NSString *)cartridge
                    slot:(NSInteger)slot
+                   type:(RomType)type
 {
     if (![self isInitialized] || ![[NSFileManager defaultManager] fileExistsAtPath:cartridge])
         return NO;
     
     emulatorSuspend();
-    insertCartridge(properties, slot, [cartridge UTF8String], NULL, ROM_UNKNOWN, 0);
+    insertCartridge(properties, slot, [cartridge UTF8String], NULL, type, 0);
     emulatorResume();
     
     return YES;
@@ -934,7 +1003,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (BOOL)toggleEjectCartridgeMenuItemStatus:(NSMenuItem*)menuItem
                                       slot:(NSInteger)slot
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
     {
         NSString *displayName = [self fileNameFromCPath:properties->media.carts[slot].fileName];
         
@@ -952,7 +1021,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)insertDiskIntoSlot:(NSInteger)slot
 {
-    if (!self.isInitialized)
+    if (![self isInitialized])
         return;
     
     [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
@@ -1063,7 +1132,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (BOOL)toggleEjectDiskMenuItemStatus:(NSMenuItem*)menuItem
                                  slot:(NSInteger)slot
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
     {
         NSString *displayName = [self fileNameFromCPath:properties->media.disks[slot].fileName];
         
@@ -1081,7 +1150,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (BOOL)toggleEjectCassetteMenuItemStatus:(NSMenuItem*)menuItem
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
     {
         NSString *displayName = [self fileNameFromCPath:properties->media.tapes[0].fileName];
         
@@ -2090,6 +2159,39 @@ void archTrap(UInt8 value)
 - (void)windowDidLoad
 {
     [super windowDidLoad];
+}
+
+#pragma mark - NSOpenSavePanelDelegate
+
+- (void)panelSelectionDidChange:(id)sender
+{
+    NSString *path = [[sender URL] path];
+    if (!path)
+    {
+        [romTypeDropdown selectItemAtIndex:0];
+        [romTypeDropdown setEnabled:NO];
+    }
+    else
+    {
+        const char *cpath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+        MediaType *mediaType = mediaDbLookupRomByPath(cpath);
+        if (!mediaType)
+            mediaType = mediaDbGuessRomByPath(cpath);
+        
+        if (!mediaType)
+        {
+            [romTypeDropdown setEnabled:NO];
+            [romTypeDropdown selectItemAtIndex:0];
+        }
+        else
+        {
+            RomType romType = mediaDbGetRomType(mediaType);
+            NSNumber *index = [romTypeIndices objectForKey:@(romType)];
+            
+            [romTypeDropdown setEnabled:YES];
+            [romTypeDropdown selectItemAtIndex:[index intValue]];
+        }
+    }
 }
 
 #pragma mark - NSWindowDelegate
