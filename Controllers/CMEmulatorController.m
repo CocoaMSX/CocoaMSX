@@ -93,12 +93,15 @@
 - (BOOL)toggleEjectCartridgeMenuItemStatus:(NSMenuItem*)menuItem
                                       slot:(NSInteger)slot;
 
-- (void)insertDiskIntoSlot:(NSInteger)slot;
+- (void)insertDiskAtPath:(NSString *)path
+                    slot:(NSInteger)slot;
 - (void)ejectDiskFromSlot:(NSInteger)slot;
 - (BOOL)toggleEjectDiskMenuItemStatus:(NSMenuItem*)menuItem
                                  slot:(NSInteger)slot;
 
 - (BOOL)toggleEjectCassetteMenuItemStatus:(NSMenuItem*)menuItem;
+
+- (void)insertCassetteAtPath:(NSString *)path;
 
 - (NSString*)fileNameFromCPath:(const char*)filePath;
 - (NSString*)fileNameNoExtensionFromCPath:(const char*)filePath;
@@ -121,6 +124,12 @@
 - (void)setIsStatusBarVisible:(BOOL)isVisible;
 
 - (void)cleanupTemporaryCaptureFile;
+
+- (void)addRecentMediaItemWithURL:(NSURL *)url
+                           action:(SEL)action
+                           parent:(NSMenuItem *)parent;
+- (void)clearRecentMediaItemsInMenu:(NSMenuItem *)menuItem;
+- (void)rebuildRecentItemsMenus;
 
 @end
 
@@ -282,6 +291,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)awakeFromNib
 {
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
+    {
+        NSWindowCollectionBehavior beh = [[self window] collectionBehavior];
+        [[self window] setCollectionBehavior:beh | NSWindowCollectionBehaviorFullScreenPrimary];
+    }
+    
     [romTypeDropdown addItemsWithTitles:romTypeNames];
     
     [inputDeviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
@@ -324,6 +339,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                              selector:@selector(receivedPasteEndedNotification:)
                                                  name:CMKeyPasteEnded
                                                object:nil];
+    
+    [self rebuildRecentItemsMenus];
     
     [self create];
     [self start];
@@ -486,7 +503,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     boardEnableSnapshots(0); // TODO
     
-    self.isInitialized = YES;
+    [self setIsInitialized:YES];
     
 #ifdef DEBUG
     NSLog(@"EmulatorController: initialized");
@@ -506,7 +523,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     archSoundDestroy(); // TODO: this doesn't belong here
     mixerDestroy(mixer);
     
-    self.isInitialized = NO;
+    [self setIsInitialized:NO];
     
 #ifdef DEBUG
     NSLog(@"EmulatorController: destroyed");
@@ -520,11 +537,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
         if ([self isStarted])
             [self stop];
         
-        if (self.fileToLoadAtStartup)
+        if ([self fileToLoadAtStartup])
         {
-            tryLaunchUnknownFile(self.properties, [self.fileToLoadAtStartup UTF8String], YES);
+            tryLaunchUnknownFile([self properties], [[self fileToLoadAtStartup] UTF8String], YES);
             
-            self.fileToLoadAtStartup = nil;
+            [self setFileToLoadAtStartup:nil];
             return;
         }
         
@@ -705,6 +722,96 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                error:&error];
     
     return (error == nil);
+}
+
+- (void)addRecentMediaItemWithURL:(NSURL *)url
+                           action:(SEL)action
+                           parent:(NSMenuItem *)parent
+{
+    NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:[url lastPathComponent]
+                                                       action:action
+                                                keyEquivalent:@""] autorelease];
+    
+    [menuItem setRepresentedObject:url];
+    [[parent submenu] insertItem:menuItem
+                         atIndex:[[parent submenu] numberOfItems] - 1];
+}
+
+- (void)clearRecentMediaItemsInMenu:(NSMenuItem *)menuItem
+{
+    NSMenu *subMenu = [menuItem submenu];
+    [[subMenu itemArray] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         if ([obj action] != @selector(clearRecentItems:))
+             [subMenu removeItem:obj];
+     }];
+}
+
+- (void)rebuildRecentItemsMenus
+{
+    // Clear existing menu items
+    [self clearRecentMediaItemsInMenu:insertRecentCartridgeA];
+    [self clearRecentMediaItemsInMenu:insertRecentCartridgeB];
+    [self clearRecentMediaItemsInMenu:insertRecentDiskA];
+    [self clearRecentMediaItemsInMenu:insertRecentDiskB];
+    [self clearRecentMediaItemsInMenu:insertRecentCassette];
+    
+    // Add new items
+    NSArray *recentURLs = [[NSDocumentController sharedDocumentController] recentDocumentURLs];
+    [recentURLs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        NSString *extension = [[obj pathExtension] lowercaseString];
+        if ([openRomFileTypes containsObject:extension])
+        {
+            [self addRecentMediaItemWithURL:obj
+                                     action:@selector(openRecentCartridgeA:)
+                                     parent:insertRecentCartridgeA];
+            [self addRecentMediaItemWithURL:obj
+                                     action:@selector(openRecentCartridgeB:)
+                                     parent:insertRecentCartridgeB];
+        }
+        else if ([openDiskFileTypes containsObject:extension])
+        {
+            [self addRecentMediaItemWithURL:obj
+                                     action:@selector(openRecentDiskA:)
+                                     parent:insertRecentDiskA];
+            [self addRecentMediaItemWithURL:obj
+                                     action:@selector(openRecentDiskB:)
+                                     parent:insertRecentDiskB];
+        }
+        else if ([openCassetteFileTypes containsObject:extension])
+        {
+            [self addRecentMediaItemWithURL:obj
+                                     action:@selector(openRecentCassette:)
+                                     parent:insertRecentCassette];
+        }
+    }];
+    
+    // Add dividers, where appropriate
+    int numberOfCartridgeItems = [[insertRecentCartridgeA submenu] numberOfItems];
+    if (numberOfCartridgeItems > 1)
+    {
+        [[insertRecentCartridgeA submenu] insertItem:[NSMenuItem separatorItem]
+                                             atIndex:numberOfCartridgeItems - 1];
+        [[insertRecentCartridgeB submenu] insertItem:[NSMenuItem separatorItem]
+                                             atIndex:numberOfCartridgeItems - 1];
+    }
+    
+    int numberOfDiskItems = [[insertRecentDiskA submenu] numberOfItems];
+    if (numberOfDiskItems > 1)
+    {
+        [[insertRecentDiskA submenu] insertItem:[NSMenuItem separatorItem]
+                                        atIndex:numberOfDiskItems - 1];
+        [[insertRecentDiskB submenu] insertItem:[NSMenuItem separatorItem]
+                                        atIndex:numberOfDiskItems - 1];
+    }
+    
+    int numberOfCassetteItems = [[insertRecentCassette submenu] numberOfItems];
+    if (numberOfCassetteItems > 1)
+    {
+        [[insertRecentCassette submenu] insertItem:[NSMenuItem separatorItem]
+                                           atIndex:numberOfCassetteItems - 1];
+    }
 }
 
 #pragma mark - Properties
@@ -951,7 +1058,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return NO;
     
     emulatorSuspend();
-    insertCartridge(properties, slot, [cartridge UTF8String], NULL, type, 0);
+    
+    if (insertCartridge(properties, slot, [cartridge UTF8String], NULL, type, 0))
+    {
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:cartridge]];
+        [self rebuildRecentItemsMenus];
+    }
+    
     emulatorResume();
     
     return YES;
@@ -1019,51 +1132,58 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return NO;
 }
 
-- (void)insertDiskIntoSlot:(NSInteger)slot
+- (void)insertDiskAtPath:(NSString *)path
+                    slot:(NSInteger)slot
 {
-    if (![self isInitialized])
-        return;
-    
-    [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
-                     allowedFileTypes:openDiskFileTypes
-                      openInDirectory:[[CMPreferences preferences] diskDirectory]
-                 canChooseDirectories:YES
-                     useAccessoryView:unrecognizedFileAccessoryView
-                    completionHandler:^(NSString *file, NSString *path)
+     emulatorSuspend();
      
+     BOOL isDirectory;
+     const char *fileCstr = [path UTF8String];
+     
+     [[NSFileManager defaultManager] fileExistsAtPath:path
+                                          isDirectory:&isDirectory];
+     
+     if (isDirectory)
      {
-         if (file)
-         {
-             emulatorSuspend();
-             
-             BOOL isDirectory;
-             const char *fileCstr = [file UTF8String];
-             
-             [[NSFileManager defaultManager] fileExistsAtPath:file isDirectory:&isDirectory];
-             
-             if (isDirectory)
-             {
-                 // Insert directory
-                 
-                 strcpy(properties->media.disks[slot].directory, fileCstr);
-                 insertDiskette(properties, slot, fileCstr, NULL, 0);
-             }
-             else
-             {
-                 // Insert disk file
-                 
-                 insertDiskette(properties, slot, fileCstr, NULL, 0);
-                 [[CMPreferences preferences] setDiskDirectory:path];
-             }
-             
-             emulatorResume();
-         }
-     }];
+         // Insert directory
+         
+         strcpy(properties->media.disks[slot].directory, fileCstr);
+         insertDiskette(properties, slot, fileCstr, NULL, 0);
+     }
+     else
+     {
+         // Insert disk file
+         
+         insertDiskette(properties, slot, fileCstr, NULL, 0);
+         [[CMPreferences preferences] setDiskDirectory:path];
+         
+         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
+         [self rebuildRecentItemsMenus];
+     }
+     
+     emulatorResume();
 }
 
 - (void)ejectDiskFromSlot:(NSInteger)slot
 {
     actionDiskRemove(slot);
+}
+
+- (void)insertCassetteAtPath:(NSString *)path
+{
+    emulatorSuspend();
+    
+    if (properties->cassette.rewindAfterInsert)
+        tapeRewindNextInsert();
+    
+    if (insertCassette(properties, 0, [path UTF8String], NULL, 0))
+    {
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
+        [self rebuildRecentItemsMenus];
+        [[CMPreferences preferences] setCassetteDirectory:path];
+    }
+    
+    emulatorResume();
 }
 
 - (BOOL)saveStateToFile:(NSString *)file
@@ -1384,6 +1504,43 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 #pragma mark - IBActions
 
+- (void)clearRecentItems:(id)sender
+{
+    [[NSDocumentController sharedDocumentController] clearRecentDocuments:sender];
+    [self rebuildRecentItemsMenus];
+}
+
+- (void)openRecentCartridgeA:(id)sender
+{
+    [self insertCartridge:[[sender representedObject] path]
+                     slot:0
+                     type:ROM_UNKNOWN];
+}
+
+- (void)openRecentCartridgeB:(id)sender
+{
+    [self insertCartridge:[[sender representedObject] path]
+                     slot:1
+                     type:ROM_UNKNOWN];
+}
+
+- (void)openRecentDiskA:(id)sender
+{
+    [self insertDiskAtPath:[[sender representedObject] path]
+                      slot:0];
+}
+
+- (void)openRecentDiskB:(id)sender
+{
+    [self insertDiskAtPath:[[sender representedObject] path]
+                      slot:1];
+}
+
+- (void)openRecentCassette:(id)sender
+{
+    [self insertCassetteAtPath:[[sender representedObject] path]];
+}
+
 - (void)openAnyFile:(id)sender
 {
     BOOL canOpenAnyFile = [sender state];
@@ -1455,12 +1612,40 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)insertDiskSlot1:(id)sender
 {
-    [self insertDiskIntoSlot:0];
+    if (![self isInitialized])
+        return;
+    
+    [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
+                     allowedFileTypes:openDiskFileTypes
+                      openInDirectory:[[CMPreferences preferences] diskDirectory]
+                 canChooseDirectories:YES
+                     useAccessoryView:unrecognizedFileAccessoryView
+                    completionHandler:^(NSString *file, NSString *path)
+     
+     {
+         if (file)
+             [self insertDiskAtPath:file
+                               slot:0];
+     }];
 }
 
 - (void)insertDiskSlot2:(id)sender
 {
-    [self insertDiskIntoSlot:1];
+    if (![self isInitialized])
+        return;
+    
+    [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
+                     allowedFileTypes:openDiskFileTypes
+                      openInDirectory:[[CMPreferences preferences] diskDirectory]
+                 canChooseDirectories:YES
+                     useAccessoryView:unrecognizedFileAccessoryView
+                    completionHandler:^(NSString *file, NSString *path)
+     
+     {
+         if (file)
+             [self insertDiskAtPath:file
+                               slot:1];
+     }];
 }
 
 - (void)ejectDiskSlot1:(id)sender
@@ -1492,17 +1677,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                     completionHandler:^(NSString *file, NSString *path)
     {
         if (file)
-        {
-            emulatorSuspend();
-            
-            if (properties->cassette.rewindAfterInsert)
-                tapeRewindNextInsert();
-            
-            insertCassette(properties, 0, [file UTF8String], NULL, 0);
-            [[CMPreferences preferences] setCassetteDirectory:path];
-            
-            emulatorResume();
-        }
+            [self insertCassetteAtPath:file];
     }];
 }
 
@@ -2416,6 +2591,10 @@ void archTrap(UInt8 value)
     else if (item.action == @selector(saveScreenshot:))
     {
         return isRunning;
+    }
+    else if (item.action == @selector(clearRecentItems:))
+    {
+        return [[[NSDocumentController sharedDocumentController] recentDocumentURLs] count] > 0;
     }
     else if (item.action == @selector(recordAudio:))
     {

@@ -8,6 +8,11 @@
         <customObject id="-2" userLabel="File's Owner" customClass="CMEmulatorController">
             <connections>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
+                <outlet property="insertRecentCartridgeA" destination="6RV-lQ-skO" id="RUb-fV-afY"/>
+                <outlet property="insertRecentCartridgeB" destination="4e4-aB-qIl" id="d3d-mY-mQW"/>
+                <outlet property="insertRecentCassette" destination="ma2-x4-3c6" id="5TI-gj-yLR"/>
+                <outlet property="insertRecentDiskA" destination="FrR-yX-mK0" id="Lhc-a1-XrI"/>
+                <outlet property="insertRecentDiskB" destination="LBN-MK-euB" id="1fY-I3-0CP"/>
                 <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
                 <outlet property="romSelectionAccessoryView" destination="hW8-CE-guM" id="dMw-A1-gUe"/>
@@ -95,6 +100,19 @@
                                                 <action selector="insertSpecialCartridgeSlot1:" target="-2" id="1189"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Insert Recent" id="6RV-lQ-skO">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Insert Recent" id="fyp-Xt-ihI">
+                                                <items>
+                                                    <menuItem title="Clear Recent Items" id="A5i-Qn-iqu">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="clearRecentItems:" target="-2" id="Sr6-wT-oBM"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="876"/>
                                         <menuItem title="Eject Cartridge" id="878">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -106,7 +124,7 @@
                                 </menu>
                             </menuItem>
                             <menuItem title="Cartridge Slot 2" id="1255">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                 <menu key="submenu" title="Cartridge Slot 2" id="1256">
                                     <items>
                                         <menuItem title="Insert Cartridge..." id="865">
@@ -120,6 +138,19 @@
                                             <connections>
                                                 <action selector="insertSpecialCartridgeSlot2:" target="-2" id="1192"/>
                                             </connections>
+                                        </menuItem>
+                                        <menuItem title="Insert Recent" id="4e4-aB-qIl">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Insert Recent" id="ajb-0Z-SZs">
+                                                <items>
+                                                    <menuItem title="Clear Recent Items" id="M7c-UF-UzE">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="clearRecentItems:" target="-2" id="sQ5-Gi-9tX"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="880"/>
                                         <menuItem title="Eject Cartridge" id="881">
@@ -148,14 +179,26 @@
                                                 <action selector="insertDiskSlot1:" target="-2" id="1194"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="983"/>
+                                        <menuItem title="Insert Recent" id="FrR-yX-mK0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Insert Recent" id="smk-lg-dKp">
+                                                <items>
+                                                    <menuItem title="Clear Recent Items" id="oLc-Dm-nDg">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="clearRecentItems:" target="-2" id="Vni-yj-Nc0"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
                                         <menuItem title="Reset After Insertion" id="995">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleDiskAutoReset:" target="-2" id="1219"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="1008"/>
+                                        <menuItem isSeparatorItem="YES" id="OF3-q5-CZx"/>
                                         <menuItem title="Eject Disk" id="982">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -175,7 +218,20 @@
                                                 <action selector="insertDiskSlot2:" target="-2" id="1197"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="991"/>
+                                        <menuItem title="Insert Recent" id="LBN-MK-euB">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Insert Recent" id="fCC-vR-WGX">
+                                                <items>
+                                                    <menuItem title="Clear Recent Items" id="Ne2-fY-sUd">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="clearRecentItems:" target="-2" id="hwV-A2-vfI"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="vVi-9S-cF5"/>
                                         <menuItem title="Eject Disk" id="992">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -196,26 +252,32 @@
                                                 <action selector="insertCassette:" target="-2" id="1200"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Eject Cassette" id="1018">
+                                        <menuItem title="Insert Recent" id="ma2-x4-3c6">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="ejectCassette:" target="-2" id="1201"/>
-                                            </connections>
+                                            <menu key="submenu" title="Insert Recent" id="I2H-9p-tk4">
+                                                <items>
+                                                    <menuItem title="Clear Recent Items" id="coD-gn-JwY">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="clearRecentItems:" target="-2" id="kWe-ls-sEG"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="1033"/>
                                         <menuItem title="Rewind After Insertion" id="1035">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleCassetteAutoRewind:" target="-2" id="1220"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Write-protect" id="1031">
+                                        <menuItem title="Open Write-Protected" id="1031">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleCassetteWriteProtect:" target="-2" id="1221"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="1037"/>
+                                        <menuItem isSeparatorItem="YES" id="caK-bq-Wzf"/>
                                         <menuItem title="Reposition..." id="1039">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -226,6 +288,12 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="rewindCassette:" target="-2" id="1203"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Eject Cassette" id="1018">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="ejectCassette:" target="-2" id="1201"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -426,7 +494,6 @@
         </menu>
         <window title="CocoaMSX" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" showsToolbarButton="NO" animationBehavior="default" id="796">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <rect key="contentRect" x="269" y="120" width="640" height="512"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
             <view key="contentView" id="797">
