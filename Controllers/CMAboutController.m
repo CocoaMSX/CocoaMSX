@@ -123,7 +123,7 @@
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString* version = [infoDict objectForKey:@"CFBundleShortVersionString"];
     
-    versionNumberField.stringValue = [NSString stringWithFormat:CMLoc(@"VersionAbout"),
+    versionNumberField.stringValue = [NSString stringWithFormat:CMLoc(@"Version %@", @""),
                                  version];
     
     NSString *bundlePath = [[NSBundle mainBundle] bundlePath];

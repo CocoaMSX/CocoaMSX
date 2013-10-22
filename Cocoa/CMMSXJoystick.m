@@ -134,23 +134,23 @@ static NSDictionary *layoutToJoystickMap;
     
     [joystick mapButtonWithPortOneVirtualCode:EC_JOY1_BUTTON1
                            portTwoVirtualCode:EC_JOY2_BUTTON1
-                                        label:CMLoc(@"JoyButtonOne")];
+                                        label:CMLoc(@"Button 1", @"Joystick button")];
     [joystick mapButtonWithPortOneVirtualCode:EC_JOY1_BUTTON2
                            portTwoVirtualCode:EC_JOY2_BUTTON2
-                                        label:CMLoc(@"JoyButtonTwo")];
+                                        label:CMLoc(@"Button 2", @"Joystick button")];
     
     [joystick mapButtonWithPortOneVirtualCode:EC_JOY1_UP
                            portTwoVirtualCode:EC_JOY2_UP
-                                        label:CMLoc(@"JoyUp")];
+                                        label:CMLoc(@"Up", @"Joystick button")];
     [joystick mapButtonWithPortOneVirtualCode:EC_JOY1_DOWN
                            portTwoVirtualCode:EC_JOY2_DOWN
-                                        label:CMLoc(@"JoyDown")];
+                                        label:CMLoc(@"Down", @"Joystick button")];
     [joystick mapButtonWithPortOneVirtualCode:EC_JOY1_LEFT
                            portTwoVirtualCode:EC_JOY2_LEFT
-                                        label:CMLoc(@"JoyLeft")];
+                                        label:CMLoc(@"Left", @"Joystick button")];
     [joystick mapButtonWithPortOneVirtualCode:EC_JOY1_RIGHT
                            portTwoVirtualCode:EC_JOY2_RIGHT
-                                        label:CMLoc(@"JoyRight")];
+                                        label:CMLoc(@"Right", @"Joystick button")];
     
     return [joystick autorelease];
 }

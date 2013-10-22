@@ -219,31 +219,31 @@
     switch(currentState)
     {
         case STATE_CENTER:
-            [directionField setStringValue:CMLoc(@"Release the directional controls then press any button")];
+            [directionField setStringValue:CMLoc(@"Release the directional controls then press any button", @"")];
             break;
         case STATE_PRESS_UP:
-            [directionField setStringValue:CMLoc(@"Press Up")];
+            [directionField setStringValue:CMLoc(@"Press Up", @"")];
             break;
         case STATE_PRESS_DOWN:
-            [directionField setStringValue:CMLoc(@"Press Down")];
+            [directionField setStringValue:CMLoc(@"Press Down", @"")];
             break;
         case STATE_PRESS_LEFT:
-            [directionField setStringValue:CMLoc(@"Press Left")];
+            [directionField setStringValue:CMLoc(@"Press Left", @"")];
             break;
         case STATE_PRESS_RIGHT:
-            [directionField setStringValue:CMLoc(@"Press Right")];
+            [directionField setStringValue:CMLoc(@"Press Right", @"")];
             break;
         case STATE_PRESS_BUTTON_A:
-            [directionField setStringValue:CMLoc(@"Press button A")];
+            [directionField setStringValue:CMLoc(@"Press Button A", @"")];
             break;
         case STATE_PRESS_BUTTON_B:
-            [directionField setStringValue:CMLoc(@"Press button B")];
+            [directionField setStringValue:CMLoc(@"Press Button B", @"")];
             break;
         case STATE_INVALID:
-            [directionField setStringValue:CMLoc(@"Configuration canceled.")];
+            [directionField setStringValue:CMLoc(@"Configuration canceled.", @"")];
             break;
         case STATE_DONE:
-            [directionField setStringValue:CMLoc(@"Configuration complete.")];
+            [directionField setStringValue:CMLoc(@"Configuration complete.", @"")];
             break;
     }
     

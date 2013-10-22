@@ -38,22 +38,19 @@
 }
 
 - (BOOL)isSelectable;
-- (id)initWithLocalizedName:(NSString*)localizationKey;
+- (id)initWithName:(NSString *)name;
 - (void)addChildren:(CMSpecialCartNode*)child, ... NS_REQUIRES_NIL_TERMINATION;
 
 @end
 
 @implementation CMSpecialCartNode
 
-- (id)initWithLocalizedName:(NSString *)localizationKey
+- (id)initWithName:(NSString *)name
 {
     if ((self = [super init]))
     {
-        displayName = nil;
         children = [[NSMutableArray alloc] init];
-        
-        if (localizationKey)
-            displayName = [CMLoc(localizationKey) retain];
+        displayName = [name retain];
     }
     
     return self;
@@ -64,20 +61,20 @@
     return children.count < 1;
 }
 
-+ (id)nodeWithLocalizedName:(NSString *)localizationKey
-                    romType:(NSInteger)romType
-                    romName:(const char*)romName
++ (id)nodeWithName:(NSString *)name
+           romType:(NSInteger)romType
+           romName:(const char*)romName
 {
-    CMSpecialCartNode *node = [[CMSpecialCartNode alloc] initWithLocalizedName:localizationKey];
+    CMSpecialCartNode *node = [[CMSpecialCartNode alloc] initWithName:name];
     node->romType = romType;
     node->romName = romName;
     
     return [node autorelease];
 }
 
-+ (id)nodeWithLocalizedName:(NSString *)localizationKey
++ (id)nodeWithName:(NSString *)name
 {
-    return [[[CMSpecialCartNode alloc] initWithLocalizedName:localizationKey] autorelease];
+    return [[[CMSpecialCartNode alloc] initWithName:name] autorelease];
 }
 
 - (void)addChildren:(CMSpecialCartNode*)child, ...
@@ -243,171 +240,171 @@
 - (void)reloadCarts
 {
     [root release];
-    root = [[CMSpecialCartNode alloc] initWithLocalizedName:nil];
+    root = [[CMSpecialCartNode alloc] initWithName:nil];
     
-    CMSpecialCartNode *gameReaderCart = [CMSpecialCartNode nodeWithLocalizedName:@"GameReaderCartridge"
-                                                                     romType:ROM_GAMEREADER
-                                                                     romName:CARTNAME_GAMEREADER];
-    CMSpecialCartNode *joyrexCart = [CMSpecialCartNode nodeWithLocalizedName:@"JoyrexPsgCartridge"
-                                                                 romType:ROM_JOYREXPSG
-                                                                 romName:CARTNAME_JOYREXPSG];
-    CMSpecialCartNode *sccCart = [CMSpecialCartNode nodeWithLocalizedName:@"SccCartridge"
-                                                              romType:ROM_SCC
-                                                              romName:CARTNAME_SCC];
-    CMSpecialCartNode *sccICart = [CMSpecialCartNode nodeWithLocalizedName:@"SccICartridge"
-                                                               romType:ROM_SCCPLUS
-                                                               romName:CARTNAME_SCCPLUS];
+    CMSpecialCartNode *gameReaderCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Game Reader", @"")
+                                                                romType:ROM_GAMEREADER
+                                                                romName:CARTNAME_GAMEREADER];
+    CMSpecialCartNode *joyrexCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Joyrex PSG Cartridge", @"")
+                                                            romType:ROM_JOYREXPSG
+                                                            romName:CARTNAME_JOYREXPSG];
+    CMSpecialCartNode *sccCart = [CMSpecialCartNode nodeWithName:CMLoc(@"SCC Cartridge", @"")
+                                                         romType:ROM_SCC
+                                                         romName:CARTNAME_SCC];
+    CMSpecialCartNode *sccICart = [CMSpecialCartNode nodeWithName:CMLoc(@"SCC-I Cartridge", @"")
+                                                          romType:ROM_SCCPLUS
+                                                          romName:CARTNAME_SCCPLUS];
     
-    CMSpecialCartNode *eseSccCart = [CMSpecialCartNode nodeWithLocalizedName:@"EseSccCartridge"];
+    CMSpecialCartNode *eseSccCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Ese-SCC", @"")];
     [eseSccCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart128kB"
-                                    romType:SRAM_ESESCC128
-                                    romName:CARTNAME_ESESCC128],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart256kB"
-                                    romType:SRAM_ESESCC256
-                                    romName:CARTNAME_ESESCC256],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart512kB"
-                                    romType:SRAM_ESESCC512
-                                    romName:CARTNAME_ESESCC512], nil];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"128 kB", @"")
+                             romType:SRAM_ESESCC128
+                             romName:CARTNAME_ESESCC128],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"256 kB", @"")
+                             romType:SRAM_ESESCC256
+                             romName:CARTNAME_ESESCC256],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"512 kB", @"")
+                             romType:SRAM_ESESCC512
+                             romName:CARTNAME_ESESCC512], nil];
     
     // IDE
-    CMSpecialCartNode *ideCart = [CMSpecialCartNode nodeWithLocalizedName:@"IdeCartridge"];
+    CMSpecialCartNode *ideCart = [CMSpecialCartNode nodeWithName:CMLoc(@"IDE", @"")];
     [ideCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"SunriseCartridge"
-                                    romType:ROM_SUNRISEIDE
-                                    romName:CARTNAME_SUNRISEIDE],
-     [CMSpecialCartNode nodeWithLocalizedName:@"BeerCartridge"
-                                    romType:ROM_BEERIDE
-                                    romName:CARTNAME_BEERIDE],
-     [CMSpecialCartNode nodeWithLocalizedName:@"GideCartridge"
-                                    romType:ROM_GIDE
-                                    romName:CARTNAME_GIDE], nil];
+    [CMSpecialCartNode nodeWithName:CMLoc(@"Sunrise", @"")
+                            romType:ROM_SUNRISEIDE
+                            romName:CARTNAME_SUNRISEIDE],
+    [CMSpecialCartNode nodeWithName:CMLoc(@"Beer", @"")
+                            romType:ROM_BEERIDE
+                            romName:CARTNAME_BEERIDE],
+    [CMSpecialCartNode nodeWithName:CMLoc(@"GIDE", @"")
+                            romType:ROM_GIDE
+                            romName:CARTNAME_GIDE], nil];
     
     // SCSI
-    CMSpecialCartNode *scsiCart = [CMSpecialCartNode nodeWithLocalizedName:@"ScsiCartridge"];
-    CMSpecialCartNode *megaScsiCart = [CMSpecialCartNode nodeWithLocalizedName:@"MegaScsiCartridge"];
+    CMSpecialCartNode *scsiCart = [CMSpecialCartNode nodeWithName:CMLoc(@"SCSI", @"")];
+    CMSpecialCartNode *megaScsiCart = [CMSpecialCartNode nodeWithName:CMLoc(@"MEGA-SCSI", @"")];
     [megaScsiCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart128kB"
-                                    romType:SRAM_MEGASCSI128
-                                    romName:CARTNAME_MEGASCSI128],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart256kB"
-                                    romType:SRAM_MEGASCSI256
-                                    romName:CARTNAME_MEGASCSI256],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart512kB"
-                                    romType:SRAM_MEGASCSI512
-                                    romName:CARTNAME_MEGASCSI512],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart1Mb"
-                                    romType:SRAM_MEGASCSI1MB
-                                    romName:CARTNAME_MEGASCSI1MB], nil];
-    CMSpecialCartNode *waveScsiCart = [CMSpecialCartNode nodeWithLocalizedName:@"WaveScsiCartridge"];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"128 kB", @"")
+                             romType:SRAM_MEGASCSI128
+                             romName:CARTNAME_MEGASCSI128],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"256 kB", @"")
+                             romType:SRAM_MEGASCSI256
+                             romName:CARTNAME_MEGASCSI256],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"512 kB", @"")
+                             romType:SRAM_MEGASCSI512
+                             romName:CARTNAME_MEGASCSI512],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"1 MB", @"")
+                             romType:SRAM_MEGASCSI1MB
+                             romName:CARTNAME_MEGASCSI1MB], nil];
+    CMSpecialCartNode *waveScsiCart = [CMSpecialCartNode nodeWithName:CMLoc(@"WAVE-SCSI", @"")];
     [waveScsiCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart128kB"
-                                    romType:SRAM_WAVESCSI128
-                                    romName:CARTNAME_WAVESCSI128],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart256kB"
-                                    romType:SRAM_WAVESCSI256
-                                    romName:CARTNAME_WAVESCSI256],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart512kB"
-                                    romType:SRAM_WAVESCSI512
-                                    romName:CARTNAME_WAVESCSI512],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart1Mb"
-                                    romType:SRAM_WAVESCSI1MB
-                                    romName:CARTNAME_WAVESCSI1MB], nil];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"128 kB", @"")
+                             romType:SRAM_WAVESCSI128
+                             romName:CARTNAME_WAVESCSI128],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"256 kB", @"")
+                             romType:SRAM_WAVESCSI256
+                             romName:CARTNAME_WAVESCSI256],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"512 kB", @"")
+                             romType:SRAM_WAVESCSI512
+                             romName:CARTNAME_WAVESCSI512],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"1 MB", @"")
+                             romType:SRAM_WAVESCSI1MB
+                             romName:CARTNAME_WAVESCSI1MB], nil];
     [scsiCart addChildren:megaScsiCart, waveScsiCart,
-     [CMSpecialCartNode nodeWithLocalizedName:@"GoudaScsiCartridge"
-                                    romType:ROM_GOUDASCSI
-                                    romName:CARTNAME_GOUDASCSI], nil];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"Gouda SCSI", @"")
+                             romType:ROM_GOUDASCSI
+                             romName:CARTNAME_GOUDASCSI], nil];
     
     // Nowind
-    CMSpecialCartNode *nowindCart = [CMSpecialCartNode nodeWithLocalizedName:@"NowindUsbController"];
+    CMSpecialCartNode *nowindCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Nowind USB Disk Controller", @"")];
     [nowindCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"MsxDos1Cartridge"
-                                    romType:ROM_NOWIND
-                                    romName:CARTNAME_NOWINDDOS1],
-     [CMSpecialCartNode nodeWithLocalizedName:@"MsxDos2Cartridge"
-                                    romType:ROM_NOWIND
-                                    romName:CARTNAME_NOWINDDOS2], nil];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"MSX DOS 1", @"")
+                             romType:ROM_NOWIND
+                             romName:CARTNAME_NOWINDDOS1],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"MSX DOS 2", @"")
+                             romType:ROM_NOWIND
+                             romName:CARTNAME_NOWINDDOS2], nil];
     
-    CMSpecialCartNode *fmpacCart = [CMSpecialCartNode nodeWithLocalizedName:@"FmPacCartridge"
-                                                                romType:ROM_FMPAC
-                                                                romName:CARTNAME_FMPAC];
-    CMSpecialCartNode *pacCart = [CMSpecialCartNode nodeWithLocalizedName:@"PacCartridge"
-                                                              romType:ROM_PAC
-                                                              romName:CARTNAME_PAC];
+    CMSpecialCartNode *fmpacCart = [CMSpecialCartNode nodeWithName:CMLoc(@"FM-PAC Cartridge", @"")
+                                                           romType:ROM_FMPAC
+                                                           romName:CARTNAME_FMPAC];
+    CMSpecialCartNode *pacCart = [CMSpecialCartNode nodeWithName:CMLoc(@"PAC Cartridge", @"")
+                                                         romType:ROM_PAC
+                                                         romName:CARTNAME_PAC];
     
-    CMSpecialCartNode *hbiCart = [CMSpecialCartNode nodeWithLocalizedName:@"SonyHbi55Cartridge"
-                                                              romType:ROM_SONYHBI55
-                                                              romName:CARTNAME_SONYHBI55];
-    CMSpecialCartNode *nmsCart = [CMSpecialCartNode nodeWithLocalizedName:@"PhilipsNms1210Interface"
-                                                              romType:ROM_NMS1210
-                                                              romName:CARTNAME_NMS1210];
+    CMSpecialCartNode *hbiCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Sony HBI-55 Cartridge", @"")
+                                                         romType:ROM_SONYHBI55
+                                                         romName:CARTNAME_SONYHBI55];
+    CMSpecialCartNode *nmsCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Philips NMS1210 Serial Interface", @"")
+                                                         romType:ROM_NMS1210
+                                                         romName:CARTNAME_NMS1210];
     
     // External RAM
-    CMSpecialCartNode *externRamCart = [CMSpecialCartNode nodeWithLocalizedName:@"ExternalRamCartridge"];
+    CMSpecialCartNode *externRamCart = [CMSpecialCartNode nodeWithName:CMLoc(@"External RAM", @"")];
     [externRamCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart16kB"
-                                    romType:ROM_EXTRAM16KB
-                                    romName:CARTNAME_EXTRAM16KB],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart32kB"
-                                    romType:ROM_EXTRAM32KB
-                                    romName:CARTNAME_EXTRAM32KB],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart48kB"
-                                    romType:ROM_EXTRAM48KB
-                                    romName:CARTNAME_EXTRAM48KB],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart64kB"
-                                    romType:ROM_EXTRAM64KB
-                                    romName:CARTNAME_EXTRAM64KB],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart512kB"
-                                    romType:ROM_EXTRAM512KB
-                                    romName:CARTNAME_EXTRAM512KB],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart1Mb"
-                                    romType:ROM_EXTRAM1MB
-                                    romName:CARTNAME_EXTRAM1MB],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart2Mb"
-                                    romType:ROM_EXTRAM2MB
-                                    romName:CARTNAME_EXTRAM2MB],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart4MB"
-                                    romType:ROM_EXTRAM4MB
-                                    romName:CARTNAME_EXTRAM4MB], nil];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"16 kB", @"")
+                             romType:ROM_EXTRAM16KB
+                             romName:CARTNAME_EXTRAM16KB],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"32 kB", @"")
+                             romType:ROM_EXTRAM32KB
+                             romName:CARTNAME_EXTRAM32KB],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"48 kB", @"")
+                             romType:ROM_EXTRAM48KB
+                             romName:CARTNAME_EXTRAM48KB],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"64 kB", @"")
+                             romType:ROM_EXTRAM64KB
+                             romName:CARTNAME_EXTRAM64KB],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"512 kB", @"")
+                             romType:ROM_EXTRAM512KB
+                             romName:CARTNAME_EXTRAM512KB],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"1 MB", @"")
+                             romType:ROM_EXTRAM1MB
+                             romName:CARTNAME_EXTRAM1MB],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"2 MB", @"")
+                             romType:ROM_EXTRAM2MB
+                             romName:CARTNAME_EXTRAM2MB],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"4 MB", @"")
+                             romType:ROM_EXTRAM4MB
+                             romName:CARTNAME_EXTRAM4MB], nil];
     
     // Mega RAM
-    CMSpecialCartNode *megaRamCart = [CMSpecialCartNode nodeWithLocalizedName:@"MegaRamCartridge"];
+    CMSpecialCartNode *megaRamCart = [CMSpecialCartNode nodeWithName:CMLoc(@"MegaRAM", @"")];
     [megaRamCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart128kB"
-                                    romType:ROM_MEGARAM128
-                                    romName:CARTNAME_MEGARAM128],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart256kB"
-                                    romType:ROM_MEGARAM256
-                                    romName:CARTNAME_MEGARAM256],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart512kB"
-                                    romType:ROM_MEGARAM512
-                                    romName:CARTNAME_MEGARAM512],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart768kB"
-                                    romType:ROM_MEGARAM768
-                                    romName:CARTNAME_MEGARAM768],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart2Mb"
-                                    romType:ROM_MEGARAM2M
-                                    romName:CARTNAME_MEGARAM2M], nil];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"128 kB", @"")
+                             romType:ROM_MEGARAM128
+                             romName:CARTNAME_MEGARAM128],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"256 kB", @"")
+                             romType:ROM_MEGARAM256
+                             romName:CARTNAME_MEGARAM256],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"512 kB", @"")
+                             romType:ROM_MEGARAM512
+                             romName:CARTNAME_MEGARAM512],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"768 kB", @"")
+                             romType:ROM_MEGARAM768
+                             romName:CARTNAME_MEGARAM768],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"2 MB", @"")
+                             romType:ROM_MEGARAM2M
+                             romName:CARTNAME_MEGARAM2M], nil];
     
     // Ese-RAM
-    CMSpecialCartNode *eseRamCart = [CMSpecialCartNode nodeWithLocalizedName:@"EseRamCartridge"];
+    CMSpecialCartNode *eseRamCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Ese-RAM", @"")];
     [eseRamCart addChildren:
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart128kB"
-                                    romType:SRAM_ESERAM128
-                                    romName:CARTNAME_ESERAM128],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart256kB"
-                                    romType:SRAM_ESERAM256
-                                    romName:CARTNAME_ESERAM256],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart512kB"
-                                    romType:SRAM_ESERAM512
-                                    romName:CARTNAME_ESERAM512],
-     [CMSpecialCartNode nodeWithLocalizedName:@"Cart1Mb"
-                                    romType:SRAM_ESERAM1MB
-                                    romName:CARTNAME_ESERAM1MB], nil];
+     [CMSpecialCartNode nodeWithName:CMLoc(@"128 kB", @"")
+                             romType:SRAM_ESERAM128
+                             romName:CARTNAME_ESERAM128],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"256 kB", @"")
+                             romType:SRAM_ESERAM256
+                             romName:CARTNAME_ESERAM256],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"512 kB", @"")
+                             romType:SRAM_ESERAM512
+                             romName:CARTNAME_ESERAM512],
+     [CMSpecialCartNode nodeWithName:CMLoc(@"1 MB", @"")
+                             romType:SRAM_ESERAM1MB
+                             romName:CARTNAME_ESERAM1MB], nil];
     
-    CMSpecialCartNode *megaFlashSccCart = [CMSpecialCartNode nodeWithLocalizedName:@"MegaFlashRomScc"
-                                                                       romType:ROM_MEGAFLSHSCC
-                                                                       romName:CARTNAME_MEGAFLSHSCC];
+    CMSpecialCartNode *megaFlashSccCart = [CMSpecialCartNode nodeWithName:CMLoc(@"Mega Flash ROM SCC", @"")
+                                                                  romType:ROM_MEGAFLSHSCC
+                                                                  romName:CARTNAME_MEGAFLSHSCC];
     
     [root addChildren:gameReaderCart, joyrexCart, sccCart, sccICart, eseSccCart,
      ideCart, scsiCart, nowindCart, fmpacCart, pacCart, hbiCart, nmsCart,

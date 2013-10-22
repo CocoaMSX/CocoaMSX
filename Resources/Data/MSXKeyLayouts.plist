@@ -15,8 +15,8 @@
 			<string>MSX - Spectravideo SVI-738 Arabic</string>
 			<string>MSX - Al Alamiah AX-150</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutArabic</string>
+		<key>name</key>
+		<string>Arabic</string>
 	</dict>
 	<key>brazilian</key>
 	<dict>
@@ -41,8 +41,8 @@
 			<string>MSX - Gradiente Expert Plus</string>
 			<string>MSX - Gradiente Expert DDPlus</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutBrazilian</string>
+		<key>name</key>
+		<string>Brazilian</string>
 	</dict>
 	<key>estonian</key>
 	<dict>
@@ -54,8 +54,8 @@
 			<string>MSX2 - Yamaha YIS503IIIR Estonian</string>
 			<string>MSX2 - Yamaha YIS805-128R2 Estonian</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutEstonian</string>
+		<key>name</key>
+		<string>Estonian</string>
 	</dict>
 	<key>european</key>
 	<dict>
@@ -131,8 +131,8 @@
 			<string>MSX2 - Spectravideo SVI-738-2 CUC</string>
 			<string>MSX - Toshiba HX-21I</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutEuropean</string>
+		<key>name</key>
+		<string>European</string>
 	</dict>
 	<key>french</key>
 	<dict>
@@ -158,8 +158,8 @@
 			<string>MSX2 - Philips VG-8235F</string>
 			<string>MSX - Canon V-20F</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutFrench</string>
+		<key>name</key>
+		<string>French</string>
 	</dict>
 	<key>german</key>
 	<dict>
@@ -175,8 +175,8 @@
 			<string>MSX - Sony HB-55D</string>
 			<string>MSX2 - Philips NMS-8280G</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutGerman</string>
+		<key>name</key>
+		<string>German</string>
 	</dict>
 	<key>japanese</key>
 	<dict>
@@ -265,8 +265,8 @@
 			<string>MSX2 - Canon V-25</string>
 			<string>MSXturboR - Panasonic FS-A1GT</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutJapanese</string>
+		<key>name</key>
+		<string>Japanese</string>
 	</dict>
 	<key>korean</key>
 	<dict>
@@ -288,8 +288,8 @@
 			<string>MSX - Daewoo Zemmix CPC-51</string>
 			<string>MSX - Daewoo Zemmix CPC-50</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutKorean</string>
+		<key>name</key>
+		<string>Korean</string>
 	</dict>
 	<key>russian</key>
 	<dict>
@@ -303,8 +303,8 @@
 			<string>MSX2 - Sanyo MPC-2300</string>
 			<string>MSX2 - Sony HB-F9P Russian</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutRussian</string>
+		<key>name</key>
+		<string>Russian</string>
 	</dict>
 	<key>spanish</key>
 	<dict>
@@ -327,8 +327,8 @@
 			<string>MSX2 - Mitsubishi ML-G3</string>
 			<string>MSX - Canon V-20S</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutSpanish</string>
+		<key>name</key>
+		<string>Spanish</string>
 	</dict>
 	<key>swedish</key>
 	<dict>
@@ -340,8 +340,8 @@
 			<string>MSX - Spectravideo SVI-838</string>
 			<string>MSX2 - Spectravideo SVI-838-2</string>
 		</array>
-		<key>nameLocalization</key>
-		<string>MsxKeyLayoutSwedish</string>
+		<key>name</key>
+		<string>Swedish</string>
 	</dict>
 </dict>
 </plist>

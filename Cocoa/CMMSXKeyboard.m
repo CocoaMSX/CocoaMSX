@@ -194,7 +194,7 @@ static NSMutableDictionary *virtualCodeToCategoryMap;
                          forKey:layoutName];
         
         // Localization labels...
-        [layoutLabels setObject:CMLoc([layoutData objectForKey:@"nameLocalization"])
+        [layoutLabels setObject:CMLoc([layoutData objectForKey:@"name"], @"")
                          forKey:layoutName];
         
         // Build a dictionary of each machine's layout
@@ -370,7 +370,7 @@ static NSMutableDictionary *virtualCodeToCategoryMap;
         return nil;
     
     NSString *localizationId = [NSString stringWithFormat:@"KeyCategory%@", categoryName];
-    return CMLoc(localizationId);
+    return CMLoc(localizationId, @"");
 }
 
 + (NSArray *)availableLayoutNames

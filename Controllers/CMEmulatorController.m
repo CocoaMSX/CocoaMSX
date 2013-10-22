@@ -614,9 +614,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)updateFps:(CGFloat)fps
 {
     if (emulatorGetState() == EMU_PAUSED)
-        self.fpsDisplay = CMLoc(@"MsxIsPaused");
+        [self setFpsDisplay:CMLoc(@"MSX Paused", @"")];
     else
-        self.fpsDisplay = [NSString stringWithFormat:CMLoc(@"Fps_f"), fps];
+        [self setFpsDisplay:[NSString stringWithFormat:CMLoc(@"FPS: %.02f", @""), fps]];
 }
 
 - (void)setScanlines:(NSInteger)value
@@ -1008,7 +1008,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     NSOpenPanel* panel = [NSOpenPanel openPanel];
     
-    [panel setTitle:CMLoc(@"InsertCartridge")];
+    [panel setTitle:CMLoc(@"Insert Cartridge", @"")];
     [panel setCanChooseFiles:YES];
     [panel setCanChooseDirectories:NO];
     [panel setCanCreateDirectories:YES];
@@ -1122,13 +1122,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         if (displayName)
         {
-            menuItem.title = [NSString stringWithFormat:CMLoc(@"EjectMedia_f"),
-                              displayName];
+            [menuItem setTitle:[NSString stringWithFormat:CMLoc(@"Eject %@", @""), displayName]];
             return YES;
         }
     }
     
-    menuItem.title = CMLoc(@"EjectCartridge");
+    [menuItem setTitle:CMLoc(@"Eject Cartridge", @"")];
+    
     return NO;
 }
 
@@ -1258,13 +1258,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         if (displayName)
         {
-            menuItem.title = [NSString stringWithFormat:CMLoc(@"EjectMedia_f"),
-                              displayName];
+            [menuItem setTitle:[NSString stringWithFormat:CMLoc(@"Eject %@", @""), displayName]];
             return YES;
         }
     }
     
-    menuItem.title = CMLoc(@"EjectDisk");
+    menuItem.title = CMLoc(@"Eject Disk", @"");
     return NO;
 }
 
@@ -1276,14 +1275,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         if (displayName)
         {
-            menuItem.title = [NSString stringWithFormat:CMLoc(@"EjectMedia_f"),
-                              displayName];
-            
+            [menuItem setTitle:[NSString stringWithFormat:CMLoc(@"Eject %@", @""), displayName]];
             return YES;
         }
     }
     
-    menuItem.title = CMLoc(@"EjectCassette");
+    menuItem.title = CMLoc(@"Eject Cassette", @"");
     return NO;
 }
 
@@ -1615,7 +1612,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (![self isInitialized])
         return;
     
-    [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
+    [self showOpenFileDialogWithTitle:CMLoc(@"Insert Disk", @"Dialog title")
                      allowedFileTypes:openDiskFileTypes
                       openInDirectory:[[CMPreferences preferences] diskDirectory]
                  canChooseDirectories:YES
@@ -1634,7 +1631,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (![self isInitialized])
         return;
     
-    [self showOpenFileDialogWithTitle:CMLoc(@"InsertDisk")
+    [self showOpenFileDialogWithTitle:CMLoc(@"Insert Disk", @"Dialog title")
                      allowedFileTypes:openDiskFileTypes
                       openInDirectory:[[CMPreferences preferences] diskDirectory]
                  canChooseDirectories:YES
@@ -1669,7 +1666,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (![self isInitialized])
         return;
     
-    [self showOpenFileDialogWithTitle:CMLoc(@"InsertCassette")
+    [self showOpenFileDialogWithTitle:CMLoc(@"Insert Cassette", @"Dialog title")
                      allowedFileTypes:openCassetteFileTypes
                       openInDirectory:[[CMPreferences preferences] cassetteDirectory]
                  canChooseDirectories:NO
@@ -1791,7 +1788,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (emulatorState != EMU_RUNNING && emulatorState != EMU_PAUSED)
         return;
     
-    [self showOpenFileDialogWithTitle:CMLoc(@"LoadSnapshot")
+    [self showOpenFileDialogWithTitle:CMLoc(@"Load Snapshot", @"Dialog title")
                      allowedFileTypes:stateFileTypes
                       openInDirectory:[[CMPreferences preferences] snapshotDirectory]
                     completionHandler:^(NSString *file, NSString *path)
@@ -1814,7 +1811,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    [self showSaveFileDialogWithTitle:CMLoc(@"SaveSnapshot")
+    [self showSaveFileDialogWithTitle:CMLoc(@"Save Snapshot", @"Dialog title")
                      allowedFileTypes:stateFileTypes
                       openInDirectory:[[CMPreferences preferences] snapshotDirectory]
                     completionHandler:^(NSString *file, NSString *path)
@@ -1837,7 +1834,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    [self showSaveFileDialogWithTitle:CMLoc(@"SaveScreenshot")
+    [self showSaveFileDialogWithTitle:CMLoc(@"Save Screenshot", @"Dialog title")
                      allowedFileTypes:[NSArray arrayWithObjects:@"png", nil]
                     completionHandler:^(NSString *file, NSString *path)
      {
@@ -1868,7 +1865,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         emulatorSuspend();
         
-        [self showSaveFileDialogWithTitle:CMLoc(@"CaptureAudio")
+        [self showSaveFileDialogWithTitle:CMLoc(@"Record Audio", @"Dialog title")
                          allowedFileTypes:captureAudioTypes
                           openInDirectory:[CMPreferences preferences].audioCaptureDirectory
                         completionHandler:^(NSString *file, NSString *path)
@@ -1920,7 +1917,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    [self showOpenFileDialogWithTitle:CMLoc(@"LoadGameplayRecording")
+    [self showOpenFileDialogWithTitle:CMLoc(@"Load Gameplay Recording", @"Dialog title")
                      allowedFileTypes:captureGameplayTypes
                       openInDirectory:[CMPreferences preferences].videoCaptureDirectory
                     completionHandler:^(NSString *file, NSString *path)
@@ -1954,7 +1951,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         emulatorSuspend();
         
-        [self showSaveFileDialogWithTitle:CMLoc(@"SaveGameplayRecording")
+        [self showSaveFileDialogWithTitle:CMLoc(@"Save Gameplay Recording", @"Dialog title")
                          allowedFileTypes:captureGameplayTypes
                           openInDirectory:[CMPreferences preferences].videoCaptureDirectory
                         completionHandler:^(NSString *file, NSString *path)
@@ -1970,11 +1967,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
                  
                  if (error)
                  {
-                     NSString *message = [NSString stringWithFormat:CMLoc(@"CouldNotSaveFileToDisk_f"),
+                     NSString *message = [NSString stringWithFormat:CMLoc(@"An error occurred while attempting to save to \"%@\".", @""),
                                           file];
                      
                      NSAlert *alert = [NSAlert alertWithMessageText:message
-                                                      defaultButton:CMLoc(@"OK")
+                                                      defaultButton:CMLoc(@"OK", @"")
                                                     alternateButton:nil
                                                         otherButton:nil
                                           informativeTextWithFormat:@""];
@@ -2539,9 +2536,9 @@ void archTrap(UInt8 value)
     else if (item.action == @selector(toggleFullScreen:))
     {
         if ([self isInFullScreenMode])
-            menuItem.title = CMLoc(@"ExitFullscreen");
+            [menuItem setTitle:CMLoc(@"Exit Full Screen", @"")];
         else
-            menuItem.title = CMLoc(@"EnterFullscreen");
+            [menuItem setTitle:CMLoc(@"Enter Full Screen", @"")];
     }
     else if (item.action == @selector(loadState:))
     {
@@ -2554,15 +2551,15 @@ void archTrap(UInt8 value)
     else if (item.action == @selector(statusMsx:))
     {
         if (machineState == EMU_RUNNING)
-            menuItem.title = CMLoc(@"MsxIsRunning");
+            [menuItem setTitle:CMLoc(@"MSX Running", @"Menu item title")];
         else if (machineState == EMU_PAUSED)
-            menuItem.title = CMLoc(@"MsxIsPaused");
+            [menuItem setTitle:CMLoc(@"MSX Paused", @"Menu item title")];
         else if (machineState == EMU_SUSPENDED)
-            menuItem.title = CMLoc(@"MsxIsSuspended");
+            [menuItem setTitle:CMLoc(@"MSX Suspended", @"Menu item title")];
         else if (machineState == EMU_STOPPED)
-            menuItem.title = CMLoc(@"MsxIsOff");
+            [menuItem setTitle:CMLoc(@"MSX Powered Off", @"Menu item title")];
         else
-            menuItem.title = CMLoc(@"MsxIsUnknown");
+            [menuItem setTitle:CMLoc(@"MSX State Unknown", @"Menu item title")];
         
         return NO; // always disabled
     }
@@ -2575,16 +2572,16 @@ void archTrap(UInt8 value)
     else if (item.action == @selector(shutDownMsx:))
     {
         if (isRunning)
-            menuItem.title = CMLoc(@"ShutDown");
+            [menuItem setTitle:CMLoc(@"Shut Down", @"Menu item title")];
         else
-            menuItem.title = CMLoc(@"StartUp");
+            [menuItem setTitle:CMLoc(@"Start Up", @"Menu item title")];
     }
     else if (item.action == @selector(pauseMsx:))
     {
         if (machineState == EMU_PAUSED)
-            menuItem.title = CMLoc(@"Resume");
+            [menuItem setTitle:CMLoc(@"Resume", @"Menu item title")];
         else
-            menuItem.title = CMLoc(@"Pause");
+            [menuItem setTitle:CMLoc(@"Pause", @"Menu item title")];
         
         return isRunning;
     }
@@ -2599,9 +2596,9 @@ void archTrap(UInt8 value)
     else if (item.action == @selector(recordAudio:))
     {
         if (!mixerIsLogging(mixer))
-            menuItem.title = CMLoc(@"RecordAudioEll");
+            [menuItem setTitle:CMLoc(@"Record Audio…", @"Menu item title")];
         else
-            menuItem.title = CMLoc(@"StopRecording");
+            [menuItem setTitle:CMLoc(@"Stop Recording", @"Menu item title")];
         
         return isRunning;
     }

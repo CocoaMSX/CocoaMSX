@@ -42,7 +42,6 @@
 #define CMKeyFunctionModifier 63
 
 #define CMCharAsString(x) [NSString stringWithFormat:@"%C", (unsigned short)x]
-#define CMFormattedCharAsString(fmt, x) [NSString stringWithFormat:CMLoc(fmt), x]
 
 static NSMutableDictionary *keyCodeLookupTable;
 static NSMutableDictionary *reverseKeyCodeLookupTable;
@@ -98,33 +97,33 @@ static NSArray *keyCodesToIgnore;
                           @"F18", @79,
                           @"F19", @80,
                           
-                          CMLoc(@"CapsLock"), @57,
-                          CMLoc(@"Spacebar"), @49,
+                          CMLoc(@"Caps Lock", @"Mac Key"), @57,
+                          CMLoc(@"Space", @"Mac Key"), @49,
                           
-                          CMFormattedCharAsString(@"LeftKey_f", kShiftUnicode),    @56,
-                          CMFormattedCharAsString(@"RightKey_f", kShiftUnicode),   @60,
-                          CMFormattedCharAsString(@"LeftKey_f", kControlUnicode),  @59,
-                          CMFormattedCharAsString(@"RightKey_f", kControlUnicode), @62,
-                          CMFormattedCharAsString(@"LeftKey_f", kOptionUnicode),   @58,
-                          CMFormattedCharAsString(@"RightKey_f", kOptionUnicode),  @61,
-                          CMFormattedCharAsString(@"LeftKey_f", kCommandUnicode),  @55,
-                          CMFormattedCharAsString(@"RightKey_f", kCommandUnicode), @54,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kShiftUnicode],    @56,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kShiftUnicode],   @60,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kControlUnicode],  @59,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kControlUnicode], @62,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kOptionUnicode],   @58,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kOptionUnicode],  @61,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kCommandUnicode],  @55,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kCommandUnicode], @54,
                           
-                          CMFormattedCharAsString(@"NumpadKey_f", @"."), @65,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"*"), @67,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"/"), @75,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"-"), @78,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"="), @81,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"0"), @82,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"1"), @83,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"2"), @84,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"3"), @85,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"4"), @86,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"5"), @87,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"6"), @88,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"7"), @89,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"8"), @91,
-                          CMFormattedCharAsString(@"NumpadKey_f", @"9"), @92,
+                          CMLoc(@"Numeric Keypad .", @"Mac Key"), @65,
+                          CMLoc(@"Numeric Keypad *", @"Mac Key"), @67,
+                          CMLoc(@"Numeric Keypad /", @"Mac Key"), @75,
+                          CMLoc(@"Numeric Keypad -", @"Mac Key"), @78,
+                          CMLoc(@"Numeric Keypad =", @"Mac Key"), @81,
+                          CMLoc(@"Numeric Keypad 0", @"Mac Key"), @82,
+                          CMLoc(@"Numeric Keypad 1", @"Mac Key"), @83,
+                          CMLoc(@"Numeric Keypad 2", @"Mac Key"), @84,
+                          CMLoc(@"Numeric Keypad 3", @"Mac Key"), @85,
+                          CMLoc(@"Numeric Keypad 4", @"Mac Key"), @86,
+                          CMLoc(@"Numeric Keypad 5", @"Mac Key"), @87,
+                          CMLoc(@"Numeric Keypad 6", @"Mac Key"), @88,
+                          CMLoc(@"Numeric Keypad 7", @"Mac Key"), @89,
+                          CMLoc(@"Numeric Keypad 8", @"Mac Key"), @91,
+                          CMLoc(@"Numeric Keypad 9", @"Mac Key"), @92,
                           
                           CMCharAsString(0x232B), @51,  // Backspace
                           CMCharAsString(0x2326), @117, // Delete

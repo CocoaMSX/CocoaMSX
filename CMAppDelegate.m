@@ -83,7 +83,7 @@
 
 - (void)disableScreenSaver
 {
-    CFStringRef reasonForActivity = (__bridge CFStringRef)CMLoc(@"CocoaMSX is running");
+    CFStringRef reasonForActivity = (__bridge CFStringRef)CMLoc(@"CocoaMSX is running", @"");
     if (self->preventSleepAssertionID != kIOPMNullAssertionID)
         return;
 

@@ -238,22 +238,22 @@ static NSArray *keysInOrderOfAppearance;
         virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
         
         mixers = [[NSArray alloc] initWithObjects:
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Psg")
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"PSG", @"Sound channel")
                                   blueMsxIdentifier:MIXER_CHANNEL_PSG
                                               tabId:@"psg"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Scc")
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"SCC", @"Sound channel")
                                   blueMsxIdentifier:MIXER_CHANNEL_SCC
                                               tabId:@"scc"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MsxMusic")
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX-Music", @"Sound channel")
                                   blueMsxIdentifier:MIXER_CHANNEL_MSXMUSIC
                                               tabId:@"msxmusic"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MsxAudio")
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX-Audio", @"Sound channel")
                                   blueMsxIdentifier:MIXER_CHANNEL_MSXAUDIO
                                               tabId:@"msxaudio"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MoonSound")
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Moonsound", @"Sound channel")
                                   blueMsxIdentifier:MIXER_CHANNEL_MOONSOUND
                                               tabId:@"moonsound"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard")
+                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard", @"Sound channel")
                                   blueMsxIdentifier:MIXER_CHANNEL_KEYBOARD
                                               tabId:@"keyboard"], nil];
         
@@ -401,10 +401,10 @@ static NSArray *keysInOrderOfAppearance;
 {
     CMMachine *selected = [self machineWithId:CMGetObjPref(@"machineConfiguration")];
     if (selected)
-        [activeSystemTextView setStringValue:[NSString stringWithFormat:CMLoc(@"YouHaveSelectedSystem_f"),
+        [activeSystemTextView setStringValue:[NSString stringWithFormat:CMLoc(@"You have selected \"%1$@\" (%2$@).", @"Ex.: You have selected 'Yamaha YIS-805IIR' (MSX2)"),
                                               [selected name], [selected systemName]]];
     else
-        [activeSystemTextView setStringValue:CMLoc(@"YouHaveNotSelectedAnySystem")];
+        [activeSystemTextView setStringValue:CMLoc(@"You have not selected a system, or the selected system is no longer available.", @"")];
     
     NSString *layoutName = [CMMSXKeyboard layoutNameOfMachineWithIdentifier:[selected machineId]];
     if (!layoutName)
@@ -486,7 +486,7 @@ static NSArray *keysInOrderOfAppearance;
                                        success = NO;
                                        error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
                                                                    code:CMErrorCritical
-                                                               userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadCritical"
+                                                               userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"Could not complete download - an unexpected error occurred.", @"")
                                                                                                            forKey:NSLocalizedDescriptionKey]];
                                    }
                                    
@@ -505,8 +505,8 @@ static NSArray *keysInOrderOfAppearance;
                                        
                                        [self performBlockOnMainThread:^
                                         {
-                                            NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
-                                                                             defaultButton:CMLoc(@"OK")
+                                            NSAlert *alert = [NSAlert alertWithMessageText:[error localizedDescription]
+                                                                             defaultButton:CMLoc(@"OK", @"")
                                                                            alternateButton:nil
                                                                                otherButton:nil
                                                                  informativeTextWithFormat:@""];
@@ -548,7 +548,7 @@ static NSArray *keysInOrderOfAppearance;
         {
             *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
                                          code:CMErrorDownloading
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorDownloadingMachineFeed"
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"An error occurred while attempting to download available machines.", @"")
                                                                                  forKey:NSLocalizedDescriptionKey]];
         }
         
@@ -567,7 +567,7 @@ static NSArray *keysInOrderOfAppearance;
         {
             *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
                                          code:CMErrorParsingJson
-                                     userInfo:[NSMutableDictionary dictionaryWithObject:@"ErrorParsingMachineFeed"
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"An error occurred while reading the list of downloadable machines.", @"")
                                                                                  forKey:NSLocalizedDescriptionKey]];
         }
         
@@ -916,15 +916,15 @@ static NSArray *keysInOrderOfAppearance;
     
     if (selectedMachineId)
     {
-        NSString *message = [NSString stringWithFormat:CMLoc(@"SureYouWantToDeleteTheMachine_f"),
+        NSString *message = [NSString stringWithFormat:CMLoc(@"Are you sure you want to remove \"%1$@\"?", @""),
                              selectedMachineId];
         NSAlert *alert = [NSAlert alertWithMessageText:message
-                                         defaultButton:CMLoc(@"No")
+                                         defaultButton:CMLoc(@"No", @"")
                                        alternateButton:nil
-                                           otherButton:CMLoc(@"Yes")
+                                           otherButton:CMLoc(@"Yes", @"")
                              informativeTextWithFormat:@""];
         
-        [alert beginSheetModalForWindow:self.window
+        [alert beginSheetModalForWindow:[self window]
                           modalDelegate:self
                          didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
                             contextInfo:(void *)ALERT_REMOVE_SYSTEM];
@@ -956,8 +956,8 @@ static NSArray *keysInOrderOfAppearance;
     }
     else
     {
-        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port")
-                                         defaultButton:CMLoc(@"OK")
+        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port", @"")
+                                         defaultButton:CMLoc(@"OK", @"")
                                        alternateButton:nil
                                            otherButton:nil
                              informativeTextWithFormat:@""];
@@ -1092,10 +1092,10 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)performColdRebootClicked:(id)sender
 {
-    NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"SureYouWantToRestartTheMachine")
-                                     defaultButton:CMLoc(@"No")
+    NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"Restart the system? You will lose all changes.", @"")
+                                     defaultButton:CMLoc(@"No", @"")
                                    alternateButton:nil
-                                       otherButton:CMLoc(@"Yes")
+                                       otherButton:CMLoc(@"Yes", @"")
                          informativeTextWithFormat:@""];
     
     [alert beginSheetModalForWindow:self.window
@@ -1217,8 +1217,8 @@ static NSArray *keysInOrderOfAppearance;
     {
         [self performBlockOnMainThread:^
          {
-             NSAlert *alert = [NSAlert alertWithMessageText:CMLoc([error localizedDescription])
-                                              defaultButton:CMLoc(@"OK")
+             NSAlert *alert = [NSAlert alertWithMessageText:[error localizedDescription]
+                                              defaultButton:CMLoc(@"OK", @"")
                                             alternateButton:nil
                                                 otherButton:nil
                                   informativeTextWithFormat:@""];
@@ -1313,7 +1313,7 @@ static NSArray *keysInOrderOfAppearance;
                 if (joystick)
                 {
                     NSString *label = [joystick presentationLabelForVirtualCode:virtualCode];
-                    return label ? label : CMLoc(@"Unavailable");
+                    return label ? label : CMLoc(@"Unavailable", @"");
                 }
             }
             else
@@ -1324,7 +1324,7 @@ static NSArray *keysInOrderOfAppearance;
                     NSString *label = [keyboard presentationLabelForVirtualCode:virtualCode
                                                                        keyState:selectedKeyboardShiftState];
                     
-                    return label ? label : CMLoc(@"Unavailable");
+                    return label ? label : CMLoc(@"Unavailable", @"");
                 }
             }
             
@@ -1541,7 +1541,7 @@ static NSArray *keysInOrderOfAppearance;
     if (theScopeBar == keyboardScopeBar)
     {
         if (groupNumber == SCOPEBAR_GROUP_REGIONS)
-            return CMLoc(@"KeyLayoutRegion");
+            return CMLoc(@"Layout", @"");
     }
     
     return nil;
@@ -1561,9 +1561,9 @@ static NSArray *keysInOrderOfAppearance;
             CMMSXKeyState shiftState = [identifier integerValue];
             
             if (shiftState == CMMSXKeyStateDefault)
-                return CMLoc(@"KeyStateNormal");
+                return CMLoc(@"Normal", @"Key state (no modifiers)");
             if (shiftState == CMMSXKeyStateShift)
-                return CMLoc(@"KeyStateShifted");
+                return CMLoc(@"Shifted", @"Key state (shift held)");
         }
         else if (groupNumber == SCOPEBAR_GROUP_REGIONS)
         {
@@ -1575,11 +1575,11 @@ static NSArray *keysInOrderOfAppearance;
         NSInteger displayMode = [identifier integerValue];
         
         if (displayMode == CMShowInstalledMachines)
-            return CMLoc(@"Installed");
+            return CMLoc(@"Installed", @"");
         else if (displayMode == CMShowAvailableMachines)
-            return CMLoc(@"NotInstalled");
+            return CMLoc(@"Not Installed", @"");
         else if (displayMode == CMShowAllMachines)
-            return CMLoc(@"All");
+            return CMLoc(@"All", @"");
     }
     
     return nil;

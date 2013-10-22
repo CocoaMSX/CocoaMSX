@@ -6,7 +6,7 @@
     #import <Cocoa/Cocoa.h>
 #endif
 
-#define CMLoc(x) NSLocalizedString((x), nil)
+#define CMLoc(sentence, comment) NSLocalizedString(sentence, comment)
 #define CMGetIntPref(key) [[NSUserDefaults standardUserDefaults] integerForKey:key]
 #define CMSetIntPref(key, value) [[NSUserDefaults standardUserDefaults] setInteger:value forKey:key]
 #define CMGetObjPref(key) [[NSUserDefaults standardUserDefaults] objectForKey:key]
