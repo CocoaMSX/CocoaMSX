@@ -8,7 +8,7 @@ CocoaMSX
 Download
 --------
 
-[Version 1.3] [6] is the latest release. [View all releases] [5].
+[Version 1.35] [6] is the latest stable release. [View all releases] [5].
 
 Features
 --------
@@ -45,5 +45,5 @@ Get support and follow development news at the [Google+ Community] [3] page.
   [3]: https://plus.google.com/u/0/communities/104314701960403368876
   [4]: https://code.google.com/p/cocoa-msx/downloads/list  
   [5]: https://github.com/melllvar/CocoaMSX/releases
-  [6]: https://github.com/melllvar/CocoaMSX/releases/v1.3
+  [6]: https://github.com/melllvar/CocoaMSX/releases/v1.35
   
