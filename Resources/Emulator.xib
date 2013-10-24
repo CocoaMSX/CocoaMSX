@@ -8,13 +8,13 @@
         <customObject id="-2" userLabel="File's Owner" customClass="CMEmulatorController">
             <connections>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
-                <outlet property="insertRecentCartridgeA" destination="6RV-lQ-skO" id="RUb-fV-afY"/>
-                <outlet property="insertRecentCartridgeB" destination="4e4-aB-qIl" id="d3d-mY-mQW"/>
-                <outlet property="insertRecentCassette" destination="ma2-x4-3c6" id="5TI-gj-yLR"/>
-                <outlet property="insertRecentDiskA" destination="FrR-yX-mK0" id="Lhc-a1-XrI"/>
-                <outlet property="insertRecentDiskB" destination="LBN-MK-euB" id="1fY-I3-0CP"/>
                 <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
+                <outlet property="recentCartridgesA" destination="6RV-lQ-skO" id="v9g-5n-8Qp"/>
+                <outlet property="recentCartridgesB" destination="4e4-aB-qIl" id="0nx-o7-eHX"/>
+                <outlet property="recentCassettes" destination="ma2-x4-3c6" id="i28-Nx-L0l"/>
+                <outlet property="recentDisksA" destination="FrR-yX-mK0" id="Nrq-7g-gOf"/>
+                <outlet property="recentDisksB" destination="LBN-MK-euB" id="A4D-lT-EZf"/>
                 <outlet property="romSelectionAccessoryView" destination="hW8-CE-guM" id="dMw-A1-gUe"/>
                 <outlet property="romTypeDropdown" destination="uq1-SV-s8z" id="5pP-zH-Q9U"/>
                 <outlet property="screen" destination="812" id="1223"/>

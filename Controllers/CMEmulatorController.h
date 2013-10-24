@@ -90,11 +90,11 @@ NSString * const CMKeyboardLayoutPrefKey;
     IBOutlet NSTextField *fpsCounter;
     IBOutlet CMMsxDisplayView *screen;
     
-    IBOutlet NSMenuItem *insertRecentCartridgeA;
-    IBOutlet NSMenuItem *insertRecentCartridgeB;
-    IBOutlet NSMenuItem *insertRecentDiskA;
-    IBOutlet NSMenuItem *insertRecentDiskB;
-    IBOutlet NSMenuItem *insertRecentCassette;
+    IBOutlet NSMenuItem *recentCartridgesA;
+    IBOutlet NSMenuItem *recentCartridgesB;
+    IBOutlet NSMenuItem *recentDisksA;
+    IBOutlet NSMenuItem *recentDisksB;
+    IBOutlet NSMenuItem *recentCassettes;
     
     NSOpenPanel *currentlyActiveOpenPanel;
     NSArray *currentlySupportedFileTypes;
@@ -205,11 +205,11 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)stopGameplayRecording:(id)sender;
 - (IBAction)playBackGameplay:(id)sender;
 
-- (IBAction)openRecentCartridgeA:(id)sender;
-- (IBAction)openRecentCartridgeB:(id)sender;
-- (IBAction)openRecentDiskA:(id)sender;
-- (IBAction)openRecentDiskB:(id)sender;
-- (IBAction)openRecentCassette:(id)sender;
+- (IBAction)insertRecentCartridgeA:(id)sender;
+- (IBAction)insertRecentCartridgeB:(id)sender;
+- (IBAction)insertRecentDiskA:(id)sender;
+- (IBAction)insertRecentDiskB:(id)sender;
+- (IBAction)insertRecentCassette:(id)sender;
 - (IBAction)clearRecentItems:(id)sender;
 
 // Edit menu

@@ -750,11 +750,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)rebuildRecentItemsMenus
 {
     // Clear existing menu items
-    [self clearRecentMediaItemsInMenu:insertRecentCartridgeA];
-    [self clearRecentMediaItemsInMenu:insertRecentCartridgeB];
-    [self clearRecentMediaItemsInMenu:insertRecentDiskA];
-    [self clearRecentMediaItemsInMenu:insertRecentDiskB];
-    [self clearRecentMediaItemsInMenu:insertRecentCassette];
+    [self clearRecentMediaItemsInMenu:recentCartridgesA];
+    [self clearRecentMediaItemsInMenu:recentCartridgesB];
+    [self clearRecentMediaItemsInMenu:recentDisksA];
+    [self clearRecentMediaItemsInMenu:recentDisksB];
+    [self clearRecentMediaItemsInMenu:recentCassettes];
     
     // Add new items
     NSArray *recentURLs = [[NSDocumentController sharedDocumentController] recentDocumentURLs];
@@ -764,52 +764,52 @@ CMEmulatorController *theEmulator = nil; // FIXME
         if ([openRomFileTypes containsObject:extension])
         {
             [self addRecentMediaItemWithURL:obj
-                                     action:@selector(openRecentCartridgeA:)
-                                     parent:insertRecentCartridgeA];
+                                     action:@selector(insertRecentCartridgeA:)
+                                     parent:recentCartridgesA];
             [self addRecentMediaItemWithURL:obj
-                                     action:@selector(openRecentCartridgeB:)
-                                     parent:insertRecentCartridgeB];
+                                     action:@selector(insertRecentCartridgeB:)
+                                     parent:recentCartridgesB];
         }
         else if ([openDiskFileTypes containsObject:extension])
         {
             [self addRecentMediaItemWithURL:obj
-                                     action:@selector(openRecentDiskA:)
-                                     parent:insertRecentDiskA];
+                                     action:@selector(insertRecentDiskA:)
+                                     parent:recentDisksA];
             [self addRecentMediaItemWithURL:obj
-                                     action:@selector(openRecentDiskB:)
-                                     parent:insertRecentDiskB];
+                                     action:@selector(insertRecentDiskB:)
+                                     parent:recentDisksB];
         }
         else if ([openCassetteFileTypes containsObject:extension])
         {
             [self addRecentMediaItemWithURL:obj
-                                     action:@selector(openRecentCassette:)
-                                     parent:insertRecentCassette];
+                                     action:@selector(insertRecentCassette:)
+                                     parent:recentCassettes];
         }
     }];
     
     // Add dividers, where appropriate
-    int numberOfCartridgeItems = [[insertRecentCartridgeA submenu] numberOfItems];
+    int numberOfCartridgeItems = [[recentCartridgesA submenu] numberOfItems];
     if (numberOfCartridgeItems > 1)
     {
-        [[insertRecentCartridgeA submenu] insertItem:[NSMenuItem separatorItem]
+        [[recentCartridgesA submenu] insertItem:[NSMenuItem separatorItem]
                                              atIndex:numberOfCartridgeItems - 1];
-        [[insertRecentCartridgeB submenu] insertItem:[NSMenuItem separatorItem]
+        [[recentCartridgesB submenu] insertItem:[NSMenuItem separatorItem]
                                              atIndex:numberOfCartridgeItems - 1];
     }
     
-    int numberOfDiskItems = [[insertRecentDiskA submenu] numberOfItems];
+    int numberOfDiskItems = [[recentDisksA submenu] numberOfItems];
     if (numberOfDiskItems > 1)
     {
-        [[insertRecentDiskA submenu] insertItem:[NSMenuItem separatorItem]
+        [[recentDisksA submenu] insertItem:[NSMenuItem separatorItem]
                                         atIndex:numberOfDiskItems - 1];
-        [[insertRecentDiskB submenu] insertItem:[NSMenuItem separatorItem]
+        [[recentDisksB submenu] insertItem:[NSMenuItem separatorItem]
                                         atIndex:numberOfDiskItems - 1];
     }
     
-    int numberOfCassetteItems = [[insertRecentCassette submenu] numberOfItems];
+    int numberOfCassetteItems = [[recentCassettes submenu] numberOfItems];
     if (numberOfCassetteItems > 1)
     {
-        [[insertRecentCassette submenu] insertItem:[NSMenuItem separatorItem]
+        [[recentCassettes submenu] insertItem:[NSMenuItem separatorItem]
                                            atIndex:numberOfCassetteItems - 1];
     }
 }
@@ -1507,33 +1507,33 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self rebuildRecentItemsMenus];
 }
 
-- (void)openRecentCartridgeA:(id)sender
+- (void)insertRecentCartridgeA:(id)sender
 {
     [self insertCartridge:[[sender representedObject] path]
                      slot:0
                      type:ROM_UNKNOWN];
 }
 
-- (void)openRecentCartridgeB:(id)sender
+- (void)insertRecentCartridgeB:(id)sender
 {
     [self insertCartridge:[[sender representedObject] path]
                      slot:1
                      type:ROM_UNKNOWN];
 }
 
-- (void)openRecentDiskA:(id)sender
+- (void)insertRecentDiskA:(id)sender
 {
     [self insertDiskAtPath:[[sender representedObject] path]
                       slot:0];
 }
 
-- (void)openRecentDiskB:(id)sender
+- (void)insertRecentDiskB:(id)sender
 {
     [self insertDiskAtPath:[[sender representedObject] path]
                       slot:1];
 }
 
-- (void)openRecentCassette:(id)sender
+- (void)insertRecentCassette:(id)sender
 {
     [self insertCassetteAtPath:[[sender representedObject] path]];
 }
@@ -2486,11 +2486,14 @@ void archTrap(UInt8 value)
         return isRunning;
     }
     else if (item.action == @selector(insertDiskSlot1:) ||
-             item.action == @selector(insertDiskSlot2:))
+             item.action == @selector(insertDiskSlot2:) ||
+             item.action == @selector(insertRecentDiskA:) ||
+             item.action == @selector(insertRecentDiskB:))
     {
         return isRunning && [self canInsertDiskettes];
     }
-    else if (item.action == @selector(insertCassette:))
+    else if (item.action == @selector(insertCassette:) ||
+             item.action == @selector(insertRecentCassette:))
     {
         return isRunning && [self canInsertCassettes];
     }
