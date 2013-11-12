@@ -1127,11 +1127,15 @@ void boardChangeCartridge(int cartNo, RomType romType, char* cart, char* cartZip
     }
 
     if (boardDeviceInfo != NULL) {
+        int maxLen = sizeof(boardDeviceInfo->carts[cartNo].name) - 1;
+        
         boardDeviceInfo->carts[cartNo].inserted = cart != NULL;
         boardDeviceInfo->carts[cartNo].type = romType;
-
-        strcpy(boardDeviceInfo->carts[cartNo].name, cart ? cart : "");
-        strcpy(boardDeviceInfo->carts[cartNo].inZipName, cartZip ? cartZip : "");
+        
+        if (boardDeviceInfo->carts[cartNo].name != cart)
+            strncpy(boardDeviceInfo->carts[cartNo].name, cart ? cart : "", maxLen);
+        if (boardDeviceInfo->carts[cartNo].inZipName != cartZip)
+            strncpy(boardDeviceInfo->carts[cartNo].inZipName, cartZip ? cartZip : "", maxLen);
     }
 
     useRom     -= romTypeIsRom(currentRomType[cartNo]);
