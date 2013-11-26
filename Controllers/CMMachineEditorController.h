@@ -22,10 +22,16 @@
  */
 #import <Cocoa/Cocoa.h>
 
-@interface CMMachineEditorController : NSWindowController<NSToolbarDelegate>
+#include "Machine.h"
+
+@interface CMMachineEditorController : NSWindowController<NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate>
 {
+    Machine *loadedMachine;
+    
     IBOutlet NSTabView *tabView;
 }
+
+- (BOOL)loadMachineNamed:(NSString *)aMachineName;
 
 - (IBAction)tabChanged:(id)sender;
 

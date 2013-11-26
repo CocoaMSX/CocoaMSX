@@ -402,7 +402,7 @@ static int readMachine(Machine* machine, const char* machineName, const char* fi
                 strcpy(machine->slotInfo[i].name, expandedPath);
             }
         }
-        else
+        else if (*machine->slotInfo[i].name)
         {
             char iniFilePath[512];
 			char *parentDir;

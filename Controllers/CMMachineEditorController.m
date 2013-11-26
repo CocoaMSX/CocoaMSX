@@ -24,6 +24,13 @@
 
 @interface CMMachineEditorController ()
 
+- (void)unloadMachine;
+
+- (NSString *)descriptionForSlotInfo:(SlotInfo)slotInfo;
+- (NSString *)slotSpanForSlotInfo:(SlotInfo)slotInfo;
+- (NSString *)addressForSlotInfo:(SlotInfo)slotInfo;
+- (NSString *)romPathForSlotInfo:(SlotInfo)slotInfo;
+
 @end
 
 @implementation CMMachineEditorController
@@ -32,7 +39,7 @@
 {
     if ((self = [super initWithWindowNibName:@"MachineEditor"]))
     {
-        // Initialization code here.
+        loadedMachine = NULL;
     }
     
     return self;
@@ -41,6 +48,117 @@
 - (void)dealloc
 {
     [super dealloc];
+    
+    [self unloadMachine];
+}
+
+- (void)unloadMachine
+{
+    if (loadedMachine)
+    {
+        machineDestroy(loadedMachine);
+        loadedMachine = NULL;
+    }
+}
+
+- (BOOL)loadMachineNamed:(NSString *)aMachineName
+{
+    [self unloadMachine];
+    
+    loadedMachine = machineCreate([aMachineName cStringUsingEncoding:NSUTF8StringEncoding]);
+    if (loadedMachine == NULL)
+    {
+        // FIXME: error
+        return NO;
+    }
+    
+    machineUpdate(loadedMachine);
+    
+    return YES;
+}
+
+- (NSString *)descriptionForSlotInfo:(SlotInfo)slotInfo
+{
+    if (slotInfo.romType == RAM_MAPPER ||
+        slotInfo.romType == RAM_NORMAL ||
+        slotInfo.romType == ROM_EXTRAM ||
+        slotInfo.romType == ROM_MEGARAM ||
+        slotInfo.romType == SRAM_MEGASCSI ||
+        slotInfo.romType == SRAM_ESERAM ||
+        slotInfo.romType == SRAM_WAVESCSI ||
+        slotInfo.romType == SRAM_ESESCC)
+    {
+        int size = slotInfo.pageCount * 8;
+        if (size < 1024) {
+            return [NSString stringWithFormat:@"%d kB %s",
+                    size, romTypeToString(slotInfo.romType)];
+        }
+        else {
+            return [NSString stringWithFormat:@"%d MB %s",
+                    size / 1024, romTypeToString(slotInfo.romType)];
+        }
+    }
+    
+    return [NSString stringWithCString:romTypeToString(slotInfo.romType)
+                              encoding:NSUTF8StringEncoding];
+}
+
+- (NSString *)slotSpanForSlotInfo:(SlotInfo)slotInfo
+{
+    if (slotInfo.pageCount == 0)
+        return @"";
+    else if (slotInfo.subslot || loadedMachine->slot[slotInfo.slot].subslotted)
+        return [NSString stringWithFormat:@"%d-%d",
+                slotInfo.slot, slotInfo.subslot];
+    else
+        return [NSString stringWithFormat:@"%d", slotInfo.slot];
+}
+
+- (NSString *)addressForSlotInfo:(SlotInfo)slotInfo
+{
+    if (slotInfo.slot == 0 &&
+        slotInfo.subslot == 0 &&
+        slotInfo.startPage == 0 &&
+        slotInfo.pageCount == 0)
+    {
+        return @"";
+    }
+    else
+    {
+        int start;
+        int end;
+        
+        if  (slotInfo.romType == SRAM_MEGASCSI ||
+             slotInfo.romType == SRAM_ESERAM   ||
+             slotInfo.romType == SRAM_WAVESCSI ||
+             slotInfo.romType == SRAM_ESESCC)
+        {
+            start = 0x4000;
+            end   = 0xbfff;
+        }
+        else
+        {
+            start = slotInfo.startPage * 0x2000;
+            end   = start + slotInfo.pageCount * 0x2000 - 1;
+            
+            if (end > 0xffff)
+                end = 0xffff;
+        }
+        
+        return [NSString stringWithFormat:@"%.4X-%.4X", start, end];
+    }
+}
+
+- (NSString *)romPathForSlotInfo:(SlotInfo)slotInfo
+{
+    const char *name;
+    if (*slotInfo.inZipName)
+        name = slotInfo.inZipName;
+    else
+        name = slotInfo.name;
+    
+    return [[NSString stringWithCString:name
+                               encoding:NSUTF8StringEncoding] lastPathComponent];
 }
 
 #pragma mark - NSWindowController
@@ -48,8 +166,6 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-    
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
 }
 
 #pragma mark - Actions
@@ -59,6 +175,39 @@
     NSToolbarItem *selectedItem = (NSToolbarItem*)sender;
     
     [tabView selectTabViewItemWithIdentifier:selectedItem.itemIdentifier];
+}
+
+#pragma mark - NSTableViewDataSourceDelegate
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    if (!loadedMachine)
+        return 0;
+    
+    return loadedMachine->slotInfoCount;
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    NSString *columnIdentifer = [aTableColumn identifier];
+    SlotInfo info = loadedMachine->slotInfo[rowIndex];
+    
+    if ([columnIdentifer isEqualToString:@"title"])
+        return [self descriptionForSlotInfo:info];
+    else if ([columnIdentifer isEqualToString:@"slotSpan"])
+        return [self slotSpanForSlotInfo:info];
+    else if ([columnIdentifer isEqualToString:@"address"])
+        return [self addressForSlotInfo:info];
+    else if ([columnIdentifer isEqualToString:@"romPath"])
+        return [self romPathForSlotInfo:info];
+    
+    return nil;
+}
+
+#pragma mark - NSTableViewDelegate
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
 }
 
 @end

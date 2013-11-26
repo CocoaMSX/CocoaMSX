@@ -2025,7 +2025,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return;
     
     if (!machineEditorController)
+    {
         machineEditorController = [[CMMachineEditorController alloc] init];
+        NSString *machineName = [NSString stringWithCString:properties->emulation.machineName
+                                                   encoding:NSUTF8StringEncoding];
+        [machineEditorController loadMachineNamed:machineName];
+    }
     
     [machineEditorController showWindow:self];
 }
