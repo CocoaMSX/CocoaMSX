@@ -20,25 +20,22 @@
  **
  ******************************************************************************
  */
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 #include "Machine.h"
 
-@class CMSlotEditorController;
-
-@interface CMMachineEditorController : NSWindowController<NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate>
+@interface CMSlotEditorController : NSWindowController<NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate>
 {
-    Machine *loadedMachine;
+    NSMutableDictionary *romTypeIndices;
+    NSMutableDictionary *romTypes;
+    NSMutableArray *romTypeNames;
     
-    CMSlotEditorController *slotEditorController;
+    IBOutlet NSPopUpButton *romTypeDropdown;
+    IBOutlet NSPopUpButton *slotDropdown;
     
-    IBOutlet NSTabView *tabView;
+    Machine *machine;
 }
 
-- (BOOL)loadMachineNamed:(NSString *)aMachineName;
-
-- (IBAction)tabChanged:(id)sender;
-
-- (IBAction)addSlotClicked:(id)sender;
+- (IBAction)romTypeSelected:(id)sender;
 
 @end

@@ -368,6 +368,8 @@
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
 		FED154BE168714910043C7E5 /* filmstrip.png in Resources */ = {isa = PBXBuildFile; fileRef = FED154BD168714910043C7E5 /* filmstrip.png */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
+		FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */; };
+		FEE4D8B818470E5800C4BAFA /* CMSlotEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */; };
 		FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEE801571674ACD000695F38 /* CartridgeDocument.icns */; };
 		FEF40ED5160DB83B009170A9 /* CMCocoaBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */; };
 		FEF40ED6160DB83B009170A9 /* CocoaCdrom.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */; };
@@ -1115,6 +1117,9 @@
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
 		FED154BD168714910043C7E5 /* filmstrip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filmstrip.png; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
+		FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SlotEditor.xib; sourceTree = "<group>"; };
+		FEE4D8B618470E5800C4BAFA /* CMSlotEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSlotEditorController.h; sourceTree = "<group>"; };
+		FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSlotEditorController.m; sourceTree = "<group>"; };
 		FEE801571674ACD000695F38 /* CartridgeDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CartridgeDocument.icns; sourceTree = "<group>"; };
 		FEF40EC5160DB83B009170A9 /* CMCocoaBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMCocoaBuffer.h; sourceTree = "<group>"; };
 		FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaBuffer.m; sourceTree = "<group>"; };
@@ -1225,6 +1230,7 @@
 				FE42836215FE857400ED7CB9 /* Emulator.xib */,
 				FEC7232115FF133700CB508C /* Preferences.xib */,
 				FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */,
+				FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */,
 				FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */,
 				6B36CC441644806B00B5FDB7 /* MainMenu.xib */,
 			);
@@ -2126,6 +2132,8 @@
 				FEC7231815FF0E3400CB508C /* CMPreferenceController.m */,
 				FE2A2BDB16240DB7000CCAE4 /* CMRepositionCassetteController.h */,
 				FE2A2BDC16240DB7000CCAE4 /* CMRepositionCassetteController.m */,
+				FEE4D8B618470E5800C4BAFA /* CMSlotEditorController.h */,
+				FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */,
 				FEA01B3F162100050066FDD8 /* CMSpecialCartChooserController.h */,
 				FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */,
 			);
@@ -2302,6 +2310,7 @@
 				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
+				FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */,
 				FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */,
 				FEB8DFBF1692402E009BE6E4 /* toolbar-joypad@2x.png in Resources */,
 				FEB8DFC01692402E009BE6E4 /* toolbar-keyboard.png in Resources */,
@@ -2609,6 +2618,7 @@
 				FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */,
 				FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */,
 				6B5D2863161F44CC0081F586 /* CMCocoaInput.m in Sources */,
+				FEE4D8B818470E5800C4BAFA /* CMSlotEditorController.m in Sources */,
 				6B5D287B161F60620081F586 /* Language.c in Sources */,
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,

@@ -2021,7 +2021,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)editMachineSettings:(id)sender
 {
-    if (!self.isInitialized)
+    if (![self isInitialized])
         return;
     
     if (!machineEditorController)

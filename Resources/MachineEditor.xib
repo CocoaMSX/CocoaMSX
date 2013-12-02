@@ -144,6 +144,9 @@
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="addSlotClicked:" target="-2" id="P4h-4A-Ujz"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" id="JYX-9d-wXP">
                                             <rect key="frame" x="42" y="70" width="23" height="23"/>

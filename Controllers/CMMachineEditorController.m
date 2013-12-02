@@ -22,6 +22,8 @@
  */
 #import "CMMachineEditorController.h"
 
+#import "CMSlotEditorController.h"
+
 @interface CMMachineEditorController ()
 
 - (void)unloadMachine;
@@ -47,9 +49,12 @@
 
 - (void)dealloc
 {
-    [super dealloc];
+    [slotEditorController release];
+    slotEditorController = nil;
     
     [self unloadMachine];
+    
+    [super dealloc];
 }
 
 - (void)unloadMachine
@@ -175,6 +180,14 @@
     NSToolbarItem *selectedItem = (NSToolbarItem*)sender;
     
     [tabView selectTabViewItemWithIdentifier:selectedItem.itemIdentifier];
+}
+
+- (void)addSlotClicked:(id)sender
+{
+    if (!slotEditorController)
+        slotEditorController = [[CMSlotEditorController alloc] init];
+    
+    [slotEditorController showWindow:self];
 }
 
 #pragma mark - NSTableViewDataSourceDelegate
