@@ -187,6 +187,7 @@
     if (!slotEditorController)
         slotEditorController = [[CMSlotEditorController alloc] init];
     
+    [slotEditorController reinitializeWithMachine:loadedMachine];
     [slotEditorController showWindow:self];
 }
 

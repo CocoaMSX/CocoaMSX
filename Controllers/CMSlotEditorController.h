@@ -30,12 +30,18 @@
     NSMutableDictionary *romTypes;
     NSMutableArray *romTypeNames;
     
+    NSMutableArray *slotIndices;
+    NSMutableArray *slotNames;
+    
     IBOutlet NSPopUpButton *romTypeDropdown;
     IBOutlet NSPopUpButton *slotDropdown;
     
     Machine *machine;
+    SlotInfo currentSlotInfo;
 }
 
 - (IBAction)romTypeSelected:(id)sender;
+- (void)reinitializeWithMachine:(Machine *)aMachine
+                       slotInfo:(SlotInfo)slotInfo;
 
 @end
