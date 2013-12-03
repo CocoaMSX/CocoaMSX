@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CMSlotEditorController">
             <connections>
+                <outlet property="romTypeArrayController" destination="zip-Dc-ZlZ" id="1ba-5q-nhX"/>
                 <outlet property="romTypeDropdown" destination="pRa-jQ-eeQ" id="jbm-6j-nQi"/>
                 <outlet property="slotDropdown" destination="xs6-cd-BKr" id="m0z-gh-um5"/>
                 <outlet property="window" destination="1" id="sER-pW-AmN"/>
@@ -50,6 +51,10 @@
                         </popUpButtonCell>
                         <connections>
                             <action selector="romTypeSelected:" target="-2" id="Whz-Ty-8BI"/>
+                            <binding destination="zip-Dc-ZlZ" name="content" keyPath="arrangedObjects" id="XJp-3n-5Ys"/>
+                            <binding destination="zip-Dc-ZlZ" name="contentObjects" keyPath="arrangedObjects.romType" previousBinding="XJp-3n-5Ys" id="JmJ-XX-PYt"/>
+                            <binding destination="zip-Dc-ZlZ" name="contentValues" keyPath="arrangedObjects.name" previousBinding="JmJ-XX-PYt" id="wNG-ZN-N2g"/>
+                            <binding destination="zip-Dc-ZlZ" name="selectedObject" keyPath="selection.romType" previousBinding="wNG-ZN-N2g" id="SIc-li-jyc"/>
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="yGe-WM-tUV">
@@ -124,5 +129,6 @@
                 </subviews>
             </view>
         </window>
+        <arrayController objectClassName="CMRomType" id="zip-Dc-ZlZ"/>
     </objects>
 </document>

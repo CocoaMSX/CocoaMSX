@@ -24,18 +24,32 @@
 
 #include "Machine.h"
 
+@interface CMRomType: NSObject
+{
+    NSString *name;
+}
+
+@property (nonatomic, retain) NSNumber *romType;
+
+- (NSString *)name;
+
+- (id)initWithName:(NSString *)aName
+           romType:(RomType)aRomType;
+
+@end
+
 @interface CMSlotEditorController : NSWindowController<NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate>
 {
-    NSMutableDictionary *romTypeIndices;
-    NSMutableDictionary *romTypes;
-    NSMutableArray *romTypeNames;
-    
-    NSMutableArray *slotIndices;
-    NSMutableArray *slotNames;
-    
+//    NSMutableArray *slotIndices;
+//    NSMutableArray *slotNames;
+//    
     IBOutlet NSPopUpButton *romTypeDropdown;
     IBOutlet NSPopUpButton *slotDropdown;
     
+    IBOutlet NSArrayController *romTypeArrayController;
+    
+    CMRomType *selectedRomType;
+
     Machine *machine;
     SlotInfo currentSlotInfo;
 }
@@ -43,5 +57,6 @@
 - (IBAction)romTypeSelected:(id)sender;
 - (void)reinitializeWithMachine:(Machine *)aMachine
                        slotInfo:(SlotInfo)slotInfo;
+- (void)reinitializeWithMachine:(Machine *)aMachine;
 
 @end

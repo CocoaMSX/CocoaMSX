@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>10</key>
+	<string>R-Type</string>
+	<key>100</key>
+	<string>Microsol VMX-80</string>
+	<key>101</key>
+	<string>Philips NMS-8280 Digitizer</string>
+	<key>102</key>
+	<string>Sony HBI-V1 Digitizer</string>
+	<key>104</key>
+	<string>F&amp;M Direct Assembler System</string>
+	<key>105</key>
+	<string>Yamaha SFG-05</string>
+	<key>106</key>
+	<string>Yamaha SFG-01</string>
+	<key>109</key>
+	<string>Sony Playball</string>
+	<key>11</key>
+	<string>Cross Blaim</string>
+	<key>110</key>
+	<string>Obsonet</string>
+	<key>111</key>
+	<string>2kB Mirrored RAM</string>
+	<key>115</key>
+	<string>MEGA-SCSI</string>
+	<key>12</key>
+	<string>Harry Fox</string>
+	<key>120</key>
+	<string>Ese-RAM</string>
+	<key>125</key>
+	<string>Ese-SCC</string>
+	<key>129</key>
+	<string>WAVE-SCSI</string>
+	<key>13</key>
+	<string>Zemina 80 in 1</string>
+	<key>134</key>
+	<string>NoWind USB</string>
+	<key>135</key>
+	<string>Gouda SCSI</string>
+	<key>136</key>
+	<string>Manbow 2</string>
+	<key>137</key>
+	<string>Mega Flash Rom SCC</string>
+	<key>138</key>
+	<string>Forte II</string>
+	<key>139</key>
+	<string>Panasonic FM 8kB SRAM</string>
+	<key>14</key>
+	<string>Zemina 126 in 1</string>
+	<key>140</key>
+	<string>Panasonic Modem</string>
+	<key>141</key>
+	<string>Panasonic DRAM</string>
+	<key>142</key>
+	<string>Panasonic WX 16kB SRAM</string>
+	<key>143</key>
+	<string>TC8566AF Turbo-R Disk Controller</string>
+	<key>144</key>
+	<string>Matra INK</string>
+	<key>145</key>
+	<string>Jaleco Moero!! Nettou Yakyuu '88</string>
+	<key>146</key>
+	<string>Yamaha Net</string>
+	<key>147</key>
+	<string>Joyrex PSG</string>
+	<key>148</key>
+	<string>Opcode PSG</string>
+	<key>15</key>
+	<string>SCC extended</string>
+	<key>153</key>
+	<string>Philips NMS1210 Serial Interface</string>
+	<key>154</key>
+	<string>Parallax ARC</string>
+	<key>16</key>
+	<string>FMPAC (SRAM)</string>
+	<key>17</key>
+	<string>Konami Generic</string>
+	<key>18</key>
+	<string>Super Pierrot</string>
+	<key>19</key>
+	<string>Mirrored ROM</string>
+	<key>2</key>
+	<string>MSXDOS 2</string>
+	<key>20</key>
+	<string>Normal ROM</string>
+	<key>21</key>
+	<string>Normal + Disk Patch</string>
+	<key>22</key>
+	<string>Mapped RAM</string>
+	<key>23</key>
+	<string>Normal RAM</string>
+	<key>24</key>
+	<string>Kanji</string>
+	<key>25</key>
+	<string>Holy Quran</string>
+	<key>26</key>
+	<string>Matsushita SRAM</string>
+	<key>27</key>
+	<string>Panasonic 16kB SRAM</string>
+	<key>28</key>
+	<string>Bunsetsu</string>
+	<key>29</key>
+	<string>Jisyo</string>
+	<key>3</key>
+	<string>Konami SCC</string>
+	<key>30</key>
+	<string>Kanji12</string>
+	<key>31</key>
+	<string>National (SRAM)</string>
+	<key>32</key>
+	<string>S1985</string>
+	<key>33</key>
+	<string>F4 Device Normal</string>
+	<key>34</key>
+	<string>F4 Device Inverted</string>
+	<key>38</key>
+	<string>Koei (SRAM)</string>
+	<key>39</key>
+	<string>Basic ROM</string>
+	<key>4</key>
+	<string>Konami</string>
+	<key>40</key>
+	<string>Halnote</string>
+	<key>41</key>
+	<string>Lode Runner</string>
+	<key>42</key>
+	<string>Normal 4000h</string>
+	<key>43</key>
+	<string>PAC (SRAM)</string>
+	<key>44</key>
+	<string>MegaRAM</string>
+	<key>5</key>
+	<string>ASCII 8</string>
+	<key>50</key>
+	<string>MSX Audio</string>
+	<key>51</key>
+	<string>Zemina 90 in 1</string>
+	<key>52</key>
+	<string>The Snatcher</string>
+	<key>53</key>
+	<string>SD Snatcher</string>
+	<key>54</key>
+	<string>SCC mirrored</string>
+	<key>55</key>
+	<string>SCC</string>
+	<key>56</key>
+	<string>SCC-I</string>
+	<key>57</key>
+	<string>TC8566AF Disk Controller</string>
+	<key>58</key>
+	<string>S1990</string>
+	<key>59</key>
+	<string>Turbo-R Timer</string>
+	<key>6</key>
+	<string>ASCII 16</string>
+	<key>60</key>
+	<string>Turbo-R PCM Chip</string>
+	<key>61</key>
+	<string>Konami Synthesizer</string>
+	<key>62</key>
+	<string>Konami Majutsushi</string>
+	<key>63</key>
+	<string>Microsol Disk Controller</string>
+	<key>64</key>
+	<string>National Disk Controller</string>
+	<key>65</key>
+	<string>Philips Disk Controller</string>
+	<key>66</key>
+	<string>Normal + Cassette Patch</string>
+	<key>67</key>
+	<string>SVI-738 Disk Controller</string>
+	<key>68</key>
+	<string>Panasonic 32kB SRAM</string>
+	<key>69</key>
+	<string>External RAM</string>
+	<key>7</key>
+	<string>Game Master 2 (SRAM)</string>
+	<key>77</key>
+	<string>Sony HBI-55</string>
+	<key>78</key>
+	<string>MSX Music</string>
+	<key>79</key>
+	<string>Moonsound</string>
+	<key>8</key>
+	<string>ASCII 8 (SRAM)</string>
+	<key>80</key>
+	<string>Y8950</string>
+	<key>84</key>
+	<string>MSX Printer</string>
+	<key>86</key>
+	<string>Normal C000h</string>
+	<key>87</key>
+	<string>FMPAK</string>
+	<key>88</key>
+	<string>MSX-MIDI</string>
+	<key>9</key>
+	<string>ASCII 16 (SRAM)</string>
+	<key>90</key>
+	<string>Turbo-R Pause</string>
+	<key>91</key>
+	<string>Konami Keyboard Master</string>
+	<key>92</key>
+	<string>GameReader</string>
+	<key>93</key>
+	<string>1kB Mirrored RAM</string>
+	<key>96</key>
+	<string>Sunrise IDE</string>
+	<key>97</key>
+	<string>GIDE</string>
+	<key>98</key>
+	<string>Beer IDE</string>
+	<key>99</key>
+	<string>Konami Word Pro</string>
+</dict>
+</plist>
