@@ -28,36 +28,79 @@
 
 @implementation CMRomType
 
-@synthesize romType;
-
 - (id)initWithName:(NSString *)aName
            romType:(RomType)aRomType
 {
     if ((self = [super init]))
     {
         name = [aName copy];
-        romType = @(aRomType);
+        romType = aRomType;
     }
     
     return self;
 }
 
-- (NSString *)name
+- (void)dealloc
 {
-    return name;
+    [name release];
+    
+    [super dealloc];
+}
+
+@end
+
+#pragma mark - CMSlot
+
+#define CM_MAKE_SLOT(i, j) (i & 0xf | (j & 0xf) << 4 | 1 << 8)
+#define CM_SLOT(k) (k & 0xf)
+#define CM_SUBSLOT(k) ((k >> 4) & 0xf)
+
+@implementation CMSlot
+
+- (id)initWithName:(NSString *)aName
+{
+    if ((self = [super init]))
+    {
+        subslotted = YES;
+        name = [aName copy];
+        slotRange = 0;
+    }
+    
+    return self;
+}
+
+- (id)initWithName:(NSString *)aName
+              slot:(NSInteger)slot
+           subslot:(NSInteger)subslot
+{
+    if ((self = [super init]))
+    {
+        subslotted = YES;
+        name = [aName copy];
+        slotRange = CM_MAKE_SLOT(slot, subslot);
+    }
+    
+    return self;
+}
+
+- (id)initWithName:(NSString *)aName
+              slot:(NSInteger)slot
+{
+    if ((self = [super init]))
+    {
+        subslotted = NO;
+        name = [aName copy];
+        slotRange = CM_MAKE_SLOT(slot, 0);
+    }
+    
+    return self;
 }
 
 - (void)dealloc
 {
     [name release];
-    [romType release];
     
     [super dealloc];
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"%@ [0x%04x]", name, [romType intValue]];
 }
 
 @end
@@ -72,33 +115,21 @@
 
 @implementation CMSlotEditorController
 
-#define CM_MAKE_SLOT(i, j) (i & 0x03 | (j & 0x03 << 2))
-#define CM_SLOT(k) (k & 0x03)
-#define CM_SUBSLOT(k) (k & 0x03 << 2)
+@synthesize selectedRomType = _selectedRomType;
+@synthesize selectedSlot = _selectedSlot;
 
 - (id)init
 {
     if ((self = [super initWithWindowNibName:@"SlotEditor"]))
     {
-//        slotIndices = [[NSMutableArray alloc] init];
-//        slotNames = [[NSMutableArray alloc] init];
     }
     
     return self;
 }
 
-- (void)dealloc
-{
-//    [slotIndices release];
-//    [slotNames release];
-
-    [super dealloc];
-}
-
 - (void)awakeFromNib
 {
     // Initialize list of ROM types
-    
     NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"AllRomTypes"
                                                              ofType:@"plist"
                                                         inDirectory:@"Data"];
@@ -118,153 +149,95 @@
     
     [romTypeArrayController setContent:romTypes];
     [romTypeArrayController setSortDescriptors:@[sd]];
-
+    
+    // Synchronize the UI to the selected SlotInfo
     [self resyncUI];
 }
 
 - (void)reinitializeWithMachine:(Machine *)aMachine
 {
+    // Create a new SlotInfo
     machine = aMachine;
     
-    memset(&currentSlotInfo, 0, sizeof(currentSlotInfo));
-    currentSlotInfo.romType = ROM_NORMAL;
-    
-    [self resyncUI];
-}
-
-- (void)reinitializeWithMachine:(Machine *)aMachine
-                       slotInfo:(SlotInfo)slotInfo
-{
-    machine = aMachine;
-    currentSlotInfo = slotInfo;
+    [self setSelectedRomType:ROM_NORMAL];
+    [self setSelectedSlot:CM_MAKE_SLOT(0, 0)];
     
     [self resyncUI];
 }
 
 #pragma mark - Private methods
 
-//- (void)initializeSystemInfo
-//{
-//    NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"RomTypes"
-//                                                             ofType:@"plist"
-//                                                        inDirectory:@"Data"];
-//    
-//    NSDictionary *romTypeMap = [NSDictionary dictionaryWithContentsOfFile:resourcePath];
-//    
-//    // Sort ROM type ID's by name
-//    NSArray *sortedRomTypeIds = [[romTypeMap allKeys] sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
-//                                 {
-//                                     if ([a isEqualTo:@"0"])
-//                                         return -1;
-//                                     else if ([b isEqualTo:@"0"])
-//                                         return 1;
-//                                     
-//                                     NSString *titleA = [romTypeMap objectForKey:a];
-//                                     NSString *titleB = [romTypeMap objectForKey:b];
-//                                     
-//                                     return [titleA caseInsensitiveCompare:titleB];
-//                                 }];
-//    
-//    [sortedRomTypeIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-//     {
-//         NSNumber *index = @(idx);
-//         NSNumber *type = [NSNumber numberWithInt:[obj intValue]];
-//         
-//         [romTypes setObject:type forKey:index];
-//         [romTypeIndices setObject:index forKey:type];
-//         [romTypeNames addObject:[romTypeMap valueForKey:obj]];
-//     }];
-//}
-
-//- (RomType)romType
-//{
-//    int romTypeIndex = [romTypeDropdown indexOfItem:[romTypeDropdown selectedItem]];
-//    return [[romTypes objectForKey:@(romTypeIndex)] intValue];
-//}
-//
-//- (void)setRomType:(RomType)type
-//{
-//    NSNumber *index = [romTypeIndices objectForKey:@(type)];
-//    [romTypeDropdown selectItemWithTag:<#(NSInteger)#>]
-//    [romTypeDropdown add]
-//    
-//    int romTypeIndex = [romTypeDropdown indexOfItem:[romTypeDropdown selectedItem]];
-//    return [[romTypes objectForKey:@(romTypeIndex)] intValue];
-//}
-
 - (void)resyncUI
 {
-//    [slotNames removeAllObjects];
-//    [slotIndices removeAllObjects];
-//    
-////    int romTypeIndex = [romTypeDropdown indexOfItem:[romTypeDropdown selectedItem]];
-////    RomType romType = [[romTypes objectForKey:@(romTypeIndex)] intValue];
-////
-//    if (romType == SRAM_MATSUCHITA || romType == SRAM_S1985 ||
-//        romType == ROM_S1990 || romType == ROM_KANJI || romType == ROM_GIDE ||
-//        romType == ROM_TURBORTIMER || romType == ROM_TURBORIO ||
-//        romType == ROM_NMS1210 || romType == ROM_F4INVERTED ||
-//        romType == ROM_F4DEVICE || romType == ROM_NMS8280DIGI ||
-//        romType == ROM_MOONSOUND || romType == ROM_MSXMIDI ||
-//        romType == ROM_MSXAUDIODEV || romType == ROM_TURBORPCM ||
-//        romType == ROM_JOYREXPSG || romType == ROM_KANJI12 ||
-//        romType == ROM_JISYO || romType == ROM_OPCODEPSG ||
-//        romType == ROM_OPCODESLOT || romType == ROM_SVI328FDC ||
-//        romType == ROM_SVI328PRN || romType == ROM_MSXPRN ||
-//        romType == ROM_SVI328RS232)
-//    {
-//        [slotDropdown setEnabled:NO];
-//        
-//        [slotNames addObject:CMLoc(@"Unmapped", @"ROM Slot")];
-//        [slotIndices addObject:@(CM_MAKE_SLOT(0, 0))];
-//    }
-//    else
-//    {
-//        [slotDropdown setEnabled:YES];
-//        
-//        for (int i = 0; i < 4; i++)
-//        {
-//            if (machine->slot[i].subslotted)
-//            {
-//                for (int j = 0; j < 4; j++)
-//                {
-//                    NSString *format = CMLoc(@"Slot %1$d-%2$d", @"ROM Slot range");
-//                    NSString *slotName = [NSString stringWithFormat:format, i, j];
-//                    
-//                    [slotNames addObject:slotName];
-//                    [slotIndices addObject:@(CM_MAKE_SLOT(i, j))];
-////                    if (editSlotInfo.slot == i && editSlotInfo.subslot == j) {
-////                        SendDlgItemMessage(hDlg, IDC_ROMSLOT, CB_SETCURSEL, index, 0);
-////                    }
-//                }
-//            }
-//            else
-//            {
-//                NSString *format = CMLoc(@"Slot %1$d", @"ROM Slot");
-//                NSString *slotName = [NSString stringWithFormat:format, i];
-//                
-//                [slotNames addObject:slotName];
-//                [slotIndices addObject:@(CM_MAKE_SLOT(i, 0))];
-////                if (editSlotInfo.slot == i) {
-////                    SendDlgItemMessage(hDlg, IDC_ROMSLOT, CB_SETCURSEL, index, 0);
-////                }
-//            }
-//        }
-//    }
-//    
-//    [slotDropdown removeAllItems];
-//    [slotDropdown addItemsWithTitles:slotNames];
+    NSMutableArray *slots = [NSMutableArray array];
     
-    NSLog(@"Resyncing %d (%@)", currentSlotInfo.romType, romTypeDropdown);
-    [[romTypeArrayController selection] setSelectedObjects:@[@(currentSlotInfo.romType)]];
+    RomType romType = [self selectedRomType];
+    if (romType == SRAM_MATSUCHITA || romType == SRAM_S1985 ||
+        romType == ROM_S1990 || romType == ROM_KANJI || romType == ROM_GIDE ||
+        romType == ROM_TURBORTIMER || romType == ROM_TURBORIO ||
+        romType == ROM_NMS1210 || romType == ROM_F4INVERTED ||
+        romType == ROM_F4DEVICE || romType == ROM_NMS8280DIGI ||
+        romType == ROM_MOONSOUND || romType == ROM_MSXMIDI ||
+        romType == ROM_MSXAUDIODEV || romType == ROM_TURBORPCM ||
+        romType == ROM_JOYREXPSG || romType == ROM_KANJI12 ||
+        romType == ROM_JISYO || romType == ROM_OPCODEPSG ||
+        romType == ROM_OPCODESLOT || romType == ROM_SVI328FDC ||
+        romType == ROM_SVI328PRN || romType == ROM_MSXPRN ||
+        romType == ROM_SVI328RS232)
+    {
+        CMSlot *slot = [[[CMSlot alloc] initWithName:CMLoc(@"Unmapped", @"ROM slot")] autorelease];
+        [slots addObject:slot];
+    }
+    else
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (machine->slot[i].subslotted)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    NSString *format = CMLoc(@"Slot %1$d/%2$d", @"Subslotted ROM slot");
+                    NSString *slotName = [NSString stringWithFormat:format, i, j];
+                    
+                    CMSlot *slot = [[[CMSlot alloc] initWithName:slotName
+                                                            slot:i
+                                                         subslot:j] autorelease];
+                    [slots addObject:slot];
+                }
+            }
+            else
+            {
+                NSString *format = CMLoc(@"Slot %1$d", @"ROM Slot");
+                NSString *slotName = [NSString stringWithFormat:format, i];
+                
+                CMSlot *slot = [[[CMSlot alloc] initWithName:slotName
+                                                        slot:i] autorelease];
+                [slots addObject:slot];
+            }
+        }
+    }
+    
+    [slotArrayController setContent:slots];
+    
+//    [self setSelectedRomType:[self selectedRomType]];
+//    [self setSelectedSlot:CM_MAKE_SLOT(currentSlotInfo.slot, currentSlotInfo.subslot)];
 }
 
 #pragma mark - Actions
 
 - (void)romTypeSelected:(id)sender
 {
-    NSLog(@"Selected: %@", [[[romTypeArrayController selectedObjects] firstObject] romType]);
-//    [self resyncUI];
+    [self setSelectedSlot:CM_MAKE_SLOT(0, 0)];
+    
+    [self resyncUI];
+}
+
+- (void)slotSelected:(id)sender
+{
+    NSLog(@"slot type: 0x%02ld (%ld,%ld)", [self selectedSlot], CM_SLOT([self selectedSlot]), CM_SUBSLOT([self selectedSlot]));
+//    currentSlotInfo.romType = [self selectedRomType];
+    
+    [self resyncUI];
 }
 
 @end

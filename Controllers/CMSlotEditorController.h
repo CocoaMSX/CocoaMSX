@@ -27,36 +27,50 @@
 @interface CMRomType: NSObject
 {
     NSString *name;
+    RomType romType;
 }
-
-@property (nonatomic, retain) NSNumber *romType;
-
-- (NSString *)name;
 
 - (id)initWithName:(NSString *)aName
            romType:(RomType)aRomType;
 
 @end
 
+@interface CMSlot: NSObject
+{
+    BOOL subslotted;
+    NSString *name;
+    NSInteger slotRange;
+}
+
+- (id)initWithName:(NSString *)aName;
+- (id)initWithName:(NSString *)aName
+              slot:(NSInteger)slot
+           subslot:(NSInteger)subslot;
+- (id)initWithName:(NSString *)aName
+              slot:(NSInteger)slot;
+
+@end
+
 @interface CMSlotEditorController : NSWindowController<NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate>
 {
-//    NSMutableArray *slotIndices;
-//    NSMutableArray *slotNames;
-//    
     IBOutlet NSPopUpButton *romTypeDropdown;
     IBOutlet NSPopUpButton *slotDropdown;
     
     IBOutlet NSArrayController *romTypeArrayController;
+    IBOutlet NSArrayController *slotArrayController;
     
-    CMRomType *selectedRomType;
+    RomType _selectedRomType;
+    NSInteger _selectedSlot;
 
     Machine *machine;
-    SlotInfo currentSlotInfo;
 }
 
+@property (nonatomic, assign) RomType selectedRomType;
+@property (nonatomic, assign) NSInteger selectedSlot;
+
 - (IBAction)romTypeSelected:(id)sender;
-- (void)reinitializeWithMachine:(Machine *)aMachine
-                       slotInfo:(SlotInfo)slotInfo;
+- (IBAction)slotSelected:(id)sender;
+
 - (void)reinitializeWithMachine:(Machine *)aMachine;
 
 @end

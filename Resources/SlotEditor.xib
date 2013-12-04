@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="romTypeArrayController" destination="zip-Dc-ZlZ" id="1ba-5q-nhX"/>
                 <outlet property="romTypeDropdown" destination="pRa-jQ-eeQ" id="jbm-6j-nQi"/>
+                <outlet property="slotArrayController" destination="F5w-1Q-4sZ" id="NDM-95-BBr"/>
                 <outlet property="slotDropdown" destination="xs6-cd-BKr" id="m0z-gh-um5"/>
                 <outlet property="window" destination="1" id="sER-pW-AmN"/>
             </connections>
@@ -41,22 +42,6 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <popUpButton verticalHuggingPriority="750" id="pRa-jQ-eeQ">
-                        <rect key="frame" x="115" y="154" width="221" height="26"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="N7L-sT-Wh4">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                            <menu key="menu" title="OtherViews" id="p8U-tL-2iV"/>
-                        </popUpButtonCell>
-                        <connections>
-                            <action selector="romTypeSelected:" target="-2" id="Whz-Ty-8BI"/>
-                            <binding destination="zip-Dc-ZlZ" name="content" keyPath="arrangedObjects" id="XJp-3n-5Ys"/>
-                            <binding destination="zip-Dc-ZlZ" name="contentObjects" keyPath="arrangedObjects.romType" previousBinding="XJp-3n-5Ys" id="JmJ-XX-PYt"/>
-                            <binding destination="zip-Dc-ZlZ" name="contentValues" keyPath="arrangedObjects.name" previousBinding="JmJ-XX-PYt" id="wNG-ZN-N2g"/>
-                            <binding destination="zip-Dc-ZlZ" name="selectedObject" keyPath="selection.romType" previousBinding="wNG-ZN-N2g" id="SIc-li-jyc"/>
-                        </connections>
-                    </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="yGe-WM-tUV">
                         <rect key="frame" x="18" y="160" width="93" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -66,6 +51,22 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <popUpButton verticalHuggingPriority="750" id="pRa-jQ-eeQ">
+                        <rect key="frame" x="115" y="154" width="221" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="N7L-sT-Wh4">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" title="OtherViews" id="p8U-tL-2iV"/>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="romTypeSelected:" target="-2" id="Whz-Ty-8BI"/>
+                            <binding destination="zip-Dc-ZlZ" name="content" keyPath="arrangedObjects" id="XJp-3n-5Ys"/>
+                            <binding destination="zip-Dc-ZlZ" name="contentValues" keyPath="arrangedObjects.name" previousBinding="JmJ-XX-PYt" id="wNG-ZN-N2g"/>
+                            <binding destination="zip-Dc-ZlZ" name="contentObjects" keyPath="arrangedObjects.romType" previousBinding="XJp-3n-5Ys" id="JmJ-XX-PYt"/>
+                            <binding destination="-2" name="selectedObject" keyPath="self.selectedRomType" previousBinding="wNG-ZN-N2g" id="2Y7-9b-ciG"/>
+                        </connections>
+                    </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ZUm-XZ-Jqc">
                         <rect key="frame" x="30" y="129" width="81" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -80,16 +81,37 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="n2c-5D-dtI">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="Znx-Ef-1tE"/>
                         </popUpButtonCell>
+                        <connections>
+                            <action selector="slotSelected:" target="-2" id="pEt-Bs-JHd"/>
+                            <binding destination="F5w-1Q-4sZ" name="content" keyPath="arrangedObjects" id="0qJ-cS-2pk"/>
+                            <binding destination="F5w-1Q-4sZ" name="contentObjects" keyPath="arrangedObjects.slotRange" previousBinding="0qJ-cS-2pk" id="rTN-8H-18A"/>
+                            <binding destination="F5w-1Q-4sZ" name="contentValues" keyPath="arrangedObjects.name" previousBinding="rTN-8H-18A" id="2cL-s6-TBh"/>
+                            <binding destination="-2" name="enabled" keyPath="self.selectedSlot" id="4aT-ly-hCV">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">CMIsZero</string>
+                                </dictionary>
+                            </binding>
+                            <binding destination="-2" name="selectedObject" keyPath="self.selectedSlot" previousBinding="2cL-s6-TBh" id="Lss-dB-v2e"/>
+                        </connections>
                     </popUpButton>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="FEZ-X4-n2Z">
+                        <rect key="frame" x="30" y="98" width="81" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Addresses:" id="j71-y6-LW3">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                     <popUpButton verticalHuggingPriority="750" id="BMu-lf-MJW">
                         <rect key="frame" x="115" y="92" width="221" height="26"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="mJm-Ds-S4M" id="giT-DO-OL7">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="RMx-iU-jG7">
                                 <items>
                                     <menuItem title="Item 1" state="on" id="mJm-Ds-S4M"/>
@@ -99,10 +121,10 @@
                             </menu>
                         </popUpButtonCell>
                     </popUpButton>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="FEZ-X4-n2Z">
-                        <rect key="frame" x="30" y="98" width="81" height="17"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="mLe-BS-RXf">
+                        <rect key="frame" x="42" y="70" width="69" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Addresses:" id="j71-y6-LW3">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Size:" id="bBj-x7-ofU">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -117,18 +139,10 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="mLe-BS-RXf">
-                        <rect key="frame" x="42" y="70" width="69" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Size:" id="bBj-x7-ofU">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                 </subviews>
             </view>
         </window>
-        <arrayController objectClassName="CMRomType" id="zip-Dc-ZlZ"/>
+        <arrayController objectClassName="CMRomType" id="zip-Dc-ZlZ" userLabel="ROM type Array Controller"/>
+        <arrayController objectClassName="CMSlot" id="F5w-1Q-4sZ" userLabel="Slot Array Controller"/>
     </objects>
 </document>
