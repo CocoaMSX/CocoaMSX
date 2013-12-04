@@ -87,13 +87,9 @@
                         <connections>
                             <action selector="slotSelected:" target="-2" id="pEt-Bs-JHd"/>
                             <binding destination="F5w-1Q-4sZ" name="content" keyPath="arrangedObjects" id="0qJ-cS-2pk"/>
-                            <binding destination="F5w-1Q-4sZ" name="contentObjects" keyPath="arrangedObjects.slotRange" previousBinding="0qJ-cS-2pk" id="rTN-8H-18A"/>
                             <binding destination="F5w-1Q-4sZ" name="contentValues" keyPath="arrangedObjects.name" previousBinding="rTN-8H-18A" id="2cL-s6-TBh"/>
-                            <binding destination="-2" name="enabled" keyPath="self.selectedSlot" id="4aT-ly-hCV">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">CMIsZero</string>
-                                </dictionary>
-                            </binding>
+                            <binding destination="F5w-1Q-4sZ" name="contentObjects" keyPath="arrangedObjects.slotRange" previousBinding="0qJ-cS-2pk" id="rTN-8H-18A"/>
+                            <binding destination="-2" name="enabled" keyPath="self.selectedSlot" id="sJE-74-Vew"/>
                             <binding destination="-2" name="selectedObject" keyPath="self.selectedSlot" previousBinding="2cL-s6-TBh" id="Lss-dB-v2e"/>
                         </connections>
                     </popUpButton>

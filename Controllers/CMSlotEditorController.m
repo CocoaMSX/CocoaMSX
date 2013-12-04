@@ -171,7 +171,9 @@
 {
     NSMutableArray *slots = [NSMutableArray array];
     
+    NSInteger selectedSlot = [self selectedSlot];
     RomType romType = [self selectedRomType];
+    
     if (romType == SRAM_MATSUCHITA || romType == SRAM_S1985 ||
         romType == ROM_S1990 || romType == ROM_KANJI || romType == ROM_GIDE ||
         romType == ROM_TURBORTIMER || romType == ROM_TURBORIO ||
@@ -187,6 +189,8 @@
     {
         CMSlot *slot = [[[CMSlot alloc] initWithName:CMLoc(@"Unmapped", @"ROM slot")] autorelease];
         [slots addObject:slot];
+        
+        selectedSlot = 0;
     }
     else
     {
@@ -215,20 +219,19 @@
                 [slots addObject:slot];
             }
         }
+        
+        if (selectedSlot == 0)
+            selectedSlot = CM_MAKE_SLOT(0, 0);
     }
     
     [slotArrayController setContent:slots];
-    
-//    [self setSelectedRomType:[self selectedRomType]];
-//    [self setSelectedSlot:CM_MAKE_SLOT(currentSlotInfo.slot, currentSlotInfo.subslot)];
+    [self setSelectedSlot:selectedSlot];
 }
 
 #pragma mark - Actions
 
 - (void)romTypeSelected:(id)sender
 {
-    [self setSelectedSlot:CM_MAKE_SLOT(0, 0)];
-    
     [self resyncUI];
 }
 
