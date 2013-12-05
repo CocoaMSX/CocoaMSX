@@ -169,23 +169,25 @@
 
 - (void)resyncUI
 {
+    RomType selectedRomType = [self selectedRomType];
+    NSInteger selectedSlot = [self selectedSlot];
+    
+    // Rebuild slots
     NSMutableArray *slots = [NSMutableArray array];
     
-    NSInteger selectedSlot = [self selectedSlot];
-    RomType romType = [self selectedRomType];
-    
-    if (romType == SRAM_MATSUCHITA || romType == SRAM_S1985 ||
-        romType == ROM_S1990 || romType == ROM_KANJI || romType == ROM_GIDE ||
-        romType == ROM_TURBORTIMER || romType == ROM_TURBORIO ||
-        romType == ROM_NMS1210 || romType == ROM_F4INVERTED ||
-        romType == ROM_F4DEVICE || romType == ROM_NMS8280DIGI ||
-        romType == ROM_MOONSOUND || romType == ROM_MSXMIDI ||
-        romType == ROM_MSXAUDIODEV || romType == ROM_TURBORPCM ||
-        romType == ROM_JOYREXPSG || romType == ROM_KANJI12 ||
-        romType == ROM_JISYO || romType == ROM_OPCODEPSG ||
-        romType == ROM_OPCODESLOT || romType == ROM_SVI328FDC ||
-        romType == ROM_SVI328PRN || romType == ROM_MSXPRN ||
-        romType == ROM_SVI328RS232)
+    if (selectedRomType == SRAM_MATSUCHITA || selectedRomType == SRAM_S1985 ||
+        selectedRomType == ROM_S1990 || selectedRomType == ROM_KANJI ||
+        selectedRomType == ROM_GIDE ||
+        selectedRomType == ROM_TURBORTIMER || selectedRomType == ROM_TURBORIO ||
+        selectedRomType == ROM_NMS1210 || selectedRomType == ROM_F4INVERTED ||
+        selectedRomType == ROM_F4DEVICE || selectedRomType == ROM_NMS8280DIGI ||
+        selectedRomType == ROM_MOONSOUND || selectedRomType == ROM_MSXMIDI ||
+        selectedRomType == ROM_MSXAUDIODEV || selectedRomType == ROM_TURBORPCM ||
+        selectedRomType == ROM_JOYREXPSG || selectedRomType == ROM_KANJI12 ||
+        selectedRomType == ROM_JISYO || selectedRomType == ROM_OPCODEPSG ||
+        selectedRomType == ROM_OPCODESLOT || selectedRomType == ROM_SVI328FDC ||
+        selectedRomType == ROM_SVI328PRN || selectedRomType == ROM_MSXPRN ||
+        selectedRomType == ROM_SVI328RS232)
     {
         CMSlot *slot = [[[CMSlot alloc] initWithName:CMLoc(@"Unmapped", @"ROM slot")] autorelease];
         [slots addObject:slot];
@@ -226,6 +228,62 @@
     
     [slotArrayController setContent:slots];
     [self setSelectedSlot:selectedSlot];
+    
+    // Addresses
+//    if (selectedRomType == RAM_NORMAL || selectedRomType == RAM_1KB_MIRRORED ||
+//        selectedRomType == RAM_2KB_MIRRORED || selectedRomType == ROM_NORMAL ||
+//        selectedRomType == ROM_DISKPATCH || selectedRomType == ROM_CASPATCH ||
+//        selectedRomType == ROM_MICROSOL || selectedRomType == ROM_NATIONALFDC ||
+//        selectedRomType == ROM_PHILIPSFDC || selectedRomType == ROM_SVI738FDC ||
+//        selectedRomType == ROM_MSXMUSIC || selectedRomType == ROM_BEERIDE ||
+//        selectedRomType == ROM_DRAM || selectedRomType == ROM_FMPAC ||
+//        selectedRomType == ROM_PAC || selectedRomType == ROM_BUNSETU ||
+//        selectedRomType == ROM_MICROSOL80)
+//    {
+//        int size;
+//        
+//        switch (selectedRomType)
+//        {
+//        case RAM_NORMAL:
+//            size = editRamNormalSize / 0x2000;
+//            break;
+//        case RAM_1KB_MIRRORED:
+//            size = editRamMirroredSize / 0x2000;
+//            break;
+//        case RAM_2KB_MIRRORED:
+//            size = editRamMirroredSize / 0x2000;
+//            break;
+//        case ROM_NATIONALFDC:
+//        case ROM_PHILIPSFDC:
+//        case ROM_SVI738FDC:
+//            size = 4;
+//            break;
+//        case ROM_FMPAC:
+//        case ROM_PAC:
+//            size = 2;
+//            break;
+//        default:
+//            size = romPages;
+//            if (size > 8)
+//                size = 8;
+//            else if (size < 1)
+//                size = 1;
+//        }
+//        
+//        int end = 8 - size;
+//        int start = (editSlotInfo.startPage < end)
+//            ? editSlotInfo.startPage : end;
+//        
+//        for (int i = 0; i <= end; i++)
+//        {
+//            char buffer[32];
+//            sprintf(buffer, "%.4X - %.4X", i * 0x2000, (i + size) * 0x2000 - 1);
+//            SendDlgItemMessage(hDlg, IDC_ROMADDR, CB_ADDSTRING, 0, (LPARAM)buffer);
+//            if (i == start) {
+//                SendDlgItemMessage(hDlg, IDC_ROMADDR, CB_SETCURSEL, i, 0);
+//            }
+//        }
+//    }
 }
 
 #pragma mark - Actions
