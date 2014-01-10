@@ -643,6 +643,7 @@
 		FEA842D7187FD94600F5CD6D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA842D5187FD94600F5CD6D /* InfoPlist.strings */; };
 		FEA842DC187FDA1700F5CD6D /* Databases in Resources */ = {isa = PBXBuildFile; fileRef = FEA842DA187FDA1700F5CD6D /* Databases */; };
 		FEA842DD187FDA1700F5CD6D /* Machines in Resources */ = {isa = PBXBuildFile; fileRef = FEA842DB187FDA1700F5CD6D /* Machines */; };
+		FEA842F2187FE0A900F5CD6D /* blueMSXGameCore.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA842F1187FE0A900F5CD6D /* blueMSXGameCore.m */; };
 		FEA8BF1016A01007006E67D2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
@@ -1405,6 +1406,8 @@
 		FEA842D6187FD94600F5CD6D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		FEA842DA187FDA1700F5CD6D /* Databases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Databases; sourceTree = "<group>"; };
 		FEA842DB187FDA1700F5CD6D /* Machines */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Machines; sourceTree = "<group>"; };
+		FEA842F0187FE0A900F5CD6D /* blueMSXGameCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blueMSXGameCore.h; sourceTree = "<group>"; };
+		FEA842F1187FE0A900F5CD6D /* blueMSXGameCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = blueMSXGameCore.m; sourceTree = "<group>"; };
 		FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputDeviceLayout.h; sourceTree = "<group>"; };
 		FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputDeviceLayout.m; sourceTree = "<group>"; };
@@ -2440,6 +2443,7 @@
 		FEA842CF187FD5B900F5CD6D /* OpenEmu-Core */ = {
 			isa = PBXGroup;
 			children = (
+				FEA842EF187FE09600F5CD6D /* Classes */,
 				FEA842DE187FDA1F00F5CD6D /* Resources */,
 				FEA842D2187FD6EE00F5CD6D /* Supporting Files */,
 			);
@@ -2462,6 +2466,15 @@
 				FEA842DB187FDA1700F5CD6D /* Machines */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		FEA842EF187FE09600F5CD6D /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				FEA842F0187FE0A900F5CD6D /* blueMSXGameCore.h */,
+				FEA842F1187FE0A900F5CD6D /* blueMSXGameCore.m */,
+			);
+			name = Classes;
 			sourceTree = "<group>";
 		};
 		FEC7231515FF0DD900CB508C /* Controllers */ = {
@@ -2574,9 +2587,9 @@
 			productReference = 8D1107320486CEB800E47090 /* CocoaMSX.app */;
 			productType = "com.apple.product-type.application";
 		};
-		FEA841AE187FCD8000F5CD6D /* blueMSX OE Core */ = {
+		FEA841AE187FCD8000F5CD6D /* blueMSX */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FEA841BC187FCD8000F5CD6D /* Build configuration list for PBXNativeTarget "blueMSX OE Core" */;
+			buildConfigurationList = FEA841BC187FCD8000F5CD6D /* Build configuration list for PBXNativeTarget "blueMSX" */;
 			buildPhases = (
 				FEA841AB187FCD8000F5CD6D /* Sources */,
 				FEA841AC187FCD8000F5CD6D /* Frameworks */,
@@ -2586,7 +2599,7 @@
 			);
 			dependencies = (
 			);
-			name = "blueMSX OE Core";
+			name = blueMSX;
 			productName = blueMSX;
 			productReference = FEA841AF187FCD8000F5CD6D /* blueMSX.oecoreplugin */;
 			productType = "com.apple.product-type.bundle";
@@ -2641,7 +2654,7 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* CocoaMSX */,
-				FEA841AE187FCD8000F5CD6D /* blueMSX OE Core */,
+				FEA841AE187FCD8000F5CD6D /* blueMSX */,
 				FEA842DF187FDAA400F5CD6D /* Build & Install blueMSX */,
 			);
 		};
@@ -3080,6 +3093,7 @@
 				FEA8426A187FD10E00F5CD6D /* romMapperOpcodePsg.c in Sources */,
 				FEA842AA187FD18F00F5CD6D /* compress.c in Sources */,
 				FEA8429F187FD16A00F5CD6D /* SN76489.c in Sources */,
+				FEA842F2187FE0A900F5CD6D /* blueMSXGameCore.m in Sources */,
 				FEA841EA187FD03D00F5CD6D /* MagicKeyDongle.c in Sources */,
 				FEA84285187FD13E00F5CD6D /* romMapperTurboRPcm.c in Sources */,
 				FEA842A8187FD17700F5CD6D /* tinyxmlparser.cpp in Sources */,
@@ -3344,7 +3358,7 @@
 /* Begin PBXTargetDependency section */
 		FEA842E4187FDABF00F5CD6D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FEA841AE187FCD8000F5CD6D /* blueMSX OE Core */;
+			target = FEA841AE187FCD8000F5CD6D /* blueMSX */;
 			targetProxy = FEA842E3187FDABF00F5CD6D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -3609,7 +3623,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FEA841BC187FCD8000F5CD6D /* Build configuration list for PBXNativeTarget "blueMSX OE Core" */ = {
+		FEA841BC187FCD8000F5CD6D /* Build configuration list for PBXNativeTarget "blueMSX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FEA841BA187FCD8000F5CD6D /* Debug */,

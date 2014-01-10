@@ -2,7 +2,7 @@
  **
  ** CocoaMSX: MSX Emulator for Mac OS X
  ** http://www.cocoamsx.com
- ** Copyright (C) 2012-2013 Akop Karapetyan
+ ** Copyright (C) 2012-2014 Akop Karapetyan
  **
  ** Semaphore implementation based on SDL_sem:
  **
