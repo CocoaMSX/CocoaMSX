@@ -1424,7 +1424,7 @@ char* boardGetBaseDirectory() {
     return baseDirectory;
 }
 
-void boardSetDirectory(char* dir) {
+void boardSetDirectory(const char* dir) {
     strcpy(baseDirectory, dir);
 }
 
