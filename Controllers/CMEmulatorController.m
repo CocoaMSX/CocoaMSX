@@ -1565,9 +1565,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)openPreferences:(id)sender
 {
-    if (!self.isInitialized)
-        return;
-    
     if (!preferenceController)
         preferenceController = [[CMPreferenceController alloc] initWithEmulator:self];
     
