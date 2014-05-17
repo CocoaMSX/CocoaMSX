@@ -47,6 +47,8 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSString *_fileToLoadAtStartup;
     BOOL _isInitialized;
     NSString *_currentlyLoadedCaptureFilePath;
+    NSString *_lastLoadedState;
+    NSString *_lastSavedState;
     
     NSString *gameplayCaptureTempFilename;
     
@@ -105,6 +107,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property (nonatomic, copy) NSString *fpsDisplay;
 @property (nonatomic, copy) NSString *fileToLoadAtStartup;
 @property (nonatomic, copy) NSString *currentlyLoadedCaptureFilePath;
+@property (nonatomic, copy) NSString *lastSavedState;
+@property (nonatomic, copy) NSString *lastLoadedState;
 
 @property (nonatomic, assign) NSInteger scanlines;
 
@@ -193,7 +197,9 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)toggleCassetteWriteProtect:(id)sender;
 
 - (IBAction)loadState:(id)sender;
+- (IBAction)reloadState:(id)sender;
 - (IBAction)saveState:(id)sender;
+- (IBAction)overwriteState:(id)sender;
 
 - (IBAction)saveScreenshot:(id)sender;
 

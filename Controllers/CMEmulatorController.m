@@ -139,6 +139,8 @@
 @synthesize fileToLoadAtStartup = _fileToLoadAtStartup;
 @synthesize isInitialized = _isInitialized;
 @synthesize currentlyLoadedCaptureFilePath = _currentlyLoadedCaptureFilePath;
+@synthesize lastSavedState = _lastSavedState;
+@synthesize lastLoadedState = _lastLoadedState;
 
 #define WIDTH_DEFAULT   272.0
 #define HEIGHT_DEFAULT  240.0
@@ -275,6 +277,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [cassetteRepositioner release];
     [preferenceController release];
     
+    [self setLastLoadedState:nil];
+    [self setLastSavedState:nil];
     [self setFileToLoadAtStartup:nil];
     [self setCurrentlyLoadedCaptureFilePath:nil];
     
@@ -1072,6 +1076,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorResume();
     
+    // Reset last used state names
+    [self setLastLoadedState:nil];
+    [self setLastSavedState:nil];
+
     return YES;
 }
 
@@ -1080,12 +1088,17 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if ([self isStarted])
         [self stop];
     
+    
+    // Reset last used state names
+    [self setLastLoadedState:nil];
+    [self setLastSavedState:nil];
+
     return tryLaunchUnknownFile(self.properties, [media UTF8String], YES) != 0;
 }
 
 - (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot
 {
-    if (!self.isInitialized)
+    if (![self isInitialized])
         return;
     
     [cartChooser release];
@@ -1101,6 +1114,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return;
     
     actionCartRemove(slot);
+    
+    // Reset last used state names
+    [self setLastLoadedState:nil];
+    [self setLastSavedState:nil];
 }
 
 - (NSString *)fileNameFromCPath:(const char *)filePath
@@ -1140,38 +1157,54 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)insertDiskAtPath:(NSString *)path
                     slot:(NSInteger)slot
 {
-     emulatorSuspend();
-     
-     BOOL isDirectory;
-     const char *fileCstr = [path UTF8String];
-     
-     [[NSFileManager defaultManager] fileExistsAtPath:path
-                                          isDirectory:&isDirectory];
-     
-     if (isDirectory)
-     {
-         // Insert directory
+    emulatorSuspend();
+    
+    BOOL isDirectory;
+    const char *fileCstr = [path UTF8String];
+    
+    [[NSFileManager defaultManager] fileExistsAtPath:path
+                                         isDirectory:&isDirectory];
+    
+    if (isDirectory)
+    {
+        // Insert directory
+        
+        strcpy(properties->media.disks[slot].directory, fileCstr);
+        insertDiskette(properties, slot, fileCstr, NULL, 0);
+    }
+    else
+    {
+        // Insert disk file
          
-         strcpy(properties->media.disks[slot].directory, fileCstr);
-         insertDiskette(properties, slot, fileCstr, NULL, 0);
-     }
-     else
-     {
-         // Insert disk file
-         
-         insertDiskette(properties, slot, fileCstr, NULL, 0);
-         [[CMPreferences preferences] setDiskDirectory:path];
-         
-         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
-         [self rebuildRecentItemsMenus];
-     }
-     
-     emulatorResume();
+        insertDiskette(properties, slot, fileCstr, NULL, 0);
+        [[CMPreferences preferences] setDiskDirectory:path];
+        
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
+        [self rebuildRecentItemsMenus];
+    }
+    
+    emulatorResume();
+    
+    // If the user is inserting a disk into the first slot, reset last used
+    // state names
+    if (slot == 0)
+    {
+        [self setLastLoadedState:nil];
+        [self setLastSavedState:nil];
+    }
 }
 
 - (void)ejectDiskFromSlot:(NSInteger)slot
 {
     actionDiskRemove(slot);
+    
+    // If the user is ejecting a disk from the first slot, reset last used
+    // state names
+    if (slot == 0)
+    {
+        [self setLastLoadedState:nil];
+        [self setLastSavedState:nil];
+    }
 }
 
 - (void)insertCassetteAtPath:(NSString *)path
@@ -1605,7 +1638,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)toggleCartAutoReset:(id)sender
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
         properties->cartridge.autoReset = !properties->cartridge.autoReset;
 }
 
@@ -1687,25 +1720,25 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)toggleCassetteAutoRewind:(id)sender
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
         properties->cassette.rewindAfterInsert = !properties->cassette.rewindAfterInsert;
 }
 
 - (void)toggleCassetteWriteProtect:(id)sender
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
         properties->cassette.readOnly ^= 1;
 }
 
 - (void)rewindCassette:(id)sender
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
         actionCasRewind();
 }
 
 - (void)repositionCassette:(id)sender
 {
-    if (!self.isInitialized || !(*properties->media.tapes[0].fileName))
+    if (![self isInitialized] || !(*properties->media.tapes[0].fileName))
         return;
     
     [cassetteRepositioner release];
@@ -1802,8 +1835,29 @@ CMEmulatorController *theEmulator = nil; // FIXME
             emulatorStart([file UTF8String]);
             
             [[CMPreferences preferences] setSnapshotDirectory:path];
+            [self setLastLoadedState:file];
         }
     }];
+}
+
+- (void)reloadState:(id)sender
+{
+    if (![self isInitialized])
+        return;
+
+    NSString *statePath = [self lastLoadedState];
+    if (statePath == nil)
+    {
+        [self loadState:sender];
+        return;
+    }
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:statePath])
+    {
+        emulatorSuspend();
+        emulatorStop();
+        emulatorStart([statePath UTF8String]);
+    }
 }
 
 - (void)saveState:(id)sender
@@ -1823,15 +1877,39 @@ CMEmulatorController *theEmulator = nil; // FIXME
              [[CMPreferences preferences] setSnapshotDirectory:path];
              
              [self saveStateToFile:file];
+             [self setLastLoadedState:file];
+             [self setLastSavedState:file];
          }
          
          emulatorResume();
      }];
 }
 
+- (void)overwriteState:(id)sender
+{
+    if (![self isInitialized] || ![self isStarted])
+        return;
+
+    NSString *statePath = [self lastSavedState];
+    if (statePath == nil)
+    {
+        [self saveState:sender];
+        return;
+    }
+    
+    emulatorSuspend();
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:statePath])
+    {
+        [self saveStateToFile:statePath];
+    }
+
+    emulatorResume();
+}
+
 - (void)saveScreenshot:(id)sender
 {
-    if (!self.isInitialized || ![self isStarted])
+    if (![self isInitialized] || ![self isStarted])
         return;
     
     emulatorSuspend();
@@ -1914,7 +1992,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)openGameplayRecording:(id)sender
 {
-    if (!self.isInitialized || ![self isStarted])
+    if (![self isInitialized] || ![self isStarted])
         return;
     
     emulatorSuspend();
@@ -2482,83 +2560,83 @@ void archTrap(UInt8 value)
     NSInteger machineState = [self machineState];
     BOOL isRunning = [self isStarted];
     
-    if (item.action == @selector(toggleCartAutoReset:))
+    if ([item action] == @selector(toggleCartAutoReset:))
     {
         menuItem.state = (properties->cartridge.autoReset) ? NSOnState : NSOffState;
         return isRunning;
     }
-    else if (item.action == @selector(insertCartridgeSlot1:) ||
-             item.action == @selector(insertCartridgeSlot2:))
+    else if ([item action] == @selector(insertCartridgeSlot1:) ||
+             [item action] == @selector(insertCartridgeSlot2:))
     {
         return isRunning;
     }
-    else if (item.action == @selector(insertDiskSlot1:) ||
-             item.action == @selector(insertDiskSlot2:) ||
-             item.action == @selector(insertRecentDiskA:) ||
-             item.action == @selector(insertRecentDiskB:))
+    else if ([item action] == @selector(insertDiskSlot1:) ||
+             [item action] == @selector(insertDiskSlot2:) ||
+             [item action] == @selector(insertRecentDiskA:) ||
+             [item action] == @selector(insertRecentDiskB:))
     {
         return isRunning && [self canInsertDiskettes];
     }
-    else if (item.action == @selector(insertCassette:) ||
-             item.action == @selector(insertRecentCassette:))
+    else if ([item action] == @selector(insertCassette:) ||
+             [item action] == @selector(insertRecentCassette:))
     {
         return isRunning && [self canInsertCassettes];
     }
-    else if (item.action == @selector(ejectCartridgeSlot1:))
+    else if ([item action] == @selector(ejectCartridgeSlot1:))
         return [self toggleEjectCartridgeMenuItemStatus:menuItem slot:0];
-    else if (item.action == @selector(ejectCartridgeSlot2:))
+    else if ([item action] == @selector(ejectCartridgeSlot2:))
         return [self toggleEjectCartridgeMenuItemStatus:menuItem slot:1];
-    else if (item.action == @selector(toggleDiskAutoReset:))
+    else if ([item action] == @selector(toggleDiskAutoReset:))
     {
         menuItem.state = (properties->diskdrive.autostartA) ? NSOnState : NSOffState;
         return isRunning;
     }
-    else if (item.action == @selector(ejectDiskSlot1:))
+    else if ([item action] == @selector(ejectDiskSlot1:))
         return [self toggleEjectDiskMenuItemStatus:menuItem slot:0];
-    else if (item.action == @selector(ejectDiskSlot2:))
+    else if ([item action] == @selector(ejectDiskSlot2:))
         return [self toggleEjectDiskMenuItemStatus:menuItem slot:1];
-    else if (item.action == @selector(ejectCassette:))
+    else if ([item action] == @selector(ejectCassette:))
         return [self toggleEjectCassetteMenuItemStatus:menuItem];
-    else if (item.action == @selector(toggleCassetteAutoRewind:))
+    else if ([item action] == @selector(toggleCassetteAutoRewind:))
     {
         menuItem.state = (properties->cassette.rewindAfterInsert) ? NSOnState : NSOffState;
         return isRunning;
     }
-    else if (item.action == @selector(toggleCassetteWriteProtect:))
+    else if ([item action] == @selector(toggleCassetteWriteProtect:))
     {
         menuItem.state = (properties->cassette.readOnly) ? NSOnState : NSOffState;
         return isRunning;
     }
-    else if (item.action == @selector(rewindCassette:))
+    else if ([item action] == @selector(rewindCassette:))
         return (*properties->media.tapes[0].fileName) ? NSOnState : NSOffState;
-    else if (item.action == @selector(repositionCassette:))
+    else if ([item action] == @selector(repositionCassette:))
         return (*properties->media.tapes[0].fileName) ? NSOnState : NSOffState;
-    else if (item.action == @selector(normalSize:) ||
-             item.action == @selector(doubleSize:))
+    else if ([item action] == @selector(normalSize:) ||
+             [item action] == @selector(doubleSize:))
     {
         return ![self isInFullScreenMode];
     }
-    else if (item.action == @selector(toggleStatusBar:))
+    else if ([item action] == @selector(toggleStatusBar:))
     {
         menuItem.state = CMGetBoolPref(@"isStatusBarVisible") ? NSOnState : NSOffState;
         return ![self isInFullScreenMode]; // Can't toggle in fullscreen mode
     }
-    else if (item.action == @selector(toggleFullScreen:))
+    else if ([item action] == @selector(toggleFullScreen:))
     {
         if ([self isInFullScreenMode])
             [menuItem setTitle:CMLoc(@"Exit Full Screen", @"")];
         else
             [menuItem setTitle:CMLoc(@"Enter Full Screen", @"")];
     }
-    else if (item.action == @selector(loadState:))
+    else if ([item action] == @selector(loadState:))
     {
         return isRunning;
     }
-    else if (item.action == @selector(saveState:))
+    else if ([item action] == @selector(saveState:))
     {
         return isRunning;
     }
-    else if (item.action == @selector(statusMsx:))
+    else if ([item action] == @selector(statusMsx:))
     {
         if (machineState == EMU_RUNNING)
             [menuItem setTitle:CMLoc(@"MSX Running", @"Menu item title")];
@@ -2573,20 +2651,20 @@ void archTrap(UInt8 value)
         
         return NO; // always disabled
     }
-    else if (item.action == @selector(resetMsx:) ||
-             item.action == @selector(hardResetMsx:))
+    else if ([item action] == @selector(resetMsx:) ||
+             [item action] == @selector(hardResetMsx:))
     {
         // Resetting while paused leads to some odd behavior
         return (machineState == EMU_RUNNING);
     }
-    else if (item.action == @selector(shutDownMsx:))
+    else if ([item action] == @selector(shutDownMsx:))
     {
         if (isRunning)
             [menuItem setTitle:CMLoc(@"Shut Down", @"Menu item title")];
         else
             [menuItem setTitle:CMLoc(@"Start Up", @"Menu item title")];
     }
-    else if (item.action == @selector(pauseMsx:))
+    else if ([item action] == @selector(pauseMsx:))
     {
         if (machineState == EMU_PAUSED)
             [menuItem setTitle:CMLoc(@"Resume", @"Menu item title")];
@@ -2595,15 +2673,15 @@ void archTrap(UInt8 value)
         
         return isRunning;
     }
-    else if (item.action == @selector(saveScreenshot:))
+    else if ([item action] == @selector(saveScreenshot:))
     {
         return isRunning;
     }
-    else if (item.action == @selector(clearRecentItems:))
+    else if ([item action] == @selector(clearRecentItems:))
     {
         return [[[NSDocumentController sharedDocumentController] recentDocumentURLs] count] > 0;
     }
-    else if (item.action == @selector(recordAudio:))
+    else if ([item action] == @selector(recordAudio:))
     {
         if (!mixerIsLogging(mixer))
             [menuItem setTitle:CMLoc(@"Record Audio…", @"Menu item title")];
@@ -2612,17 +2690,17 @@ void archTrap(UInt8 value)
         
         return isRunning;
     }
-    else if (item.action == @selector(recordGameplay:))
+    else if ([item action] == @selector(recordGameplay:))
     {
         [menuItem setState:boardCaptureIsRecording() ? NSOnState : NSOffState];
         
         return isRunning && !boardCaptureIsRecording() && !boardCaptureIsPlaying();
     }
-    else if (item.action == @selector(stopGameplayRecording:))
+    else if ([item action] == @selector(stopGameplayRecording:))
     {
         return isRunning && (boardCaptureIsRecording() || boardCaptureIsPlaying());
     }
-    else if (item.action == @selector(playBackGameplay:))
+    else if ([item action] == @selector(playBackGameplay:))
     {
         [menuItem setState:boardCaptureIsPlaying() ? NSOnState : NSOffState];
         
@@ -2631,12 +2709,20 @@ void archTrap(UInt8 value)
             && [[NSFileManager defaultManager] fileExistsAtPath:[self currentlyLoadedCaptureFilePath]]
             && !boardCaptureIsPlaying();
     }
-    else if (item.action == @selector(saveGameplayRecording:))
+    else if ([item action] == @selector(saveGameplayRecording:))
     {
         return isRunning
             && [self currentlyLoadedCaptureFilePath] != nil
             && [[NSFileManager defaultManager] fileExistsAtPath:[self currentlyLoadedCaptureFilePath]]
             && !boardCaptureIsRecording();
+    }
+    else if ([item action] == @selector(reloadState:))
+    {
+        return isRunning; // && [self lastLoadedState] != nil;
+    }
+    else if ([item action] == @selector(overwriteState:))
+    {
+        return isRunning; // && [self lastSavedState] != nil;
     }
     
     return menuItem.isEnabled;
