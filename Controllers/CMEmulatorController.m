@@ -532,7 +532,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)start
 {
-    if (self.isInitialized)
+    if ([self isInitialized])
     {
         if ([self isStarted])
             [self stop];
@@ -549,6 +549,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         // Pause if not focused
         [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
+
+        // Update the window title with machine's name
+        NSString *name = [NSString stringWithCString:properties->emulation.machineName
+                                            encoding:NSASCIIStringEncoding];
+        [[self window] setTitle:name];
     }
 }
 
@@ -1781,7 +1786,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)loadState:(id)sender
 {
-    if (!self.isInitialized)
+    if (![self isInitialized])
         return;
     
     NSInteger emulatorState = emulatorGetState();
@@ -1856,7 +1861,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)recordAudio:(id)sender
 {
-    if (!self.isInitialized || ![self isStarted])
+    if (![self isInitialized] || ![self isStarted])
         return;
     
     if (mixerIsLogging(mixer))
