@@ -338,6 +338,10 @@
 		FE73719216D20F7B00ADF942 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718D16D20F7A00ADF942 /* NSObject+SBJson.m */; };
 		FE73719316D20F7B00ADF942 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */; };
 		FE73719416D20F7B00ADF942 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */; };
+		FE755EA419274F91003B10F0 /* green_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA019274F91003B10F0 /* green_led_off@2x.png */; };
+		FE755EA519274F91003B10F0 /* green_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA119274F91003B10F0 /* green_led_on@2x.png */; };
+		FE755EA619274F91003B10F0 /* green_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA219274F91003B10F0 /* green_led_on.png */; };
+		FE755EA719274F91003B10F0 /* green_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA319274F91003B10F0 /* green_led_off.png */; };
 		FE81435F16F6FE31000FABC7 /* HashSet.c in Sources */ = {isa = PBXBuildFile; fileRef = FE81435E16F6FE30000FABC7 /* HashSet.c */; };
 		FE81438D16F78AEE000FABC7 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE81438C16F78AED000FABC7 /* IOKit.framework */; };
 		FE81439016F797CC000FABC7 /* CMGamepadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE81438F16F797CC000FABC7 /* CMGamepadManager.m */; };
@@ -1348,6 +1352,10 @@
 		FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonTokeniser.m; sourceTree = "<group>"; };
 		FE73719016D20F7B00ADF942 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
 		FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
+		FE755EA019274F91003B10F0 /* green_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_led_off@2x.png"; sourceTree = "<group>"; };
+		FE755EA119274F91003B10F0 /* green_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_led_on@2x.png"; sourceTree = "<group>"; };
+		FE755EA219274F91003B10F0 /* green_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_led_on.png; sourceTree = "<group>"; };
+		FE755EA319274F91003B10F0 /* green_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_led_off.png; sourceTree = "<group>"; };
 		FE81435E16F6FE30000FABC7 /* HashSet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HashSet.c; sourceTree = "<group>"; };
 		FE81436016F6FE40000FABC7 /* HashSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashSet.h; sourceTree = "<group>"; };
 		FE81438C16F78AED000FABC7 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
@@ -1583,6 +1591,10 @@
 		6BCA755D164D7D09002CA211 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				FE755EA019274F91003B10F0 /* green_led_off@2x.png */,
+				FE755EA119274F91003B10F0 /* green_led_on@2x.png */,
+				FE755EA219274F91003B10F0 /* green_led_on.png */,
+				FE755EA319274F91003B10F0 /* green_led_off.png */,
 				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
 				FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */,
 				FEA4548C1679B65300AAECB7 /* DiskDocument.icns */,
@@ -2668,11 +2680,13 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				E99733701298B4B500766C90 /* build_info.txt in Resources */,
 				FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */,
+				FE755EA719274F91003B10F0 /* green_led_off.png in Resources */,
 				FEC7232215FF133700CB508C /* Preferences.xib in Resources */,
 				FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */,
 				FEA01B3A1620FE360066FDD8 /* SpecialCartChooser.xib in Resources */,
 				FE2CEB581622A50500E58F9A /* Databases in Resources */,
 				FE2CEB5A1622A50500E58F9A /* Machines in Resources */,
+				FE755EA619274F91003B10F0 /* green_led_on.png in Resources */,
 				FE2A2BD916240966000CCAE4 /* RepositionCassette.xib in Resources */,
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
 				FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */,
@@ -2686,8 +2700,10 @@
 				FE1C134F167DCF8900CE2B6B /* About.xib in Resources */,
 				FE1C1358167DE0D200CE2B6B /* Documents in Resources */,
 				FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */,
+				FE755EA519274F91003B10F0 /* green_led_on@2x.png in Resources */,
 				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
+				FE755EA419274F91003B10F0 /* green_led_off@2x.png in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
 				FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */,
 				FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */,
@@ -3630,6 +3646,7 @@
 				FEA841BB187FCD8000F5CD6D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FEA842E0187FDAA400F5CD6D /* Build configuration list for PBXAggregateTarget "Build & Install blueMSX" */ = {
 			isa = XCConfigurationList;
@@ -3638,6 +3655,7 @@
 				FEA842E2187FDAA400F5CD6D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

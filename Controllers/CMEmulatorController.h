@@ -98,6 +98,9 @@ NSString * const CMKeyboardLayoutPrefKey;
     IBOutlet NSMenuItem *recentDisksB;
     IBOutlet NSMenuItem *recentCassettes;
     
+    IBOutlet NSImageView *fdd0Led;
+    IBOutlet NSImageView *fdd1Led;
+    
     NSOpenPanel *currentlyActiveOpenPanel;
     NSArray *currentlySupportedFileTypes;
     

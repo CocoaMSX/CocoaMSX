@@ -7,6 +7,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CMEmulatorController">
             <connections>
+                <outlet property="fdd0Led" destination="2jo-qo-ICJ" id="fAr-ce-6w7"/>
+                <outlet property="fdd1Led" destination="kxZ-IV-lOt" id="s8J-kV-cuT"/>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
                 <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
@@ -526,6 +528,16 @@
                             <rect key="frame" x="0.0" y="0.0" width="640" height="32"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="kxZ-IV-lOt">
+                                    <rect key="frame" x="604" y="0.0" width="24" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="green_led_off" id="Mcl-lR-yVz"/>
+                                </imageView>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="2jo-qo-ICJ">
+                                    <rect key="frame" x="572" y="0.0" width="24" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="green_led_off" id="WuY-ON-yRB"/>
+                                </imageView>
                                 <textField verticalHuggingPriority="750" id="1076">
                                     <rect key="frame" x="224" y="6" width="192" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES"/>
@@ -605,4 +617,7 @@
             </subviews>
         </customView>
     </objects>
+    <resources>
+        <image name="green_led_off" width="19.862068176269531" height="10.758620262145996"/>
+    </resources>
 </document>

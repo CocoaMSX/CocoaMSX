@@ -51,6 +51,7 @@
 #include "Machine.h"
 #include "Board.h"
 #include "CommandLine.h"
+#include "Led.h"
 #include "Debugger.h"
 
 #include "ArchFile.h"
@@ -622,6 +623,16 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)updateFps:(CGFloat)fps
 {
+    if (ledGetFdd1())
+        [fdd0Led setImage:[NSImage imageNamed:@"green_led_on"]];
+    else
+        [fdd0Led setImage:[NSImage imageNamed:@"green_led_off"]];
+
+    if (ledGetFdd2())
+        [fdd1Led setImage:[NSImage imageNamed:@"green_led_on"]];
+    else
+        [fdd1Led setImage:[NSImage imageNamed:@"green_led_off"]];
+    
     if (emulatorGetState() == EMU_PAUSED)
         [self setFpsDisplay:CMLoc(@"MSX Paused", @"")];
     else
