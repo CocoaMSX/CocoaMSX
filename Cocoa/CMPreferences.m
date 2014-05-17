@@ -42,8 +42,6 @@ static NSString * const CMCassetteDirectoryKey = @"cassetteDirectory";
 static NSString * const CMCartridgeDirectoryKey = @"cartridgeDirectory";
 static NSString * const CMDiskDirectoryKey = @"diskDirectory";
 
-static NSString * const CMScanlineAmount = @"scanlineAmount";
-
 @interface CMPreferences ()
 
 - (NSString *)appSupportSubdirectoryForKey:(NSString *)preferenceKey
@@ -83,7 +81,7 @@ static CMPreferences *preferences = nil;
         return nil;
     
     NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
-    NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:bundlePath];
+    NSString *appName = [[bundlePath lastPathComponent] stringByDeletingPathExtension];
     
     return [appSupportUrl URLByAppendingPathComponent:appName];
 }
