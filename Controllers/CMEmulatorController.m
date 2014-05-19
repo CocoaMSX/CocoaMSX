@@ -621,22 +621,44 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return inputDeviceLayouts;
 }
 
+#define LED_FDD0 0x80
+#define LED_FDD1 0x40
+
+- (int)ledState
+{
+    int state = 0;
+    if (ledGetFdd1())
+        state |= LED_FDD0;
+    if (ledGetFdd2())
+        state |= LED_FDD1;
+    
+    return state;
+}
+
 - (void)updateFps:(CGFloat)fps
 {
-    if (ledGetFdd1())
-        [fdd0Led setImage:[NSImage imageNamed:@"green_led_on"]];
-    else
-        [fdd0Led setImage:[NSImage imageNamed:@"green_led_off"]];
-
-    if (ledGetFdd2())
-        [fdd1Led setImage:[NSImage imageNamed:@"green_led_on"]];
-    else
-        [fdd1Led setImage:[NSImage imageNamed:@"green_led_off"]];
+    int state = [self ledState];
+    if ((state & LED_FDD0) != (lastLedState & LED_FDD0))
+    {
+        if (state & LED_FDD0)
+            [fdd0Led setImage:[NSImage imageNamed:@"fdd0_led_on"]];
+        else
+            [fdd0Led setImage:[NSImage imageNamed:@"fdd0_led_off"]];
+    }
+    if ((state & LED_FDD1) != (lastLedState & LED_FDD1))
+    {
+        if (state & LED_FDD1)
+            [fdd1Led setImage:[NSImage imageNamed:@"fdd1_led_on"]];
+        else
+            [fdd1Led setImage:[NSImage imageNamed:@"fdd1_led_off"]];
+    }
     
     if (emulatorGetState() == EMU_PAUSED)
         [self setFpsDisplay:CMLoc(@"MSX Paused", @"")];
     else
         [self setFpsDisplay:[NSString stringWithFormat:CMLoc(@"FPS: %.02f", @""), fps]];
+    
+    self->lastLedState = state;
 }
 
 - (void)setScanlines:(NSInteger)value

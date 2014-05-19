@@ -43,6 +43,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate>
 {
+    NSInteger lastLedState;
     NSString *_fpsDisplay;
     NSString *_fileToLoadAtStartup;
     BOOL _isInitialized;

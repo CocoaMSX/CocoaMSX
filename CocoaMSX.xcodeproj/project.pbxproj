@@ -286,6 +286,10 @@
 		E997347A1298B4B500766C90 /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
 		FE05CAD1176CD17C00D6CAC0 /* ConfigureJoystick.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */; };
 		FE05CAD4176CD21200D6CAC0 /* CMConfigureJoystickController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */; };
+		FE17A07B1929CC96007FB866 /* fdd0_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0771929CC96007FB866 /* fdd0_led_on@2x.png */; };
+		FE17A07C1929CC96007FB866 /* fdd0_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0781929CC96007FB866 /* fdd0_led_off@2x.png */; };
+		FE17A07D1929CC96007FB866 /* fdd0_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0791929CC96007FB866 /* fdd0_led_on.png */; };
+		FE17A07E1929CC96007FB866 /* fdd0_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A07A1929CC96007FB866 /* fdd0_led_off.png */; };
 		FE17DBF116B3B9A7004ED68D /* CMMachineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */; };
 		FE17DBFB16B3BD1A004ED68D /* logo-msx.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF316B3BD1A004ED68D /* logo-msx.png */; };
 		FE17DBFC16B3BD1A004ED68D /* logo-msx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */; };
@@ -334,14 +338,14 @@
 		FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE46C8F016CA1DCA00D25801 /* icon-downloading-inverse@2x.png */; };
 		FE5458C2168C182A0002FA46 /* MGRecessedPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */; };
 		FE5458C3168C182A0002FA46 /* MGScopeBar.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5458BF168C182A0002FA46 /* MGScopeBar.m */; };
+		FE5B566B1929D331001C4E85 /* fdd1_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5B56671929D331001C4E85 /* fdd1_led_off@2x.png */; };
+		FE5B566C1929D331001C4E85 /* fdd1_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5B56681929D331001C4E85 /* fdd1_led_on@2x.png */; };
+		FE5B566D1929D331001C4E85 /* fdd1_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5B56691929D331001C4E85 /* fdd1_led_on.png */; };
+		FE5B566E1929D331001C4E85 /* fdd1_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5B566A1929D331001C4E85 /* fdd1_led_off.png */; };
 		FE6BDBA6176FB20500341948 /* CMGamepadConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6BDBA5176FB20500341948 /* CMGamepadConfiguration.m */; };
 		FE73719216D20F7B00ADF942 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718D16D20F7A00ADF942 /* NSObject+SBJson.m */; };
 		FE73719316D20F7B00ADF942 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */; };
 		FE73719416D20F7B00ADF942 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */; };
-		FE755EA419274F91003B10F0 /* green_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA019274F91003B10F0 /* green_led_off@2x.png */; };
-		FE755EA519274F91003B10F0 /* green_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA119274F91003B10F0 /* green_led_on@2x.png */; };
-		FE755EA619274F91003B10F0 /* green_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA219274F91003B10F0 /* green_led_on.png */; };
-		FE755EA719274F91003B10F0 /* green_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FE755EA319274F91003B10F0 /* green_led_off.png */; };
 		FE81435F16F6FE31000FABC7 /* HashSet.c in Sources */ = {isa = PBXBuildFile; fileRef = FE81435E16F6FE30000FABC7 /* HashSet.c */; };
 		FE81438D16F78AEE000FABC7 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE81438C16F78AED000FABC7 /* IOKit.framework */; };
 		FE81439016F797CC000FABC7 /* CMGamepadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE81438F16F797CC000FABC7 /* CMGamepadManager.m */; };
@@ -1266,6 +1270,10 @@
 		FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigureJoystick.xib; sourceTree = "<group>"; };
 		FE05CAD2176CD21200D6CAC0 /* CMConfigureJoystickController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMConfigureJoystickController.h; sourceTree = "<group>"; };
 		FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConfigureJoystickController.m; sourceTree = "<group>"; };
+		FE17A0771929CC96007FB866 /* fdd0_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd0_led_on@2x.png"; sourceTree = "<group>"; };
+		FE17A0781929CC96007FB866 /* fdd0_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd0_led_off@2x.png"; sourceTree = "<group>"; };
+		FE17A0791929CC96007FB866 /* fdd0_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd0_led_on.png; sourceTree = "<group>"; };
+		FE17A07A1929CC96007FB866 /* fdd0_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd0_led_off.png; sourceTree = "<group>"; };
 		FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineCell.h; sourceTree = "<group>"; };
 		FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineCell.m; sourceTree = "<group>"; };
 		FE17DBF316B3BD1A004ED68D /* logo-msx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx.png"; sourceTree = "<group>"; };
@@ -1344,6 +1352,10 @@
 		FE5458BF168C182A0002FA46 /* MGScopeBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGScopeBar.m; sourceTree = "<group>"; };
 		FE5458C0168C182A0002FA46 /* MGScopeBarDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGScopeBarDelegateProtocol.h; sourceTree = "<group>"; };
 		FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "MGScopeBar License.rtf"; sourceTree = "<group>"; };
+		FE5B56671929D331001C4E85 /* fdd1_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd1_led_off@2x.png"; sourceTree = "<group>"; };
+		FE5B56681929D331001C4E85 /* fdd1_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd1_led_on@2x.png"; sourceTree = "<group>"; };
+		FE5B56691929D331001C4E85 /* fdd1_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd1_led_on.png; sourceTree = "<group>"; };
+		FE5B566A1929D331001C4E85 /* fdd1_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd1_led_off.png; sourceTree = "<group>"; };
 		FE6BDBA4176FB20500341948 /* CMGamepadConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMGamepadConfiguration.h; sourceTree = "<group>"; };
 		FE6BDBA5176FB20500341948 /* CMGamepadConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMGamepadConfiguration.m; sourceTree = "<group>"; };
 		FE73718C16D20F6400ADF942 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
@@ -1352,10 +1364,6 @@
 		FE73718F16D20F7B00ADF942 /* SBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonTokeniser.m; sourceTree = "<group>"; };
 		FE73719016D20F7B00ADF942 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
 		FE73719116D20F7B00ADF942 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
-		FE755EA019274F91003B10F0 /* green_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_led_off@2x.png"; sourceTree = "<group>"; };
-		FE755EA119274F91003B10F0 /* green_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_led_on@2x.png"; sourceTree = "<group>"; };
-		FE755EA219274F91003B10F0 /* green_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_led_on.png; sourceTree = "<group>"; };
-		FE755EA319274F91003B10F0 /* green_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = green_led_off.png; sourceTree = "<group>"; };
 		FE81435E16F6FE30000FABC7 /* HashSet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HashSet.c; sourceTree = "<group>"; };
 		FE81436016F6FE40000FABC7 /* HashSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashSet.h; sourceTree = "<group>"; };
 		FE81438C16F78AED000FABC7 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
@@ -1591,10 +1599,14 @@
 		6BCA755D164D7D09002CA211 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				FE755EA019274F91003B10F0 /* green_led_off@2x.png */,
-				FE755EA119274F91003B10F0 /* green_led_on@2x.png */,
-				FE755EA219274F91003B10F0 /* green_led_on.png */,
-				FE755EA319274F91003B10F0 /* green_led_off.png */,
+				FE5B56671929D331001C4E85 /* fdd1_led_off@2x.png */,
+				FE5B56681929D331001C4E85 /* fdd1_led_on@2x.png */,
+				FE5B56691929D331001C4E85 /* fdd1_led_on.png */,
+				FE5B566A1929D331001C4E85 /* fdd1_led_off.png */,
+				FE17A0771929CC96007FB866 /* fdd0_led_on@2x.png */,
+				FE17A0781929CC96007FB866 /* fdd0_led_off@2x.png */,
+				FE17A0791929CC96007FB866 /* fdd0_led_on.png */,
+				FE17A07A1929CC96007FB866 /* fdd0_led_off.png */,
 				FEE801571674ACD000695F38 /* CartridgeDocument.icns */,
 				FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */,
 				FEA4548C1679B65300AAECB7 /* DiskDocument.icns */,
@@ -2680,19 +2692,18 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				E99733701298B4B500766C90 /* build_info.txt in Resources */,
 				FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */,
-				FE755EA719274F91003B10F0 /* green_led_off.png in Resources */,
 				FEC7232215FF133700CB508C /* Preferences.xib in Resources */,
 				FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */,
 				FEA01B3A1620FE360066FDD8 /* SpecialCartChooser.xib in Resources */,
 				FE2CEB581622A50500E58F9A /* Databases in Resources */,
 				FE2CEB5A1622A50500E58F9A /* Machines in Resources */,
-				FE755EA619274F91003B10F0 /* green_led_on.png in Resources */,
 				FE2A2BD916240966000CCAE4 /* RepositionCassette.xib in Resources */,
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
 				FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */,
 				6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */,
 				6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */,
 				6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */,
+				FE17A07D1929CC96007FB866 /* fdd0_led_on.png in Resources */,
 				FE1A3631165623AC0083BA21 /* icon.icns in Resources */,
 				FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */,
 				FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */,
@@ -2700,16 +2711,18 @@
 				FE1C134F167DCF8900CE2B6B /* About.xib in Resources */,
 				FE1C1358167DE0D200CE2B6B /* Documents in Resources */,
 				FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */,
-				FE755EA519274F91003B10F0 /* green_led_on@2x.png in Resources */,
 				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
+				FE17A07B1929CC96007FB866 /* fdd0_led_on@2x.png in Resources */,
+				FE5B566E1929D331001C4E85 /* fdd1_led_off.png in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
-				FE755EA419274F91003B10F0 /* green_led_off@2x.png in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
 				FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */,
+				FE5B566D1929D331001C4E85 /* fdd1_led_on.png in Resources */,
 				FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */,
 				FEB8DFBF1692402E009BE6E4 /* toolbar-joypad@2x.png in Resources */,
 				FEB8DFC01692402E009BE6E4 /* toolbar-keyboard.png in Resources */,
 				FEB8DFC11692402E009BE6E4 /* toolbar-keyboard@2x.png in Resources */,
+				FE17A07E1929CC96007FB866 /* fdd0_led_off.png in Resources */,
 				FEB8DFC21692402E009BE6E4 /* toolbar-sound.png in Resources */,
 				FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */,
 				FEACF06C16A07B9800EEF84C /* sparkle_dsa_pub.pem in Resources */,
@@ -2720,12 +2733,15 @@
 				FE17DBFD16B3BD1A004ED68D /* logo-msx2.png in Resources */,
 				FE17DBFE16B3BD1A004ED68D /* logo-msx2@2x.png in Resources */,
 				FE17DBFF16B3BD1A004ED68D /* logo-msx2p.png in Resources */,
+				FE5B566C1929D331001C4E85 /* fdd1_led_on@2x.png in Resources */,
 				FE17DC0016B3BD1A004ED68D /* logo-msx2p@2x.png in Resources */,
+				FE5B566B1929D331001C4E85 /* fdd1_led_off@2x.png in Resources */,
 				FE17DC0116B3BD1A004ED68D /* logo-turbor.png in Resources */,
 				FE17DC0216B3BD1A004ED68D /* logo-turbor@2x.png in Resources */,
 				FE46C8ED16CA188E00D25801 /* icon-downloading.png in Resources */,
 				FE46C8EE16CA188E00D25801 /* icon-downloading@2x.png in Resources */,
 				FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */,
+				FE17A07C1929CC96007FB866 /* fdd0_led_off@2x.png in Resources */,
 				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
 				FEA74EFD16FC14B60033E2DE /* Data in Resources */,
 				FE05CAD1176CD17C00D6CAC0 /* ConfigureJoystick.xib in Resources */,
