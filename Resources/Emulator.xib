@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1060" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
@@ -7,9 +7,11 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CMEmulatorController">
             <connections>
+                <outlet property="capsLed" destination="Q1u-MO-TNv" id="n7L-tJ-XzA"/>
                 <outlet property="fdd0Led" destination="2jo-qo-ICJ" id="fAr-ce-6w7"/>
                 <outlet property="fdd1Led" destination="kxZ-IV-lOt" id="s8J-kV-cuT"/>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
+                <outlet property="graphLed" destination="jQv-gf-erv" id="sIO-Zg-5E1"/>
                 <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
                 <outlet property="recentCartridgesA" destination="6RV-lQ-skO" id="v9g-5n-8Qp"/>
@@ -529,12 +531,12 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="kxZ-IV-lOt">
-                                    <rect key="frame" x="604" y="7" width="24" height="17"/>
+                                    <rect key="frame" x="597" y="7" width="24" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="fdd1_led_off" id="Mcl-lR-yVz"/>
                                 </imageView>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="2jo-qo-ICJ">
-                                    <rect key="frame" x="572" y="7" width="24" height="17"/>
+                                    <rect key="frame" x="565" y="7" width="24" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="fdd0_led_off" id="WuY-ON-yRB"/>
                                 </imageView>
@@ -550,6 +552,16 @@
                                         <binding destination="-2" name="value" keyPath="self.fpsDisplay" id="1224"/>
                                     </connections>
                                 </textField>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="jQv-gf-erv">
+                                    <rect key="frame" x="525" y="6" width="24" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="graph_led_off" id="sIM-ja-kPr"/>
+                                </imageView>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Q1u-MO-TNv">
+                                    <rect key="frame" x="493" y="6" width="24" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="caps_led_off" id="osZ-gt-9FK"/>
+                                </imageView>
                             </subviews>
                         </view>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -618,7 +630,9 @@
         </customView>
     </objects>
     <resources>
+        <image name="caps_led_off" width="20.819276809692383" height="14.746988296508789"/>
         <image name="fdd0_led_off" width="20.819276809692383" height="14.746988296508789"/>
         <image name="fdd1_led_off" width="20.819276809692383" height="14.746988296508789"/>
+        <image name="graph_led_off" width="20.819276809692383" height="14.746988296508789"/>
     </resources>
 </document>

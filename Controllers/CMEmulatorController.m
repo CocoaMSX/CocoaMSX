@@ -58,10 +58,21 @@
 #include "ArchEvent.h"
 #include "ArchSound.h"
 
+#define LED_CAPS_LOCK 0x001
+#define LED_GRAPH     0x002
+#define LED_TURBO_R   0x004
+#define LED_PAUSE     0x008
+#define LED_REN_SHA   0x010
+#define LED_FDD0      0x020
+#define LED_FDD1      0x040
+#define LED_HD        0x080
+#define LED_CASSETTE  0x100
+
 @interface CMEmulatorController ()
 
 - (CMAppDelegate *)theApp;
 
+- (int)ledState;
 - (void)zoomWindowBy:(CGFloat)factor;
 - (void)setScreenSize:(NSSize)size
               animate:(BOOL)animate;
@@ -621,16 +632,27 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return inputDeviceLayouts;
 }
 
-#define LED_FDD0 0x80
-#define LED_FDD1 0x40
-
 - (int)ledState
 {
     int state = 0;
+    if (ledGetCapslock())
+        state |= LED_CAPS_LOCK;
+    if (ledGetKana())
+        state |= LED_GRAPH;
+    if (ledGetTurboR())
+        state |= LED_TURBO_R;
+    if (ledGetPause())
+        state |= LED_PAUSE;
+    if (ledGetRensha())
+        state |= LED_REN_SHA;
+    if (ledGetHd())
+        state |= LED_HD;
     if (ledGetFdd1())
         state |= LED_FDD0;
     if (ledGetFdd2())
         state |= LED_FDD1;
+    if (ledGetCas())
+        state |= LED_CASSETTE;
     
     return state;
 }
@@ -651,6 +673,20 @@ CMEmulatorController *theEmulator = nil; // FIXME
             [fdd1Led setImage:[NSImage imageNamed:@"fdd1_led_on"]];
         else
             [fdd1Led setImage:[NSImage imageNamed:@"fdd1_led_off"]];
+    }
+    if ((state & LED_GRAPH) != (lastLedState & LED_GRAPH))
+    {
+        if (state & LED_GRAPH)
+            [graphLed setImage:[NSImage imageNamed:@"graph_led_on"]];
+        else
+            [graphLed setImage:[NSImage imageNamed:@"graph_led_off"]];
+    }
+    if ((state & LED_CAPS_LOCK) != (lastLedState & LED_CAPS_LOCK))
+    {
+        if (state & LED_CAPS_LOCK)
+            [capsLed setImage:[NSImage imageNamed:@"caps_led_on"]];
+        else
+            [capsLed setImage:[NSImage imageNamed:@"caps_led_off"]];
     }
     
     if (emulatorGetState() == EMU_PAUSED)

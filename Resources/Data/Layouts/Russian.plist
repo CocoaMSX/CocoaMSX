@@ -34,7 +34,7 @@
 	<key>14</key>
 	<dict>
 		<key>default</key>
-		<string>"</string>
+		<string>&quot;</string>
 		<key>shift</key>
 		<string>2</string>
 	</dict>
@@ -69,7 +69,7 @@
 	<key>19</key>
 	<dict>
 		<key>default</key>
-		<string>'</string>
+		<string>&apos;</string>
 		<key>shift</key>
 		<string>7</string>
 	</dict>
@@ -417,7 +417,7 @@
 	<key>66</key>
 	<dict>
 		<key>label</key>
-		<string>KeyCapsLock</string>
+		<string>Caps Lock</string>
 	</dict>
 	<key>67</key>
 	<dict>
