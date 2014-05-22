@@ -59,7 +59,7 @@
 #include "ArchSound.h"
 
 #define LED_CAPS_LOCK 0x001
-#define LED_GRAPH     0x002
+#define LED_CODE      0x002
 #define LED_TURBO_R   0x004
 #define LED_PAUSE     0x008
 #define LED_REN_SHA   0x010
@@ -638,7 +638,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (ledGetCapslock())
         state |= LED_CAPS_LOCK;
     if (ledGetKana())
-        state |= LED_GRAPH;
+        state |= LED_CODE;
     if (ledGetTurboR())
         state |= LED_TURBO_R;
     if (ledGetPause())
@@ -674,12 +674,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
         else
             [fdd1Led setImage:[NSImage imageNamed:@"fdd1_led_off"]];
     }
-    if ((state & LED_GRAPH) != (lastLedState & LED_GRAPH))
+    if ((state & LED_CODE) != (lastLedState & LED_CODE))
     {
-        if (state & LED_GRAPH)
-            [graphLed setImage:[NSImage imageNamed:@"graph_led_on"]];
+        if (state & LED_CODE)
+            [codeLed setImage:[NSImage imageNamed:@"code_led_on"]];
         else
-            [graphLed setImage:[NSImage imageNamed:@"graph_led_off"]];
+            [codeLed setImage:[NSImage imageNamed:@"code_led_off"]];
     }
     if ((state & LED_CAPS_LOCK) != (lastLedState & LED_CAPS_LOCK))
     {
