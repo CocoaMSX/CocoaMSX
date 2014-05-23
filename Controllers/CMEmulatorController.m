@@ -32,7 +32,6 @@
 
 #import "CMPreferences.h"
 #import "CMMSXKeyboard.h"
-#import "CMGamepadManager.h"
 
 #import "NSString+CMExtensions.h"
 

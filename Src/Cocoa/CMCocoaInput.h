@@ -25,13 +25,14 @@
 #import "CMMSXKeyboard.h"
 
 #import "CMGamepadManager.h"
+#import "CMKeyboardManager.h"
 
 #define CMJoypadNone 0
 
 extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;
 
-@interface CMCocoaInput : NSObject<CMGamepadDelegate>
+@interface CMCocoaInput : NSObject<CMGamepadEventDelegate, CMKeyboardEventDelegate>
 {
     int virtualCodeMap[256];
     NSUInteger pollCounter;
@@ -56,6 +57,9 @@ extern NSString * const CMKeyPasteEnded;
 @property (nonatomic, retain) CMMSXKeyCombination *keyCombinationToAutoPress;
 
 - (void)setEmulatorHasFocus:(BOOL)focus;
+
+- (void)keyboardKeyDown:(NSInteger)scanCode;
+- (void)keyboardKeyUp:(NSInteger)scanCode;
 
 - (void)keyDown:(NSEvent*)event;
 - (void)keyUp:(NSEvent*)event;

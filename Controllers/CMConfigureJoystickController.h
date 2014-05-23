@@ -26,7 +26,7 @@
 
 @class CMGamepadConfiguration;
 
-@interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, CMGamepadDelegate>
+@interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, CMGamepadEventDelegate>
 {
     NSInteger selectedJoypadId;
     NSInteger currentState;

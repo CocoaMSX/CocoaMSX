@@ -23,45 +23,26 @@
 #import <Foundation/Foundation.h>
 #import <IOKit/hid/IOHIDLib.h>
 
-#import "CMGamepad.h"
-#import "CMGamepadEventData.h"
-
-@protocol CMGamepadEventDelegate
+@protocol CMKeyboardEventDelegate
 
 @optional
-- (void)gamepadDidConnect:(CMGamepad *)gamepad;
-- (void)gamepadDidDisconnect:(CMGamepad *)gamepad;
-
-- (void)gamepad:(CMGamepad *)gamepad
-       xChanged:(NSInteger)newValue
-         center:(NSInteger)center
-      eventData:(CMGamepadEventData *)eventData;
-- (void)gamepad:(CMGamepad *)gamepad
-       yChanged:(NSInteger)newValue
-         center:(NSInteger)center
-      eventData:(CMGamepadEventData *)eventData;
-
-- (void)gamepad:(CMGamepad *)gamepad
-     buttonDown:(NSInteger)index
-      eventData:(CMGamepadEventData *)eventData;
-- (void)gamepad:(CMGamepad *)gamepad
-       buttonUp:(NSInteger)index
-      eventData:(CMGamepadEventData *)eventData;
+- (void)keyboardKeyDown:(NSInteger)scanCode;
+- (void)keyboardKeyUp:(NSInteger)scanCode;
 
 @end
 
-@interface CMGamepadManager : NSObject<CMGamepadEventDelegate>
+@interface CMKeyboardManager : NSObject<CMKeyboardEventDelegate>
 {
-    IOHIDManagerRef hidManager;
-    NSMutableDictionary *gamepads;
+    IOHIDManagerRef keyboardHidManager;
     NSMutableArray *observers;
+    
+    @private
+    NSObject *observerLock;
 }
 
-+ (CMGamepadManager *)sharedInstance;
++ (CMKeyboardManager *)sharedInstance;
 
-- (CMGamepad *)gamepadWithId:(NSInteger)gamepadId;
-
-- (void)addObserver:(id<CMGamepadEventDelegate>)observer;
-- (void)removeObserver:(id<CMGamepadEventDelegate>)observer;
+- (void)addObserver:(id<CMKeyboardEventDelegate>)observer;
+- (void)removeObserver:(id<CMKeyboardEventDelegate>)observer;
 
 @end

@@ -23,6 +23,8 @@
 #import "CMGamepadManager.h"
 #import "CMGamepad.h"
 
+#pragma mark - CMGamepadManager
+
 static CMGamepadManager *singletonManager = nil;
 
 void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
@@ -182,12 +184,12 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
      }];
 }
 
-- (void)addObserver:(id<CMGamepadDelegate>)observer
+- (void)addObserver:(id<CMGamepadEventDelegate>)observer
 {
     [observers addObject:observer];
 }
 
-- (void)removeObserver:(id<CMGamepadDelegate>)observer
+- (void)removeObserver:(id<CMGamepadEventDelegate>)observer
 {
     [observers removeObject:observer];
 }

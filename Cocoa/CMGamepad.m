@@ -22,17 +22,11 @@
  */
 #import "CMGamepad.h"
 
+#import "CMGamepadManager.h"
+
 #import <IOKit/hid/IOHIDLib.h>
 
 #define AXIS_CENTER 127
-
-#pragma mark - CMGamepadEventData
-
-@implementation CMGamepadEventData : NSObject
-
-@synthesize sourceId = _sourceId;
-
-@end
 
 #pragma mark - CMGamepad
 

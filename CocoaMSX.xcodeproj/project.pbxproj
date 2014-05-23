@@ -286,6 +286,8 @@
 		E997347A1298B4B500766C90 /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
 		FE05CAD1176CD17C00D6CAC0 /* ConfigureJoystick.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */; };
 		FE05CAD4176CD21200D6CAC0 /* CMConfigureJoystickController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */; };
+		FE0C5F04192F344900FBE461 /* CMKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C5F03192F344900FBE461 /* CMKeyboardManager.m */; };
+		FE0C5F08192F3F7500FBE461 /* CMGamepadEventData.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0C5F07192F3F7500FBE461 /* CMGamepadEventData.m */; };
 		FE17A07B1929CC96007FB866 /* fdd0_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0771929CC96007FB866 /* fdd0_led_on@2x.png */; };
 		FE17A07C1929CC96007FB866 /* fdd0_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0781929CC96007FB866 /* fdd0_led_off@2x.png */; };
 		FE17A07D1929CC96007FB866 /* fdd0_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0791929CC96007FB866 /* fdd0_led_on.png */; };
@@ -655,7 +657,6 @@
 		FEA842CC187FD1CB00F5CD6D /* R800Dasm.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733621298B4B500766C90 /* R800Dasm.c */; };
 		FEA842CD187FD1CB00F5CD6D /* R800Debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733641298B4B500766C90 /* R800Debug.c */; };
 		FEA842CE187FD1CB00F5CD6D /* R800SaveState.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733661298B4B500766C90 /* R800SaveState.c */; };
-		FEA842D1187FD64B00F5CD6D /* Core-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FEA842D0187FD64B00F5CD6D /* Core-Info.plist */; };
 		FEA842D7187FD94600F5CD6D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA842D5187FD94600F5CD6D /* InfoPlist.strings */; };
 		FEA842DC187FDA1700F5CD6D /* Databases in Resources */ = {isa = PBXBuildFile; fileRef = FEA842DA187FDA1700F5CD6D /* Databases */; };
 		FEA842DD187FDA1700F5CD6D /* Machines in Resources */ = {isa = PBXBuildFile; fileRef = FEA842DB187FDA1700F5CD6D /* Machines */; };
@@ -1278,6 +1279,10 @@
 		FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigureJoystick.xib; sourceTree = "<group>"; };
 		FE05CAD2176CD21200D6CAC0 /* CMConfigureJoystickController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMConfigureJoystickController.h; sourceTree = "<group>"; };
 		FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConfigureJoystickController.m; sourceTree = "<group>"; };
+		FE0C5F02192F344900FBE461 /* CMKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyboardManager.h; sourceTree = "<group>"; };
+		FE0C5F03192F344900FBE461 /* CMKeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyboardManager.m; sourceTree = "<group>"; };
+		FE0C5F06192F3F7500FBE461 /* CMGamepadEventData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMGamepadEventData.h; sourceTree = "<group>"; };
+		FE0C5F07192F3F7500FBE461 /* CMGamepadEventData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMGamepadEventData.m; sourceTree = "<group>"; };
 		FE17A0771929CC96007FB866 /* fdd0_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd0_led_on@2x.png"; sourceTree = "<group>"; };
 		FE17A0781929CC96007FB866 /* fdd0_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd0_led_off@2x.png"; sourceTree = "<group>"; };
 		FE17A0791929CC96007FB866 /* fdd0_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd0_led_on.png; sourceTree = "<group>"; };
@@ -2357,6 +2362,21 @@
 			path = Z80;
 			sourceTree = "<group>";
 		};
+		FE0C5F05192F3E6700FBE461 /* HID */ = {
+			isa = PBXGroup;
+			children = (
+				FE81439116F7A191000FABC7 /* CMGamepad.h */,
+				FE81439216F7A191000FABC7 /* CMGamepad.m */,
+				FE0C5F06192F3F7500FBE461 /* CMGamepadEventData.h */,
+				FE0C5F07192F3F7500FBE461 /* CMGamepadEventData.m */,
+				FE81438E16F797CC000FABC7 /* CMGamepadManager.h */,
+				FE81438F16F797CC000FABC7 /* CMGamepadManager.m */,
+				FE0C5F02192F344900FBE461 /* CMKeyboardManager.h */,
+				FE0C5F03192F344900FBE461 /* CMKeyboardManager.m */,
+			);
+			name = HID;
+			sourceTree = "<group>";
+		};
 		FE1C1359167DE41800CE2B6B /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -2551,14 +2571,11 @@
 		FEEF38AC163C82D0005F7DC8 /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
+				FE0C5F05192F3E6700FBE461 /* HID */,
 				FE99C538160E58FD00843DC8 /* CMFrameCounter.h */,
 				FE99C539160E58FD00843DC8 /* CMFrameCounter.m */,
-				FE81439116F7A191000FABC7 /* CMGamepad.h */,
-				FE81439216F7A191000FABC7 /* CMGamepad.m */,
 				FE6BDBA4176FB20500341948 /* CMGamepadConfiguration.h */,
 				FE6BDBA5176FB20500341948 /* CMGamepadConfiguration.m */,
-				FE81438E16F797CC000FABC7 /* CMGamepadManager.h */,
-				FE81438F16F797CC000FABC7 /* CMGamepadManager.m */,
 				FEAAF3F61672942600D371CD /* CMInputMethod.h */,
 				FEAAF3F71672942700D371CD /* CMInputMethod.m */,
 				FEAAF3ED167283C500D371CD /* CMInputDeviceLayout.h */,
@@ -2659,7 +2676,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CM;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Akop Karapetyan";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CocoaMSX" */;
@@ -2785,7 +2802,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FEA842DC187FDA1700F5CD6D /* Databases in Resources */,
-				FEA842D1187FD64B00F5CD6D /* Core-Info.plist in Resources */,
 				FEA842DD187FDA1700F5CD6D /* Machines in Resources */,
 				FEA842D7187FD94600F5CD6D /* InfoPlist.strings in Resources */,
 			);
@@ -2953,6 +2969,7 @@
 				E99733F21298B4B500766C90 /* romMapperMsxDos2.c in Sources */,
 				E99733F31298B4B500766C90 /* romMapperMsxMusic.c in Sources */,
 				E99733F41298B4B500766C90 /* romMapperMsxPrn.c in Sources */,
+				FE0C5F08192F3F7500FBE461 /* CMGamepadEventData.m in Sources */,
 				E99733F51298B4B500766C90 /* romMapperMsxRs232.c in Sources */,
 				E99733F61298B4B500766C90 /* romMapperNational.c in Sources */,
 				E99733F71298B4B500766C90 /* romMapperNationalFdc.c in Sources */,
@@ -3072,6 +3089,7 @@
 				FEF40ED6160DB83B009170A9 /* CocoaCdrom.c in Sources */,
 				FEF40ED7160DB83B009170A9 /* CocoaDialog.c in Sources */,
 				FEF40ED8160DB83B009170A9 /* CocoaEth.c in Sources */,
+				FE0C5F04192F344900FBE461 /* CMKeyboardManager.m in Sources */,
 				FEF40ED9160DB83B009170A9 /* CocoaFile.c in Sources */,
 				FEF40EDA160DB83B009170A9 /* CocoaGlob.c in Sources */,
 				FEF40EDB160DB83B009170A9 /* CocoaMenu.c in Sources */,
@@ -3574,7 +3592,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -3617,7 +3634,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_OBJC_ARC = YES;

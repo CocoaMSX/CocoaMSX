@@ -39,7 +39,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 @class CMAboutController;
 @class CMMachineEditorController;
-@class CMGamepadManager;
 
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate>
 {

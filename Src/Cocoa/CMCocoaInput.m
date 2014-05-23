@@ -34,6 +34,8 @@
 #include "Board.h"
 #include "InputEvent.h"
 
+#define DEBUG_KEY_STATE
+
 NSString *const CMKeyPasteStarted = @"com.akop.CocoaMSX.KeyPasteStarted";
 NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
@@ -103,8 +105,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 }
 
 @end
-
-//#define DEBUG_KEY_STATE
 
 #pragma mark - CMCocoaInput
 
@@ -371,13 +371,34 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 #endif
         // Emulator has lost focus - release all virtual keys
         [self releaseAllKeys];
+        
+        // Stop listening for key events
+        [[CMKeyboardManager sharedInstance] removeObserver:self];
     }
     else
     {
 #ifdef DEBUG
         NSLog(@"CocoaKeyboard: +Focus");
 #endif
+        // Start listening for key events
+        [[CMKeyboardManager sharedInstance] addObserver:self];
     }
+}
+
+#pragma mark - CMKeyboardEventDelegate
+
+- (void)keyboardKeyDown:(NSInteger)scanCode
+{
+#ifdef DEBUG_KEY_STATE
+    NSLog(@"keyboardKeyDown:%ld", scanCode);
+#endif
+}
+
+- (void)keyboardKeyUp:(NSInteger)scanCode
+{
+#ifdef DEBUG_KEY_STATE
+    NSLog(@"keyboardKeyUp:%ld", scanCode);
+#endif
 }
 
 #pragma mark - Private methods

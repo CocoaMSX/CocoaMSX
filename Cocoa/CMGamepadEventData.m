@@ -20,40 +20,10 @@
  **
  ******************************************************************************
  */
-#import <Foundation/Foundation.h>
-#import <IOKit/hid/IOHIDLib.h>
+#import "CMGamepadEventData.h"
 
-@interface CMGamepad : NSObject
-{
-    id _delegate;
-    NSInteger _gamepadId;
-    
-    BOOL registeredForEvents;
-    IOHIDDeviceRef hidDevice;
-    
-    NSInteger _locationId;
-    NSInteger _vendorId;
-    NSInteger _productId;
-    NSString *_name;
-}
+@implementation CMGamepadEventData
 
-@property (nonatomic, assign) id delegate;
-@property (nonatomic, assign) NSInteger gamepadId;
-
-@property (nonatomic, readonly) NSInteger locationId;
-@property (nonatomic, readonly) NSInteger vendorId;
-@property (nonatomic, readonly) NSInteger productId;
-@property (nonatomic, readonly) NSString *name;
-
-+ (NSArray *)allGamepads;
-
-- (id)initWithHidDevice:(IOHIDDeviceRef)device;
-
-- (void)registerForEvents;
-
-- (NSInteger)vendorProductId;
-- (NSString *)vendorProductString;
-
-- (NSMutableDictionary *)currentAxisValues;
+@synthesize sourceId = _sourceId;
 
 @end
