@@ -187,98 +187,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     [self reloadConfigurations];
 }
 
-#pragma mark - Key event methods
-
-- (void)keyDown:(NSEvent*)event
-{
-    if ([event isARepeat])
-        return;
-    
-#ifdef DEBUG_KEY_STATE
-    NSLog(@"keyDown: %i", [event keyCode]);
-#endif
-    
-    // Ignore keys while Command is pressed - they don't generate keyUp
-    if (([event modifierFlags] & NSCommandKeyMask) != 0)
-        return;
-    
-    if ([event keyCode] == 53) // Escape
-        [self stopPasting];
-    
-    [self handleKeyEvent:[event keyCode] isDown:YES];
-}
-
-- (void)keyUp:(NSEvent*)event
-{
-    if ([event isARepeat])
-        return;
-    
-#ifdef DEBUG_KEY_STATE
-    NSLog(@"keyUp: %i", [event keyCode]);
-#endif
-    
-    [self handleKeyEvent:[event keyCode] isDown:NO];
-}
-
-- (void)flagsChanged:(NSEvent *)event
-{
-#ifdef DEBUG_KEY_STATE
-    NSLog(@"flagsChanged: %1$x; flags: %2$ld (0x%2$lx)",
-          event.keyCode, event.modifierFlags);
-#endif
-    
-    if ([event keyCode] == CMKeyLeftShift)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMLeftShiftKeyMask) == CMLeftShiftKeyMask)];
-    else if ([event keyCode] == CMKeyRightShift)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMRightShiftKeyMask) == CMRightShiftKeyMask)];
-    else if ([event keyCode] == CMKeyLeftAlt)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMLeftAltKeyMask) == CMLeftAltKeyMask)];
-    else if ([event keyCode] == CMKeyRightAlt)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMRightAltKeyMask) == CMRightAltKeyMask)];
-    else if ([event keyCode] == CMKeyLeftControl)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMLeftControlKeyMask) == CMLeftControlKeyMask)];
-    else if ([event keyCode] == CMKeyRightControl)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMRightControlKeyMask) == CMRightControlKeyMask)];
-    else if ([event keyCode] == CMKeyLeftCommand)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMLeftCommandKeyMask) == CMLeftCommandKeyMask)];
-    else if ([event keyCode] == CMKeyRightCommand)
-        [self handleKeyEvent:[event keyCode]
-                      isDown:(([event modifierFlags] & CMRightCommandKeyMask) == CMRightCommandKeyMask)];
-    else if ([event keyCode] == CMKeyCapsLock)
-    {
-        // Mac Caps Lock has no up/down. When it's pressed, auto-press the key
-        // (it will be released automatically)
-        
-        CMKeyboardInput *input = [CMKeyboardInput keyboardInputWithKeyCode:[event keyCode]];
-        NSInteger virtualCode = [[theEmulator keyboardLayout] virtualCodeForInputMethod:input];
-        
-        if (virtualCode != CMUnknownVirtualCode)
-        {
-            CMMSXKeyCombination *keyCombination = [CMMSXKeyCombination combinationWithVirtualCode:virtualCode
-                                                                                 stateFlags:CMMSXKeyStateDefault];
-            
-            [self setKeyCombinationToAutoPress:keyCombination];
-            timeOfAutoPress = [NSDate timeIntervalSinceReferenceDate];
-        }
-    }
-    
-    if ([event keyCode] == CMKeyLeftCommand || [event keyCode] == CMKeyRightCommand)
-    {
-        // If Command is toggled while another key is down, releasing the
-        // other key no longer generates a keyUp event, and the virtual key
-        // 'sticks'. Release all virtual keys if Command is pressed.
-        
-        [self releaseAllKeys];
-    }
-}
-
 #pragma mark - Private methods
 
 - (void)reloadConfigurations
@@ -383,22 +291,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         // Start listening for key events
         [[CMKeyboardManager sharedInstance] addObserver:self];
     }
-}
-
-#pragma mark - CMKeyboardEventDelegate
-
-- (void)keyboardKeyDown:(NSInteger)scanCode
-{
-#ifdef DEBUG_KEY_STATE
-    NSLog(@"keyboardKeyDown:%ld", scanCode);
-#endif
-}
-
-- (void)keyboardKeyUp:(NSInteger)scanCode
-{
-#ifdef DEBUG_KEY_STATE
-    NSLog(@"keyboardKeyUp:%ld", scanCode);
-#endif
 }
 
 #pragma mark - Private methods
@@ -521,6 +413,28 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
             virtualCodeSet([[self keyCombinationToAutoPress] virtualCode]);
         }
     }
+}
+
+#pragma mark - CMKeyboardEventDelegate
+
+- (void)keyStateChanged:(CMKeyEventData *)event
+                 isDown:(BOOL)isDown
+{
+#ifdef DEBUG_KEY_STATE
+    if (isDown)
+        NSLog(@"keyboardKeyDown:%ld", [event scanCode]);
+    else
+        NSLog(@"keyboardKeyUp:%ld", [event scanCode]);
+#endif
+    
+    if (isDown)
+    {
+        if ([event keyCode] == 53) // Escape
+            [self stopPasting];
+    }
+    
+    [self handleKeyEvent:[event keyCode]
+                  isDown:isDown];
 }
 
 #pragma mark - CMGamepadDelegate

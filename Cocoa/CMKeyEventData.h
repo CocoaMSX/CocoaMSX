@@ -22,48 +22,13 @@
  */
 #import <Foundation/Foundation.h>
 
-#import "CMMSXKeyboard.h"
-
-#import "CMGamepadManager.h"
-#import "CMKeyboardManager.h"
-
-#define CMJoypadNone 0
-
-extern NSString * const CMKeyPasteStarted;
-extern NSString * const CMKeyPasteEnded;
-
-@interface CMCocoaInput : NSObject<CMGamepadEventDelegate, CMKeyboardEventDelegate>
+@interface CMKeyEventData : NSObject
 {
-    int virtualCodeMap[256];
-    NSUInteger pollCounter;
-    
-    NSObject *keysToPasteLock;
-    
-    NSMutableArray *keysToPaste;
-    
-    NSInteger _joypadOneId;
-    NSInteger _joypadTwoId;
-    
-    CMMSXKeyCombination *_keyCombinationToAutoPress;
-    NSTimeInterval timeOfAutoPress;
-    BOOL autoKeyPressPasted;
-    
-    NSMutableDictionary *joypadConfigurations;
+    NSInteger _scanCode;
+    NSInteger _keyCode;
 }
 
-@property (nonatomic, assign, readonly) NSInteger joypadOneId;
-@property (nonatomic, assign, readonly) NSInteger joypadTwoId;
-
-@property (nonatomic, retain) CMMSXKeyCombination *keyCombinationToAutoPress;
-
-- (void)setEmulatorHasFocus:(BOOL)focus;
-
-- (void)resetState;
-
-- (BOOL)pasteText:(NSString *)text
-       layoutName:(NSString *)layoutName;
-
-- (void)resetState;
-- (void)releaseAllKeys;
+@property (nonatomic, assign) NSInteger scanCode;
+@property (nonatomic, assign) NSInteger keyCode;
 
 @end

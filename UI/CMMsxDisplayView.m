@@ -224,23 +224,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-#pragma mark - Keyboard Callbacks
-
-- (void)keyDown:(NSEvent *)theEvent
-{
-    [[emulator input] keyDown:theEvent];
-}
-
-- (void)keyUp:(NSEvent *)theEvent
-{
-    [[emulator input] keyUp:theEvent];
-}
-
-- (void)flagsChanged:(NSEvent *)theEvent
-{
-    [[emulator input] flagsChanged:theEvent];
-}
-
 #pragma mark - Mouse Callbacks
 
 - (void)mouseMoved:(NSEvent *)theEvent

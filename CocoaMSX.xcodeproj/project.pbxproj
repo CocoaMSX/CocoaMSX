@@ -331,6 +331,7 @@
 		FE3754E216B638DB005360CC /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE3754D816B638DB005360CC /* SBJsonWriter.m */; };
 		FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */; };
 		FE3D5E6716AE6EBA00898DF5 /* toolbar-computer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */; };
+		FE41ABA11930056100AB89FF /* CMKeyEventData.m in Sources */ = {isa = PBXBuildFile; fileRef = FE41ABA01930056100AB89FF /* CMKeyEventData.m */; };
 		FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE42836215FE857400ED7CB9 /* Emulator.xib */; };
 		FE42836A15FE8DF300ED7CB9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42836915FE8DF300ED7CB9 /* main.m */; };
 		FE42CF80160EBF9B00D06E1D /* CMCocoaTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */; };
@@ -1350,6 +1351,8 @@
 		FE3754D816B638DB005360CC /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-computer.png"; sourceTree = "<group>"; };
 		FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-computer@2x.png"; sourceTree = "<group>"; };
+		FE41ABA01930056100AB89FF /* CMKeyEventData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMKeyEventData.m; sourceTree = "<group>"; };
+		FE41ABA21930056800AB89FF /* CMKeyEventData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMKeyEventData.h; sourceTree = "<group>"; };
 		FE42836215FE857400ED7CB9 /* Emulator.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Emulator.xib; sourceTree = "<group>"; };
 		FE42836915FE8DF300ED7CB9 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMCocoaTimer.m; sourceTree = "<group>"; };
@@ -2373,6 +2376,8 @@
 				FE81438F16F797CC000FABC7 /* CMGamepadManager.m */,
 				FE0C5F02192F344900FBE461 /* CMKeyboardManager.h */,
 				FE0C5F03192F344900FBE461 /* CMKeyboardManager.m */,
+				FE41ABA21930056800AB89FF /* CMKeyEventData.h */,
+				FE41ABA01930056100AB89FF /* CMKeyEventData.m */,
 			);
 			name = HID;
 			sourceTree = "<group>";
@@ -3016,6 +3021,7 @@
 				E99734211298B4B500766C90 /* sramMapperEseSCC.c in Sources */,
 				E99734221298B4B500766C90 /* sramMapperMatsuchita.c in Sources */,
 				E99734231298B4B500766C90 /* sramMapperMegaSCSI.c in Sources */,
+				FE41ABA11930056100AB89FF /* CMKeyEventData.m in Sources */,
 				E99734241298B4B500766C90 /* sramMapperS1985.c in Sources */,
 				E99734381298B4B500766C90 /* AudioMixer.c in Sources */,
 				E99734391298B4B500766C90 /* AY8910.c in Sources */,

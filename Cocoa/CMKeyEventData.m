@@ -20,31 +20,11 @@
  **
  ******************************************************************************
  */
-#import <Foundation/Foundation.h>
-#import <IOKit/hid/IOHIDLib.h>
-
 #import "CMKeyEventData.h"
 
-@protocol CMKeyboardEventDelegate
+@implementation CMKeyEventData
 
-@required
-- (void)keyStateChanged:(CMKeyEventData *)event
-                 isDown:(BOOL)isDown;
-
-@end
-
-@interface CMKeyboardManager : NSObject
-{
-    IOHIDManagerRef keyboardHidManager;
-    NSMutableArray *observers;
-    
-    @private
-    NSObject *observerLock;
-}
-
-+ (CMKeyboardManager *)sharedInstance;
-
-- (void)addObserver:(id<CMKeyboardEventDelegate>)observer;
-- (void)removeObserver:(id<CMKeyboardEventDelegate>)observer;
+@synthesize scanCode = _scanCode;
+@synthesize keyCode = _keyCode;
 
 @end
