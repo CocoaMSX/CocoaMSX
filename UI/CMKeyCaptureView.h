@@ -31,4 +31,6 @@
 + (NSString *)descriptionForKeyCode:(NSNumber *)keyCode;
 + (NSNumber *)keyCodeForDescription:(NSString *)description;
 
+- (BOOL)captureKeyCode:(NSInteger)keyCode;
+
 @end

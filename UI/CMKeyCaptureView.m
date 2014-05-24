@@ -29,7 +29,6 @@
 
 @interface CMKeyCaptureView ()
 
-- (void)captureKeyCode:(NSInteger)keyCode;
 - (NSRect)unmapRect;
 - (BOOL)canUnmap;
 
@@ -231,18 +230,6 @@ static NSArray *keyCodesToIgnore;
 
 #pragma mark - Input events
 
-- (void)keyDown:(NSEvent *)theEvent
-{
-    if (![keyCodesToIgnore containsObject:@([theEvent keyCode])])
-        [self captureKeyCode:[theEvent keyCode]];
-}
-
-- (void)flagsChanged:(NSEvent *)theEvent
-{
-    if (![keyCodesToIgnore containsObject:@([theEvent keyCode])])
-        [self captureKeyCode:[theEvent keyCode]];
-}
-
 - (BOOL)becomeFirstResponder
 {
     if ([super becomeFirstResponder])
@@ -270,8 +257,11 @@ static NSArray *keyCodesToIgnore;
 
 #pragma mark - Private methods
 
-- (void)captureKeyCode:(NSInteger)keyCode
+- (BOOL)captureKeyCode:(NSInteger)keyCode
 {
+    if ([keyCodesToIgnore containsObject:@(keyCode)])
+        return NO;
+
     NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:@(keyCode)];
     if (!keyName)
         keyName = @"";
@@ -282,6 +272,8 @@ static NSArray *keyCodesToIgnore;
     
     // Resign first responder (closes the editor)
     [[self window] makeFirstResponder:(NSView *)self.delegate];
+    
+    return YES;
 }
 
 + (NSString *)descriptionForKeyCode:(NSNumber *)keyCode

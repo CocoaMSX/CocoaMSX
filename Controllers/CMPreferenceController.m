@@ -1176,6 +1176,26 @@ static NSArray *keysInOrderOfAppearance;
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
     [self synchronizeSettings];
+
+    // Start listening for key events
+    [[CMKeyboardManager sharedInstance] addObserver:self];
+}
+
+- (void)windowDidResignKey:(NSNotification *)notification
+{
+    // Stop listening for key events
+    [[CMKeyboardManager sharedInstance] removeObserver:self];
+}
+
+#pragma mark - CMKeyboardEventDelegate
+
+- (void)keyStateChanged:(CMKeyEventData *)event isDown:(BOOL)isDown
+{
+    if (!isDown && [[self window] firstResponder] == keyCaptureView)
+    {
+        // A key was released while the keyCaptureView has focus
+        [keyCaptureView captureKeyCode:[event keyCode]];
+    }
 }
 
 #pragma mark - NSNotifications

@@ -2602,7 +2602,7 @@ void archTrap(UInt8 value)
 #endif
     
     emulatorSuspend();
-    insertCartridge(self.properties, slot, romName, NULL, romType, 0);
+    insertCartridge([self properties], slot, romName, NULL, romType, 0);
     emulatorResume();
 }
 

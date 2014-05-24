@@ -25,6 +25,7 @@
 #import "MGScopeBarDelegateProtocol.h"
 
 #import "CMConfigureJoystickController.h"
+#import "CMKeyboardManager.h"
 
 @class CMEmulatorController;
 @class CMMsxKeyLayout;
@@ -32,7 +33,7 @@
 @class CMKeyCaptureView;
 @class SBJsonParser;
 
-@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate>
+@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
 {
     CMEmulatorController *_emulator;
     
