@@ -31,4 +31,6 @@
 @property (nonatomic, assign) NSInteger scanCode;
 @property (nonatomic, assign) NSInteger keyCode;
 
+- (BOOL)hasKeyCodeEquivalent;
+
 @end

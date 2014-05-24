@@ -1191,10 +1191,19 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)keyStateChanged:(CMKeyEventData *)event isDown:(BOOL)isDown
 {
-    if (!isDown && [[self window] firstResponder] == keyCaptureView)
+    if ([event hasKeyCodeEquivalent])
     {
-        // A key was released while the keyCaptureView has focus
-        [keyCaptureView captureKeyCode:[event keyCode]];
+        // Key with a valid keyCode
+        if ([[self window] firstResponder] == keyCaptureView)
+        {
+            // keyCaptureView is in focus
+            BOOL isReturn = [event keyCode] == 0x24 || [event keyCode] == 0x4c;
+            if (isReturn || !isDown)
+            {
+                // A key was released while the keyCaptureView has focus
+                [keyCaptureView captureKeyCode:[event keyCode]];
+            }
+        }
     }
 }
 
@@ -1343,7 +1352,6 @@ static NSArray *keysInOrderOfAppearance;
                 {
                     NSString *label = [keyboard presentationLabelForVirtualCode:virtualCode
                                                                        keyState:selectedKeyboardShiftState];
-                    
                     return label ? label : CMLoc(@"Unavailable", @"");
                 }
             }

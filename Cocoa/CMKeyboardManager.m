@@ -204,7 +204,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
     case kHIDUsage_KeyboardApplication:         return 0x6e;
     case kHIDUsage_KeypadEqualSign:             return 0x51;
     
-    case kHIDUsage_KeyboardF13:                 return 0x69;
+    case kHIDUsage_KeyboardPrintScreen:         return 0x69;
     case kHIDUsage_KeyboardF14:                 return 0x6b;
     case kHIDUsage_KeyboardF15:                 return 0x71;
     

@@ -422,9 +422,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 {
 #ifdef DEBUG_KEY_STATE
     if (isDown)
-        NSLog(@"keyboardKeyDown:%ld", [event scanCode]);
+        NSLog(@"keyboardKeyDown:%lx", [event keyCode]);
     else
-        NSLog(@"keyboardKeyUp:%ld", [event scanCode]);
+        NSLog(@"keyboardKeyUp:%lx", [event keyCode]);
 #endif
     
     if (isDown)

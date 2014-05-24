@@ -61,85 +61,86 @@ static NSArray *keyCodesToIgnore;
                         @CMKeyRightCommand,
                         
                         nil];
-    
+
     keyCodeLookupTable = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
                           
                           // These seem to be unused. Included here to avoid
                           // creating collisions in reverseKeyCodeLookupTable
                           // with identical names
                           
-                          @"",    @102,
-                          @"",    @104,
-                          @"",    @108,
-                          @"",    @110,
-                          @"",    @112,
+                          @"",    @0x66,
+                          @"",    @0x68,
+                          @"",    @0x6c,
+                          @"",    @0x6e,
+                          @"",    @0x70,
                           
                           // Well-known keys
                           
-                          @"F1",  @122,
-                          @"F2",  @120,
-                          @"F3",  @99,
-                          @"F4",  @118,
-                          @"F5",  @96,
-                          @"F6",  @97,
-                          @"F7",  @98,
-                          @"F8",  @100,
-                          @"F9",  @101,
-                          @"F10", @109,
-                          @"F11", @103,
-                          @"F12", @111,
-                          @"F13", @105,
-                          @"F14", @107,
-                          @"F15", @113,
-                          @"F16", @106,
-                          @"F17", @64,
-                          @"F18", @79,
-                          @"F19", @80,
+                          @"F1",  @0x7a,
+                          @"F2",  @0x78,
+                          @"F3",  @0x63,
+                          @"F4",  @0x76,
+                          @"F5",  @0x60,
+                          @"F6",  @0x61,
+                          @"F7",  @0x62,
+                          @"F8",  @0x64,
+                          @"F9",  @0x65,
+                          @"F10", @0x6d,
+                          @"F11", @0x67,
+                          @"F12", @0x6f,
+                          CMLoc(@"Print Screen", @"Mac Key"), @0x69,
+                          @"F14", @0x6b,
+                          @"F15", @0x71,
+                          @"F16", @0x6a,
+                          @"F17", @0x40,
+                          @"F18", @0x4f,
+                          @"F19", @0x50,
                           
-                          CMLoc(@"Caps Lock", @"Mac Key"), @57,
-                          CMLoc(@"Space", @"Mac Key"), @49,
+                          CMLoc(@"Caps Lock", @"Mac Key"), @0x39,
+                          CMLoc(@"Space", @"Mac Key"),     @0x31,
                           
-                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kShiftUnicode],    @56,
-                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kShiftUnicode],   @60,
-                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kControlUnicode],  @59,
-                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kControlUnicode], @62,
-                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kOptionUnicode],   @58,
-                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kOptionUnicode],  @61,
-                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kCommandUnicode],  @55,
-                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kCommandUnicode], @54,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kShiftUnicode],    @0x38,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kShiftUnicode],   @0x3c,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kControlUnicode],  @0x3b,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kControlUnicode], @0x3e,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kOptionUnicode],   @0x3a,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kOptionUnicode],  @0x3d,
+                          [NSString stringWithFormat:CMLoc(@"Left %C", @"Mac Key"), kCommandUnicode],  @0x37,
+                          [NSString stringWithFormat:CMLoc(@"Right %C", @"Mac Key"), kCommandUnicode], @0x36,
                           
-                          CMLoc(@"Numeric Keypad .", @"Mac Key"), @65,
-                          CMLoc(@"Numeric Keypad *", @"Mac Key"), @67,
-                          CMLoc(@"Numeric Keypad /", @"Mac Key"), @75,
-                          CMLoc(@"Numeric Keypad -", @"Mac Key"), @78,
-                          CMLoc(@"Numeric Keypad =", @"Mac Key"), @81,
-                          CMLoc(@"Numeric Keypad 0", @"Mac Key"), @82,
-                          CMLoc(@"Numeric Keypad 1", @"Mac Key"), @83,
-                          CMLoc(@"Numeric Keypad 2", @"Mac Key"), @84,
-                          CMLoc(@"Numeric Keypad 3", @"Mac Key"), @85,
-                          CMLoc(@"Numeric Keypad 4", @"Mac Key"), @86,
-                          CMLoc(@"Numeric Keypad 5", @"Mac Key"), @87,
-                          CMLoc(@"Numeric Keypad 6", @"Mac Key"), @88,
-                          CMLoc(@"Numeric Keypad 7", @"Mac Key"), @89,
-                          CMLoc(@"Numeric Keypad 8", @"Mac Key"), @91,
-                          CMLoc(@"Numeric Keypad 9", @"Mac Key"), @92,
+                          CMLoc(@"Keypad .", @"Mac Key"),     @0x41,
+                          CMLoc(@"Keypad *", @"Mac Key"),     @0x43,
+                          CMLoc(@"Keypad +", @"Mac Key"),     @0x45,
+                          CMLoc(@"Keypad /", @"Mac Key"),     @0x4b,
+                          CMLoc(@"Keypad -", @"Mac Key"),     @0x4e,
+                          CMLoc(@"Keypad =", @"Mac Key"),     @0x51,
+                          CMLoc(@"Keypad 0", @"Mac Key"),     @0x52,
+                          CMLoc(@"Keypad 1", @"Mac Key"),     @0x53,
+                          CMLoc(@"Keypad 2", @"Mac Key"),     @0x54,
+                          CMLoc(@"Keypad 3", @"Mac Key"),     @0x55,
+                          CMLoc(@"Keypad 4", @"Mac Key"),     @0x56,
+                          CMLoc(@"Keypad 5", @"Mac Key"),     @0x57,
+                          CMLoc(@"Keypad 6", @"Mac Key"),     @0x58,
+                          CMLoc(@"Keypad 7", @"Mac Key"),     @0x59,
+                          CMLoc(@"Keypad 8", @"Mac Key"),     @0x5b,
+                          CMLoc(@"Keypad 9", @"Mac Key"),     @0x5c,
+                          CMLoc(@"Keypad Enter", @"Mac Key"), @0x4c,
                           
-                          CMCharAsString(0x232B), @51,  // Backspace
-                          CMCharAsString(0x2326), @117, // Delete
-                          CMCharAsString(0x2327), @71,  // Numpad
-                          CMCharAsString(0x2190), @123, // Cursor Left
-                          CMCharAsString(0x2192), @124, // Cursor Right
-                          CMCharAsString(0x2191), @126, // Cursor Up
-                          CMCharAsString(0x2193), @125, // Cursor Down
-                          CMCharAsString(0x2196), @115, // Home
-                          CMCharAsString(0x2198), @119, // End
-                          CMCharAsString(0x238B), @53,  // Escape
-                          CMCharAsString(0x21DF), @121, // Page Down
-                          CMCharAsString(0x21DE), @116, // Page Up
-                          CMCharAsString(0x21A9), @36,  // Return R-L
-                          CMCharAsString(0x2305), @76,  // Return
-                          CMCharAsString(0x21E5), @48,  // Tab
-                          CMCharAsString(0x003F), @114, // Help
+                          CMLoc(@"Insert", "Mac Key"),    @0x72, // Insert
+                          CMCharAsString(0x232B),         @0x33, // Backspace
+                          CMCharAsString(0x2326),         @0x75, // Delete
+                          CMLoc(@"Num Lock", "Mac Key"),  @0x47, // Numpad
+                          CMCharAsString(0x2190),         @0x7b, // Cursor Left
+                          CMCharAsString(0x2192),         @0x7c, // Cursor Right
+                          CMCharAsString(0x2191),         @0x7e, // Cursor Up
+                          CMCharAsString(0x2193),         @0x7d, // Cursor Down
+                          CMLoc(@"Home", "Mac Key"),      @0x73, // Home
+                          CMLoc(@"End", "Mac Key"),       @0x77, // End
+                          CMLoc(@"Escape", "Mac Key"),    @0x35, // Escape
+                          CMLoc(@"Page Down", "Mac Key"), @0x79, // Page Down
+                          CMLoc(@"Page Up", "Mac Key"),   @0x74, // Page Up
+                          CMCharAsString(0x21A9),         @0x24, // Return R-L
+                          CMCharAsString(0x21E5),         @0x30, // Tab
                           
                           nil];
     
@@ -253,6 +254,14 @@ static NSArray *keyCodesToIgnore;
         if (NSPointInRect(mousePosition, [self unmapRect]))
             [self captureKeyCode:CMKeyNone];
     }
+}
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+}
+
+- (void)keyUp:(NSEvent *)theEvent
+{
 }
 
 #pragma mark - Private methods

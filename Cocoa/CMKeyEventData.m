@@ -27,4 +27,9 @@
 @synthesize scanCode = _scanCode;
 @synthesize keyCode = _keyCode;
 
+- (BOOL)hasKeyCodeEquivalent
+{
+    return _keyCode != 0xff;
+}
+
 @end
