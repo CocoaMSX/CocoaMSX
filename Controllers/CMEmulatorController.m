@@ -72,6 +72,12 @@
 - (CMAppDelegate *)theApp;
 
 - (int)ledState;
+- (void)toggleIfLedState:(int)state
+              ledBitMask:(int)bitMask
+               imageView:(NSImageView *)imageView
+           offStateImage:(NSString *)offImage
+            onStateImage:(NSString *)onImage;
+
 - (void)zoomWindowBy:(CGFloat)factor;
 - (void)setScreenSize:(NSSize)size
               animate:(BOOL)animate;
@@ -153,8 +159,8 @@
 @synthesize lastSavedState = _lastSavedState;
 @synthesize lastLoadedState = _lastLoadedState;
 
-#define WIDTH_DEFAULT   272.0
-#define HEIGHT_DEFAULT  240.0
+#define WIDTH_DEFAULT   544.0
+#define HEIGHT_DEFAULT  480.0
 #define WIDTH_TO_HEIGHT_RATIO (WIDTH_DEFAULT / HEIGHT_DEFAULT)
 
 #define CMMinYEdgeHeight 32.0 // Height of the status bar at bottom
@@ -656,37 +662,45 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return state;
 }
 
+- (void)toggleIfLedState:(int)state
+              ledBitMask:(int)bitMask
+               imageView:(NSImageView *)imageView
+           offStateImage:(NSString *)offImage
+            onStateImage:(NSString *)onImage
+{
+    if ((state & bitMask) != (lastLedState & bitMask))
+    {
+        if (state & bitMask)
+            [imageView setImage:[NSImage imageNamed:onImage]];
+        else
+            [imageView setImage:[NSImage imageNamed:offImage]];
+    }
+}
+
 - (void)updateFps:(CGFloat)fps
 {
     int state = [self ledState];
-    if ((state & LED_FDD0) != (lastLedState & LED_FDD0))
-    {
-        if (state & LED_FDD0)
-            [fdd0Led setImage:[NSImage imageNamed:@"fdd0_led_on"]];
-        else
-            [fdd0Led setImage:[NSImage imageNamed:@"fdd0_led_off"]];
-    }
-    if ((state & LED_FDD1) != (lastLedState & LED_FDD1))
-    {
-        if (state & LED_FDD1)
-            [fdd1Led setImage:[NSImage imageNamed:@"fdd1_led_on"]];
-        else
-            [fdd1Led setImage:[NSImage imageNamed:@"fdd1_led_off"]];
-    }
-    if ((state & LED_CODE) != (lastLedState & LED_CODE))
-    {
-        if (state & LED_CODE)
-            [codeLed setImage:[NSImage imageNamed:@"code_led_on"]];
-        else
-            [codeLed setImage:[NSImage imageNamed:@"code_led_off"]];
-    }
-    if ((state & LED_CAPS_LOCK) != (lastLedState & LED_CAPS_LOCK))
-    {
-        if (state & LED_CAPS_LOCK)
-            [capsLed setImage:[NSImage imageNamed:@"caps_led_on"]];
-        else
-            [capsLed setImage:[NSImage imageNamed:@"caps_led_off"]];
-    }
+    
+    [self toggleIfLedState:state
+                ledBitMask:LED_FDD0
+                 imageView:fdd0Led
+             offStateImage:@"fdd0_led_off"
+              onStateImage:@"fdd0_led_on"];
+    [self toggleIfLedState:state
+                ledBitMask:LED_FDD1
+                 imageView:fdd1Led
+             offStateImage:@"fdd1_led_off"
+              onStateImage:@"fdd1_led_on"];
+    [self toggleIfLedState:state
+                ledBitMask:LED_CODE
+                 imageView:codeLed
+             offStateImage:@"code_led_off"
+              onStateImage:@"code_led_on"];
+    [self toggleIfLedState:state
+                ledBitMask:LED_CAPS_LOCK
+                 imageView:capsLed
+             offStateImage:@"caps_led_off"
+              onStateImage:@"caps_led_on"];
     
     if (emulatorGetState() == EMU_PAUSED)
         [self setFpsDisplay:CMLoc(@"MSX Paused", @"")];
@@ -2190,11 +2204,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self zoomWindowBy:1.0];
 }
 
-- (void)doubleSize:(id)sender
-{
-    [self zoomWindowBy:2.0];
-}
-
 - (void)toggleFullScreen:(id)sender
 {
     [self toggleFullScreen];
@@ -2679,8 +2688,7 @@ void archTrap(UInt8 value)
         return (*properties->media.tapes[0].fileName) ? NSOnState : NSOffState;
     else if ([item action] == @selector(repositionCassette:))
         return (*properties->media.tapes[0].fileName) ? NSOnState : NSOffState;
-    else if ([item action] == @selector(normalSize:) ||
-             [item action] == @selector(doubleSize:))
+    else if ([item action] == @selector(normalSize:))
     {
         return ![self isInFullScreenMode];
     }

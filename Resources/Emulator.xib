@@ -12,7 +12,6 @@
                 <outlet property="fdd0Led" destination="2jo-qo-ICJ" id="fAr-ce-6w7"/>
                 <outlet property="fdd1Led" destination="kxZ-IV-lOt" id="s8J-kV-cuT"/>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
-                <outlet property="graphLed" destination="jQv-gf-erv" id="sIO-Zg-5E1"/>
                 <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
                 <outlet property="recentCartridgesA" destination="6RV-lQ-skO" id="v9g-5n-8Qp"/>
@@ -406,11 +405,6 @@
                                     <action selector="normalSize:" target="-2" id="1204"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Double Size" keyEquivalent="2" id="845">
-                                <connections>
-                                    <action selector="doubleSize:" target="-2" id="1205"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="847"/>
                             <menuItem title="Show Status Bar" keyEquivalent="/" id="1279">
                                 <connections>
@@ -531,15 +525,25 @@
                             <rect key="frame" x="0.0" y="0.0" width="640" height="32"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="kxZ-IV-lOt">
-                                    <rect key="frame" x="597" y="7" width="24" height="17"/>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Q1u-MO-TNv">
+                                    <rect key="frame" x="493" y="6" width="24" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="fdd1_led_off" id="Mcl-lR-yVz"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="caps_led_off" id="osZ-gt-9FK"/>
+                                </imageView>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="jQv-gf-erv">
+                                    <rect key="frame" x="525" y="6" width="24" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="code_led_off" id="sIM-ja-kPr"/>
                                 </imageView>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="2jo-qo-ICJ">
                                     <rect key="frame" x="565" y="7" width="24" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="fdd0_led_off" id="WuY-ON-yRB"/>
+                                </imageView>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="kxZ-IV-lOt">
+                                    <rect key="frame" x="597" y="7" width="24" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="fdd1_led_off" id="Mcl-lR-yVz"/>
                                 </imageView>
                                 <textField verticalHuggingPriority="750" id="1076">
                                     <rect key="frame" x="224" y="6" width="192" height="17"/>
@@ -553,16 +557,6 @@
                                         <binding destination="-2" name="value" keyPath="self.fpsDisplay" id="1224"/>
                                     </connections>
                                 </textField>
-                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="jQv-gf-erv">
-                                    <rect key="frame" x="525" y="6" width="24" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="code_led_off" id="sIM-ja-kPr"/>
-                                </imageView>
-                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Q1u-MO-TNv">
-                                    <rect key="frame" x="493" y="6" width="24" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="caps_led_off" id="osZ-gt-9FK"/>
-                                </imageView>
                             </subviews>
                         </view>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>

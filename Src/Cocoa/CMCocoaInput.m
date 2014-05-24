@@ -433,8 +433,12 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
             [self stopPasting];
     }
     
-    [self handleKeyEvent:[event keyCode]
-                  isDown:isDown];
+    // Don't generate a KeyDown if Command is pressed
+    if (([NSEvent modifierFlags] & NSCommandKeyMask) == 0 || !isDown)
+    {
+        [self handleKeyEvent:[event keyCode]
+                      isDown:isDown];
+    }
 }
 
 #pragma mark - CMGamepadDelegate
