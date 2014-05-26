@@ -34,7 +34,7 @@
 #include "Board.h"
 #include "InputEvent.h"
 
-#define DEBUG_KEY_STATE
+//#define DEBUG_KEY_STATE
 
 NSString *const CMKeyPasteStarted = @"com.akop.CocoaMSX.KeyPasteStarted";
 NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";

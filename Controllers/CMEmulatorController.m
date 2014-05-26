@@ -2222,6 +2222,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
 }
 
+#pragma mark - Key events
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+    // Intercept default behavior - which is beeps
+}
+
 #pragma mark - blueMSX implementations - emulation
 
 void archEmulationStartNotification()
