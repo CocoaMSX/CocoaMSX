@@ -178,6 +178,9 @@ static NSArray *keysInOrderOfAppearance;
 #define SCOPEBAR_GROUP_SHIFTED 0
 #define SCOPEBAR_GROUP_REGIONS 1
 
+#define SCOPEBAR_GROUP_MACHINE_STATUS 0
+#define SCOPEBAR_GROUP_MACHINE_FAMILY 1
+
 #define DOWNLOAD_TIMEOUT_SECONDS 10
 
 @interface CMPreferenceController ()
@@ -201,6 +204,7 @@ static NSArray *keysInOrderOfAppearance;
 
 - (NSArray *)machinesAvailableForDownload;
 - (void)synchronizeMachines;
+- (void)synchronizeMachineArrayController;
 - (void)synchronizeSettings;
 - (CMMachine *)machineWithId:(NSString *)machineId;
 - (CMMachine *)selectedMachine;
@@ -210,12 +214,15 @@ static NSArray *keysInOrderOfAppearance;
 - (void)sizeWindowToTabContent:(NSString *)tabId;
 
 - (void)configureJoypad:(NSInteger)joypadId;
+- (void)resetPredicate;
 
 @end
 
 @implementation CMPreferenceController
 
 @synthesize emulator = _emulator;
+@synthesize machines = _machines;
+@synthesize machineNameFilter = _machineNameFilter;
 
 #pragma mark - Init & Dealloc
 
@@ -230,6 +237,7 @@ static NSArray *keysInOrderOfAppearance;
         keyCategories = [[NSMutableArray alloc] init];
         joystickOneCategories = [[NSMutableArray alloc] init];
         joystickTwoCategories = [[NSMutableArray alloc] init];
+        _machines = [[NSMutableArray alloc] init];
         allMachines = [[NSMutableArray alloc] init];
         installedMachines = [[NSMutableArray alloc] init];
         installableMachines = [[NSMutableArray alloc] init];
@@ -293,6 +301,8 @@ static NSArray *keysInOrderOfAppearance;
     }];
     
     machineDisplayMode = CMShowInstalledMachines;
+    machineStatusFilter = 0;
+    machineFamilyFilter = 0;
     
     // Input devices devices
     [self initializeInputDeviceCategories:keyCategories
@@ -320,8 +330,14 @@ static NSArray *keysInOrderOfAppearance;
                                              selector:@selector(receivedInstallErrorNotification:)
                                                  name:CMInstallErrorNotification
                                                object:nil];
+    [self addObserver:self
+           forKeyPath:@"machineNameFilter"
+              options:0
+              context:nil];
     
     [machineScopeBar setSelected:YES forItem:@(machineDisplayMode) inGroup:0];
+    [newMachineScopeBar setSelected:YES forItem:@(machineFamilyFilter) inGroup:SCOPEBAR_GROUP_MACHINE_FAMILY];
+    [newMachineScopeBar setSelected:YES forItem:@(machineStatusFilter) inGroup:SCOPEBAR_GROUP_MACHINE_STATUS];
     
     [mixerTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     [mixerTabView selectTabViewItemWithIdentifier:[[mixers objectAtIndex:0] tabId]];
@@ -339,6 +355,9 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)dealloc
 {
+    [self removeObserver:self
+              forKeyPath:@"machineNameFilter"];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:CMInstallStartedNotification
                                                   object:nil];
@@ -356,6 +375,7 @@ static NSArray *keysInOrderOfAppearance;
     
     [keyCaptureView release];
     
+    [_machines release];
     [mixers release];
     [keyCategories release];
     [joystickOneCategories release];
@@ -621,11 +641,49 @@ static NSArray *keysInOrderOfAppearance;
     return YES;
 }
 
+- (void)synchronizeMachineArrayController
+{
+    // Load downloadable machines
+    NSMutableArray *downloadable = [NSMutableArray arrayWithArray:[self machinesAvailableForDownload]];
+    [downloadable enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        [obj setStatus:CMMachineDownloadable];
+    }];
+    
+    // Load installed machines
+    NSMutableArray *installed = [NSMutableArray array];
+    NSArray *foundNames = [CMEmulatorController machineConfigurations];
+    [foundNames enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+     {
+         CMMachine *machine = [CMMachine machineWithPath:obj];
+         [machine setInstalled:YES];
+         [machine setStatus:CMMachineInstalled];
+         [installed addObject:machine];
+     }];
+    
+    // From the downloaded list, remove all that are already installed
+    [downloadable removeObjectsInArray:installed];
+    
+    // Add both machine lists to the master list
+    NSRange range = NSMakeRange(0, [[machinesArrayController arrangedObjects] count]);
+    [machinesArrayController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:range]];
+
+    [machinesArrayController addObjects:installed];
+    [machinesArrayController addObjects:downloadable];
+
+    [[self machines] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    {
+        NSLog(@"** %@ ? status: %d", [obj name], [obj status]);
+    }];
+}
+
 - (void)synchronizeMachines
 {
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
+    
+    [self synchronizeMachineArrayController];
     
     NSArray *downloadableMachines = [self machinesAvailableForDownload];
     NSArray *foundMachines = [CMEmulatorController machineConfigurations];
@@ -1146,6 +1204,8 @@ static NSArray *keysInOrderOfAppearance;
                         change:(NSDictionary *)change
                        context:(void *)context
 {
+    if ([keyPath isEqualToString:@"machineNameFilter"])
+        [self resetPredicate];
 }
 
 #pragma mark - NSWindowController
@@ -1535,6 +1595,9 @@ static NSArray *keysInOrderOfAppearance;
     if (theScopeBar == keyboardScopeBar)
         return 2;
     
+    if (theScopeBar == newMachineScopeBar)
+        return 2;
+    
     return 1;
 }
 
@@ -1560,11 +1623,26 @@ static NSArray *keysInOrderOfAppearance;
                 @CMShowInstalledMachines,
                 @CMShowAvailableMachines, nil];
     }
+    else if (theScopeBar == newMachineScopeBar)
+    {
+        if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
+            return [NSArray arrayWithObjects:
+                    @0,
+                    @CMMsx,
+                    @CMMsx2,
+                    @CMMsx2Plus,
+                    @CMMsxTurboR, nil];
+        else if (groupNumber == SCOPEBAR_GROUP_MACHINE_STATUS)
+            return [NSArray arrayWithObjects:
+                    @0,
+                    @CMMachineInstalled,
+                    @CMMachineDownloadable, nil];
+    }
     
     return nil;
 }
 
-- (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber // return nil or an empty string for no label.
+- (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber
 {
     if (theScopeBar == keyboardScopeBar)
     {
@@ -1609,6 +1687,33 @@ static NSArray *keysInOrderOfAppearance;
         else if (displayMode == CMShowAllMachines)
             return CMLoc(@"All", @"");
     }
+    else if (theScopeBar == newMachineScopeBar)
+    {
+        NSInteger ident = [identifier integerValue];
+        
+        if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
+        {
+            if (ident == CMMsx)
+                return CMLoc(@"MSX", @"MSX System");
+            else if (ident == CMMsx2)
+                return CMLoc(@"MSX 2", @"MSX System");
+            else if (ident == CMMsx2Plus)
+                return CMLoc(@"MSX 2+", @"MSX System");
+            else if (ident == CMMsxTurboR)
+                return CMLoc(@"Turbo R", @"MSX System");
+            else if (ident == 0)
+                return CMLoc(@"All", @"");
+        }
+        else if (groupNumber == SCOPEBAR_GROUP_MACHINE_STATUS)
+        {
+            if (ident == CMMachineDownloadable)
+                return CMLoc(@"Not installed", @"System availability");
+            else if (ident == CMMachineInstalled)
+                return CMLoc(@"Installed", @"System availability");
+            else if (ident == 0)
+                return CMLoc(@"All", @"");
+        }
+    }
     
     return nil;
 }
@@ -1634,10 +1739,36 @@ static NSArray *keysInOrderOfAppearance;
     else if (theScopeBar == machineScopeBar)
     {
         machineDisplayMode = [identifier integerValue];
-        
         [systemTableView reloadData];
         [self toggleSystemSpecificButtons];
     }
+    else if (theScopeBar == newMachineScopeBar)
+    {
+        if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
+            machineFamilyFilter = [identifier integerValue];
+        else if (groupNumber == SCOPEBAR_GROUP_MACHINE_STATUS)
+            machineStatusFilter = [identifier integerValue];
+
+        [self resetPredicate];
+    }
+}
+
+
+- (void)resetPredicate
+{
+    NSMutableArray *predicates = [NSMutableArray array];
+    if (machineFamilyFilter != 0)
+        [predicates addObject:[NSPredicate predicateWithFormat:@"system == %d",
+                           machineFamilyFilter]];
+    if (machineStatusFilter != 0)
+        [predicates addObject:[NSPredicate predicateWithFormat:@"status == %d",
+                               machineStatusFilter]];
+    NSString *system = [_machineNameFilter stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([system length] > 0)
+        [predicates addObject:[NSPredicate predicateWithFormat:@"name contains[cd] %@",
+                         system]];
+
+    [machinesArrayController setFilterPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
 }
 
 #pragma mark - CMGamepadConfigurationDelegate

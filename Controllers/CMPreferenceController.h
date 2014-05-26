@@ -36,6 +36,10 @@
 @interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
 {
     CMEmulatorController *_emulator;
+    NSMutableArray *_machines;
+    NSString *_machineNameFilter;
+    NSInteger machineFamilyFilter;
+    NSInteger machineStatusFilter;
     
     CMConfigureJoystickController *joystickConfigurator;
     
@@ -51,6 +55,7 @@
     
     IBOutlet MGScopeBar *keyboardScopeBar;
     IBOutlet MGScopeBar *machineScopeBar;
+    IBOutlet MGScopeBar *newMachineScopeBar;
     
     CMKeyCaptureView *keyCaptureView;
     
@@ -85,6 +90,7 @@
     IBOutlet NSSlider *scanlineSlider;
     
     IBOutlet NSSlider *emulationSpeedSlider;
+    IBOutlet NSArrayController *machinesArrayController;
     
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
@@ -94,7 +100,7 @@
     NSMutableArray *installedMachines;
     NSMutableArray *installableMachines;
     NSMutableArray *allMachines;
-    
+
     NSArray *virtualEmulationSpeedRange;
     
     NSString *selectedKeyboardRegion;
@@ -105,6 +111,8 @@
 }
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
+@property (nonatomic, copy) NSMutableArray *machines;
+@property (nonatomic, copy) NSString *machineNameFilter;
 
 - (id)initWithEmulator:(CMEmulatorController *)emulator;
 

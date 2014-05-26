@@ -27,6 +27,15 @@ extern NSString * const CMMsx2Machine;
 extern NSString * const CMMsx2PMachine;
 extern NSString * const CMMsxTurboRMachine;
 
+#define CMUnknown   0
+#define CMMsx       1
+#define CMMsx2      2
+#define CMMsx2Plus  3
+#define CMMsxTurboR 4
+
+#define CMMachineDownloadable 1
+#define CMMachineInstalled    2
+
 @interface CMMachine : NSObject<NSCopying, NSCoding>
 {
     NSString *_machineId;
@@ -36,6 +45,7 @@ extern NSString * const CMMsxTurboRMachine;
     NSInteger _system;
     NSURL *_machineUrl;
     BOOL _installed;
+    NSInteger _status;
 }
 
 @property (nonatomic, copy) NSString *machineId;
@@ -45,6 +55,9 @@ extern NSString * const CMMsxTurboRMachine;
 @property (nonatomic, retain) NSURL *machineUrl;
 @property (nonatomic, assign) NSInteger system;
 @property (nonatomic, assign) BOOL installed;
+@property (nonatomic, assign) NSInteger status;
+
++ (CMMachine *)machineWithPath:(NSString *)path;
 
 - (id)initWithPath:(NSString *)path;
 - (id)initWithPath:(NSString *)path

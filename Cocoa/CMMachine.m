@@ -25,12 +25,6 @@
 #import "NSString+CMExtensions.h"
 #import "CMPreferences.h"
 
-#define CMUnknown   0
-#define CMMsx       1
-#define CMMsx2      2
-#define CMMsx2Plus  3
-#define CMMsxTurboR 4
-
 NSString *const CMMsxMachine       = @"MSX";
 NSString *const CMMsx2Machine      = @"MSX 2";
 NSString *const CMMsx2PMachine     = @"MSX 2+";
@@ -51,6 +45,12 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 @synthesize checksum = _checksum;
 @synthesize installed = _installed;
 @synthesize system = _system;
+@synthesize status = _status;
+
++ (CMMachine *)machineWithPath:(NSString *)path
+{
+    return [[[CMMachine alloc] initWithPath:path] autorelease];
+}
 
 - (id)init
 {
@@ -63,6 +63,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _checksum = nil;
         _installed = NO;
         _system = CMUnknown;
+        _status = CMMachineDownloadable;
     }
     
     return self;
@@ -185,6 +186,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _checksum = [[aDecoder decodeObjectForKey:@"checksum"] retain];
         _installed = [aDecoder decodeBoolForKey:@"installed"];
         _system = [aDecoder decodeIntegerForKey:@"system"];
+        _status = [aDecoder decodeIntegerForKey:@"status"];
     }
     
     return self;
@@ -199,6 +201,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [aCoder encodeObject:_checksum forKey:@"checksum"];
     [aCoder encodeBool:_installed forKey:@"installed"];
     [aCoder encodeInteger:_system forKey:@"system"];
+    [aCoder encodeInteger:_status forKey:@"status"];
 }
 
 #pragma mark - NSCopying
@@ -214,6 +217,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [copy setChecksum:_checksum];
     [copy setInstalled:_installed];
     [copy setSystem:_system];
+    [copy setStatus:_status];
     
     return copy;
 }

@@ -24,7 +24,7 @@
 
 @class CMMachine;
 
-@interface CMMachineCell : NSCell
+@interface CMMachineCell : NSTextFieldCell
 {
     CMMachine *machine;
 }
