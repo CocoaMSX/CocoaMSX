@@ -127,10 +127,10 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
         return NO;
     }
     
-#ifdef DEBUG
-    NSLog(@"Sleeping");
-    [NSThread sleepForTimeInterval:10];
-#endif
+//#ifdef DEBUG
+//    NSLog(@"Sleeping");
+//    [NSThread sleepForTimeInterval:10];
+//#endif
     
 #ifdef DEBUG
     NSLog(@"Downloading from %@...", [machine machineUrl]);
