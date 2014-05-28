@@ -34,7 +34,8 @@ extern NSString * const CMMsxTurboRMachine;
 #define CMMsxTurboR 4
 
 #define CMMachineDownloadable 1
-#define CMMachineInstalled    2
+#define CMMachineDownloading  2
+#define CMMachineInstalled    3
 
 @interface CMMachine : NSObject<NSCopying, NSCoding>
 {
@@ -44,7 +45,6 @@ extern NSString * const CMMsxTurboRMachine;
     NSString *_checksum;
     NSInteger _system;
     NSURL *_machineUrl;
-    BOOL _installed;
     NSInteger _status;
 }
 
@@ -54,7 +54,6 @@ extern NSString * const CMMsxTurboRMachine;
 @property (nonatomic, copy) NSString *checksum;
 @property (nonatomic, retain) NSURL *machineUrl;
 @property (nonatomic, assign) NSInteger system;
-@property (nonatomic, assign) BOOL installed;
 @property (nonatomic, assign) NSInteger status;
 
 + (CMMachine *)machineWithPath:(NSString *)path;

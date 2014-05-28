@@ -43,11 +43,6 @@
     
     CMConfigureJoystickController *joystickConfigurator;
     
-    NSInteger machineDisplayMode;
-    
-    IBOutlet NSButton *addMachineButton;
-    IBOutlet NSButton *removeMachineButton;
-    
     IBOutlet NSButton *configureJoypadOneButton;
     IBOutlet NSButton *configureJoypadTwoButton;
     
@@ -55,7 +50,6 @@
     
     IBOutlet MGScopeBar *keyboardScopeBar;
     IBOutlet MGScopeBar *machineScopeBar;
-    IBOutlet MGScopeBar *newMachineScopeBar;
     
     CMKeyCaptureView *keyCaptureView;
     
@@ -97,8 +91,6 @@
     NSMutableArray *joystickTwoCategories;
     NSArray *mixers;
     
-    NSMutableArray *installedMachines;
-    NSMutableArray *installableMachines;
     NSMutableArray *allMachines;
 
     NSArray *virtualEmulationSpeedRange;

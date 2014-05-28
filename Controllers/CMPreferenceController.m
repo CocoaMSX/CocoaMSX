@@ -208,8 +208,6 @@ static NSArray *keysInOrderOfAppearance;
 - (void)synchronizeSettings;
 - (CMMachine *)machineWithId:(NSString *)machineId;
 - (CMMachine *)selectedMachine;
-- (NSArray *)machinesCurrentlyVisible;
-- (void)toggleSystemSpecificButtons;
 - (void)updateCurrentConfigurationInformation;
 - (void)sizeWindowToTabContent:(NSString *)tabId;
 
@@ -239,8 +237,6 @@ static NSArray *keysInOrderOfAppearance;
         joystickTwoCategories = [[NSMutableArray alloc] init];
         _machines = [[NSMutableArray alloc] init];
         allMachines = [[NSMutableArray alloc] init];
-        installedMachines = [[NSMutableArray alloc] init];
-        installableMachines = [[NSMutableArray alloc] init];
         
         // Set the virtual emulation speed range
         virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
@@ -300,7 +296,6 @@ static NSArray *keysInOrderOfAppearance;
         slider.target = self;
     }];
     
-    machineDisplayMode = CMShowInstalledMachines;
     machineStatusFilter = 0;
     machineFamilyFilter = 0;
     
@@ -330,14 +325,15 @@ static NSArray *keysInOrderOfAppearance;
                                              selector:@selector(receivedInstallErrorNotification:)
                                                  name:CMInstallErrorNotification
                                                object:nil];
+    
+    // Observe the machineNameFilter (bound to the machine search textbox)
     [self addObserver:self
            forKeyPath:@"machineNameFilter"
               options:0
               context:nil];
     
-    [machineScopeBar setSelected:YES forItem:@(machineDisplayMode) inGroup:0];
-    [newMachineScopeBar setSelected:YES forItem:@(machineFamilyFilter) inGroup:SCOPEBAR_GROUP_MACHINE_FAMILY];
-    [newMachineScopeBar setSelected:YES forItem:@(machineStatusFilter) inGroup:SCOPEBAR_GROUP_MACHINE_STATUS];
+    [machineScopeBar setSelected:YES forItem:@(machineFamilyFilter) inGroup:SCOPEBAR_GROUP_MACHINE_FAMILY];
+    [machineScopeBar setSelected:YES forItem:@(machineStatusFilter) inGroup:SCOPEBAR_GROUP_MACHINE_STATUS];
     
     [mixerTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     [mixerTabView selectTabViewItemWithIdentifier:[[mixers objectAtIndex:0] tabId]];
@@ -381,8 +377,6 @@ static NSArray *keysInOrderOfAppearance;
     [joystickOneCategories release];
     [joystickTwoCategories release];
     [allMachines release];
-    [installedMachines release];
-    [installableMachines release];
     
     [virtualEmulationSpeedRange release];
     
@@ -390,16 +384,6 @@ static NSArray *keysInOrderOfAppearance;
 }
 
 #pragma mark - Private Methods
-
-- (NSArray *)machinesCurrentlyVisible
-{
-    if (machineDisplayMode == CMShowAvailableMachines)
-        return installableMachines;
-    else if (machineDisplayMode == CMShowInstalledMachines)
-        return installedMachines;
-    else
-        return allMachines;
-}
 
 - (CMMachine *)machineWithId:(NSString *)machineId
 {
@@ -613,7 +597,7 @@ static NSArray *keysInOrderOfAppearance;
                                                               name:[obj objectForKey:@"name"]
                                                         systemName:[obj objectForKey:@"system"]] autorelease];
              
-             [machine setInstalled:NO];
+             [machine setStatus:CMMachineDownloadable];
              [machine setChecksum:[obj objectForKey:@"md5"]];
              [machine setMachineUrl:[downloadRoot URLByAppendingPathComponent:[obj objectForKey:@"file"]]];
              
@@ -644,37 +628,78 @@ static NSArray *keysInOrderOfAppearance;
 - (void)synchronizeMachineArrayController
 {
     // Load downloadable machines
-    NSMutableArray *downloadable = [NSMutableArray arrayWithArray:[self machinesAvailableForDownload]];
-    [downloadable enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    NSMutableSet *all = [NSMutableSet set];
+    [[self machinesAvailableForDownload] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         [obj setStatus:CMMachineDownloadable];
+        [all addObject:obj];
     }];
     
     // Load installed machines
-    NSMutableArray *installed = [NSMutableArray array];
+    NSMutableSet *installed = [NSMutableSet set];
     NSArray *foundNames = [CMEmulatorController machineConfigurations];
     [foundNames enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
          CMMachine *machine = [CMMachine machineWithPath:obj];
-         [machine setInstalled:YES];
          [machine setStatus:CMMachineInstalled];
          [installed addObject:machine];
      }];
-    
+
     // From the downloaded list, remove all that are already installed
-    [downloadable removeObjectsInArray:installed];
+    [all minusSet:installed];
+    // Add the remaining
+    [all unionSet:installed];
+
+    // Machines already in the controller
+    NSSet *currentlyListed = [NSSet setWithArray:_machines];
     
-    // Add both machine lists to the master list
-    NSRange range = NSMakeRange(0, [[machinesArrayController arrangedObjects] count]);
-    [machinesArrayController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:range]];
+    // Machines missing from the controller (newly added)
+    NSMutableSet *missingInController = [NSMutableSet setWithSet:all];
+    [missingInController minusSet:currentlyListed];
+    
+    // Machines in the controller, but no longer existing
+    NSMutableSet *expiredInController = [NSMutableSet setWithSet:currentlyListed];
+    [expiredInController minusSet:all];
 
-    [machinesArrayController addObjects:installed];
-    [machinesArrayController addObjects:downloadable];
-
-    [[self machines] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    // Add new machines to controller
+    [machinesArrayController addObjects:[missingInController allObjects]];
+    // Remove expired machines from controller
+    [machinesArrayController removeObjects:[expiredInController allObjects]];
+    
+    // Synchronize remaining machines
+    __block NSInteger machinesUpdated = 0;
+    [[machinesArrayController content] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
-        NSLog(@"** %@ ? status: %d", [obj name], [obj status]);
+        CMMachine *inController = obj;
+        CMMachine *updated = [all member:inController];
+        
+        if ([inController status] != [updated status]
+            && [inController status] != CMMachineDownloading)
+        {
+            // Status has changed for one of the machines
+            // Update the item in the controller
+            
+            [inController setName:[updated name]];
+            [inController setPath:[updated path]];
+            [inController setMachineId:[updated machineId]];
+            [inController setMachineUrl:[updated machineUrl]];
+            [inController setChecksum:[updated checksum]];
+            [inController setSystem:[updated system]];
+            [inController setStatus:[updated status]];
+            
+            machinesUpdated++;
+        }
     }];
+    
+    // If anything has changed, rearrange the objects
+    if (machinesUpdated > 0)
+        [machinesArrayController rearrangeObjects];
+    
+#ifdef DEBUG
+    NSLog(@"machinesArrayController: added %ld, removed %ld, updated %ld",
+          [missingInController count], [expiredInController count],
+          machinesUpdated);
+#endif
 }
 
 - (void)synchronizeMachines
@@ -688,15 +713,15 @@ static NSArray *keysInOrderOfAppearance;
     NSArray *downloadableMachines = [self machinesAvailableForDownload];
     NSArray *foundMachines = [CMEmulatorController machineConfigurations];
     
-    [installedMachines removeAllObjects];
-    [installableMachines removeAllObjects];
+    NSMutableArray *installedMachines = [NSMutableArray array];
+    NSMutableArray *installableMachines = [NSMutableArray array];
     
     [foundMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        CMMachine *machine = [[[CMMachine alloc] initWithPath:obj] autorelease];
-        [machine setInstalled:YES];
-        [installedMachines addObject:machine];
-    }];
+     {
+         CMMachine *machine = [[[CMMachine alloc] initWithPath:obj] autorelease];
+         [machine setStatus:CMMachineInstalled];
+         [installedMachines addObject:machine];
+     }];
     
     if (downloadableMachines)
         [installableMachines addObjectsFromArray:downloadableMachines];
@@ -710,15 +735,15 @@ static NSArray *keysInOrderOfAppearance;
     // Sort the three arrays by 1. system, 2. name
     NSArray *arraysToSort = [NSArray arrayWithObjects:installedMachines, installableMachines, allMachines, nil];
     [arraysToSort enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-    {
-        [obj sortUsingComparator:^NSComparisonResult(CMMachine *obj1, CMMachine *obj2)
-         {
-             if ([obj1 system] != [obj2 system])
-                 return [obj1 system] - [obj2 system];
-             
-             return [[obj1 name] localizedCompare:[obj2 name]];
-         }];
-    }];
+     {
+         [obj sortUsingComparator:^NSComparisonResult(CMMachine *obj1, CMMachine *obj2)
+          {
+              if ([obj1 system] != [obj2 system])
+                  return [obj1 system] - [obj2 system];
+              
+              return [[obj1 name] localizedCompare:[obj2 name]];
+          }];
+     }];
     
     // If the selected machine is no longer available, select closest
     CMMachine *selectedMachine = [[[self machineWithId:CMGetObjPref(@"machineConfiguration")] copy] autorelease];
@@ -726,16 +751,16 @@ static NSArray *keysInOrderOfAppearance;
     {
         __block CMMachine *machine = [installedMachines lastObject];
         [installedMachines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-        {
-            NSInteger systemComparison = [@([selectedMachine system]) compare:@([obj system])];
-            NSInteger nameComparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
-            
-            if (systemComparison != NSOrderedAscending && nameComparison != NSOrderedDescending)
-            {
-                machine = obj;
-                *stop = YES;
-            }
-        }];
+         {
+             NSInteger systemComparison = [@([selectedMachine system]) compare:@([obj system])];
+             NSInteger nameComparison = [[selectedMachine name] caseInsensitiveCompare:[obj name]];
+             
+             if (systemComparison != NSOrderedAscending && nameComparison != NSOrderedDescending)
+             {
+                 machine = obj;
+                 *stop = YES;
+             }
+         }];
         
         if (machine)
             CMSetObjPref(@"machineConfiguration", [machine machineId]);
@@ -743,7 +768,6 @@ static NSArray *keysInOrderOfAppearance;
     
     [systemTableView reloadData];
     
-    [self toggleSystemSpecificButtons];
     [self updateCurrentConfigurationInformation];
     
 #ifdef DEBUG
@@ -899,24 +923,9 @@ static NSArray *keysInOrderOfAppearance;
     CMMachine *machine = nil;
     
     if (selectedRow >= 0)
-        machine = [[self machinesCurrentlyVisible] objectAtIndex:selectedRow];
+        machine = [allMachines objectAtIndex:selectedRow];
     
     return machine;
-}
-
-- (void)toggleSystemSpecificButtons
-{
-    CMMachine *selectedMachine = [self selectedMachine];
-    
-    BOOL isRemoveButtonEnabled = selectedMachine
-        && [selectedMachine installed]
-        && [allMachines count] > 1; // At least one machine must remain
-    BOOL isAddButtonEnabled = selectedMachine
-        && ![selectedMachine installed]
-        && ![self isDownloadQueuedForMachine:selectedMachine];
-    
-    [addMachineButton setEnabled:isAddButtonEnabled];
-    [removeMachineButton setEnabled:isRemoveButtonEnabled];
 }
 
 - (void)sizeWindowToTabContent:(NSString *)tabId
@@ -954,28 +963,23 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)installMachineConfiguration:(id)sender
 {
-    CMMachine *selectedMachine = [self selectedMachine];
-    
-    if (selectedMachine
-        && ![selectedMachine installed]
-        && ![self isDownloadQueuedForMachine:selectedMachine])
+    CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
+    if ([selection status] == CMMachineDownloadable)
     {
-        CMMachineInstallationOperation *installOp = [CMMachineInstallationOperation installationOperationWithMachine:selectedMachine];
+        CMMachineInstallationOperation *installOp = [CMMachineInstallationOperation installationOperationWithMachine:selection];
+        [selection setStatus:CMMachineDownloading];
         [downloadQueue addOperation:installOp];
         
-        [self toggleSystemSpecificButtons];
         [systemTableView reloadData];
     }
 }
 
 - (void)removeMachineConfiguration:(id)sender
 {
-    NSString *selectedMachineId = [[self selectedMachine] machineId];
-    
-    if (selectedMachineId)
+    CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
+    if ([selection status] == CMMachineInstalled)
     {
-        NSString *message = [NSString stringWithFormat:CMLoc(@"Are you sure you want to remove \"%1$@\"?", @""),
-                             selectedMachineId];
+        NSString *message = [NSString stringWithFormat:CMLoc(@"Are you sure you want to remove \"%1$@\"?", @"Remove machine configuration prompt"), [selection name]];
         NSAlert *alert = [NSAlert alertWithMessageText:message
                                          defaultButton:CMLoc(@"No", @"")
                                        alternateButton:nil
@@ -1133,17 +1137,15 @@ static NSArray *keysInOrderOfAppearance;
     if ((int)contextInfo == ALERT_RESTART_SYSTEM)
     {
         if (returnCode == NSAlertOtherReturn)
-            [self.emulator performColdReboot];
+            [[self emulator] performColdReboot];
     }
     else if ((int)contextInfo == ALERT_REMOVE_SYSTEM)
     {
         if (returnCode == NSAlertOtherReturn)
         {
-            CMMachine *selectedMachine = [self selectedMachine];
-            if (selectedMachine)
-            {
+            CMMachine *selectedMachine = [[machinesArrayController selectedObjects] firstObject];
+            if ([selectedMachine status] == CMMachineInstalled)
                 [CMEmulatorController removeMachineConfiguration:[selectedMachine path]];
-            }
         }
     }
 }
@@ -1186,15 +1188,18 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)showMachinesInFinder:(id)sender
 {
-    CMMachine *selectedMachine = [self selectedMachine];
-    NSString *finderPath;
-    
-    if (selectedMachine)
-        finderPath = [CMEmulatorController pathForMachineConfigurationNamed:[selectedMachine machineId]];
+    CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
+    if ([selection status] == CMMachineInstalled)
+    {
+        NSString *path = [CMEmulatorController pathForMachineConfigurationNamed:[selection machineId]];
+        NSArray *urls = [NSArray arrayWithObject:[NSURL fileURLWithPath:path]];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:urls];
+    }
     else
-        finderPath = [[CMPreferences preferences] machineDirectory];
-    
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:finderPath]];
+    {
+        NSString *path = [[CMPreferences preferences] machineDirectory];
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:path]];
+    }
 }
 
 #pragma mark - KVO Notifications
@@ -1278,46 +1283,48 @@ static NSArray *keysInOrderOfAppearance;
     [self performBlockOnMainThread:^
      {
          [systemTableView reloadData];
-         [self toggleSystemSpecificButtons];
      }];
 }
 
 - (void)receivedInstallCompletedNotification:(NSNotification *)notification
 {
+    CMMachine *machine = [[notification userInfo] objectForKey:@"machine"];
+    [machine setStatus:CMMachineInstalled];
+
 #ifdef DEBUG
     NSLog(@"Received download completed notification");
 #endif
     
-    [self performBlockOnMainThread:^
-     {
-         [self synchronizeMachines];
-     }];
+//    [self performBlockOnMainThread:^
+//     {
+//         [self synchronizeMachines];
+//     }];
 }
 
 - (void)receivedInstallErrorNotification:(NSNotification *)notification
 {
     NSError *error = [[notification userInfo] objectForKey:@"error"];
+    CMMachine *machine = [[notification userInfo] objectForKey:@"machine"];
     
 #ifdef DEBUG
     NSLog(@"Received error notification: %@", error);
 #endif
     
-    if (error)
-    {
-        [self performBlockOnMainThread:^
-         {
-             NSAlert *alert = [NSAlert alertWithMessageText:[error localizedDescription]
-                                              defaultButton:CMLoc(@"OK", @"")
-                                            alternateButton:nil
-                                                otherButton:nil
-                                  informativeTextWithFormat:@""];
-             
-             [alert beginSheetModalForWindow:[self window]
-                               modalDelegate:self
-                              didEndSelector:nil
-                                 contextInfo:nil];
-         }];
-    }
+    [machine setStatus:CMMachineDownloadable];
+    
+    [self performBlockOnMainThread:^
+     {
+         NSAlert *alert = [NSAlert alertWithMessageText:[error localizedDescription]
+                                          defaultButton:CMLoc(@"OK", @"")
+                                        alternateButton:nil
+                                            otherButton:nil
+                              informativeTextWithFormat:@""];
+         
+         [alert beginSheetModalForWindow:[self window]
+                           modalDelegate:self
+                          didEndSelector:nil
+                             contextInfo:nil];
+     }];
 }
 
 #pragma mark - NSTabViewDelegate
@@ -1505,7 +1512,7 @@ static NSArray *keysInOrderOfAppearance;
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
     if (tableView == systemTableView)
-        return [[self machinesCurrentlyVisible] count];
+        return [allMachines count];
     else if (tableView == mixerTableView)
         return [mixers count];
     
@@ -1518,7 +1525,7 @@ static NSArray *keysInOrderOfAppearance;
     
     if (aTableView == systemTableView)
     {
-        CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
+        CMMachine *machine = [allMachines objectAtIndex:rowIndex];
         
         if ([columnIdentifer isEqualToString:@"isSelected"])
             return [NSNumber numberWithBool:[machine isEqual:CMGetObjPref(@"machineConfiguration")]];
@@ -1545,7 +1552,7 @@ static NSArray *keysInOrderOfAppearance;
         NSString *columnIdentifer = [tableColumn identifier];
         if ([columnIdentifer isEqualToString:@"isSelected"])
         {
-            CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:row];
+            CMMachine *machine = [allMachines objectAtIndex:row];
             
             CMSetObjPref(@"machineConfiguration", [machine path]);
             [self updateCurrentConfigurationInformation];
@@ -1565,10 +1572,10 @@ static NSArray *keysInOrderOfAppearance;
         if ([[aTableColumn identifier] isEqualToString:@"isSelected"])
         {
             CMMachineSelectionCell *buttonCell = aCell;
-            CMMachine *machine = [[self machinesCurrentlyVisible] objectAtIndex:rowIndex];
+            CMMachine *machine = [allMachines objectAtIndex:rowIndex];
             
-            [buttonCell setEnabled:[machine installed]];
-            [buttonCell setImagePosition:[machine installed] ? NSImageOnly : NSNoImage];
+            [buttonCell setEnabled:([machine status] == CMMachineInstalled)];
+            [buttonCell setImagePosition:([machine status] == CMMachineInstalled) ? NSImageOnly : NSNoImage];
             
             [buttonCell setDownloadingIconVisible:[self isDownloadQueuedForMachine:machine]];
         }
@@ -1577,11 +1584,7 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-    if ([aNotification object] == systemTableView)
-    {
-        [self toggleSystemSpecificButtons];
-    }
-    else if ([aNotification object] == mixerTableView)
+    if ([aNotification object] == mixerTableView)
     {
         CMMixerChannel *mixerChannel = [mixers objectAtIndex:[mixerTableView selectedRow]];
         [mixerTabView selectTabViewItemWithIdentifier:[mixerChannel tabId]];
@@ -1595,7 +1598,7 @@ static NSArray *keysInOrderOfAppearance;
     if (theScopeBar == keyboardScopeBar)
         return 2;
     
-    if (theScopeBar == newMachineScopeBar)
+    if (theScopeBar == machineScopeBar)
         return 2;
     
     return 1;
@@ -1617,13 +1620,6 @@ static NSArray *keysInOrderOfAppearance;
         }
     }
     else if (theScopeBar == machineScopeBar)
-    {
-        return [NSArray arrayWithObjects:
-                @CMShowAllMachines,
-                @CMShowInstalledMachines,
-                @CMShowAvailableMachines, nil];
-    }
-    else if (theScopeBar == newMachineScopeBar)
     {
         if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
             return [NSArray arrayWithObjects:
@@ -1678,17 +1674,6 @@ static NSArray *keysInOrderOfAppearance;
     }
     else if (theScopeBar == machineScopeBar)
     {
-        NSInteger displayMode = [identifier integerValue];
-        
-        if (displayMode == CMShowInstalledMachines)
-            return CMLoc(@"Installed", @"");
-        else if (displayMode == CMShowAvailableMachines)
-            return CMLoc(@"Not Installed", @"");
-        else if (displayMode == CMShowAllMachines)
-            return CMLoc(@"All", @"");
-    }
-    else if (theScopeBar == newMachineScopeBar)
-    {
         NSInteger ident = [identifier integerValue];
         
         if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
@@ -1737,12 +1722,6 @@ static NSArray *keysInOrderOfAppearance;
         }
     }
     else if (theScopeBar == machineScopeBar)
-    {
-        machineDisplayMode = [identifier integerValue];
-        [systemTableView reloadData];
-        [self toggleSystemSpecificButtons];
-    }
-    else if (theScopeBar == newMachineScopeBar)
     {
         if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
             machineFamilyFilter = [identifier integerValue];

@@ -38,7 +38,7 @@
     }
     else
     {
-        textColor = ![machine installed]
+        textColor = [machine status] != CMMachineInstalled
             ? [NSColor disabledControlTextColor] : [NSColor controlTextColor];
     }
     

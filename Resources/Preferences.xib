@@ -8,7 +8,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="CMPreferenceController">
             <connections>
                 <outlet property="activeSystemTextView" destination="3978" id="3980"/>
-                <outlet property="addMachineButton" destination="3942" id="3989"/>
                 <outlet property="brightnessSlider" destination="178" id="261"/>
                 <outlet property="configureJoypadOneButton" destination="4474" id="4482"/>
                 <outlet property="configureJoypadTwoButton" destination="4478" id="4484"/>
@@ -22,7 +21,7 @@
                 <outlet property="keyboardLayoutEditor" destination="3623" id="3845"/>
                 <outlet property="keyboardScopeBar" destination="3739" id="3990"/>
                 <outlet property="keyboardVolumeSlider" destination="4338" id="4402"/>
-                <outlet property="machineScopeBar" destination="3994" id="3995"/>
+                <outlet property="machineScopeBar" destination="PgO-iz-9VP" id="pGR-Jh-oj5"/>
                 <outlet property="machinesArrayController" destination="mqW-Wf-8nz" id="LlH-C4-Lvl"/>
                 <outlet property="mixerTabView" destination="4135" id="4148"/>
                 <outlet property="mixerTableView" destination="4124" id="4134"/>
@@ -32,10 +31,8 @@
                 <outlet property="msxAudioVolumeSlider" destination="4324" id="4404"/>
                 <outlet property="msxMusicBalanceSlider" destination="4312" id="4407"/>
                 <outlet property="msxMusicVolumeSlider" destination="4310" id="4406"/>
-                <outlet property="newMachineScopeBar" destination="PgO-iz-9VP" id="uhh-EQ-Xok"/>
                 <outlet property="psgBalanceSlider" destination="4153" id="4172"/>
                 <outlet property="psgVolumeSlider" destination="4149" id="4171"/>
-                <outlet property="removeMachineButton" destination="3944" id="3949"/>
                 <outlet property="saturationSlider" destination="217" id="318"/>
                 <outlet property="scanlineSlider" destination="817" id="884"/>
                 <outlet property="sccBalanceSlider" destination="4295" id="4409"/>
@@ -170,13 +167,6 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <customView id="3994" customClass="MGScopeBar">
-                                            <rect key="frame" x="20" y="488" width="558" height="25"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <connections>
-                                                <outlet property="delegate" destination="-2" id="3996"/>
-                                            </connections>
-                                        </customView>
                                         <customView id="PgO-iz-9VP" customClass="MGScopeBar">
                                             <rect key="frame" x="20" y="336" width="408" height="25"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -248,7 +238,7 @@
                                                 <rect key="frame" x="1" y="17" width="556" height="120"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" headerView="oMQ-mL-1i6" id="a7i-vw-LLh">
+                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" headerView="oMQ-mL-1i6" id="a7i-vw-LLh">
                                                         <rect key="frame" x="0.0" y="0.0" width="556" height="120"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
@@ -284,10 +274,17 @@
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
-                                                                    <binding destination="mqW-Wf-8nz" name="value" keyPath="arrangedObjects" id="anf-NT-iyU"/>
+                                                                    <binding destination="mqW-Wf-8nz" name="value" keyPath="arrangedObjects.self" id="Tsa-JY-yUv">
+                                                                        <dictionary key="options">
+                                                                            <bool key="NSConditionallySetsEditable" value="YES"/>
+                                                                        </dictionary>
+                                                                    </binding>
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <connections>
+                                                            <binding destination="mqW-Wf-8nz" name="sortDescriptors" keyPath="sortDescriptors" id="2h7-Bz-2Zy"/>
+                                                        </connections>
                                                     </tableView>
                                                 </subviews>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -314,6 +311,11 @@
                                             </buttonCell>
                                             <connections>
                                                 <action selector="installMachineConfiguration:" target="-2" id="4000"/>
+                                                <binding destination="mqW-Wf-8nz" name="enabled" keyPath="selection.status" id="QQf-Ie-gUm">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">CMIsMachineDownloadable</string>
+                                                    </dictionary>
+                                                </binding>
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" id="3944">
@@ -325,12 +327,17 @@
                                             </buttonCell>
                                             <connections>
                                                 <action selector="removeMachineConfiguration:" target="-2" id="3950"/>
+                                                <binding destination="mqW-Wf-8nz" name="enabled" keyPath="selection.status" id="A9V-GH-5s8">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">CMIsMachineInstalled</string>
+                                                    </dictionary>
+                                                </binding>
                                             </connections>
                                         </button>
                                         <popUpButton verticalHuggingPriority="750" id="3959">
                                             <rect key="frame" x="64" y="168" width="36" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="3962" id="3960">
+                                            <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="3960">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="menu"/>
                                                 <menu key="menu" title="OtherViews" id="3961">
@@ -2034,9 +2041,11 @@
                 <outlet property="delegate" destination="-2" id="3875"/>
             </connections>
         </window>
-        <arrayController objectClassName="CMMachine" id="mqW-Wf-8nz">
+        <arrayController objectClassName="CMMachine" selectsInsertedObjects="NO" avoidsEmptySelection="NO" clearsFilterPredicateOnInsertion="NO" id="mqW-Wf-8nz" userLabel="Machines Array Controller">
             <declaredKeys>
                 <string>name</string>
+                <string>status</string>
+                <string>path</string>
             </declaredKeys>
             <connections>
                 <binding destination="-2" name="contentArray" keyPath="machines" id="Nl2-Dp-xW8"/>

@@ -694,6 +694,8 @@
 		FEF40EDF160DB83B009170A9 /* CocoaUart.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40ED0160DB83B009170A9 /* CocoaUart.c */; };
 		FEF40EE0160DB83B009170A9 /* CocoaVideoIn.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40ED1160DB83B009170A9 /* CocoaVideoIn.c */; };
 		FEF40EE1160DB83B009170A9 /* CMMsxDisplayView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */; };
+		FEFF3F721935AA1C00434DED /* CMIsMachineInstalled.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFF3F711935AA1C00434DED /* CMIsMachineInstalled.m */; };
+		FEFF3F751935AFB500434DED /* CMIsMachineDownloadable.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFF3F741935AFB500434DED /* CMIsMachineDownloadable.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1488,6 +1490,10 @@
 		FEF40ED2160DB83B009170A9 /* CMMsxDisplayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMsxDisplayView.h; sourceTree = "<group>"; };
 		FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMsxDisplayView.m; sourceTree = "<group>"; };
 		FEFB43B916321F2F00EAE462 /* CocoaMSX-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "CocoaMSX-Info.plist"; path = "../CocoaMSX-Info.plist"; sourceTree = "<group>"; };
+		FEFF3F701935AA1C00434DED /* CMIsMachineInstalled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMIsMachineInstalled.h; sourceTree = "<group>"; };
+		FEFF3F711935AA1C00434DED /* CMIsMachineInstalled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMIsMachineInstalled.m; sourceTree = "<group>"; };
+		FEFF3F731935AFB500434DED /* CMIsMachineDownloadable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMIsMachineDownloadable.h; sourceTree = "<group>"; };
+		FEFF3F741935AFB500434DED /* CMIsMachineDownloadable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMIsMachineDownloadable.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2411,6 +2417,10 @@
 		FE2D857A16E330F3003EFB3F /* ValueTransformers */ = {
 			isa = PBXGroup;
 			children = (
+				FEFF3F731935AFB500434DED /* CMIsMachineDownloadable.h */,
+				FEFF3F741935AFB500434DED /* CMIsMachineDownloadable.m */,
+				FEFF3F701935AA1C00434DED /* CMIsMachineInstalled.h */,
+				FEFF3F711935AA1C00434DED /* CMIsMachineInstalled.m */,
 				FE2D857B16E33140003EFB3F /* CMIsZero.h */,
 				FE2D857C16E33140003EFB3F /* CMIsZero.m */,
 				FE2D857E16E3480C003EFB3F /* CMAsString.h */,
@@ -2978,6 +2988,7 @@
 				E99733F51298B4B500766C90 /* romMapperMsxRs232.c in Sources */,
 				E99733F61298B4B500766C90 /* romMapperNational.c in Sources */,
 				E99733F71298B4B500766C90 /* romMapperNationalFdc.c in Sources */,
+				FEFF3F751935AFB500434DED /* CMIsMachineDownloadable.m in Sources */,
 				E99733F81298B4B500766C90 /* romMapperNet.c in Sources */,
 				E99733F91298B4B500766C90 /* romMapperNettouYakyuu.c in Sources */,
 				E99733FA1298B4B500766C90 /* romMapperNms1210Rs232.c in Sources */,
@@ -3147,6 +3158,7 @@
 				FE73719416D20F7B00ADF942 /* SBJsonUTF8Stream.m in Sources */,
 				FE9B86B616D458CC00623DBD /* NSData+MD5.m in Sources */,
 				FE9B86B916D45A2E00623DBD /* NSString+CMExtensions.m in Sources */,
+				FEFF3F721935AA1C00434DED /* CMIsMachineInstalled.m in Sources */,
 				FE9B86BC16D4A96300623DBD /* CMMachineSelectionCell.m in Sources */,
 				FE9B86BF16D4AC8100623DBD /* CMMachineInstallationOperation.m in Sources */,
 				FE2D857D16E33140003EFB3F /* CMIsZero.m in Sources */,

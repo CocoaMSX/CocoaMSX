@@ -104,8 +104,7 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:CMInstallErrorNotification
                                                             object:self
-                                                          userInfo:[NSDictionary dictionaryWithObject:error
-                                                                                               forKey:@"error"]];
+                                                          userInfo:[NSDictionary dictionaryWithObjectsAndKeys:error, @"error", [self machine], @"machine", nil]];
     }
 }
 
@@ -128,10 +127,10 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
         return NO;
     }
     
-//#ifdef DEBUG
-//    NSLog(@"Sleeping");
-//    [NSThread sleepForTimeInterval:5];
-//#endif
+#ifdef DEBUG
+    NSLog(@"Sleeping");
+    [NSThread sleepForTimeInterval:10];
+#endif
     
 #ifdef DEBUG
     NSLog(@"Downloading from %@...", [machine machineUrl]);

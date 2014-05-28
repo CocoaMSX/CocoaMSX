@@ -43,7 +43,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 @synthesize machineId = _machineId;
 @synthesize machineUrl = _machineUrl;
 @synthesize checksum = _checksum;
-@synthesize installed = _installed;
 @synthesize system = _system;
 @synthesize status = _status;
 
@@ -61,7 +60,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _machineId = nil;
         _machineUrl = nil;
         _checksum = nil;
-        _installed = NO;
         _system = CMUnknown;
         _status = CMMachineDownloadable;
     }
@@ -103,7 +101,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _path = [path copy];
         _machineId = [machineId copy];
         _name = [name copy];
-        _installed = NO;
         _system = [CMMachine systemNamed:systemName];
     }
     
@@ -184,7 +181,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _machineId = [[aDecoder decodeObjectForKey:@"machineId"] retain];
         _machineUrl = [[aDecoder decodeObjectForKey:@"machineUrl"] retain];
         _checksum = [[aDecoder decodeObjectForKey:@"checksum"] retain];
-        _installed = [aDecoder decodeBoolForKey:@"installed"];
         _system = [aDecoder decodeIntegerForKey:@"system"];
         _status = [aDecoder decodeIntegerForKey:@"status"];
     }
@@ -199,7 +195,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [aCoder encodeObject:_machineId forKey:@"machineId"];
     [aCoder encodeObject:_machineUrl forKey:@"machineUrl"];
     [aCoder encodeObject:_checksum forKey:@"checksum"];
-    [aCoder encodeBool:_installed forKey:@"installed"];
     [aCoder encodeInteger:_system forKey:@"system"];
     [aCoder encodeInteger:_status forKey:@"status"];
 }
@@ -215,11 +210,20 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [copy setMachineId:_machineId];
     [copy setMachineUrl:_machineUrl];
     [copy setChecksum:_checksum];
-    [copy setInstalled:_installed];
     [copy setSystem:_system];
     [copy setStatus:_status];
     
     return copy;
+}
+
+- (NSComparisonResult)compare:(CMMachine *)machine
+{
+    if (_system < machine->_system)
+        return NSOrderedAscending;
+    else if (_system > machine->_system)
+        return NSOrderedDescending;
+    
+    return [_name caseInsensitiveCompare:machine->_name];
 }
 
 @end
