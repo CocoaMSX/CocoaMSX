@@ -32,6 +32,7 @@
 @class MGScopeBar;
 @class CMKeyCaptureView;
 @class SBJsonParser;
+@class CMMachine;
 
 @interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
 {
@@ -40,6 +41,7 @@
     NSString *_machineNameFilter;
     NSInteger machineFamilyFilter;
     NSInteger machineStatusFilter;
+    CMMachine *_activeMachine;
     
     CMConfigureJoystickController *joystickConfigurator;
     
@@ -53,9 +55,7 @@
     
     CMKeyCaptureView *keyCaptureView;
     
-    IBOutlet NSTableView *systemTableView;
     IBOutlet NSTableView *mixerTableView;
-    IBOutlet NSTextField *activeSystemTextView;
     
     IBOutlet NSTabView *contentTabView;
     IBOutlet NSTabView *mixerTabView;
@@ -85,14 +85,13 @@
     
     IBOutlet NSSlider *emulationSpeedSlider;
     IBOutlet NSArrayController *machinesArrayController;
+    IBOutlet NSSearchField *machineSearchField;
     
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
     NSArray *mixers;
     
-    NSMutableArray *allMachines;
-
     NSArray *virtualEmulationSpeedRange;
     
     NSString *selectedKeyboardRegion;
@@ -104,6 +103,7 @@
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
 @property (nonatomic, copy) NSMutableArray *machines;
+@property (nonatomic, copy) CMMachine *activeMachine;
 @property (nonatomic, copy) NSString *machineNameFilter;
 
 - (id)initWithEmulator:(CMEmulatorController *)emulator;

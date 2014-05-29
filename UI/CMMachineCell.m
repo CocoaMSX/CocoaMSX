@@ -28,6 +28,8 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+    CMMachine *machine = [self objectValue];
+    
     [controlView lockFocus];
     
     NSColor *textColor;
@@ -61,11 +63,6 @@
                        withAttributes:subtextAttributes];
     
     [controlView unlockFocus];
-}
-
-- (void)setObjectValue:(id <NSCopying>)object
-{
-    machine = (CMMachine *)object;
 }
 
 @end

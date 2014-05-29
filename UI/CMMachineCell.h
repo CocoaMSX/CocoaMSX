@@ -26,10 +26,6 @@
 
 @interface CMMachineCell : NSTextFieldCell
 {
-    CMMachine *machine;
 }
-
-- (void)setObjectValue:(id <NSCopying>)object;
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 
 @end

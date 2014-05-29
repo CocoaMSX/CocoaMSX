@@ -46,6 +46,7 @@ extern NSString * const CMMsxTurboRMachine;
     NSInteger _system;
     NSURL *_machineUrl;
     NSInteger _status;
+    BOOL _active;
 }
 
 @property (nonatomic, copy) NSString *machineId;
@@ -55,6 +56,7 @@ extern NSString * const CMMsxTurboRMachine;
 @property (nonatomic, retain) NSURL *machineUrl;
 @property (nonatomic, assign) NSInteger system;
 @property (nonatomic, assign) NSInteger status;
+@property (nonatomic, assign) BOOL active;
 
 + (CMMachine *)machineWithPath:(NSString *)path;
 
