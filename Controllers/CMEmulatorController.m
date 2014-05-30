@@ -66,6 +66,7 @@
 #define LED_FDD1      0x040
 #define LED_HD        0x080
 #define LED_CASSETTE  0x100
+#define LED_POWER     0x200
 
 @interface CMEmulatorController ()
 
@@ -588,6 +589,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     [self setCurrentlyLoadedCaptureFilePath:nil];
     [self cleanupTemporaryCaptureFile];
+    
+    [self updateFps:0];
 }
 
 - (void)pause
@@ -646,7 +649,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         state |= LED_CODE;
     if (ledGetTurboR())
         state |= LED_TURBO_R;
-    if (ledGetPause())
+    if ([self isPaused])
         state |= LED_PAUSE;
     if (ledGetRensha())
         state |= LED_REN_SHA;
@@ -658,6 +661,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
         state |= LED_FDD1;
     if (ledGetCas())
         state |= LED_CASSETTE;
+    if ([self isStarted])
+        state |= LED_POWER;
     
     return state;
 }
@@ -701,9 +706,19 @@ CMEmulatorController *theEmulator = nil; // FIXME
                  imageView:capsLed
              offStateImage:@"caps_led_off"
               onStateImage:@"caps_led_on"];
+    [self toggleIfLedState:state
+                ledBitMask:LED_PAUSE
+                 imageView:pauseLed
+             offStateImage:@"pause_led_off"
+              onStateImage:@"pause_led_on"];
+    [self toggleIfLedState:state
+                ledBitMask:LED_POWER
+                 imageView:powerLed
+             offStateImage:@"power_led_off"
+              onStateImage:@"power_led_on"];
     
-    if (emulatorGetState() == EMU_PAUSED)
-        [self setFpsDisplay:CMLoc(@"MSX Paused", @"")];
+    if (emulatorGetState() != EMU_RUNNING)
+        [self setFpsDisplay:@""];
     else
         [self setFpsDisplay:[NSString stringWithFormat:CMLoc(@"FPS: %.02f", @""), fps]];
     

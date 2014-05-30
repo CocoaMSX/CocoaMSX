@@ -679,6 +679,14 @@
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
 		FED154BE168714910043C7E5 /* filmstrip.png in Resources */ = {isa = PBXBuildFile; fileRef = FED154BD168714910043C7E5 /* filmstrip.png */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
+		FED5C860193860E80045FE8C /* pause_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C85C193860E80045FE8C /* pause_led_off.png */; };
+		FED5C861193860E80045FE8C /* pause_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C85D193860E80045FE8C /* pause_led_off@2x.png */; };
+		FED5C862193860E80045FE8C /* pause_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C85E193860E80045FE8C /* pause_led_on.png */; };
+		FED5C863193860E80045FE8C /* pause_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C85F193860E80045FE8C /* pause_led_on@2x.png */; };
+		FED5C8681938629B0045FE8C /* power_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C8641938629B0045FE8C /* power_led_off.png */; };
+		FED5C8691938629B0045FE8C /* power_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C8651938629B0045FE8C /* power_led_off@2x.png */; };
+		FED5C86A1938629B0045FE8C /* power_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C8661938629B0045FE8C /* power_led_on.png */; };
+		FED5C86B1938629B0045FE8C /* power_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C8671938629B0045FE8C /* power_led_on@2x.png */; };
 		FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */; };
 		FEE4D8B818470E5800C4BAFA /* CMSlotEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */; };
 		FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEE801571674ACD000695F38 /* CartridgeDocument.icns */; };
@@ -1473,6 +1481,14 @@
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
 		FED154BD168714910043C7E5 /* filmstrip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filmstrip.png; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
+		FED5C85C193860E80045FE8C /* pause_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause_led_off.png; sourceTree = "<group>"; };
+		FED5C85D193860E80045FE8C /* pause_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause_led_off@2x.png"; sourceTree = "<group>"; };
+		FED5C85E193860E80045FE8C /* pause_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause_led_on.png; sourceTree = "<group>"; };
+		FED5C85F193860E80045FE8C /* pause_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause_led_on@2x.png"; sourceTree = "<group>"; };
+		FED5C8641938629B0045FE8C /* power_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = power_led_off.png; sourceTree = "<group>"; };
+		FED5C8651938629B0045FE8C /* power_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "power_led_off@2x.png"; sourceTree = "<group>"; };
+		FED5C8661938629B0045FE8C /* power_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = power_led_on.png; sourceTree = "<group>"; };
+		FED5C8671938629B0045FE8C /* power_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "power_led_on@2x.png"; sourceTree = "<group>"; };
 		FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SlotEditor.xib; sourceTree = "<group>"; };
 		FEE4D8B618470E5800C4BAFA /* CMSlotEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSlotEditorController.h; sourceTree = "<group>"; };
 		FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSlotEditorController.m; sourceTree = "<group>"; };
@@ -1632,6 +1648,14 @@
 		6BCA755D164D7D09002CA211 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				FED5C8641938629B0045FE8C /* power_led_off.png */,
+				FED5C8651938629B0045FE8C /* power_led_off@2x.png */,
+				FED5C8661938629B0045FE8C /* power_led_on.png */,
+				FED5C8671938629B0045FE8C /* power_led_on@2x.png */,
+				FED5C85C193860E80045FE8C /* pause_led_off.png */,
+				FED5C85D193860E80045FE8C /* pause_led_off@2x.png */,
+				FED5C85E193860E80045FE8C /* pause_led_on.png */,
+				FED5C85F193860E80045FE8C /* pause_led_on@2x.png */,
 				FE5CDEBD192C8BE600312BB4 /* caps_led_off.png */,
 				FE5CDEBE192C8BE600312BB4 /* caps_led_on.png */,
 				FE5CDEBF192C8BE600312BB4 /* caps_led_on@2x.png */,
@@ -2774,6 +2798,7 @@
 				6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */,
 				6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */,
 				6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */,
+				FED5C862193860E80045FE8C /* pause_led_on.png in Resources */,
 				FE17A07D1929CC96007FB866 /* fdd0_led_on.png in Resources */,
 				FE1A3631165623AC0083BA21 /* icon.icns in Resources */,
 				FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */,
@@ -2781,13 +2806,16 @@
 				FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */,
 				FE1C134F167DCF8900CE2B6B /* About.xib in Resources */,
 				FE1C1358167DE0D200CE2B6B /* Documents in Resources */,
+				FED5C86A1938629B0045FE8C /* power_led_on.png in Resources */,
 				FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */,
+				FED5C860193860E80045FE8C /* pause_led_off.png in Resources */,
 				FE1C135D167DE41800CE2B6B /* AppIcon@2x.png in Resources */,
 				FE17A07B1929CC96007FB866 /* fdd0_led_on@2x.png in Resources */,
 				FE5B566E1929D331001C4E85 /* fdd1_led_off.png in Resources */,
 				FE5CDEBC192C871F00312BB4 /* code_led_off@2x.png in Resources */,
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
+				FED5C861193860E80045FE8C /* pause_led_off@2x.png in Resources */,
 				FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */,
 				FE5B566D1929D331001C4E85 /* fdd1_led_on.png in Resources */,
 				FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */,
@@ -2797,7 +2825,10 @@
 				FEB8DFC11692402E009BE6E4 /* toolbar-keyboard@2x.png in Resources */,
 				FE17A07E1929CC96007FB866 /* fdd0_led_off.png in Resources */,
 				FEB8DFC21692402E009BE6E4 /* toolbar-sound.png in Resources */,
+				FED5C863193860E80045FE8C /* pause_led_on@2x.png in Resources */,
 				FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */,
+				FED5C86B1938629B0045FE8C /* power_led_on@2x.png in Resources */,
+				FED5C8691938629B0045FE8C /* power_led_off@2x.png in Resources */,
 				FEACF06C16A07B9800EEF84C /* sparkle_dsa_pub.pem in Resources */,
 				FE5CDEBA192C871F00312BB4 /* code_led_on.png in Resources */,
 				FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */,
@@ -2821,6 +2852,7 @@
 				FE17A07C1929CC96007FB866 /* fdd0_led_off@2x.png in Resources */,
 				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
 				FEA74EFD16FC14B60033E2DE /* Data in Resources */,
+				FED5C8681938629B0045FE8C /* power_led_off.png in Resources */,
 				FE05CAD1176CD17C00D6CAC0 /* ConfigureJoystick.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
