@@ -302,6 +302,7 @@
 		FE17DC0116B3BD1A004ED68D /* logo-turbor.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF916B3BD1A004ED68D /* logo-turbor.png */; };
 		FE17DC0216B3BD1A004ED68D /* logo-turbor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBFA16B3BD1A004ED68D /* logo-turbor@2x.png */; };
 		FE17DC0516B3CFAF004ED68D /* CMMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = FE17DC0416B3CFAF004ED68D /* CMMachine.m */; };
+		FE1905241937965600CC3E08 /* CMMixerChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1905231937965600CC3E08 /* CMMixerChannel.m */; };
 		FE1A3631165623AC0083BA21 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FE1A3630165623AC0083BA21 /* icon.icns */; };
 		FE1C134F167DCF8900CE2B6B /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE1C134E167DCF8900CE2B6B /* About.xib */; };
 		FE1C1356167DD08E00CE2B6B /* CMAboutController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1C1355167DD08E00CE2B6B /* CMAboutController.m */; };
@@ -1302,6 +1303,8 @@
 		FE17DBFA16B3BD1A004ED68D /* logo-turbor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-turbor@2x.png"; sourceTree = "<group>"; };
 		FE17DC0316B3CFAF004ED68D /* CMMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachine.h; sourceTree = "<group>"; };
 		FE17DC0416B3CFAF004ED68D /* CMMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachine.m; sourceTree = "<group>"; };
+		FE1905221937965600CC3E08 /* CMMixerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMixerChannel.h; sourceTree = "<group>"; };
+		FE1905231937965600CC3E08 /* CMMixerChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMixerChannel.m; sourceTree = "<group>"; };
 		FE1A3630165623AC0083BA21 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		FE1C134E167DCF8900CE2B6B /* About.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = About.xib; sourceTree = "<group>"; };
 		FE1C1354167DD08E00CE2B6B /* CMAboutController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMAboutController.h; sourceTree = "<group>"; };
@@ -2388,6 +2391,19 @@
 			name = HID;
 			sourceTree = "<group>";
 		};
+		FE1905211937964400CC3E08 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				FE17DC0316B3CFAF004ED68D /* CMMachine.h */,
+				FE17DC0416B3CFAF004ED68D /* CMMachine.m */,
+				FE9B86BD16D4AC8100623DBD /* CMMachineInstallationOperation.h */,
+				FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */,
+				FE1905221937965600CC3E08 /* CMMixerChannel.h */,
+				FE1905231937965600CC3E08 /* CMMixerChannel.m */,
+			);
+			name = Preferences;
+			sourceTree = "<group>";
+		};
 		FE1C1359167DE41800CE2B6B /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -2586,6 +2602,7 @@
 		FEEF38AC163C82D0005F7DC8 /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
+				FE1905211937964400CC3E08 /* Preferences */,
 				FE0C5F05192F3E6700FBE461 /* HID */,
 				FE99C538160E58FD00843DC8 /* CMFrameCounter.h */,
 				FE99C539160E58FD00843DC8 /* CMFrameCounter.m */,
@@ -2597,10 +2614,6 @@
 				FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */,
 				6B1C25AA1672972F004DD618 /* CMKeyboardInput.h */,
 				6B1C25AB1672972F004DD618 /* CMKeyboardInput.m */,
-				FE17DC0316B3CFAF004ED68D /* CMMachine.h */,
-				FE17DC0416B3CFAF004ED68D /* CMMachine.m */,
-				FE9B86BD16D4AC8100623DBD /* CMMachineInstallationOperation.h */,
-				FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */,
 				FEA6E8A516EB223100A580CF /* CMMSXJoystick.h */,
 				FEA6E8A616EB223100A580CF /* CMMSXJoystick.m */,
 				FEA6E8A216EB0A2800A580CF /* CMMSXKeyboard.h */,
@@ -3113,6 +3126,7 @@
 				FEF40EDC160DB83B009170A9 /* CocoaMidi.c in Sources */,
 				FEF40EDD160DB83B009170A9 /* CocoaNotifications.c in Sources */,
 				FEF40EDE160DB83B009170A9 /* CocoaPrinter.c in Sources */,
+				FE1905241937965600CC3E08 /* CMMixerChannel.m in Sources */,
 				FEF40EDF160DB83B009170A9 /* CocoaUart.c in Sources */,
 				FEF40EE0160DB83B009170A9 /* CocoaVideoIn.c in Sources */,
 				FEF40EE1160DB83B009170A9 /* CMMsxDisplayView.m in Sources */,

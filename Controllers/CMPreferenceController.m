@@ -36,6 +36,7 @@
 #import "CMMSXJoystick.h"
 #import "CMKeyboardInput.h"
 #import "CMMachine.h"
+#import "CMMixerChannel.h"
 
 #import "CMCocoaInput.h"
 #import "CMKeyCaptureView.h"
@@ -119,53 +120,6 @@ static NSArray *keysInOrderOfAppearance;
 
 @end
 
-#pragma mark MixerChannel
-
-@interface CMMixerChannel : NSObject
-{
-    NSString *_name;
-    NSString *_tabId;
-    NSInteger _blueMsxIdentifier;
-}
-
-+ (CMMixerChannel *)mixerChannelNamed:(NSString *)name
-                    blueMsxIdentifier:(NSInteger)blueMsxIdentifier
-                                tabId:(NSString *)tabId;
-
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *tabId;
-@property (nonatomic, assign) NSInteger blueMsxIdentifier;
-
-@end
-
-@implementation CMMixerChannel
-
-@synthesize name = _name;
-@synthesize tabId = _tabId;
-@synthesize blueMsxIdentifier = _blueMsxIdentifier;
-
-+ (CMMixerChannel *)mixerChannelNamed:(NSString *)name
-                    blueMsxIdentifier:(NSInteger)blueMsxIdentifier
-                                tabId:(NSString *)tabId
-{
-    CMMixerChannel *mc = [[CMMixerChannel alloc] init];
-    
-    [mc setName:name];
-    [mc setBlueMsxIdentifier:blueMsxIdentifier];
-    [mc setTabId:tabId];
-    
-    return [mc autorelease];
-}
-
-- (void)dealloc
-{
-    [self setName:nil];
-    
-    [super dealloc];
-}
-
-@end
-
 #pragma mark - PreferenceController
 
 #define ALERT_RESTART_SYSTEM 1
@@ -213,6 +167,7 @@ static NSArray *keysInOrderOfAppearance;
 
 @synthesize emulator = _emulator;
 @synthesize machines = _machines;
+@synthesize channels = _channels;
 @synthesize machineNameFilter = _machineNameFilter;
 
 #pragma mark - Init & Dealloc
@@ -232,26 +187,33 @@ static NSArray *keysInOrderOfAppearance;
         
         // Set the virtual emulation speed range
         virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
-        
-        mixers = [[NSArray alloc] initWithObjects:
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"PSG", @"Sound channel")
-                                  blueMsxIdentifier:MIXER_CHANNEL_PSG
-                                              tabId:@"psg"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"SCC", @"Sound channel")
-                                  blueMsxIdentifier:MIXER_CHANNEL_SCC
-                                              tabId:@"scc"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX-Music", @"Sound channel")
-                                  blueMsxIdentifier:MIXER_CHANNEL_MSXMUSIC
-                                              tabId:@"msxmusic"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX-Audio", @"Sound channel")
-                                  blueMsxIdentifier:MIXER_CHANNEL_MSXAUDIO
-                                              tabId:@"msxaudio"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Moonsound", @"Sound channel")
-                                  blueMsxIdentifier:MIXER_CHANNEL_MOONSOUND
-                                              tabId:@"moonsound"],
-                  [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard", @"Sound channel")
-                                  blueMsxIdentifier:MIXER_CHANNEL_KEYBOARD
-                                              tabId:@"keyboard"], nil];
+
+        // Set up channels
+        _channels = [[NSArray alloc] initWithObjects:
+                     [CMMixerChannel mixerChannelNamed:CMLoc(@"PSG", "Audio Channel")
+                                   enabledPropertyName:@"audioEnablePsg"
+                                    volumePropertyName:@"audioVolumePsg"
+                                   balancePropertyName:@"audioBalancePsg"],
+                     [CMMixerChannel mixerChannelNamed:CMLoc(@"SCC", "Audio Channel")
+                                   enabledPropertyName:@"audioEnableScc"
+                                    volumePropertyName:@"audioVolumeScc"
+                                   balancePropertyName:@"audioBalanceScc"],
+                     [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Music", "Audio Channel")
+                                   enabledPropertyName:@"audioEnableMsxMusic"
+                                    volumePropertyName:@"audioVolumeMsxMusic"
+                                   balancePropertyName:@"audioBalanceMsxMusic"],
+                     [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Audio", "Audio Channel")
+                                   enabledPropertyName:@"audioEnableMsxAudio"
+                                    volumePropertyName:@"audioVolumeMsxAudio"
+                                   balancePropertyName:@"audioBalanceMsxAudio"],
+                     [CMMixerChannel mixerChannelNamed:CMLoc(@"Moonsound", "Audio Channel")
+                                   enabledPropertyName:@"audioEnableMoonSound"
+                                    volumePropertyName:@"audioVolumeMoonSound"
+                                   balancePropertyName:@"audioBalanceMoonSound"],
+                     [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard", "Audio Channel")
+                                   enabledPropertyName:@"audioEnableKeyboard"
+                                    volumePropertyName:@"audioVolumeKeyboard"
+                                   balancePropertyName:@"audioBalanceKeyboard"], nil];
         
         downloadQueue = [[NSOperationQueue alloc] init];
         [downloadQueue setMaxConcurrentOperationCount:1];
@@ -273,19 +235,15 @@ static NSArray *keysInOrderOfAppearance;
                         saturationSlider,
                         gammaSlider,
                         scanlineSlider,
-                        psgVolumeSlider, psgBalanceSlider,
-                        sccVolumeSlider, sccBalanceSlider,
-                        msxMusicVolumeSlider, msxMusicBalanceSlider,
-                        msxAudioVolumeSlider, msxAudioBalanceSlider,
-                        keyboardVolumeSlider, keyboardBalanceSlider,
-                        moonSoundVolumeSlider, moonSoundBalanceSlider, nil];
+                        balanceSlider,
+                        volumeSlider, nil];
     
     [sliders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         NSSlider *slider = (NSSlider*)obj;
         
-        slider.action = @selector(sliderValueChanged:);
-        slider.target = self;
+        [slider setAction:@selector(sliderValueChanged:)];
+        [slider setTarget:self];
     }];
     
     machineStatusFilter = CMMachineInstalled;
@@ -333,9 +291,6 @@ static NSArray *keysInOrderOfAppearance;
     [machineScopeBar setSelected:YES forItem:@(machineFamilyFilter) inGroup:SCOPEBAR_GROUP_MACHINE_FAMILY];
     [machineScopeBar setSelected:YES forItem:@(machineStatusFilter) inGroup:SCOPEBAR_GROUP_MACHINE_STATUS];
     
-    [mixerTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
-    [mixerTabView selectTabViewItemWithIdentifier:[[mixers objectAtIndex:0] tabId]];
-    
     [self sizeWindowToTabContent:[[contentTabView selectedTabViewItem] identifier]];
     
     [keyboardLayoutEditor reloadData];
@@ -374,7 +329,7 @@ static NSArray *keysInOrderOfAppearance;
     [_activeMachine release];
     [_machineNameFilter release];
     [_machines release];
-    [mixers release];
+    [_channels release];
     [keyCategories release];
     [joystickOneCategories release];
     [joystickTwoCategories release];
@@ -1422,42 +1377,6 @@ static NSArray *keysInOrderOfAppearance;
     }
 }
 
-#pragma mark - NSTableViewDataSourceDelegate
-
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
-{
-    if (tableView == mixerTableView)
-        return [mixers count];
-    
-    return 0;
-}
-
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
-{
-    NSString *columnIdentifer = [aTableColumn identifier];
-    
-    if (aTableView == mixerTableView)
-    {
-        CMMixerChannel *mixerChannel = [mixers objectAtIndex:rowIndex];
-        
-        if ([columnIdentifer isEqualToString:@"mixerName"])
-            return [mixerChannel name];
-    }
-    
-    return nil;
-}
-
-#pragma mark - NSTableViewDelegate
-
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
-{
-    if ([aNotification object] == mixerTableView)
-    {
-        CMMixerChannel *mixerChannel = [mixers objectAtIndex:[mixerTableView selectedRow]];
-        [mixerTabView selectTabViewItemWithIdentifier:[mixerChannel tabId]];
-    }
-}
-
 #pragma mark MGScopeBarDelegate
 
 - (NSView *)accessoryViewForScopeBar:(MGScopeBar *)theScopeBar
@@ -1606,7 +1525,6 @@ static NSArray *keysInOrderOfAppearance;
         [self resetPredicate];
     }
 }
-
 
 - (void)resetPredicate
 {

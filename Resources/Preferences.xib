@@ -7,7 +7,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CMPreferenceController">
             <connections>
+                <outlet property="balanceSlider" destination="iwM-Bh-yaX" id="7Xw-Sk-Fns"/>
                 <outlet property="brightnessSlider" destination="178" id="261"/>
+                <outlet property="channelsArrayController" destination="aH6-jf-UAc" id="HSO-B9-gla"/>
                 <outlet property="configureJoypadOneButton" destination="4474" id="4482"/>
                 <outlet property="configureJoypadTwoButton" destination="4478" id="4484"/>
                 <outlet property="contentTabView" destination="81" id="4420"/>
@@ -16,28 +18,15 @@
                 <outlet property="gammaSlider" destination="234" id="317"/>
                 <outlet property="joystickOneLayoutEditor" destination="3774" id="3843"/>
                 <outlet property="joystickTwoLayoutEditor" destination="3808" id="3844"/>
-                <outlet property="keyboardBalanceSlider" destination="4340" id="4403"/>
                 <outlet property="keyboardLayoutEditor" destination="3623" id="3845"/>
                 <outlet property="keyboardScopeBar" destination="3739" id="3990"/>
-                <outlet property="keyboardVolumeSlider" destination="4338" id="4402"/>
                 <outlet property="machineScopeBar" destination="PgO-iz-9VP" id="pGR-Jh-oj5"/>
                 <outlet property="machineSearchField" destination="H9z-H5-1n2" id="59G-Dt-rZE"/>
                 <outlet property="machinesArrayController" destination="mqW-Wf-8nz" id="LlH-C4-Lvl"/>
-                <outlet property="mixerTabView" destination="4135" id="4148"/>
-                <outlet property="mixerTableView" destination="4124" id="4134"/>
-                <outlet property="moonSoundBalanceSlider" destination="4354" id="4401"/>
-                <outlet property="moonSoundVolumeSlider" destination="4352" id="4400"/>
-                <outlet property="msxAudioBalanceSlider" destination="4326" id="4405"/>
-                <outlet property="msxAudioVolumeSlider" destination="4324" id="4404"/>
-                <outlet property="msxMusicBalanceSlider" destination="4312" id="4407"/>
-                <outlet property="msxMusicVolumeSlider" destination="4310" id="4406"/>
-                <outlet property="psgBalanceSlider" destination="4153" id="4172"/>
-                <outlet property="psgVolumeSlider" destination="4149" id="4171"/>
                 <outlet property="saturationSlider" destination="217" id="318"/>
                 <outlet property="scanlineSlider" destination="817" id="884"/>
-                <outlet property="sccBalanceSlider" destination="4295" id="4409"/>
-                <outlet property="sccVolumeSlider" destination="4293" id="4408"/>
                 <outlet property="toolbar" destination="34" id="108"/>
+                <outlet property="volumeSlider" destination="dsY-Ut-mc9" id="nSs-7b-wJ6"/>
                 <outlet property="window" destination="32" id="1783"/>
             </connections>
         </customObject>
@@ -199,12 +188,12 @@
                                                                 </buttonCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
+                                                                    <binding destination="mqW-Wf-8nz" name="value" keyPath="arrangedObjects.active" id="tQm-QS-OJi"/>
                                                                     <binding destination="mqW-Wf-8nz" name="enabled" keyPath="arrangedObjects.status" id="rbQ-9i-c0Z">
                                                                         <dictionary key="options">
                                                                             <string key="NSValueTransformerName">CMIsMachineInstalled</string>
                                                                         </dictionary>
                                                                     </binding>
-                                                                    <binding destination="mqW-Wf-8nz" name="value" keyPath="arrangedObjects.active" id="tQm-QS-OJi"/>
                                                                 </connections>
                                                             </tableColumn>
                                                             <tableColumn editable="NO" width="496.5703125" minWidth="40" maxWidth="1000" id="Vuz-ha-p8t">
@@ -314,14 +303,14 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
-                                                <binding destination="-2" name="displayPatternValue1" keyPath="activeMachine.name" id="Z63-ak-aoj">
-                                                    <dictionary key="options">
-                                                        <string key="NSDisplayPattern">"%{value1}@" is currently active.</string>
-                                                    </dictionary>
-                                                </binding>
                                                 <binding destination="-2" name="hidden" keyPath="activeMachine" id="UCn-RG-bSZ">
                                                     <dictionary key="options">
                                                         <string key="NSValueTransformerName">NSIsNil</string>
+                                                    </dictionary>
+                                                </binding>
+                                                <binding destination="-2" name="displayPatternValue1" keyPath="activeMachine.name" id="Z63-ak-aoj">
+                                                    <dictionary key="options">
+                                                        <string key="NSDisplayPattern">"%{value1}@" is currently active.</string>
                                                     </dictionary>
                                                 </binding>
                                             </connections>
@@ -699,6 +688,15 @@
                                     <rect key="frame" x="0.0" y="0.0" width="598" height="558"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <textField verticalHuggingPriority="750" id="4410">
+                                            <rect key="frame" x="17" y="521" width="284" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Select a device to adjust sound output:" id="4411">
+                                                <font key="font" metaFont="systemBold"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="4123">
                                             <rect key="frame" x="20" y="381" width="558" height="132"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -725,12 +723,11 @@
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                <connections>
+                                                                    <binding destination="aH6-jf-UAc" name="value" keyPath="arrangedObjects.name" id="oQg-0T-Raa"/>
+                                                                </connections>
                                                             </tableColumn>
                                                         </tableColumns>
-                                                        <connections>
-                                                            <outlet property="dataSource" destination="-2" id="4132"/>
-                                                            <outlet property="delegate" destination="-2" id="4133"/>
-                                                        </connections>
                                                     </tableView>
                                                 </subviews>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -748,477 +745,78 @@
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </tableHeaderView>
                                         </scrollView>
-                                        <tabView drawsBackground="NO" type="noTabsNoBorder" id="4135">
-                                            <rect key="frame" x="20" y="203" width="558" height="130"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                            <tabViewItems>
-                                                <tabViewItem label="PSG" identifier="psg" id="4136">
-                                                    <view key="view" id="4139">
-                                                        <rect key="frame" x="0.0" y="0.0" width="558" height="130"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        <subviews>
-                                                            <textField verticalHuggingPriority="750" id="4161">
-                                                                <rect key="frame" x="54" y="113" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Volume:" id="4162">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4149">
-                                                                <rect key="frame" x="203" y="101" width="201" height="25"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="4150"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioVolumePsg" id="4169"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4163">
-                                                                <rect key="frame" x="54" y="58" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Balance:" id="4164">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4153">
-                                                                <rect key="frame" x="203" y="46" width="201" height="26"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="4154"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioBalancePsg" id="4170"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4155">
-                                                                <rect key="frame" x="195" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="left" id="4156">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <textField verticalHuggingPriority="750" id="4159">
-                                                                <rect key="frame" x="376" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="right" id="4160">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <button id="4173">
-                                                                <rect key="frame" x="426" y="111" width="77" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="check" title="Mute" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4174">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioEnablePsg" id="4176">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                    </view>
-                                                </tabViewItem>
-                                                <tabViewItem label="SCC" identifier="scc" id="4137">
-                                                    <view key="view" id="4138">
-                                                        <rect key="frame" x="0.0" y="0.0" width="558" height="130"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <subviews>
-                                                            <textField verticalHuggingPriority="750" id="4292">
-                                                                <rect key="frame" x="54" y="113" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Volume:" id="4305">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4293">
-                                                                <rect key="frame" x="203" y="101" width="201" height="25"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="4304"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioVolumeScc" id="4369"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4294">
-                                                                <rect key="frame" x="54" y="58" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Balance:" id="4303">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4295">
-                                                                <rect key="frame" x="203" y="46" width="201" height="26"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="4302"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioBalanceScc" id="4371"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4296">
-                                                                <rect key="frame" x="195" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="left" id="4301">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <textField verticalHuggingPriority="750" id="4297">
-                                                                <rect key="frame" x="376" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="right" id="4300">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <button id="4298">
-                                                                <rect key="frame" x="426" y="111" width="77" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="check" title="Mute" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4299">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioEnableScc" id="4367">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                    </view>
-                                                </tabViewItem>
-                                                <tabViewItem label="MSX-Music" identifier="msxmusic" id="4140">
-                                                    <view key="view" id="4141">
-                                                        <rect key="frame" x="0.0" y="0.0" width="558" height="130"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <subviews>
-                                                            <textField verticalHuggingPriority="750" id="4309">
-                                                                <rect key="frame" x="54" y="113" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Volume:" id="4322">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4310">
-                                                                <rect key="frame" x="203" y="101" width="201" height="25"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="4321"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioVolumeMsxMusic" id="4376"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4311">
-                                                                <rect key="frame" x="54" y="58" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Balance:" id="4320">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4312">
-                                                                <rect key="frame" x="203" y="46" width="201" height="26"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="4319"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioBalanceMsxMusic" id="4378"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4313">
-                                                                <rect key="frame" x="195" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="left" id="4318">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <textField verticalHuggingPriority="750" id="4314">
-                                                                <rect key="frame" x="376" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="right" id="4317">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <button id="4315">
-                                                                <rect key="frame" x="426" y="111" width="77" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="check" title="Mute" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4316">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioEnableMsxMusic" id="4374">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                    </view>
-                                                </tabViewItem>
-                                                <tabViewItem label="MSX-Audio" identifier="msxaudio" id="4142">
-                                                    <view key="view" id="4143">
-                                                        <rect key="frame" x="0.0" y="0.0" width="558" height="130"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <subviews>
-                                                            <textField verticalHuggingPriority="750" id="4323">
-                                                                <rect key="frame" x="54" y="113" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Volume:" id="4336">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4324">
-                                                                <rect key="frame" x="203" y="101" width="201" height="25"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="4335"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioVolumeMsxAudio" id="4383"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4325">
-                                                                <rect key="frame" x="54" y="58" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Balance:" id="4334">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4326">
-                                                                <rect key="frame" x="203" y="46" width="201" height="26"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="4333"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioBalanceMsxAudio" id="4385"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4327">
-                                                                <rect key="frame" x="195" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="left" id="4332">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <textField verticalHuggingPriority="750" id="4328">
-                                                                <rect key="frame" x="376" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="right" id="4331">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <button id="4329">
-                                                                <rect key="frame" x="426" y="111" width="77" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="check" title="Mute" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4330">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioEnableMsxAudio" id="4381">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                    </view>
-                                                </tabViewItem>
-                                                <tabViewItem label="Keyboard" identifier="keyboard" id="4144">
-                                                    <view key="view" id="4145">
-                                                        <rect key="frame" x="0.0" y="0.0" width="558" height="130"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <subviews>
-                                                            <textField verticalHuggingPriority="750" id="4337">
-                                                                <rect key="frame" x="54" y="113" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Volume:" id="4350">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4338">
-                                                                <rect key="frame" x="203" y="101" width="201" height="25"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="4349"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioVolumeKeyboard" id="4390"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4339">
-                                                                <rect key="frame" x="54" y="58" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Balance:" id="4348">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4340">
-                                                                <rect key="frame" x="203" y="46" width="201" height="26"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="4347"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioBalanceKeyboard" id="4392"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4341">
-                                                                <rect key="frame" x="195" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="left" id="4346">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <textField verticalHuggingPriority="750" id="4342">
-                                                                <rect key="frame" x="376" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="right" id="4345">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <button id="4343">
-                                                                <rect key="frame" x="426" y="111" width="77" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="check" title="Mute" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4344">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioEnableKeyboard" id="4388">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                    </view>
-                                                </tabViewItem>
-                                                <tabViewItem label="Moonsound" identifier="moonsound" id="4146">
-                                                    <view key="view" id="4147">
-                                                        <rect key="frame" x="0.0" y="0.0" width="558" height="130"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <subviews>
-                                                            <textField verticalHuggingPriority="750" id="4351">
-                                                                <rect key="frame" x="54" y="113" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Volume:" id="4364">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4352">
-                                                                <rect key="frame" x="203" y="101" width="201" height="25"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="4363"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioVolumeMoonSound" id="4397"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4353">
-                                                                <rect key="frame" x="54" y="58" width="118" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Balance:" id="4362">
-                                                                    <font key="font" metaFont="system"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <slider verticalHuggingPriority="750" id="4354">
-                                                                <rect key="frame" x="203" y="46" width="201" height="26"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="4361"/>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioBalanceMoonSound" id="4399"/>
-                                                                </connections>
-                                                            </slider>
-                                                            <textField verticalHuggingPriority="750" id="4355">
-                                                                <rect key="frame" x="195" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="left" id="4360">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <textField verticalHuggingPriority="750" id="4356">
-                                                                <rect key="frame" x="376" y="22" width="38" height="17"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="right" id="4359">
-                                                                    <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                </textFieldCell>
-                                                            </textField>
-                                                            <button id="4357">
-                                                                <rect key="frame" x="426" y="111" width="77" height="18"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                <buttonCell key="cell" type="check" title="Mute" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4358">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                                <connections>
-                                                                    <binding destination="804" name="value" keyPath="values.audioEnableMoonSound" id="4395">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                    </view>
-                                                </tabViewItem>
-                                            </tabViewItems>
-                                        </tabView>
-                                        <textField verticalHuggingPriority="750" id="4410">
-                                            <rect key="frame" x="17" y="521" width="284" height="17"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Select a device to adjust sound output:" id="4411">
-                                                <font key="font" metaFont="systemBold"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
                                         <textField verticalHuggingPriority="750" id="4412">
                                             <rect key="frame" x="17" y="348" width="284" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Settings for the selected device:" id="4413">
                                                 <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="x5Q-UJ-fwQ">
+                                            <rect key="frame" x="75" y="316" width="118" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Volume:" id="Rmy-g5-GMl">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <slider verticalHuggingPriority="750" id="dsY-Ut-mc9">
+                                            <rect key="frame" x="224" y="304" width="201" height="25"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="3z4-dP-Ssw"/>
+                                            <connections>
+                                                <binding destination="aH6-jf-UAc" name="value" keyPath="selection.volume" id="2FZ-he-D9Q"/>
+                                            </connections>
+                                        </slider>
+                                        <button id="gTK-5r-aH9">
+                                            <rect key="frame" x="447" y="314" width="77" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="Mute" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="LYk-iB-mhc">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="aH6-jf-UAc" name="value" keyPath="selection.enabled" id="s2d-es-HhG">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
+                                        </button>
+                                        <textField verticalHuggingPriority="750" id="uUV-pN-b6V">
+                                            <rect key="frame" x="75" y="261" width="118" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Balance:" id="0hC-Bc-9RF">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <slider verticalHuggingPriority="750" id="iwM-Bh-yaX">
+                                            <rect key="frame" x="224" y="249" width="201" height="26"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="zRX-em-FwP"/>
+                                            <connections>
+                                                <binding destination="aH6-jf-UAc" name="value" keyPath="selection.balance" id="hBo-2A-e7q"/>
+                                            </connections>
+                                        </slider>
+                                        <textField verticalHuggingPriority="750" id="EUQ-rN-Cf8">
+                                            <rect key="frame" x="216" y="225" width="38" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="left" id="rDi-gR-lbf">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="ZvC-C6-INi">
+                                            <rect key="frame" x="397" y="225" width="38" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="right" id="gpC-4b-sKx">
+                                                <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1995,6 +1593,14 @@
             </declaredKeys>
             <connections>
                 <binding destination="-2" name="contentArray" keyPath="machines" id="Nl2-Dp-xW8"/>
+            </connections>
+        </arrayController>
+        <arrayController objectClassName="CMMixerChannel" id="aH6-jf-UAc" userLabel="Channels Array Controller">
+            <declaredKeys>
+                <string>name</string>
+            </declaredKeys>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="channels" id="Jlq-6x-gic"/>
             </connections>
         </arrayController>
         <userDefaultsController representsSharedInstance="YES" id="804"/>

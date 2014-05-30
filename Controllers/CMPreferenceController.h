@@ -34,10 +34,11 @@
 @class SBJsonParser;
 @class CMMachine;
 
-@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTableViewDataSource, NSTableViewDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
+@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
 {
     CMEmulatorController *_emulator;
     NSMutableArray *_machines;
+    NSArray *_channels;
     NSString *_machineNameFilter;
     NSInteger machineFamilyFilter;
     NSInteger machineStatusFilter;
@@ -55,27 +56,14 @@
     
     CMKeyCaptureView *keyCaptureView;
     
-    IBOutlet NSTableView *mixerTableView;
-    
     IBOutlet NSTabView *contentTabView;
-    IBOutlet NSTabView *mixerTabView;
     
     IBOutlet NSOutlineView *keyboardLayoutEditor;
     IBOutlet NSOutlineView *joystickOneLayoutEditor;
     IBOutlet NSOutlineView *joystickTwoLayoutEditor;
     
-    IBOutlet NSSlider *psgVolumeSlider;
-    IBOutlet NSSlider *psgBalanceSlider;
-    IBOutlet NSSlider *sccVolumeSlider;
-    IBOutlet NSSlider *sccBalanceSlider;
-    IBOutlet NSSlider *msxMusicVolumeSlider;
-    IBOutlet NSSlider *msxMusicBalanceSlider;
-    IBOutlet NSSlider *msxAudioVolumeSlider;
-    IBOutlet NSSlider *msxAudioBalanceSlider;
-    IBOutlet NSSlider *keyboardVolumeSlider;
-    IBOutlet NSSlider *keyboardBalanceSlider;
-    IBOutlet NSSlider *moonSoundVolumeSlider;
-    IBOutlet NSSlider *moonSoundBalanceSlider;
+    IBOutlet NSSlider *volumeSlider;
+    IBOutlet NSSlider *balanceSlider;
     
     IBOutlet NSSlider *brightnessSlider;
     IBOutlet NSSlider *contrastSlider;
@@ -83,14 +71,15 @@
     IBOutlet NSSlider *gammaSlider;
     IBOutlet NSSlider *scanlineSlider;
     
-    IBOutlet NSSlider *emulationSpeedSlider;
     IBOutlet NSArrayController *machinesArrayController;
+    IBOutlet NSArrayController *channelsArrayController;
+
+    IBOutlet NSSlider *emulationSpeedSlider;
     IBOutlet NSSearchField *machineSearchField;
     
     NSMutableArray *keyCategories;
     NSMutableArray *joystickOneCategories;
     NSMutableArray *joystickTwoCategories;
-    NSArray *mixers;
     
     NSArray *virtualEmulationSpeedRange;
     
@@ -103,6 +92,7 @@
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
 @property (nonatomic, copy) NSMutableArray *machines;
+@property (nonatomic, copy) NSArray *channels;
 @property (nonatomic, copy) CMMachine *activeMachine;
 @property (nonatomic, copy) NSString *machineNameFilter;
 
