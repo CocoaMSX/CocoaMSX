@@ -677,6 +677,10 @@
 		FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBD1692402E009BE6E4 /* toolbar-sound@2x.png */; };
 		FEC7231915FF0E3400CB508C /* CMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC7231815FF0E3400CB508C /* CMPreferenceController.m */; };
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
+		FEC9AE1F193A947300E4725D /* rensha_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC9AE1B193A947300E4725D /* rensha_led_off.png */; };
+		FEC9AE20193A947300E4725D /* rensha_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC9AE1C193A947300E4725D /* rensha_led_off@2x.png */; };
+		FEC9AE21193A947300E4725D /* rensha_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC9AE1D193A947300E4725D /* rensha_led_on.png */; };
+		FEC9AE22193A947300E4725D /* rensha_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC9AE1E193A947300E4725D /* rensha_led_on@2x.png */; };
 		FED154BE168714910043C7E5 /* filmstrip.png in Resources */ = {isa = PBXBuildFile; fileRef = FED154BD168714910043C7E5 /* filmstrip.png */; };
 		FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = FED34F3C163F320D002FCC89 /* Defaults.plist */; };
 		FED5C860193860E80045FE8C /* pause_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C85C193860E80045FE8C /* pause_led_off.png */; };
@@ -1479,6 +1483,10 @@
 		FEC7231715FF0E3400CB508C /* CMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferenceController.h; sourceTree = "<group>"; };
 		FEC7231815FF0E3400CB508C /* CMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferenceController.m; sourceTree = "<group>"; };
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
+		FEC9AE1B193A947300E4725D /* rensha_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rensha_led_off.png; sourceTree = "<group>"; };
+		FEC9AE1C193A947300E4725D /* rensha_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rensha_led_off@2x.png"; sourceTree = "<group>"; };
+		FEC9AE1D193A947300E4725D /* rensha_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rensha_led_on.png; sourceTree = "<group>"; };
+		FEC9AE1E193A947300E4725D /* rensha_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rensha_led_on@2x.png"; sourceTree = "<group>"; };
 		FED154BD168714910043C7E5 /* filmstrip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filmstrip.png; sourceTree = "<group>"; };
 		FED34F3C163F320D002FCC89 /* Defaults.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Defaults.plist; sourceTree = "<group>"; };
 		FED5C85C193860E80045FE8C /* pause_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause_led_off.png; sourceTree = "<group>"; };
@@ -1648,6 +1656,10 @@
 		6BCA755D164D7D09002CA211 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				FEC9AE1B193A947300E4725D /* rensha_led_off.png */,
+				FEC9AE1C193A947300E4725D /* rensha_led_off@2x.png */,
+				FEC9AE1D193A947300E4725D /* rensha_led_on.png */,
+				FEC9AE1E193A947300E4725D /* rensha_led_on@2x.png */,
 				FED5C8641938629B0045FE8C /* power_led_off.png */,
 				FED5C8651938629B0045FE8C /* power_led_off@2x.png */,
 				FED5C8661938629B0045FE8C /* power_led_on.png */,
@@ -2785,11 +2797,13 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				E99733701298B4B500766C90 /* build_info.txt in Resources */,
 				FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */,
+				FEC9AE1F193A947300E4725D /* rensha_led_off.png in Resources */,
 				FEC7232215FF133700CB508C /* Preferences.xib in Resources */,
 				FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */,
 				FE5CDEC4192C8BE600312BB4 /* caps_led_off@2x.png in Resources */,
 				FEA01B3A1620FE360066FDD8 /* SpecialCartChooser.xib in Resources */,
 				FE2CEB581622A50500E58F9A /* Databases in Resources */,
+				FEC9AE20193A947300E4725D /* rensha_led_off@2x.png in Resources */,
 				FE2CEB5A1622A50500E58F9A /* Machines in Resources */,
 				FE2A2BD916240966000CCAE4 /* RepositionCassette.xib in Resources */,
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
@@ -2806,6 +2820,7 @@
 				FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */,
 				FE1C134F167DCF8900CE2B6B /* About.xib in Resources */,
 				FE1C1358167DE0D200CE2B6B /* Documents in Resources */,
+				FEC9AE22193A947300E4725D /* rensha_led_on@2x.png in Resources */,
 				FED5C86A1938629B0045FE8C /* power_led_on.png in Resources */,
 				FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */,
 				FED5C860193860E80045FE8C /* pause_led_off.png in Resources */,
@@ -2831,6 +2846,7 @@
 				FED5C8691938629B0045FE8C /* power_led_off@2x.png in Resources */,
 				FEACF06C16A07B9800EEF84C /* sparkle_dsa_pub.pem in Resources */,
 				FE5CDEBA192C871F00312BB4 /* code_led_on.png in Resources */,
+				FEC9AE21193A947300E4725D /* rensha_led_on.png in Resources */,
 				FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */,
 				FE3D5E6716AE6EBA00898DF5 /* toolbar-computer@2x.png in Resources */,
 				FE17DBFB16B3BD1A004ED68D /* logo-msx.png in Resources */,

@@ -52,6 +52,7 @@
 #include "CommandLine.h"
 #include "Led.h"
 #include "Debugger.h"
+#include "Switches.h"
 
 #include "ArchFile.h"
 #include "ArchEvent.h"
@@ -208,6 +209,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                          @"audioEnableMoonSound",
                                          @"audioVolumeMoonSound",
                                          @"audioBalanceMoonSound",
+                                         @"joystickRenshaTurbo",
                                          nil];
         
         openRomFileTypes = [[NSArray alloc] initWithObjects:@"rom", @"ri", @"mx1", @"mx2", @"zip", nil];
@@ -432,6 +434,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].pan = CMGetIntPref(@"audioBalanceMoonSound");
     properties->sound.mixerChannel[MIXER_CHANNEL_MOONSOUND].enable = CMGetIntPref(@"audioEnableMoonSound");
     
+    properties->joy1.autofire = CMGetIntPref(@"joystickRenshaTurbo");
+    switchSetRensha(properties->joy1.autofire);
+
     properties->joy1.typeId = CMGetIntPref(@"joystickDevicePort1");
     properties->joy2.typeId = CMGetIntPref(@"joystickDevicePort2");
     
@@ -716,7 +721,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
                  imageView:powerLed
              offStateImage:@"power_led_off"
               onStateImage:@"power_led_on"];
-    
+    [self toggleIfLedState:state
+                ledBitMask:LED_REN_SHA
+                 imageView:renshaLed
+             offStateImage:@"rensha_led_off"
+              onStateImage:@"rensha_led_on"];
+
     if (emulatorGetState() != EMU_RUNNING)
         [self setFpsDisplay:@""];
     else
@@ -2506,6 +2516,13 @@ void archTrap(UInt8 value)
             
             properties->joy2.typeId = newValue;
             joystickPortSetType(1, newValue);
+        }
+        else if ([keyPath isEqualToString:@"joystickRenshaTurbo"])
+        {
+            NSInteger newValue = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+
+            properties->joy1.autofire = newValue; //(int)ceil((11 - 1) * value / 100.0);
+            switchSetRensha(properties->joy1.autofire);
         }
     }
 }

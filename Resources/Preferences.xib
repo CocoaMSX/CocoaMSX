@@ -1283,7 +1283,7 @@
                                                                     <tabViewItem identifier="0" id="3889">
                                                                         <view key="view" id="3890">
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         </view>
                                                                     </tabViewItem>
                                                                     <tabViewItem label="Joystick" identifier="1" id="3884">

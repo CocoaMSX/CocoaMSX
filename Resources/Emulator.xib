@@ -21,6 +21,7 @@
                 <outlet property="recentCassettes" destination="ma2-x4-3c6" id="i28-Nx-L0l"/>
                 <outlet property="recentDisksA" destination="FrR-yX-mK0" id="Nrq-7g-gOf"/>
                 <outlet property="recentDisksB" destination="LBN-MK-euB" id="A4D-lT-EZf"/>
+                <outlet property="renshaLed" destination="mdl-xd-s5J" id="MpX-7o-Oqu"/>
                 <outlet property="romSelectionAccessoryView" destination="hW8-CE-guM" id="dMw-A1-gUe"/>
                 <outlet property="romTypeDropdown" destination="uq1-SV-s8z" id="5pP-zH-Q9U"/>
                 <outlet property="screen" destination="812" id="1223"/>
@@ -527,24 +528,29 @@
                             <rect key="frame" x="0.0" y="0.0" width="640" height="32"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="czc-jq-QxQ">
-                                    <rect key="frame" x="51" y="6" width="24" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="pause_led_off" id="3r5-v1-diY"/>
-                                </imageView>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="4b3-Fk-EKg">
-                                    <rect key="frame" x="19" y="6" width="24" height="17"/>
+                                    <rect key="frame" x="19" y="7" width="24" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="power_led_off" id="yIf-2R-EQI"/>
                                 </imageView>
-                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Q1u-MO-TNv">
-                                    <rect key="frame" x="99" y="6" width="24" height="17"/>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="czc-jq-QxQ">
+                                    <rect key="frame" x="51" y="7" width="24" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="pause_led_off" id="3r5-v1-diY"/>
+                                </imageView>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="mdl-xd-s5J">
+                                    <rect key="frame" x="183" y="7" width="32" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="rensha_led_off" id="KlM-fu-eEH"/>
+                                </imageView>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Q1u-MO-TNv">
+                                    <rect key="frame" x="438" y="7" width="24" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="caps_led_off" id="osZ-gt-9FK"/>
                                 </imageView>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="jQv-gf-erv">
-                                    <rect key="frame" x="131" y="6" width="24" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <rect key="frame" x="470" y="7" width="24" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="code_led_off" id="sIM-ja-kPr"/>
                                 </imageView>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="2jo-qo-ICJ">
@@ -558,7 +564,7 @@
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="fdd1_led_off" id="Mcl-lR-yVz"/>
                                 </imageView>
                                 <textField verticalHuggingPriority="750" id="1076">
-                                    <rect key="frame" x="224" y="6" width="192" height="17"/>
+                                    <rect key="frame" x="256" y="6" width="160" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" placeholderString="FPS" id="1077">
                                         <font key="font" metaFont="smallSystem"/>
@@ -569,6 +575,14 @@
                                         <binding destination="-2" name="value" keyPath="self.fpsDisplay" id="1224"/>
                                     </connections>
                                 </textField>
+                                <slider verticalHuggingPriority="750" id="Hrw-iF-9Pr">
+                                    <rect key="frame" x="83" y="7" width="92" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <sliderCell key="cell" controlSize="mini" state="on" alignment="left" maxValue="11" tickMarkPosition="below" numberOfTickMarks="11" allowsTickMarkValuesOnly="YES" sliderType="linear" id="xhV-H9-XH3"/>
+                                    <connections>
+                                        <binding destination="1283" name="value" keyPath="values.joystickRenshaTurbo" id="L9Y-w1-Cbn"/>
+                                    </connections>
+                                </slider>
                             </subviews>
                         </view>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -635,6 +649,11 @@
                 </textField>
             </subviews>
         </customView>
+        <slider verticalHuggingPriority="750" id="Z8D-vU-4Q4">
+            <rect key="frame" x="0.0" y="0.0" width="96" height="21"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="kxg-of-XhO"/>
+        </slider>
     </objects>
     <resources>
         <image name="caps_led_off" width="20.819276809692383" height="14.746988296508789"/>
@@ -643,5 +662,6 @@
         <image name="fdd1_led_off" width="20.819276809692383" height="14.746988296508789"/>
         <image name="pause_led_off" width="20.819276809692383" height="14.746988296508789"/>
         <image name="power_led_off" width="20.819276809692383" height="14.746988296508789"/>
+        <image name="rensha_led_off" width="27.759037017822266" height="14.746988296508789"/>
     </resources>
 </document>
