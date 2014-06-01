@@ -8,6 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="CMEmulatorController">
             <connections>
                 <outlet property="capsLed" destination="Q1u-MO-TNv" id="n7L-tJ-XzA"/>
+                <outlet property="casLed" destination="R8p-bM-RvU" id="CKc-cu-t96"/>
                 <outlet property="codeLed" destination="jQv-gf-erv" id="nX2-fr-2ke"/>
                 <outlet property="fdd0Led" destination="2jo-qo-ICJ" id="fAr-ce-6w7"/>
                 <outlet property="fdd1Led" destination="kxZ-IV-lOt" id="s8J-kV-cuT"/>
@@ -538,6 +539,14 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="pause_led_off" id="3r5-v1-diY"/>
                                 </imageView>
+                                <slider verticalHuggingPriority="750" id="Hrw-iF-9Pr">
+                                    <rect key="frame" x="83" y="7" width="92" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <sliderCell key="cell" controlSize="mini" state="on" alignment="left" maxValue="11" tickMarkPosition="below" numberOfTickMarks="11" allowsTickMarkValuesOnly="YES" sliderType="linear" id="xhV-H9-XH3"/>
+                                    <connections>
+                                        <binding destination="1283" name="value" keyPath="values.joystickRenshaTurbo" id="L9Y-w1-Cbn"/>
+                                    </connections>
+                                </slider>
                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="mdl-xd-s5J">
                                     <rect key="frame" x="183" y="7" width="32" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -563,8 +572,13 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="fdd1_led_off" id="Mcl-lR-yVz"/>
                                 </imageView>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="R8p-bM-RvU">
+                                    <rect key="frame" x="533" y="7" width="24" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="cas_led_off" id="xc0-D6-3HR"/>
+                                </imageView>
                                 <textField verticalHuggingPriority="750" id="1076">
-                                    <rect key="frame" x="256" y="6" width="160" height="17"/>
+                                    <rect key="frame" x="270" y="7" width="101" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" placeholderString="FPS" id="1077">
                                         <font key="font" metaFont="smallSystem"/>
@@ -575,14 +589,6 @@
                                         <binding destination="-2" name="value" keyPath="self.fpsDisplay" id="1224"/>
                                     </connections>
                                 </textField>
-                                <slider verticalHuggingPriority="750" id="Hrw-iF-9Pr">
-                                    <rect key="frame" x="83" y="7" width="92" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <sliderCell key="cell" controlSize="mini" state="on" alignment="left" maxValue="11" tickMarkPosition="below" numberOfTickMarks="11" allowsTickMarkValuesOnly="YES" sliderType="linear" id="xhV-H9-XH3"/>
-                                    <connections>
-                                        <binding destination="1283" name="value" keyPath="values.joystickRenshaTurbo" id="L9Y-w1-Cbn"/>
-                                    </connections>
-                                </slider>
                             </subviews>
                         </view>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -657,6 +663,7 @@
     </objects>
     <resources>
         <image name="caps_led_off" width="20.819276809692383" height="14.746988296508789"/>
+        <image name="cas_led_off" width="20.819276809692383" height="14.746988296508789"/>
         <image name="code_led_off" width="20.819276809692383" height="14.746988296508789"/>
         <image name="fdd0_led_off" width="20.819276809692383" height="14.746988296508789"/>
         <image name="fdd1_led_off" width="20.819276809692383" height="14.746988296508789"/>

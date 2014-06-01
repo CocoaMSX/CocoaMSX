@@ -105,6 +105,7 @@ NSString * const CMKeyboardLayoutPrefKey;
     IBOutlet NSImageView *powerLed;
     IBOutlet NSImageView *pauseLed;
     IBOutlet NSImageView *renshaLed;
+    IBOutlet NSImageView *casLed;
     
     NSOpenPanel *currentlyActiveOpenPanel;
     NSArray *currentlySupportedFileTypes;

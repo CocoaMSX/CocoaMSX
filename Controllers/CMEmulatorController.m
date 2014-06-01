@@ -726,11 +726,16 @@ CMEmulatorController *theEmulator = nil; // FIXME
                  imageView:renshaLed
              offStateImage:@"rensha_led_off"
               onStateImage:@"rensha_led_on"];
+    [self toggleIfLedState:state
+                ledBitMask:LED_CASSETTE
+                 imageView:casLed
+             offStateImage:@"cas_led_off"
+              onStateImage:@"cas_led_on"];
 
     if (emulatorGetState() != EMU_RUNNING)
         [self setFpsDisplay:@""];
     else
-        [self setFpsDisplay:[NSString stringWithFormat:CMLoc(@"FPS: %.02f", @""), fps]];
+        [self setFpsDisplay:[NSString stringWithFormat:CMLoc(@"%.02f", @""), fps]];
     
     self->lastLedState = state;
 }
