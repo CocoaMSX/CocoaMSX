@@ -77,21 +77,21 @@ static const int DP_BASE_BITS = DP_BITS - PG_BITS;
 
 // Dynamic range (Accuracy of sin table)
 static const int DB_BITS = 8;
-static const double DB_STEP = 48.0 / (1 << DB_BITS);
+static const DoubleT DB_STEP = 48.0 / (1 << DB_BITS);
 static const int DB_MUTE = 1 << DB_BITS;
 
 // Dynamic range of envelope
-static const double EG_STEP = 0.375;
+static const DoubleT EG_STEP = 0.375;
 static const int EG_BITS = 7;
 static const int EG_MUTE = 1 << EG_BITS;
 
 // Dynamic range of total level
-static const double TL_STEP = 0.75;
+static const DoubleT TL_STEP = 0.75;
 static const int TL_BITS = 6;
 static const int TL_MUTE = 1 << TL_BITS;
 
 // Dynamic range of sustine level
-static const double SL_STEP = 3.0;
+static const DoubleT SL_STEP = 3.0;
 static const int SL_BITS = 4;
 static const int SL_MUTE = 1 << SL_BITS;
 
@@ -118,12 +118,12 @@ static const int PM_AMP_BITS = 8;
 static const int PM_AMP = 1 << PM_AMP_BITS;
 
 // PM speed(Hz) and depth(cent) 
-static const double PM_SPEED = 6.4;
-static const double PM_DEPTH = 13.75;
+static const DoubleT PM_SPEED = 6.4;
+static const DoubleT PM_DEPTH = 13.75;
 
 // AM speed(Hz) and depth(dB)
-static const double AM_SPEED = 3.6413;
-static const double AM_DEPTH = 4.875;
+static const DoubleT AM_SPEED = 3.6413;
+static const DoubleT AM_DEPTH = 4.875;
 
 
 static const int NULL_PATCH_IDX = 19 * 2;
@@ -251,7 +251,7 @@ private:
 
 	static void makeAdjustTable();
 	static void makeSinTable();
-	static int lin2db(double d);
+	static int lin2db(DoubleT d);
 	static void makePmTable();
 	static void makeAmTable();
 	static void makeDphaseTable(int sampleRate);
@@ -277,8 +277,8 @@ private:
 	inline void update_ampm();
 
 	inline static int TL2EG(int d);
-	inline static unsigned int DB_POS(double x);
-	inline static unsigned int DB_NEG(double x);
+	inline static unsigned int DB_POS(DoubleT x);
+	inline static unsigned int DB_NEG(DoubleT x);
 
 	// Debuggable
 	virtual unsigned getSize() const;

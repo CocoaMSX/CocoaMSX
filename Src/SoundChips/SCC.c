@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/SCC.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.27 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:45 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -375,14 +375,14 @@ static void getDebugInfo(SCC* scc, DbgDevice* dbgDevice)
 
 SCC* sccCreate(Mixer* mixer)
 {
-//    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     SCC* scc = (SCC*)calloc(1, sizeof(SCC));
 
     scc->mixer = mixer;
 
 //    scc->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, langDbgDevScc(), &dbgCallbacks, scc);
 
-    scc->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_SCC, 0, (MixerUpdateCallback)sccSync, scc);
+    scc->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_SCC, 0, sccSync, NULL, scc);
 
     sccReset(scc);
 
@@ -452,8 +452,6 @@ UInt8 sccRead(SCC* scc, UInt8 address)
         }
 
         return 0xff;
-    default:
-        break;
     }
 
     return 0xff;
@@ -513,8 +511,6 @@ UInt8 sccPeek(SCC* scc, UInt8 address)
         }
 
         return 0xff;
-    default:
-        break;
     }
 
     return 0xff;
@@ -582,8 +578,6 @@ void sccWrite(SCC* scc, UInt8 address, UInt8 value)
         }
 
         return;
-    default:
-        break;
     }
 }
 
@@ -618,7 +612,7 @@ static Int32 filter(SCC* scc, Int32 input) {
 static Int32 filter4(SCC* scc, Int32 in1, Int32 in2, Int32 in3, Int32 in4)
 {
     int i;
-    double res;
+    DoubleT res;
 
     for (i = 0; i < 91; ++i) {
         scc->in[i] = scc->in[i + 4];

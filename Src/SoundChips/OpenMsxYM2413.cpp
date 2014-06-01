@@ -13,7 +13,7 @@ extern "C" {
 #include <cmath>
 #include <cstring>
 
-const double PI = 3.14159265358979323846;
+const DoubleT PI = 3.14159265358979323846;
  
 const int FREQ_SH = 16;	// 16.16 fixed point (frequency calculations)
 const int EG_SH   = 16;	// 16.16 fixed point (EG timing)
@@ -24,7 +24,7 @@ const unsigned EG_TIMER_OVERFLOW = (1 << EG_SH);
 // envelope output entries
 const int ENV_BITS = 10;
 const int ENV_LEN  = 1 << ENV_BITS;
-const double ENV_STEP = 128.0 / ENV_LEN;
+const DoubleT ENV_STEP = 128.0 / ENV_LEN;
 
 const int MAX_ATT_INDEX = (1 << (ENV_BITS - 2)) - 1;	// 255
 const int MIN_ATT_INDEX = 0;
@@ -99,7 +99,7 @@ static const int ksl_tab[8 * 16] =
 
 // sustain level table (3dB per step)
 // 0 - 15: 0, 3, 6, 9,12,15,18,21,24,27,30,33,36,39,42,45 (dB)
-#define SC(db) (int)(((double)db) / ENV_STEP)
+#define SC(db) (int)(((DoubleT)db) / ENV_STEP)
 static const int sl_tab[16] = {
 	SC( 0),SC( 1),SC( 2),SC(3 ),SC(4 ),SC(5 ),SC(6 ),SC( 7),
 	SC( 8),SC( 9),SC(10),SC(11),SC(12),SC(13),SC(14),SC(15)
@@ -819,7 +819,7 @@ void OpenYM2413::init_tables()
 	alreadyInit = true;
 	
 	for (int x = 0; x < TL_RES_LEN; x++) {
-		double m = (1 << 16) / pow(2.0, (x + 1) * (ENV_STEP / 4.0) / 8.0);
+		DoubleT m = (1 << 16) / pow(2.0, (x + 1) * (ENV_STEP / 4.0) / 8.0);
 		m = floor(m);
 
 		// we never reach (1 << 16) here due to the (x + 1)
@@ -844,10 +844,10 @@ void OpenYM2413::init_tables()
 
 	for (int i = 0; i < SIN_LEN; i++) {
 		// non-standard sinus
-		double m = sin(((i * 2) + 1) * PI / SIN_LEN); // checked against the real chip
+		DoubleT m = sin(((i * 2) + 1) * PI / SIN_LEN); // checked against the real chip
 
 		// we never reach zero here due to ((i*2)+1)
-		double o = (m > 0.0) ?
+		DoubleT o = (m > 0.0) ?
 		           (8 * ::log( 1.0 / m) / ::log(2.0)) :	// convert to 'decibels'
 		           (8 * ::log(-1.0 / m) / ::log(2.0));	// convert to 'decibels'
 		o = o / (ENV_STEP / 4);
@@ -878,13 +878,13 @@ void OpenYM2413::setSampleRate(int sampleRate, int Oversampling)
 {
     oplOversampling = Oversampling;
 	const int CLOCK_FREQ = 3579545;
-	double freqbase = (CLOCK_FREQ / 72.0) / (double)(sampleRate * oplOversampling);
+	DoubleT freqbase = (CLOCK_FREQ / 72.0) / (DoubleT)(sampleRate * oplOversampling);
 
 	// make fnumber -> increment counter table 
 	for (int i = 0 ; i < 1024; i++) {
 		// OPLL (YM2413) phase increment counter = 18bit 
 		// -10 because chip works with 10.10 fixed point, while we use 16.16 
-		fn_tab[i] = (int)((double)i * 64 * freqbase * (1 << (FREQ_SH - 10)));
+		fn_tab[i] = (int)((DoubleT)i * 64 * freqbase * (1 << (FREQ_SH - 10)));
 	}
 
 	// Amplitude modulation: 27 output levels (triangle waveform)

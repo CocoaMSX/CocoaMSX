@@ -1,4 +1,4 @@
-// $Id: OpenMsxY8950Adpcm.h 73 2012-10-20 00:10:16Z akop $
+// $Id: OpenMsxY8950Adpcm.h,v 1.2 2006-06-17 21:42:32 vincent_van_dam Exp $
 
 #ifndef __Y8950ADPCM_HH__
 #define __Y8950ADPCM_HH__

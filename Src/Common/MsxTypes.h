@@ -43,6 +43,15 @@ extern "C" {
 #define DIR_SEPARATOR "/"
 #endif
 
+/* Define double type for different targets
+ */
+#if defined(__x86_64__) || defined(__i386__) || defined _WIN32
+typedef double DoubleT;
+#else
+typedef float DoubleT;
+#endif
+
+
 /* So far, only support for MSVC types
  */
 typedef unsigned char    UInt8;
@@ -121,4 +130,94 @@ void dbgPrint();
 #endif
 
 
+///
+/// The following section contain target dependent configuration
+/// It should probably be moved to its own file but for convenience
+/// its kept here....
+///
+
+
+//
+// Target dependent video configuration options
+//
+
+#if 0
+// Should be enabled for IPHONE
+#include <Config/VideoChips.h>
+
+// Enable for displays that are only 320 pixels wide
+#define MAX_VIDEO_WIDTH_320
+
+// Skip overscan for CRT (e.g. Iphone)
+#define CRT_SKIP_OVERSCAN
+
+// Enable for 565 RGB displays
+#define VIDEO_COLOR_TYPE_RGB565
+
+// Enable for 565 RGB displays
+#define VIDEO_COLOR_TYPE_RGB565
+
+// Enable for 5551 RGBA displays
+#define VIDEO_COLOR_TYPE_RGBA5551
+
+// Provide custom z80 configuration
+#define Z80_CUSTOM_CONFIGURATION
+
+// For Iphone custom z80 configuration is in separate file:
+#include <Config/Z80.h>
+
+
+// Exclude embedded samples from build
+#define NO_EMBEDDED_SAMPLES
+
 #endif
+
+
+// Placeholder for configuration definitions
+// Targets that wish to disable features should create an ifdef block
+// for that particular target with the appropriate definitions or
+// add them as a pre-processor directive in the build system
+#if 0
+
+
+#define EXCLUDE_JOYSTICK_PORT_GUNSTICK
+#define EXCLUDE_JOYSTICK_PORT_ASCIILASER
+#define EXCLUDE_JOYSTICK_PORT_JOYSTICK
+#define EXCLUDE_JOYSTICK_PORT_MOUSE
+#define EXCLUDE_JOYSTICK_PORT_TETRIS2DONGLE
+#define EXCLUDE_JOYSTICK_PORT_MAGICKEYDONGLE
+#define EXCLUDE_JOYSTICK_PORT_ARKANOID_PAD
+
+
+
+#define EXCLUDE_SPECIAL_GAME_CARTS
+#define EXCLUDE_MSXMIDI
+#define EXCLUDE_NMS8280DIGI
+#define EXCLUDE_JOYREXPSG
+#define EXCLUDE_OPCODE_DEVICES
+#define EXCLUDE_SVI328_DEVICES
+#define EXCLUDE_SVIMSX_DEVICES
+#define EXCLUDE_FORTEII
+#define EXCLUDE_OBSONET
+#define EXCLUDE_NOWIND
+#define EXCLUDE_DUMAS
+#define EXCLUDE_MOONSOUND
+#define EXCLUDE_PANASONIC_DEVICES
+#define EXCLUDE_YAMAHA_SFG
+#define EXCLUDE_ROM_YAMAHANET
+#define EXCLUDE_SEGA_DEVICES
+#define EXCLUDE_DISK_DEVICES
+#define EXCLUDE_IDE_DEVICES
+#define EXCLUDE_MICROSOL80
+#define EXCLUDE_SRAM_MATSUCHITA
+#define EXCLUDE_SRAM_S1985
+#define EXCLUDE_ROM_S1990
+#define EXCLUDE_ROM_TURBOR
+#define EXCLUDE_ROM_F4DEVICE
+
+#endif
+
+
+
+#endif
+

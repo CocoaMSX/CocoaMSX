@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/MsxAudio.cpp,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2006-09-21 04:28:08 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -191,6 +191,12 @@ extern "C" void msxaudioWrite(MsxAudio* msxaudio, UInt16 ioPort, UInt8 value)
 	}
 }
 
+void msxaudioSetSampleRate(void* ref, UInt32 rate)
+{
+    MsxAudio* msxaudio = (MsxAudio*)ref;
+    msxaudio->y8950->setSampleRate(rate, boardGetY8950Oversampling());
+}
+
 extern "C" int msxaudioCreate(Mixer* mixer)
 {
     DeviceCallbacks callbacks = { msxaudioDestroy, NULL, msxaudioSaveState, msxaudioLoadState };
@@ -204,12 +210,12 @@ extern "C" int msxaudioCreate(Mixer* mixer)
     msxaudio->counter2 = -1;
     msxaudio->registerLatch = 0;
 
-    msxaudio->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXAUDIO, 0, msxaudioSync, msxaudio);
+    msxaudio->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXAUDIO, 0, msxaudioSync, msxaudioSetSampleRate, msxaudio);
 
     msxaudio->deviceHandle = deviceManagerRegister(ROM_MSXAUDIO, &callbacks, msxaudio);
 
     msxaudio->y8950 = new Y8950("MsxAudio", 256*1024, systemTime);
-    msxaudio->y8950->setSampleRate(AUDIO_SAMPLERATE, boardGetY8950Oversampling());
+    msxaudio->y8950->setSampleRate(mixerGetSampleRate(mixer), boardGetY8950Oversampling());
 	msxaudio->y8950->setVolume(32767);
 
     ioPortRegister(0xc0, (IoPortRead)msxaudioRead, (IoPortWrite)msxaudioWrite, msxaudio);

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/Y8950.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.21 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:23 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -45,6 +45,7 @@
 struct Y8950 {
     Mixer* mixer;
     Int32  handle;
+    UInt32 rate;
 
     FM_OPL* opl;
     MidiIO* ykIo; 
@@ -249,19 +250,19 @@ static Int32* y8950Sync(void* ref, UInt32 count)
     UInt32 i;
 
     for (i = 0; i < count; i++) {
-#if SAMPLERATE > AUDIO_SAMPLERATE
-        y8950->off -= SAMPLERATE - AUDIO_SAMPLERATE;
-        y8950->s1 = y8950->s2;
-        y8950->s2 = Y8950UpdateOne(y8950->opl);
-        if (y8950->off < 0) {
-            y8950->off += AUDIO_SAMPLERATE;
+        if(SAMPLERATE > y8950->rate) {
+            y8950->off -= SAMPLERATE - y8950->rate;
             y8950->s1 = y8950->s2;
             y8950->s2 = Y8950UpdateOne(y8950->opl);
+            if (y8950->off < 0) {
+                y8950->off += y8950->rate;
+                y8950->s1 = y8950->s2;
+                y8950->s2 = Y8950UpdateOne(y8950->opl);
+            }
+            y8950->buffer[i] = (y8950->s1 * (y8950->off / 256) + y8950->s2 * ((SAMPLERATE - y8950->off) / 256)) / (SAMPLERATE / 256);
         }
-        y8950->buffer[i] = (y8950->s1 * (y8950->off / 256) + y8950->s2 * ((SAMPLERATE - y8950->off) / 256)) / (SAMPLERATE / 256);
-#else
-        y8950->buffer[i] = Y8950UpdateOne(y8950->opl);
-#endif
+        else
+            y8950->buffer[i] = Y8950UpdateOne(y8950->opl);
     }
 
     return y8950->buffer;
@@ -345,6 +346,12 @@ void y8950Reset(Y8950* y8950)
     y8950->s2 = 0;
 }
 
+void y8950SetSampleRate(void* ref, UInt32 rate)
+{
+    Y8950* y8950 = (Y8950*)ref;
+    y8950->rate = rate;
+}
+
 Y8950* y8950Create(Mixer* mixer)
 {
     Y8950* y8950;
@@ -360,11 +367,13 @@ Y8950* y8950Create(Mixer* mixer)
     
     y8950->ykIo = ykIoCreate();
 
-    y8950->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXAUDIO, 0, y8950Sync, y8950);
+    y8950->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_MSXAUDIO, 0, y8950Sync, y8950SetSampleRate, y8950);
 
     y8950->opl = OPLCreate(OPL_TYPE_Y8950, FREQUENCY, SAMPLERATE, 256, y8950);
     OPLSetOversampling(y8950->opl, boardGetY8950Oversampling());
     OPLResetChip(y8950->opl);
+
+	y8950->rate = mixerGetSampleRate(mixer);
 
     return y8950;
 }

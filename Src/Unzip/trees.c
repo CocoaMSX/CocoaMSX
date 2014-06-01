@@ -29,7 +29,7 @@
  *          Addison-Wesley, 1983. ISBN 0-201-06672-6.
  */
 
-/* @(#) $Id: trees.c 73 2012-10-20 00:10:16Z akop $ */
+/* @(#) $Id: trees.c,v 1.2 2008-03-30 18:38:46 dvik Exp $ */
 
 /* #define GEN_TREES_H */
 
@@ -528,9 +528,8 @@ local void gen_bitlen(s, desc)
         if (stree) s->static_len += (ulg)f * (stree[n].Len + xbits);
     }
     if (overflow == 0) return;
-#if FALSE
+
     Trace((stderr,"\nbit length overflow\n"));
-#endif
     /* This happens for example on obj2 and pic of the Calgary corpus */
 
     /* Find the first bit length which could increase: */
@@ -557,9 +556,7 @@ local void gen_bitlen(s, desc)
             m = s->heap[--h];
             if (m > max_code) continue;
             if ((unsigned) tree[m].Len != (unsigned) bits) {
-#if FALSE
                 Trace((stderr,"code %d bits %d->%d\n", m, tree[m].Len, bits));
-#endif
                 s->opt_len += ((long)bits - (long)tree[m].Len)
                               *(long)tree[m].Freq;
                 tree[m].Len = (ush)bits;

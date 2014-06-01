@@ -62,7 +62,7 @@
 #define LED_CODE      0x002
 #define LED_TURBO_R   0x004
 #define LED_PAUSE     0x008
-#define LED_REN_SHA   0x010
+#define LED_RENSHA    0x010
 #define LED_FDD0      0x020
 #define LED_FDD1      0x040
 #define LED_HD        0x080
@@ -465,7 +465,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     midiIoSetMidiOutType(properties->sound.MidiOut.type, properties->sound.MidiOut.fileName);
     midiIoSetMidiInType(properties->sound.MidiIn.type, properties->sound.MidiIn.fileName);
     ykIoSetMidiInType(properties->sound.YkIn.type, properties->sound.YkIn.fileName);
-    
+
     emulatorRestartSound();
     
     for (int i = 0; i < MIXER_CHANNEL_TYPE_COUNT; i++)
@@ -657,7 +657,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if ([self isPaused])
         state |= LED_PAUSE;
     if (ledGetRensha())
-        state |= LED_REN_SHA;
+        state |= LED_RENSHA;
     if (ledGetHd())
         state |= LED_HD;
     if (ledGetFdd1())
@@ -722,7 +722,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
              offStateImage:@"power_led_off"
               onStateImage:@"power_led_on"];
     [self toggleIfLedState:state
-                ledBitMask:LED_REN_SHA
+                ledBitMask:LED_RENSHA
                  imageView:renshaLed
              offStateImage:@"rensha_led_off"
               onStateImage:@"rensha_led_on"];

@@ -12,6 +12,7 @@ typedef struct {
 #define MAX_MEMINFO 1024
 
 static MemInfo memInfo[MAX_MEMINFO];
+static int     memIndex = 0;
 
 void* dbgMalloc(size_t size) {
     void* ptr = malloc(size);
@@ -66,7 +67,7 @@ void dbgPrint() {
     printf("MEMORY DUMP:\n");
     for (i = 0; i < MAX_MEMINFO; i++) {
         if (memInfo[i].ptr != NULL) {
-            printf("%d\t%.8x : %ld bytes\n", i, (unsigned int)memInfo[i].ptr, memInfo[i].size);
+            printf("%d\t%.8x : %d bytes\n", i, memInfo[i].ptr, memInfo[i].size);
         }
     }
 }

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/ym2151.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.13 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:23 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -37,12 +37,13 @@
 
 #define FREQUENCY        3579545
 #define SAMPLERATE       (FREQUENCY / 64 )
-#define TIMER_FREQUENCY  (boardFrequency() / (FREQUENCY / 2) * 64)
+#define TIMER_FREQUENCY  (boardFrequency() / (SAMPLERATE / 1))  // Divided by 2 ???
 
 
 struct YM2151 {
     Mixer* mixer;
     Int32  handle;
+    UInt32 rate;
 
     MameYm2151* opl;
     BoardTimer* timer1;
@@ -56,6 +57,7 @@ struct YM2151 {
     UInt8  address;
     UInt8  latch;
     UInt8  irqVector;
+    int irqState;
     // Variables used for resampling
     Int32  off;
     Int32  s1l;
@@ -67,14 +69,34 @@ struct YM2151 {
 
 void ym2151TimerStart(void* ptr, int timer, int start);
 
-void ym2151Irq(void* ptr, int irq)
+
+void ym2151TimerSet(void* ref, int timer, int count)
+{
+    YM2151* ym2151 = (YM2151*)ref;
+
+    if (timer == 0) {
+        ym2151->timerValue1 = count;
+    }
+    else {
+        ym2151->timerValue2 = count;
+    }
+}
+
+void ym2151SetIrq(void* ptr, int timer)
 {
     YM2151* ym2151 = (YM2151*)ptr;
-    if (irq) {
+    if (ym2151->irqState == 0) {
         boardSetDataBus(ym2151->irqVector, 0, 0);
 		boardSetInt(0x40);
     }
-    else {
+    ym2151->irqState |= timer;
+}
+
+void ym2151ClearIrq(void* ptr, int timer)
+{
+    YM2151* ym2151 = (YM2151*)ptr;
+    ym2151->irqState &= ~timer;
+    if (ym2151->irqState == 0) {
 		boardClearInt(0x40);
     }
 }
@@ -86,7 +108,7 @@ void ym2151WritePortCallback(void* ref, UInt32 port, UInt8 value)
 static void onTimeout1(void* ptr, UInt32 time)
 {
     YM2151* ym2151 = (YM2151*)ptr;
-    ym2151->timerRunning1 = 0;
+   ym2151->timerRunning1 = 0;
     YM2151TimerCallback(ym2151->opl, 0);
     ym2151TimerStart(ptr, 0, 1);
 }
@@ -94,7 +116,6 @@ static void onTimeout1(void* ptr, UInt32 time)
 static void onTimeout2(void* ptr, UInt32 time)
 {
     YM2151* ym2151 = (YM2151*)ptr;
-
     ym2151->timerRunning2 = 0;
     YM2151TimerCallback(ym2151->opl, 1);
     ym2151TimerStart(ptr, 1, 1);
@@ -152,7 +173,8 @@ UInt8 ym2151Peek(YM2151* ym2151, UInt16 ioPort)
 
 UInt8 ym2151Read(YM2151* ym2151, UInt16 ioPort)
 {
-    return (UInt8)YM2151ReadStatus(ym2151->opl);
+    UInt8 value = (UInt8)YM2151ReadStatus(ym2151->opl);
+    return value;
 }
 
 void ym2151Write(YM2151* ym2151, UInt16 ioPort, UInt8 value)
@@ -179,14 +201,14 @@ static Int32* ym2151Sync(void* ref, UInt32 count)
 
     for (i = 0; i < count; i++) {
         Int16 sl, sr;
-        ym2151->off -= SAMPLERATE - AUDIO_SAMPLERATE;
+        ym2151->off -= SAMPLERATE - ym2151->rate;
         ym2151->s1l = ym2151->s2l;
         ym2151->s1r = ym2151->s2r;
         YM2151UpdateOne(ym2151->opl, &sl, &sr, 1);
         ym2151->s2l = sl;
         ym2151->s2r = sr;
         if (ym2151->off < 0) {
-            ym2151->off += AUDIO_SAMPLERATE;
+            ym2151->off += ym2151->rate;
             ym2151->s1l = ym2151->s2l;
             ym2151->s1r = ym2151->s2r;
             YM2151UpdateOne(ym2151->opl, &sl, &sr, 1);
@@ -206,6 +228,7 @@ void ym2151SaveState(YM2151* ym2151)
     SaveState* state = saveStateOpenForWrite("ym2151");
 
     saveStateSet(state, "address",       ym2151->address);
+    saveStateSet(state, "irqState",      ym2151->irqState);
     saveStateSet(state, "latch",         ym2151->latch);
     saveStateSet(state, "timerValue1",   ym2151->timerValue1);
     saveStateSet(state, "timerRunning1", ym2151->timerRunning1);
@@ -225,6 +248,7 @@ void ym2151LoadState(YM2151* ym2151)
     SaveState* state = saveStateOpenForRead("ym2151");
 
     ym2151->address       = (UInt8)saveStateGet(state, "address",       0);
+    ym2151->irqState      =        saveStateGet(state, "irqState",      0);
     ym2151->latch         = (UInt8)saveStateGet(state, "latch",         0);
     ym2151->timerValue1   =        saveStateGet(state, "timerValue1",   0);
     ym2151->timerRunning1 =        saveStateGet(state, "timerRunning1", 0);
@@ -259,8 +283,14 @@ void ym2151Destroy(YM2151* ym2151)
 
 void ym2151Reset(YM2151* ym2151)
 {
-    ym2151TimerStart(ym2151, 0, ym2151->timerValue1);
-    ym2151TimerStart(ym2151, 1, ym2151->timerValue2);
+    ym2151->timerRunning1 = 0;
+    ym2151->timerRunning2 = 0;
+    ym2151TimerSet(ym2151, 0, 1024);
+    ym2151TimerSet(ym2151, 1, 16 * 256);
+    ym2151TimerStart(ym2151, 0, 0);
+    ym2151TimerStart(ym2151, 1, 0);
+//    ym2151TimerStart(ym2151, 0, ym2151->timerValue1);
+//    ym2151TimerStart(ym2151, 1, ym2151->timerValue2);
     YM2151ResetChip(ym2151->opl);
     ym2151->off = 0;
     ym2151->s1l = 0;
@@ -268,6 +298,13 @@ void ym2151Reset(YM2151* ym2151)
     ym2151->s1r = 0;
     ym2151->s2r = 0;
     ym2151->latch = 0;
+    ym2151->irqState = 0;
+}
+
+void ym2151SetSampleRate(void* ref, UInt32 rate)
+{
+    YM2151* ym2151 = (YM2151*)ref;
+    ym2151->rate = rate;
 }
 
 YM2151* ym2151Create(Mixer* mixer)
@@ -277,27 +314,18 @@ YM2151* ym2151Create(Mixer* mixer)
     ym2151 = (YM2151*)calloc(1, sizeof(YM2151));
 
     ym2151->mixer = mixer;
-    ym2151->timerRunning1 = 0;
-    ym2151->timerRunning2 = 0;
 
     ym2151->timer1 = boardTimerCreate(onTimeout1, ym2151);
     ym2151->timer2 = boardTimerCreate(onTimeout2, ym2151);
 
-    ym2151->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_YAMAHA_SFG, 1, ym2151Sync, ym2151);
+    ym2151->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_YAMAHA_SFG, 1, ym2151Sync, ym2151SetSampleRate, ym2151);
 
     ym2151->opl = YM2151Create(ym2151, FREQUENCY, SAMPLERATE);
+    
+    ym2151->rate = mixerGetSampleRate(mixer);
+
+    ym2151Reset(ym2151);
 
     return ym2151;
 }
 
-void ym2151TimerSet(void* ref, int timer, int count)
-{
-    YM2151* ym2151 = (YM2151*)ref;
-
-    if (timer == 0) {
-        ym2151->timerValue1 = count;
-    }
-    else {
-        ym2151->timerValue2 = count;
-    }
-}

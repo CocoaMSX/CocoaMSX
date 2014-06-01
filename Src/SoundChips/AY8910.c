@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/AY8910.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.26 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -194,6 +194,13 @@ static void getDebugInfo(AY8910* ay8910, DbgDevice* dbgDevice)
         dbgIoPortsAddPort(ioPorts, 2, 0xa2, DBG_IO_READ, ay8910PeekData(ay8910, 0xa2));
         break;
 
+    case AY8910_MSX_SCCPLUS:
+        ioPorts = dbgDeviceAddIoPorts(dbgDevice, langDbgDevAy8910(), 3);
+        dbgIoPortsAddPort(ioPorts, 0, 0x10, DBG_IO_WRITE, 0);
+        dbgIoPortsAddPort(ioPorts, 1, 0x11, DBG_IO_WRITE, 0);
+        dbgIoPortsAddPort(ioPorts, 2, 0x12, DBG_IO_READ, ay8910PeekData(ay8910, 0xa2));
+        break;
+
     case AY8910_SVI:
         ioPorts = dbgDeviceAddIoPorts(dbgDevice, langDbgDevAy8910(), 3);
         dbgIoPortsAddPort(ioPorts, 0, 0x88, DBG_IO_WRITE, 0);
@@ -212,16 +219,11 @@ static int dbgWriteRegister(AY8910* ay8910, char* name, int regIndex, UInt32 val
 
 AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type, Int32 stereo, Int32* pan)
 {
-    DebugCallbacks dbgCallbacks = {
-        (void(*)(void*,DbgDevice*))getDebugInfo,
-        NULL,
-        (int(*)(void*,char*,int,UInt32))dbgWriteRegister,
-        NULL
-    };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, dbgWriteRegister, NULL };
     AY8910* ay8910 = (AY8910*)calloc(1, sizeof(AY8910));
     int i;
 
-    double v = 0x26a9;
+    DoubleT v = 0x26a9;
     for (i = 15; i >= 0; i--) {
         voltTable[i] = (Int16)v;
         voltEnvTable[2 * i + 0] = (Int16)v;
@@ -230,7 +232,7 @@ AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type, Int3
     }
 
     if ( type == PSGTYPE_YM2149) {
-        double v = 0x26a9;
+        DoubleT v = 0x26a9;
         for (i = 31; i >= 0; i--) {
             voltEnvTable[i] = (Int16)v;
             v *= 0.84139514164519509115274189380029;
@@ -249,11 +251,11 @@ AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type, Int3
     ay8910->noiseRand = 1;
     ay8910->noiseVolume = 1;
     ay8910->stereo = stereo;
-    ay8910->pan[0] = pan[0];
-    ay8910->pan[1] = pan[1];
-    ay8910->pan[2] = pan[2];
+    ay8910->pan[0] = pan?pan[0]:0;
+    ay8910->pan[1] = pan?pan[1]:0;
+    ay8910->pan[2] = pan?pan[2]:0;
 
-    ay8910->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, stereo, ay8910Sync, ay8910);
+    ay8910->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, stereo, ay8910Sync, NULL, ay8910);
 
     ay8910Reset(ay8910);
     for (i = 0; i < 16; i++) {
@@ -263,15 +265,21 @@ AY8910* ay8910Create(Mixer* mixer, Ay8910Connector connector, PsgType type, Int3
 
     switch (ay8910->connector) {
     case AY8910_MSX:
-        ioPortRegister(0xa0, NULL, (IoPortWrite)ay8910WriteAddress, ay8910);
-        ioPortRegister(0xa1, NULL, (IoPortWrite)ay8910WriteData, ay8910);
-        ioPortRegister(0xa2, (IoPortRead)ay8910ReadData, NULL, ay8910);
+        ioPortRegister(0xa0, NULL,           ay8910WriteAddress, ay8910);
+        ioPortRegister(0xa1, NULL,           ay8910WriteData,    ay8910);
+        ioPortRegister(0xa2, ay8910ReadData, NULL,               ay8910);
+        break;
+
+    case AY8910_MSX_SCCPLUS:
+        ioPortRegister(0x10, NULL,           ay8910WriteAddress, ay8910);
+        ioPortRegister(0x11, NULL,           ay8910WriteData,    ay8910);
+        ioPortRegister(0x12, ay8910ReadData, NULL,               ay8910);
         break;
 
     case AY8910_SVI:
-        ioPortRegister(0x88, NULL, (IoPortWrite)ay8910WriteAddress, ay8910);
-        ioPortRegister(0x8c, NULL, (IoPortWrite)ay8910WriteData, ay8910);
-        ioPortRegister(0x90, (IoPortRead)ay8910ReadData, NULL, ay8910);
+        ioPortRegister(0x88, NULL,           ay8910WriteAddress, ay8910);
+        ioPortRegister(0x8c, NULL,           ay8910WriteData,    ay8910);
+        ioPortRegister(0x90, ay8910ReadData, NULL,               ay8910);
         break;
     }
 
@@ -302,7 +310,13 @@ void ay8910Destroy(AY8910* ay8910)
         ioPortUnregister(0xa1);
         ioPortUnregister(0xa2);
         break;
-        
+
+    case AY8910_MSX_SCCPLUS:
+        ioPortUnregister(0x10);
+        ioPortUnregister(0x11);
+        ioPortUnregister(0x12);
+        break;
+
     case AY8910_SVI:
         ioPortUnregister(0x88);
         ioPortUnregister(0x8c);

@@ -135,7 +135,7 @@ class YMF278 : public SoundDevice
 		byte* ram;
 
         int oplOversampling;
-		double freqbase;
+		DoubleT freqbase;
 
 		YMF278Slot slots[24];
 

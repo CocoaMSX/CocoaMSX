@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/SamplePlayer.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-05-17 04:51:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -76,7 +76,7 @@ SamplePlayer* samplePlayerCreate(Mixer* mixer, int mixerChannel, int bitDepth, i
 
     samplePlayerReset(samplePlayer);
 
-    samplePlayer->handle = mixerRegisterChannel(mixer, mixerChannel, 0, (MixerUpdateCallback)samplePlayerSync, samplePlayer);
+    samplePlayer->handle = mixerRegisterChannel(mixer, mixerChannel, 0, samplePlayerSync, NULL, samplePlayer);
 
     return samplePlayer;
 }

@@ -1,4 +1,4 @@
-// $Id: OpenMsxY8950.cpp 73 2012-10-20 00:10:16Z akop $
+// $Id: OpenMsxY8950.cpp,v 1.6 2008-03-31 22:07:05 hap-hap Exp $
 
 /*
   * Based on:
@@ -37,7 +37,7 @@ extern "C" int switchGetAudio();
 //                                                  //
 //**************************************************//
 
-int Y8950::Slot::ALIGN(int d, double SS, double SD) 
+int Y8950::Slot::ALIGN(int d, DoubleT SS, DoubleT SD) 
 { 
 	return d*(int)(SS/SD);
 }
@@ -67,9 +67,9 @@ int Y8950::EXPAND_BITS(int x, int s, int d)
 	return x << (d-s);
 }
 // Adjust envelope speed which depends on sampling rate
-unsigned int Y8950::rate_adjust(double x, int rate)
+unsigned int Y8950::rate_adjust(DoubleT x, int rate)
 {
-	double tmp = x * CLK_FREQ / 72 / rate + 0.5; // +0.5 to round
+	DoubleT tmp = x * CLK_FREQ / 72 / rate + 0.5; // +0.5 to round
 //	assert (tmp <= 4294967295U);
 	return (unsigned int)tmp;
 }
@@ -85,8 +85,8 @@ void Y8950::Slot::makeAdjustTable()
 {
 	AR_ADJUST_TABLE[0] = 1 << EG_BITS;
 	for (int i = 1; i < (1 << EG_BITS); i++)
-		AR_ADJUST_TABLE[i] = (int)((double)(1 << EG_BITS) - 1 -
-		         (1 << EG_BITS) * ::log((double)i) / ::log((double)(1 << EG_BITS))) >> 1;
+		AR_ADJUST_TABLE[i] = (int)((DoubleT)(1 << EG_BITS) - 1 -
+		         (1 << EG_BITS) * ::log((DoubleT)i) / ::log((DoubleT)(1 << EG_BITS))) >> 1;
 }
 
 // Table for dB(0 -- (1<<DB_BITS)) to Liner(0 -- DB2LIN_AMP_WIDTH) 
@@ -94,14 +94,14 @@ void Y8950::Slot::makeDB2LinTable()
 {
 	for (int i=0; i < 2*DB_MUTE; i++) {
 		dB2LinTab[i] = (i<DB_MUTE) ?
-			(int)((double)((1<<DB2LIN_AMP_BITS)-1)*pow((double)10,-(double)i*DB_STEP/20)) :
+			(int)((DoubleT)((1<<DB2LIN_AMP_BITS)-1)*pow((DoubleT)10,-(DoubleT)i*DB_STEP/20)) :
 			0;
 		dB2LinTab[i + 2*DB_MUTE] = -dB2LinTab[i];
 	}
 }
 
 // Liner(+0.0 - +1.0) to dB((1<<DB_BITS) - 1 -- 0) 
-int Y8950::Slot::lin2db(double d)
+int Y8950::Slot::lin2db(DoubleT d)
 {
 	if (d < 1e-4) {
 		// (almost) zero
@@ -136,18 +136,18 @@ void Y8950::makeDphaseNoiseTable(int sampleRate)
 void Y8950::makePmTable()
 {
 	for (int i=0; i<PM_PG_WIDTH; i++)
-		pmtable[0][i] = (int)((double)PM_AMP * pow(2.,(double)PM_DEPTH*sin(2.0*PI*i/PM_PG_WIDTH)/1200));
+		pmtable[0][i] = (int)((DoubleT)PM_AMP * pow(2.,(DoubleT)PM_DEPTH*sin(2.0*PI*i/PM_PG_WIDTH)/1200));
 	for (int i=0; i < PM_PG_WIDTH; i++)
-		pmtable[1][i] = (int)((double)PM_AMP * pow(2.,(double)PM_DEPTH2*sin(2.0*PI*i/PM_PG_WIDTH)/1200));
+		pmtable[1][i] = (int)((DoubleT)PM_AMP * pow(2.,(DoubleT)PM_DEPTH2*sin(2.0*PI*i/PM_PG_WIDTH)/1200));
 }
 
 // Table for Amp Modulator 
 void Y8950::makeAmTable()
 {
 	for (int i=0; i<AM_PG_WIDTH; i++)
-		amtable[0][i] = (int)((double)AM_DEPTH/2/DB_STEP * (1.0 + sin(2.0*PI*i/PM_PG_WIDTH)));
+		amtable[0][i] = (int)((DoubleT)AM_DEPTH/2/DB_STEP * (1.0 + sin(2.0*PI*i/PM_PG_WIDTH)));
 	for (int i=0; i<AM_PG_WIDTH; i++)
-		amtable[1][i] = (int)((double)AM_DEPTH2/2/DB_STEP * (1.0 + sin(2.0*PI*i/PM_PG_WIDTH)));
+		amtable[1][i] = (int)((DoubleT)AM_DEPTH2/2/DB_STEP * (1.0 + sin(2.0*PI*i/PM_PG_WIDTH)));
 }
 
 // Phase increment counter table  

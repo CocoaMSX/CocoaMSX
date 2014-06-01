@@ -1,4 +1,4 @@
-// $Id: OpenMsxY8950.h 73 2012-10-20 00:10:16Z akop $
+// $Id: OpenMsxY8950.h,v 1.3 2008-03-31 19:42:23 jancasper Exp $
 
 #ifndef __Y8950_HH__
 #define __Y8950_HH__
@@ -79,11 +79,11 @@ class SoundDevice
 #endif
 
 // Dynamic range of envelope
-static const double EG_STEP = 0.1875;
+static const DoubleT EG_STEP = 0.1875;
 static const int EG_BITS = 9;
 static const int EG_MUTE = 1<<EG_BITS;
 // Dynamic range of sustine level
-static const double SL_STEP = 3.0;
+static const DoubleT SL_STEP = 3.0;
 static const int SL_BITS = 4;
 static const int SL_MUTE = 1<<SL_BITS;
 // Size of Sintable ( 1 -- 18 can be used, but 7 -- 14 recommended.)
@@ -97,11 +97,11 @@ static const int DP_BASE_BITS = DP_BITS - PG_BITS;
 static const int EG_DP_BITS = 23;
 static const int EG_DP_WIDTH = 1<<EG_DP_BITS;
 // Dynamic range of total level
-static const double TL_STEP = 0.75;
+static const DoubleT TL_STEP = 0.75;
 static const int TL_BITS = 6;
 static const int TL_MUTE = 1<<TL_BITS;
 
-static const double DB_STEP = 0.1875;
+static const DoubleT DB_STEP = 0.1875;
 static const int DB_BITS = 9;
 static const int DB_MUTE = 1<<DB_BITS;
 // PM table is calcurated by PM_AMP * pow(2,PM_DEPTH*sin(x)/1200)
@@ -111,15 +111,15 @@ static const int PM_AMP = 1<<PM_AMP_BITS;
 
 
 static const int CLK_FREQ = 3579545;
-static const double PI = 3.14159265358979;
+static const DoubleT PI = 3.14159265358979;
 // PM speed(Hz) and depth(cent)
-static const double PM_SPEED = 6.4;
-static const double PM_DEPTH = (13.75/2);
-static const double PM_DEPTH2 = 13.75;
+static const DoubleT PM_SPEED = 6.4;
+static const DoubleT PM_DEPTH = (13.75/2);
+static const DoubleT PM_DEPTH2 = 13.75;
 // AM speed(Hz) and depth(dB)
-static const double AM_SPEED = 3.7;
-static const double AM_DEPTH = 1.0;
-static const double AM_DEPTH2 = 4.8;
+static const DoubleT AM_SPEED = 3.7;
+static const DoubleT AM_DEPTH = 1.0;
+static const DoubleT AM_DEPTH2 = 4.8;
 // Bits for liner value
 static const int DB2LIN_AMP_BITS = 11;
 static const int SLOT_AMP_BITS = DB2LIN_AMP_BITS;
@@ -226,8 +226,8 @@ class Y8950 : public SoundDevice, public TimerCallback
 		int *plfo_am;
 
 	private:
-		static int lin2db(double d);
-		inline static int ALIGN(int d, double SS, double SD);
+		static int lin2db(DoubleT d);
+		inline static int ALIGN(int d, DoubleT SS, DoubleT SD);
 		inline static int wave2_4pi(int e);
 		inline static int wave2_8pi(int e);
 
@@ -289,6 +289,7 @@ private:
 	//virtual const string& getDescription() const;  // also in SoundDevice!!
 	virtual byte read(unsigned address);
 	virtual void write(unsigned address, byte value);
+	
 	// Definition of envelope mode
 	enum { ATTACK,DECAY,SUSHOLD,SUSTINE,RELEASE,FINISH };
 	// Dynamic range
@@ -299,7 +300,7 @@ private:
 	inline static int HIGHBITS(int c, int b);
 	inline static int LOWBITS(int c, int b);
 	inline static int EXPAND_BITS(int x, int s, int d);
-	static unsigned int rate_adjust(double x, int rate);
+	static unsigned int rate_adjust(DoubleT x, int rate);
 
 	void makeDphaseNoiseTable(int sampleRate);
 	void makePmTable();

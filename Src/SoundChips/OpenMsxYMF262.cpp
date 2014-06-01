@@ -1,7 +1,7 @@
 // This file is taken from the openMSX project. 
 // The file has been modified to be built in the blueMSX environment.
 
-// $Id: OpenMsxYMF262.cpp 73 2012-10-20 00:10:16Z akop $
+// $Id: OpenMsxYMF262.cpp,v 1.8 2009-07-18 15:08:35 dvik Exp $
 
 /*
  *
@@ -55,7 +55,7 @@ extern "C" {
 #pragma warning( disable : 4355 )
 #endif
 
-const double PI = 3.14159265358979323846;
+const DoubleT PI = 3.14159265358979323846;
 
 const int FREQ_SH   = 16;  // 16.16 fixed point (frequency calculations)
 const int EG_SH     = 16;  // 16.16 fixed point (EG timing)
@@ -67,7 +67,7 @@ const unsigned int EG_TIMER_OVERFLOW = 1 << EG_SH;
 // envelope output entries
 const int ENV_BITS    = 10;
 const int ENV_LEN     = 1 << ENV_BITS;
-const double ENV_STEP = 128.0 / ENV_LEN;
+const DoubleT ENV_STEP = 128.0 / ENV_LEN;
 
 const int MAX_ATT_INDEX = (1 << (ENV_BITS - 1)) - 1; //511
 const int MIN_ATT_INDEX = 0;
@@ -874,7 +874,7 @@ void YMF262::init_tables(void)
 	alreadyInit = true;
 
 	for (int x = 0; x < TL_RES_LEN; x++) {
-		double m = (1 << 16) / pow((double)2, (x + 1) * (ENV_STEP / 4.0) / 8.0);
+		DoubleT m = (1 << 16) / pow((DoubleT)2, (x + 1) * (ENV_STEP / 4.0) / 8.0);
 		m = floor(m);
 
 		// we never reach (1<<16) here due to the (x+1) 
@@ -897,12 +897,12 @@ void YMF262::init_tables(void)
 		}
 	}
 
-	const double LOG2 = ::log((double)2);
+	const DoubleT LOG2 = ::log((DoubleT)2);
 	for (i = 0; i < SIN_LEN; i++) {
 		// non-standard sinus
-		double m = sin(((i * 2) + 1) * PI / SIN_LEN); // checked against the real chip 
+		DoubleT m = sin(((i * 2) + 1) * PI / SIN_LEN); // checked against the real chip 
 		// we never reach zero here due to ((i * 2) + 1) 
-		double o = (m > 0.0) ?
+		DoubleT o = (m > 0.0) ?
 			8 * ::log( 1.0 / m) / LOG2:	// convert to 'decibels' 
 			8 * ::log(-1.0 / m) / LOG2;	// convert to 'decibels'
 		o = o / (ENV_STEP / 4);
@@ -990,13 +990,13 @@ void YMF262::setSampleRate(int sampleRate, int Oversampling)
 {
     oplOversampling = Oversampling;
 	const int CLCK_FREQ = 14318180;
-	double freqbase  = ((double)CLCK_FREQ / (8.0 * 36)) / (double)(sampleRate * oplOversampling);
+	DoubleT freqbase  = ((DoubleT)CLCK_FREQ / (8.0 * 36)) / (DoubleT)(sampleRate * oplOversampling);
 
 	// make fnumber -> increment counter table 
 	for (int i = 0; i < 1024; i++) {
 		// opn phase increment counter = 20bit 
 		// -10 because chip works with 10.10 fixed point, while we use 16.16 
-		fn_tab[i] = (unsigned)( (double)i * 64 * freqbase * (1<<(FREQ_SH - 10)));
+		fn_tab[i] = (unsigned)( (DoubleT)i * 64 * freqbase * (1<<(FREQ_SH - 10)));
 	}
 
 	// Amplitude modulation: 27 output levels (triangle waveform);

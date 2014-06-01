@@ -54,7 +54,7 @@ void YM_DELTAT_ADPCM_Write(YM_DELTAT *DELTAT,int r,int v)
 		if( v&0x80 ){
 			DELTAT->portstate = v&0x90; /* start req,memory mode,repeat flag copy */
 			/**** start ADPCM ****/
-			DELTAT->volume_w_step = (INT32)((double)DELTAT->volume * DELTAT->step / (1<<YM_DELTAT_SHIFT));
+			DELTAT->volume_w_step = (INT32)((DoubleT)DELTAT->volume * DELTAT->step / (1<<YM_DELTAT_SHIFT));
 			DELTAT->now_addr = (DELTAT->start)<<1;
 			DELTAT->now_step = (1<<YM_DELTAT_SHIFT)-DELTAT->step;
 			/*adpcm->adpcmm   = 0;*/
@@ -134,8 +134,8 @@ void YM_DELTAT_ADPCM_Write(YM_DELTAT *DELTAT,int r,int v)
 	case 0x09:	/* DELTA-N L (ADPCM Playback Prescaler) */
 	case 0x0a:	/* DELTA-N H */
 		DELTAT->delta  = (DELTAT->reg[0xa]*0x0100 | DELTAT->reg[0x9]);
-		DELTAT->step   = (UINT32)((double)(DELTAT->delta*(1<<(YM_DELTAT_SHIFT-16)))*(DELTAT->freqbase));
-		DELTAT->volume_w_step = (INT32)((double)DELTAT->volume * DELTAT->step / (1<<YM_DELTAT_SHIFT));
+		DELTAT->step   = (UINT32)((DoubleT)(DELTAT->delta*(1<<(YM_DELTAT_SHIFT-16)))*(DELTAT->freqbase));
+		DELTAT->volume_w_step = (INT32)((DoubleT)DELTAT->volume * DELTAT->step / (1<<YM_DELTAT_SHIFT));
 		break;
 	case 0x0b:	/* Level control (volume , voltage flat) */
 		{
@@ -143,10 +143,10 @@ void YM_DELTAT_ADPCM_Write(YM_DELTAT *DELTAT,int r,int v)
 			DELTAT->volume = (v&0xff)*(DELTAT->output_range/256) / YM_DELTAT_DECODE_RANGE;
 			if( oldvol != 0 )
 			{
-				DELTAT->adpcml      = (int)((double)DELTAT->adpcml      / (double)oldvol * (double)DELTAT->volume);
-				DELTAT->sample_step = (int)((double)DELTAT->sample_step / (double)oldvol * (double)DELTAT->volume);
+				DELTAT->adpcml      = (int)((DoubleT)DELTAT->adpcml      / (DoubleT)oldvol * (DoubleT)DELTAT->volume);
+				DELTAT->sample_step = (int)((DoubleT)DELTAT->sample_step / (DoubleT)oldvol * (DoubleT)DELTAT->volume);
 			}
-			DELTAT->volume_w_step = (int)((double)DELTAT->volume * (double)DELTAT->step / (double)(1<<YM_DELTAT_SHIFT));
+			DELTAT->volume_w_step = (int)((DoubleT)DELTAT->volume * (DoubleT)DELTAT->step / (DoubleT)(1<<YM_DELTAT_SHIFT));
 		}
 		break;
 	}
@@ -293,7 +293,7 @@ void YM_DELTAT_ADPCM_CALC(YM_DELTAT *DELTAT)
 		/* output of start point */
 		DELTAT->adpcml  = now_leveling * DELTAT->volume;
 		/* adjust to now */
-		DELTAT->adpcml += (int)((double)DELTAT->sample_step * ((double)DELTAT->now_step/(double)DELTAT->step));
+		DELTAT->adpcml += (int)((DoubleT)DELTAT->sample_step * ((DoubleT)DELTAT->now_step/(DoubleT)DELTAT->step));
 	}
 	DELTAT->adpcml += DELTAT->sample_step;
 #endif

@@ -1,6 +1,8 @@
 #ifndef __FMOPL_H_
 #define __FMOPL_H_
 
+#include "MsxTypes.h"
+
 /* for MSX-AUDIO specifics */
 #define MSX_AUDIO
 
@@ -90,8 +92,8 @@ typedef struct fm_opl_f {
 	int clock;			/* master clock  (Hz)                */
 	int rate;			/* sampling rate (Hz)                */
     int baseRate;       /* sampling rate (Hz)                */
-	double freqbase;	/* frequency base                    */
-	double TimerBase;	/* Timer base time (==sampling time) */
+	DoubleT freqbase;	/* frequency base                    */
+	DoubleT TimerBase;	/* Timer base time (==sampling time) */
 
     UINT8 type;			/* chip type                        */
 	UINT8 address;		/* address register                  */

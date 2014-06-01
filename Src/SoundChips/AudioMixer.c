@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/AudioMixer.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.18 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-03 21:27:14 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -42,7 +42,7 @@
 
 
 static int mixerCPUFrequency;
-//static int mixerConnector;
+static int mixerConnector;
 static int mixerCPUFrequencyFixed;
 
 void mixerSetBoardFrequency(int CPUFrequency)
@@ -88,6 +88,7 @@ typedef struct {
 typedef struct {
     Int32 handle;
     MixerUpdateCallback updateCallback;
+    MixerSetSampleRateCallback rateCallback;
     void* ref;
     MixerAudioType type;
     // User config
@@ -122,10 +123,10 @@ struct Mixer
     Int32   channelCount;
     Int32   handleCount;
     UInt32  oldTick;
-    Int32   dummyBuffer[AUDIO_STEREO_BUFFER_SIZE];
     Int32   logging;
     Int32   stereo;
-    double  masterVolume;
+    UInt32  rate;
+    DoubleT  masterVolume;
     Int32   masterEnable;
     Int32   volIntLeft;
     Int32   volIntRight;
@@ -165,6 +166,13 @@ static void mixerRecalculateType(Mixer* mixer, int audioType)
             recalculateChannelVolume(mixer, channel);
         }
     }
+}
+
+Int16 *mixerGetBuffer(Mixer* mixer, UInt32 *samplesOut)
+{
+	*samplesOut = mixer->index;
+	mixer->index = 0;
+	return mixer->buffer;
 }
 
 void mixerSetStereo(Mixer* mixer, Int32 stereo)
@@ -273,9 +281,9 @@ Int32 mixerIsChannelTypeActive(Mixer* mixer, Int32 type, Int32 reset)
 
 static void recalculateChannelVolume(Mixer* mixer, MixerChannel* channel)
 {
-    double volume        = pow(10.0, (channel->volume - 100) / 60.0) - pow(10.0, -100 / 60.0);
-    double panLeft       = pow(10.0, (MIN(100 - channel->pan, 50) - 50) / 30.0) - pow(10.0, -50 / 30.0);
-    double panRight      = pow(10.0, (MIN(channel->pan, 50) - 50) / 30.0) - pow(10.0, -50 / 30.0);
+    DoubleT volume        = pow(10.0, (channel->volume - 100) / 60.0) - pow(10.0, -100 / 60.0);
+    DoubleT panLeft       = pow(10.0, (MIN(100 - channel->pan, 50) - 50) / 30.0) - pow(10.0, -50 / 30.0);
+    DoubleT panRight      = pow(10.0, (MIN(channel->pan, 50) - 50) / 30.0) - pow(10.0, -50 / 30.0);
 
     channel->volumeLeft  = channel->enable * mixer->masterEnable * (Int32)(1024 * mixer->masterVolume * volume * panLeft);
     channel->volumeRight = channel->enable * mixer->masterEnable * (Int32)(1024 * mixer->masterVolume * volume * panRight);
@@ -342,6 +350,7 @@ Mixer* mixerCreate()
 
     mixer->fragmentSize = 512;
     mixer->enable = 1;
+    mixer->rate = AUDIO_SAMPLERATE;
 
     if (globalMixer == NULL) globalMixer = mixer;
 
@@ -355,6 +364,21 @@ void mixerDestroy(Mixer* mixer)
     free(mixer);
 }
 
+UInt32 mixerGetSampleRate(Mixer* mixer)
+{
+    return mixer->rate;
+}
+
+void mixerSetSampleRate(Mixer* mixer, UInt32 rate)
+{
+    int i;
+    mixer->rate = rate;
+    for(i = 0; i < mixer->channelCount; i++) {
+        if (mixer->channels[i].rateCallback != NULL) {
+            mixer->channels[i].rateCallback(mixer->channels[i].ref, rate);
+        }
+    }
+}
 
 void mixerSetWriteCallback(Mixer* mixer, MixerWriteCallback callback, void* ref, int fragmentSize)
 {
@@ -367,7 +391,7 @@ void mixerSetWriteCallback(Mixer* mixer, MixerWriteCallback callback, void* ref,
     }
 }
 
-Int32 mixerRegisterChannel(Mixer* mixer, Int32 audioType, Int32 stereo, MixerUpdateCallback callback, void* ref)
+Int32 mixerRegisterChannel(Mixer* mixer, Int32 audioType, Int32 stereo, MixerUpdateCallback callback, MixerSetSampleRateCallback rateCallback, void* ref)
 {
     MixerChannel*  channel = mixer->channels + mixer->channelCount;
     AudioTypeInfo* type    = mixer->audioTypeInfo + audioType;
@@ -379,6 +403,7 @@ Int32 mixerRegisterChannel(Mixer* mixer, Int32 audioType, Int32 stereo, MixerUpd
     mixer->channelCount++;
 
     channel->updateCallback = callback;
+    channel->rateCallback   = rateCallback;
     channel->ref            = ref;
     channel->type           = audioType;
     channel->stereo         = stereo;
@@ -438,7 +463,7 @@ void mixerSync(Mixer* mixer)
     UInt64 elapsed;
     int i;
 
-    elapsed        = AUDIO_SAMPLERATE * (UInt64)(systemTime - mixer->refTime) + mixer->refFrag;
+    elapsed        = mixer->rate * (UInt64)(systemTime - mixer->refTime) + mixer->refFrag;
     mixer->refTime = systemTime;
     mixer->refFrag = (UInt32)(elapsed % (mixerCPUFrequency * (boardFrequency() / 3579545)));
     count          = (UInt32)(elapsed / (mixerCPUFrequency * (boardFrequency() / 3579545)));
@@ -634,7 +659,7 @@ void mixerSync(Mixer* mixer)
     }
 }
 
-void mixerStartLog(Mixer* mixer, const char* fileName)
+void mixerStartLog(Mixer* mixer, char* fileName) 
 {
     if (mixer->logging == 1) {
         mixerStopLog(mixer);
@@ -670,8 +695,8 @@ void mixerStopLog(Mixer* mixer)
     header.wavHeader.chunkSize      = 16;
     header.wavHeader.formatType     = 1;
     header.wavHeader.channels       = (mixer->stereo ? 2 : 1);
-    header.wavHeader.samplesPerSec  = AUDIO_SAMPLERATE;
-    header.wavHeader.avgBytesPerSec = (mixer->stereo ? 2 : 1) * AUDIO_SAMPLERATE * BITSPERSAMPLE / 8;
+    header.wavHeader.samplesPerSec  = mixer->rate;
+    header.wavHeader.avgBytesPerSec = (mixer->stereo ? 2 : 1) * mixer->rate * BITSPERSAMPLE / 8;
     header.wavHeader.blockAlign     = (mixer->stereo ? 2 : 1) * BITSPERSAMPLE / 8;
     header.wavHeader.bitsPerSample  = BITSPERSAMPLE;
     header.data                     = str2ul("data");

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/DAC.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:45 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -76,10 +76,10 @@ DAC* dacCreate(Mixer* mixer, DacMode mode)
     dacReset(dac);
 
     if (mode == DAC_MONO) {
-        dac->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PCM, 0, (MixerUpdateCallback)dacSyncMono, dac);
+        dac->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PCM, 0, dacSyncMono, NULL, dac);
     }
     else {
-        dac->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PCM, 1, (MixerUpdateCallback)dacSyncStereo, dac);
+        dac->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PCM, 1, dacSyncStereo, NULL, dac);
     }
     return dac;
 }

@@ -1,6 +1,9 @@
 #ifndef __YMDELTAT_H_
 #define __YMDELTAT_H_
 
+
+#include "MsxTypes.h"
+
 #define YM_DELTAT_SHIFT    (16)
 
 #ifndef OSD_CPU_H
@@ -18,7 +21,7 @@ typedef struct deltat_adpcm_state {
 	UINT8 *memory;
 	UINT32 memory_size;
     void* OPL;
-	double freqbase;
+	DoubleT freqbase;
 	INT32 *output_pointer; /* pointer of output pointers */
 	int output_range;
 

@@ -135,12 +135,12 @@ struct MameYm2151
     signed int chanout[8];
     signed int m2,c1,c2; /* Phase Modulation input for operators 2,3,4 */
     signed int mem;		/* one sample delay memory */
-
 };
 
 extern void	ym2151TimerSet(void* ref, int timer, int count);
 extern void	ym2151TimerStart(void* ref, int timer, int start);
-extern void	ym2151Irq(void* ref, int irq);
+extern void	ym2151ClearIrq(void* ref, int irq);
+extern void	ym2151SetIrq(void* ref, int irq);
 extern void ym2151WritePortCallback(void* ref, UInt32 port, UInt8 value);
 
 #define FREQ_SH			16  /* 16.16 fixed point (frequency calculations) */
@@ -462,7 +462,7 @@ static MameYm2151 * PSG;
 static void init_tables(void)
 {
 	signed int i,x,n;
-	double o,m;
+	DoubleT o,m;
 
 	for (x=0; x<TL_RES_LEN; x++)
 	{
@@ -537,10 +537,10 @@ static void init_tables(void)
 static void init_chip_tables(MameYm2151 *chip)
 {
 	int i,j;
-	double mult,phaseinc,Hz;
-	double scaler;
+	DoubleT mult,phaseinc,Hz;
+	DoubleT scaler;
 
-	scaler = ( (double)chip->clock / 64.0 ) / ( (double)chip->sampfreq );
+	scaler = ( (DoubleT)chip->clock / 64.0 ) / ( (DoubleT)chip->sampfreq );
 	/*logerror("scaler    = %20.15f\n", scaler);*/
 
 
@@ -594,10 +594,10 @@ static void init_chip_tables(MameYm2151 *chip)
 	{
 		for (i=0; i<32; i++)
 		{
-			Hz = ( (double)dt1_tab[j*32+i] * ((double)chip->clock/64.0) ) / (double)(1<<20);
+			Hz = ( (DoubleT)dt1_tab[j*32+i] * ((DoubleT)chip->clock/64.0) ) / (DoubleT)(1<<20);
 
 			/*calculate phase increment*/
-			phaseinc = (Hz*SIN_LEN) / (double)chip->sampfreq;
+			phaseinc = (Hz*SIN_LEN) / (DoubleT)chip->sampfreq;
 
 			/*positive and negative values*/
 			chip->dt1_freq[ (j+0)*32 + i ] = (Int32)(phaseinc * mult);
@@ -608,12 +608,12 @@ static void init_chip_tables(MameYm2151 *chip)
     chip->timer_A_val = 0;
 
     /* calculate noise periods table */
-	scaler = ( (double)chip->clock / 64.0 ) / ( (double)chip->sampfreq );
+	scaler = ( (DoubleT)chip->clock / 64.0 ) / ( (DoubleT)chip->sampfreq );
 	for (i=0; i<32; i++)
 	{
 		j = (i!=31 ? i : 30);				/* rate 30 and 31 are the same */
 		j = 32-j;
-		j = (int)(65536.0 / (double)(j*32.0));	/* number of samples per one shift of the shift register */
+		j = (int)(65536.0 / (DoubleT)(j*32.0));	/* number of samples per one shift of the shift register */
 		/*chip->noise_tab[i] = j * 64;*/	/* number of chip clock cycles per one shift */
 		chip->noise_tab[i] = (UInt32)(j * 64 * scaler);
 		/*logerror("noise_tab[%02x]=%08x\n", i, chip->noise_tab[i]);*/
@@ -677,7 +677,7 @@ void YM2151TimerCallback(MameYm2151 *chip, int timer)
     if (timer == 0) {
         if (chip->irq_enable & 0x04)
 	    {
-            if ((chip->status & 3) == 0) ym2151Irq(chip->ref, 1);
+            if ((chip->status & 3) == 0) ym2151SetIrq(chip->ref, 1);
 		    chip->status |= 1;
 	    }
 	    if (chip->irq_enable & 0x80)
@@ -686,7 +686,7 @@ void YM2151TimerCallback(MameYm2151 *chip, int timer)
     if (timer == 1) {
 	    if (chip->irq_enable & 0x08)
 	    {
-            if ((chip->status & 3) == 0) ym2151Irq(chip->ref, 1);
+            if ((chip->status & 3) == 0) ym2151SetIrq(chip->ref, 2);
 		    chip->status |= 2;
 	    }
     }
@@ -925,17 +925,17 @@ void YM2151WriteReg(MameYm2151 *chip, int r, int v)
 			if (v&0x10)	/* reset timer A irq flag */
 			{
 				chip->status &= ~1;
-                if ((chip->status & 3) == 0) ym2151Irq(chip->ref, 0);
+                if ((chip->status & 3) == 0) ym2151ClearIrq(chip->ref, 1);
 			}
 
 			if (v&0x20)	/* reset timer B irq flag */
 			{
 				chip->status &= ~2;
-                if ((chip->status & 3) == 0) ym2151Irq(chip->ref, 0);
+                if ((chip->status & 3) == 0) ym2151ClearIrq(chip->ref, 2);
 			}
 
-			ym2151TimerStart(chip->ref, 0, v & 4);
-			ym2151TimerStart(chip->ref, 1, v & 8);
+			ym2151TimerStart(chip->ref, 1, v & 2);
+			ym2151TimerStart(chip->ref, 0, v & 1);
 			break;
 
 		case 0x18:	/* LFO frequency */
@@ -955,6 +955,7 @@ void YM2151WriteReg(MameYm2151 *chip, int r, int v)
 		case 0x1b:	/* CT2, CT1, LFO waveform */
 			chip->ct = v >> 6;
 			chip->lfo_wsel = v & 3;
+
             ym2151WritePortCallback(chip->ref, 0 , chip->ct);
 			break;
 
@@ -1172,6 +1173,7 @@ void YM2151ResetChip(MameYm2151 *chip)
 	{
 		memset(&chip->oper[i],'\0',sizeof(YM2151Operator));
 		chip->oper[i].volume = MAX_ATT_INDEX;
+        chip->oper[i].kc_i = 768; // min kc_i value
 	}
 
 	chip->eg_timer = 0;
@@ -1903,6 +1905,7 @@ void YM2151LoadState(MameYm2151* chip)
     SaveState* state = saveStateOpenForRead("ym2151_core");
     char tag[32];
     int i;
+    int tmp;
     
     chip->eg_cnt            = saveStateGet(state, "eg_cnt",            0);
     chip->eg_timer          = saveStateGet(state, "eg_timer",          0);
@@ -2050,13 +2053,21 @@ void YM2151LoadState(MameYm2151* chip)
         chip->oper[i].rr = saveStateGet(state, tag, 0);
         
         sprintf(tag, "connect%d", i);
-        if (chip->oper[i].connect != NULL) {
-            chip->oper[i].connect += (int*)chip - (int*)0;
+        tmp = saveStateGet(state, tag, -1);
+        if (tmp < 0) {
+            chip->oper[i].connect = NULL;
         }
-        
+        else {
+            chip->oper[i].connect = (int*)chip + tmp;
+        }
+
         sprintf(tag, "mem_connect%d", i);
-        if (chip->oper[i].mem_connect != NULL) {
-            chip->oper[i].mem_connect +=  (int*)chip - (int*)0;
+        tmp = saveStateGet(state, tag, -1);
+        if (tmp < 0) {
+            chip->oper[i].mem_connect = NULL;
+        }
+        else {
+            chip->oper[i].mem_connect = (int*)chip + tmp;
         }
     }
 
@@ -2219,7 +2230,7 @@ void YM2151SaveState(MameYm2151* chip)
             saveStateSet(state, tag, (int*)chip->oper[i].connect - (int*)chip);
         }
         else {
-            saveStateSet(state, tag, 0);
+            saveStateSet(state, tag, -1);
         }
         
         sprintf(tag, "mem_connect%d", i);
@@ -2227,7 +2238,7 @@ void YM2151SaveState(MameYm2151* chip)
             saveStateSet(state, tag, (int*)chip->oper[i].mem_connect - (int*)chip);
         }
         else {
-            saveStateSet(state, tag, 0);
+            saveStateSet(state, tag, -1);
         }
     }
 

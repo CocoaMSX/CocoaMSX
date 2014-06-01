@@ -805,7 +805,6 @@ void vlm5030_SaveState()
  * Generic get_info
  **************************************************************************/
 
-#if 0
 static void vlm5030_set_info(void *token, UINT32 state, union sndinfo *info)
 {
 	switch (state)
@@ -814,6 +813,7 @@ static void vlm5030_set_info(void *token, UINT32 state, union sndinfo *info)
 	}
 }
 
+#if 0
 void vlm5030_get_info(void *token, UINT32 state, union sndinfo *info)
 {
 	switch (state)

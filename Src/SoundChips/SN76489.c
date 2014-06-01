@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/SN76489.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.21 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-10 04:38:10 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -218,12 +218,12 @@ void sn76489Reset(SN76489* sn76489)
 
 SN76489* sn76489Create(Mixer* mixer)
 {
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     SN76489* sn76489 = (SN76489*)calloc(1, sizeof(SN76489));
 
     sn76489->mixer = mixer;
 
-    sn76489->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, 0, sn76489Sync, sn76489);
+    sn76489->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PSG, 0, sn76489Sync, NULL, sn76489);
     sn76489->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, "SN76489 PSG", &dbgCallbacks, sn76489);
 
 
@@ -487,7 +487,7 @@ SN76489* sn76489Create(Mixer* mixer)
     sn76489Reset(sn76489);
 
     {
-        double v = 0x26a9;
+        DoubleT v = 0x26a9;
         for (i = 0; i < 15; i++) {
             v /= 1.258925412;
         }

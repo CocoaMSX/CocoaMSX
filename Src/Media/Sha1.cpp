@@ -1,4 +1,4 @@
-// $Id: Sha1.cpp 73 2012-10-20 00:10:16Z akop $
+// $Id: Sha1.cpp,v 1.3 2007-05-22 06:23:17 dvik Exp $
 
 /*
 Based on:

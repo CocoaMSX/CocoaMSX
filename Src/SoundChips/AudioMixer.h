@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/AudioMixer.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.14 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-03 21:27:14 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -60,6 +60,7 @@ typedef enum {
 #define MAX_CHANNELS 16
 
 typedef Int32* (*MixerUpdateCallback)(void*, UInt32);
+typedef void (*MixerSetSampleRateCallback)(void*, UInt32);
 typedef Int32 (*MixerWriteCallback)(void*, Int16*, UInt32);
 
 /* Constructor and destructor */
@@ -72,6 +73,8 @@ Int32 mixerGetMasterVolume(Mixer* mixer, int leftRight);
 void mixerSetMasterVolume(Mixer* mixer, Int32 volume);
 void mixerEnableMaster(Mixer* mixer, Int32 enable);
 void mixerSetStereo(Mixer* mixer, Int32 stereo);
+UInt32 mixerGetSampleRate(Mixer* mixer);
+void mixerSetSampleRate(Mixer* mixer, UInt32 rate);
 
 Int32 mixerGetChannelTypeVolume(Mixer* mixer, Int32 channelType, int leftRight);
 void mixerSetChannelTypeVolume(Mixer* mixer, Int32 channelType, Int32 volume);
@@ -83,7 +86,7 @@ Int32 mixerIsChannelTypeActive(Mixer* mixer, Int32 channelType, Int32 reset);
 void mixerSetWriteCallback(Mixer* mixer, MixerWriteCallback callback, void*, int);
 
 /* File logging methods */
-void mixerStartLog(Mixer* mixer, const char* fileName);
+void mixerStartLog(Mixer* mixer, char* fileName);
 int  mixerIsLogging(Mixer* mixer);
 void mixerStopLog(Mixer* mixer);
 
@@ -92,7 +95,8 @@ void mixerReset(Mixer* mixer);
 void mixerSync(Mixer* mixer);
 
 Int32 mixerRegisterChannel(Mixer* mixer, Int32 audioType, Int32 stereo, 
-                           MixerUpdateCallback callback, void*param);
+                           MixerUpdateCallback callback, MixerSetSampleRateCallback rateCallback,
+                           void*param);
 void mixerSetEnable(Mixer* mixer, int enable);
 void mixerUnregisterChannel(Mixer* mixer, Int32 handle);
 

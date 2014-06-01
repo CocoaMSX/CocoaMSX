@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/SoundChips/VLM5030.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:23 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -170,7 +170,7 @@ VLM5030* vlm5030Create(Mixer* mixer, UInt8* voiceData, int length)
 
     vlm5030->mixer = mixer;
 
-    vlm5030->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PCM, 0, (MixerUpdateCallback)vlm5030Sync, vlm5030);
+    vlm5030->handle = mixerRegisterChannel(mixer, MIXER_CHANNEL_PCM, 0, vlm5030Sync, NULL, vlm5030);
 
     vlm5030_start(FREQUENCY);
     VLM5030_set_rom(voiceData, length);
