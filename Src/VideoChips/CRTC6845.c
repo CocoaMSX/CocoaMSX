@@ -245,8 +245,8 @@ UInt8 crtcMemRead(CRTC6845* crtc, UInt16 address)
 
 static void crtc6845Reset(CRTC6845* crtc)
 {
-    memset(&crtc->registers, 0, sizeof(&crtc->registers));
-    memset(&crtc->cursor, 0, sizeof(&crtc->cursor));
+    memset(&crtc->registers, 0, sizeof(crtc->registers));
+    memset(&crtc->cursor, 0, sizeof(crtc->cursor));
     memset(crtc->vram, 0xff, crtc->vramMask + 1);
     crtc->frameCounter = 0;
 }

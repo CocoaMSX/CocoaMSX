@@ -54,6 +54,8 @@
 #else
 #ifndef O_BINARY
 #define O_BINARY 0
+
+#include <unistd.h>
 #endif
 #endif
 

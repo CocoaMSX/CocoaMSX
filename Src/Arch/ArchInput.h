@@ -43,6 +43,7 @@ void  archPollInput();
 void  archKeyboardSetSelectedKey(int keyCode);
 char* archGetSelectedKey();
 char* archGetMappedKey();
+UInt8 archJoystickGetState(int joystickNo);
 int   archKeyboardIsKeyConfigured(int msxKeyCode);
 int   archKeyboardIsKeySelected(int msxKeyCode);
 char* archKeyconfigSelectedKeyTitle();

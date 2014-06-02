@@ -120,7 +120,7 @@ static void loadState(RomMapperSCCplus* rm)
         slotMapPage(rm->slot, rm->sslot, rm->startPage + 2, NULL, 1, 0);
         slotMapPage(rm->slot, rm->sslot, rm->startPage + 3, NULL, 0, 0);
     }
-    else if (rm->sccMode = SCC_COMPATIBLE) {
+    else if ((rm->sccMode = SCC_COMPATIBLE)) {
         slotMapPage(rm->slot, rm->sslot, rm->startPage + 2, NULL, 0, 0);
         slotMapPage(rm->slot, rm->sslot, rm->startPage + 3, NULL, 1, 0);
     }

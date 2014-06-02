@@ -93,7 +93,7 @@ static Int32* audioKeyClickSync(void* ref, UInt32 count)
     keyClick->ctrlVolume = keyClick->sampleVolume - keyClick->oldSampleVolume + 0x3fe7 * keyClick->ctrlVolume / 0x4000;
     keyClick->oldSampleVolume = keyClick->sampleVolume;
 
-    for (index; index < count; index++) {
+    for (; index < count; index++) {
         /* Perform DC offset filtering */
         keyClick->ctrlVolume = 0x3fe7 * keyClick->ctrlVolume / 0x4000;
 

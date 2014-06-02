@@ -87,7 +87,7 @@ static void write(RomMapperKonamiWordPro* rm, UInt16 address, UInt8 value)
 #if 0
     printf("W %.4x : 0x%.2x\n", address, value);
 #endif
-    if (address = 0xbfff) {
+    if ((address = 0xbfff)) {
         rm->control = value;
     }
 }

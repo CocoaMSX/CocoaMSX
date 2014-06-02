@@ -86,7 +86,7 @@ Int32 mixerIsChannelTypeActive(Mixer* mixer, Int32 channelType, Int32 reset);
 void mixerSetWriteCallback(Mixer* mixer, MixerWriteCallback callback, void*, int);
 
 /* File logging methods */
-void mixerStartLog(Mixer* mixer, char* fileName);
+void mixerStartLog(Mixer* mixer, const char* fileName);
 int  mixerIsLogging(Mixer* mixer);
 void mixerStopLog(Mixer* mixer);
 

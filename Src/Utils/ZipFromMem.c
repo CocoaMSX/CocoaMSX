@@ -85,7 +85,6 @@ long fseek_mem_func(void *opaque, void *stream, unsigned long offset, int origin
     default: return -1;
     }
     if( memfile->index > memfile->size ) memfile->index = memfile->size;
-    if( memfile->index < 0 ) memfile->index = 0;
     return 0;
 }
 

@@ -659,7 +659,7 @@ void mixerSync(Mixer* mixer)
     }
 }
 
-void mixerStartLog(Mixer* mixer, char* fileName) 
+void mixerStartLog(Mixer* mixer, const char* fileName)
 {
     if (mixer->logging == 1) {
         mixerStopLog(mixer);

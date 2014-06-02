@@ -269,7 +269,7 @@ int tapeInsert(char *name, const char *fileInZipFile)
         int cntFMSX98  = 0;
         int cntSVICAS  = 0;
 
-        while (ptr >= ramImageBuffer) {
+        while (ptr >= (UInt8*)ramImageBuffer) {
             if (!memcmp(ptr, hdrFMSXDOS, sizeof(hdrFMSXDOS))) {
                 cntFMSXDOS++;
             }

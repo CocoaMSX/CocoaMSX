@@ -814,7 +814,7 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
     }
 
     if ((++cnt & 0x0f) == 0) {
-        emuCalcCpuUsage(NULL);
+        emuCalcCpuUsage();
     }
 
     overflowCount = emulatorGetCpuOverflow() ? 1 : 0;
