@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Z80/R800.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.40 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-01 05:00:23 $
 **
 ** Author: Daniel Vik
 **
@@ -138,8 +138,9 @@ static void fd_cb(R800* r800);
     if ((port & 0xfc) == 0x98) {                                             \
         delayT9769(r800);                                                    \
     }                                                                        \
-    if ((port & 0xf8) == 0x98) {                                             \
-        if (r800->cpuMode == CPU_R800) {                                     \
+    if (r800->cpuMode == CPU_R800) {                                         \
+        r800->systemTime = 6 * ((r800->systemTime + 5) / 6);                 \
+        if ((port & 0xf8) == 0x98) {                                         \
             if (r800->systemTime - r800->vdpTime < r800->delay[DLY_S1990VDP])\
                 r800->systemTime = r800->vdpTime + r800->delay[DLY_S1990VDP];\
             r800->vdpTime = r800->systemTime;                                \
@@ -168,6 +169,12 @@ static void writePort(R800* r800, UInt16 port, UInt8 value) {
     delayVdpIO(r800, port);
     r800->writeIoPort(r800->ref, port, value);
     delayPostIo(r800);
+    
+#ifdef ENABLE_WATCHPOINTS
+    if (r800->watchpointIoCb != NULL) {
+        r800->watchpointIoCb(r800->ref, port, value);
+    }
+#endif
 
 }
 
@@ -190,6 +197,12 @@ static void writeMem(R800* r800, UInt16 address, UInt8 value) {
     delayMem(r800);
     r800->cachePage = 0xffff;
     r800->writeMemory(r800->ref, address, value);
+
+#ifdef ENABLE_WATCHPOINTS
+    if (r800->watchpointMemCb != NULL) {
+        r800->watchpointMemCb(r800->ref, address, value);
+    }
+#endif
 }
 
 static void INC(R800* r800, UInt8* reg) {
@@ -304,8 +317,8 @@ static void XOR(R800* r800, UInt8 reg) {
 
 static void MULU(R800* r800, UInt8 reg) { // Diff on mask // RuMSX: (S_FLAG & V_FLAG)
     r800->regs.HL.W = (Int16)r800->regs.AF.B.h * reg;
-    r800->regs.AF.B.l = (r800->regs.AF.B.l & (N_FLAG | H_FLAG)) |
-        (r800->regs.HL.W ? 0 : Z_FLAG) | ((r800->regs.HL.W >> 15) & C_FLAG);
+    r800->regs.AF.B.l = (r800->regs.AF.B.l & (N_FLAG | H_FLAG | X_FLAG | Y_FLAG)) |
+        (r800->regs.HL.W ? 0 : Z_FLAG) | ((r800->regs.HL.W &0xff00) ? C_FLAG : 0);
     delayMul8(r800);
 }
 
@@ -313,8 +326,8 @@ static void MULUW(R800* r800, UInt16 reg) { // Diff on mask // RuMSX: (S_FLAG & 
     UInt32 rv = (UInt32)r800->regs.HL.W * reg;
     r800->regs.DE.W = (UInt16)(rv >> 16);
     r800->regs.HL.W = (UInt16)(rv & 0xffff);
-    r800->regs.AF.B.l = (r800->regs.AF.B.l & (N_FLAG | H_FLAG)) |
-        (rv ? 0 : Z_FLAG) | (UInt8)((rv >> 31) & C_FLAG);
+    r800->regs.AF.B.l = (r800->regs.AF.B.l & (N_FLAG | H_FLAG | X_FLAG | Y_FLAG)) |
+        (rv ? 0 : Z_FLAG) | ((rv & 0xFFFF0000) ? C_FLAG : 0);
     delayMul16(r800);
 }
 
@@ -5707,8 +5720,6 @@ static void r800SwitchCpu(R800* r800) {
     case CPU_R800:
         r800->regBanks[1] = r800->regs;
         break;
-    default:
-        break;
     }
 
     r800->oldCpuMode = CPU_UNKNOWN;
@@ -5719,8 +5730,6 @@ static void r800SwitchCpu(R800* r800) {
         break;
     case CPU_R800:
         r800->regs = r800->regBanks[1];
-        break;
-    default:
         break;
     }
 
@@ -5813,7 +5822,8 @@ R800* r800Create(UInt32 cpuFlags,
                  R800ReadCb readIoPort, R800WriteCb writeIoPort, 
                  R800PatchCb patch,     R800TimerCb timerCb,
                  R800BreakptCb bpCb,    R800DebugCb debugCb,
-                 R800TrapCb trapCb,
+                 R800TrapCb trapCb,     R800WriteCb watchpointMemCb,
+                 R800WriteCb watchpointIoCb,
                  void* ref)
 {
     R800* r800 = calloc(1, sizeof(R800));
@@ -5829,13 +5839,17 @@ R800* r800Create(UInt32 cpuFlags,
     r800->breakpointCb= bpCb        ? bpCb        : breakpointCbDummy;
     r800->debugCb     = debugCb     ? debugCb     : debugCbDummy;
     r800->trapCb      = trapCb      ? trapCb      : trapCbDummy;
+    r800->watchpointMemCb  = watchpointMemCb  ? watchpointMemCb  : writeMemoryDummy;
+    r800->watchpointIoCb   = watchpointIoCb   ? watchpointIoCb   : writeIoPortDummy;
     r800->ref         = ref;
 
     r800->frequencyZ80  = 3579545;
     r800->frequencyR800 = 7159090;
 
     r800->terminate       = 0;
+#ifdef ENABLE_BREAKPOINTS
     r800->breakpointCount = 0;
+#endif
     r800->systemTime      = 0;
     r800->cpuMode         = CPU_UNKNOWN;
     r800->oldCpuMode      = CPU_UNKNOWN;
@@ -5917,7 +5931,9 @@ void r800Reset(R800 *r800, UInt32 cpuTime) {
     r800->nmiState       = INT_HIGH;
     r800->nmiEdge        = 0;
 
+#ifdef ENABLE_CALLSTACK
     r800->callstackSize = 0;
+#endif
 }
 
 void r800SetDataBus(R800* r800, UInt8 value, UInt8 defaultValue, int setDefault) {
@@ -5957,8 +5973,6 @@ void r800SetFrequency(R800* r800, CpuMode cpuMode, UInt32 frequency) {
         break;
     case CPU_R800:
         r800->frequencyR800 = frequency;
-        break;
-    default:
         break;
     }
 
@@ -6004,12 +6018,26 @@ void r800ClearBreakpoint(R800* r800, UInt16 address)
 #endif
 }
 
+SystemTime r800GetTimeTrace(R800* r800, int offset) {
+#if TIME_TRACE_SIZE > 0
+    return r800->timeTraceBuffer[(TIME_TRACE_SIZE + r800->timeTraceIndex - offset) % TIME_TRACE_SIZE];
+#else
+    return r800->systemTime;
+#endif
+}
+
 void r800Execute(R800* r800) {
     static SystemTime lastRefreshTime = 0;
     while (!r800->terminate) {
         UInt16 address;
-//        int iff1 = 0;
+        int iff1 = 0;
 
+#if TIME_TRACE_SIZE > 0
+        if (r800->regs.PC.W != r800->lastPC) {
+            r800->lastPC = r800->regs.PC.W;
+            r800->timeTraceBuffer[++r800->timeTraceIndex % TIME_TRACE_SIZE] = r800->systemTime;
+        }
+#endif
         if ((Int32)(r800->timeout - r800->systemTime) <= 0) {
             if (r800->timerCb != NULL) {
                 r800->timerCb(r800->ref);

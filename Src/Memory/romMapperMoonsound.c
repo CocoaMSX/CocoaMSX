@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMoonsound.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -126,15 +126,10 @@ static void getDebugInfo(RomMapperMoonsound* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 5, 0xc7, DBG_IO_READWRITE, peek(rm, 0xc7));
 }
 
-int romMapperMoonsoundCreate(char* filename, UInt8* romData, int size, int sramSize)
+int romMapperMoonsoundCreate(const char* filename, UInt8* romData, int size, int sramSize)
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperMoonsound* rm = malloc(sizeof(RomMapperMoonsound));
 
     rm->deviceHandle = deviceManagerRegister(ROM_MOONSOUND, &callbacks, rm);
@@ -144,12 +139,12 @@ int romMapperMoonsoundCreate(char* filename, UInt8* romData, int size, int sramS
 
     if (boardGetMoonsoundEnable()) {
         rm->moonsound = moonsoundCreate(boardGetMixer(), romData, size, sramSize);
-        ioPortRegister(0x7e, (IoPortRead)read, (IoPortWrite)write, rm);
-        ioPortRegister(0x7f, (IoPortRead)read, (IoPortWrite)write, rm);
-        ioPortRegister(0xc4, (IoPortRead)read, (IoPortWrite)write, rm);
-        ioPortRegister(0xc5, (IoPortRead)read, (IoPortWrite)write, rm);
-        ioPortRegister(0xc6, (IoPortRead)read, (IoPortWrite)write, rm);
-        ioPortRegister(0xc7, (IoPortRead)read, (IoPortWrite)write, rm);
+        ioPortRegister(0x7e, read, write, rm);
+        ioPortRegister(0x7f, read, write, rm);
+        ioPortRegister(0xc4, read, write, rm);
+        ioPortRegister(0xc5, read, write, rm);
+        ioPortRegister(0xc6, read, write, rm);
+        ioPortRegister(0xc7, read, write, rm);
     }
     else {
         // moonsound emulation has ownership of rom data. Need to

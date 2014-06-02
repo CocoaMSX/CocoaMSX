@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKorean80.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.7 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-06-08 13:02:48 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -105,15 +105,10 @@ static void write(RomMapperKorean80* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperKorean80Create(char* filename, UInt8* romData, 
+int romMapperKorean80Create(const char* filename, UInt8* romData, 
                             int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperKorean80* rm;
     int i;
 
@@ -124,7 +119,7 @@ int romMapperKorean80Create(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperKorean80));
 
     rm->deviceHandle = deviceManagerRegister(ROM_KOREAN80, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

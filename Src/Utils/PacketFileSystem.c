@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Utils/PacketFileSystem.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:47 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -201,7 +201,7 @@ int pkg_fclose(FILE* file)
 
 size_t pkg_fwrite(const void* buffer, size_t size, size_t count, FILE* file)
 {
-//    PKG_FILE* pkg_file = (PKG_FILE*)file;
+    PKG_FILE* pkg_file = (PKG_FILE*)file;
 
     if ((char*)file < (char*)pkg_files || (char*)file >= ((char*)pkg_files + PKG_FILE_CNT)) {
         return fwrite(buffer, size, count, file);

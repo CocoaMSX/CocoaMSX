@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperBeerIDE.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -28,7 +28,6 @@
 #include "romMapperBeerIDE.h"
 #include "HarddiskIDE.h"
 #include "MediaDb.h"
-#include "Language.h"
 #include "SlotManager.h"
 #include "DeviceManager.h"
 #include "DebugDeviceManager.h"
@@ -36,6 +35,7 @@
 #include "IoPort.h"
 #include "I8255.h"
 #include "Disk.h"
+#include "Language.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -146,7 +146,7 @@ static UInt8 readA(RomMapperBeerIde* rm)
 
 static UInt8 readB(RomMapperBeerIde* rm)
 {
-    return (UInt8)rm->ideData >>8;
+    return (UInt8)(rm->ideData >> 8);
 }
 
 static void writeA(RomMapperBeerIde* rm, UInt8 value)
@@ -215,22 +215,17 @@ static void getDebugInfo(RomMapperBeerIde* rm, DbgDevice* dbgDevice)
     DbgIoPorts* ioPorts;
     int i;
 
-    ioPorts = dbgDeviceAddIoPorts(dbgDevice, langDbgDevIdeBeer(), 12);
-    for (i = 0; i < 12; i++) {
-        dbgIoPortsAddPort(ioPorts, i, 0x44 + i, DBG_IO_READWRITE, peekIo(rm, 0x44 + i));
+    ioPorts = dbgDeviceAddIoPorts(dbgDevice, langDbgDevIdeBeer(), 4);
+    for (i = 0; i < 4; i++) {
+        dbgIoPortsAddPort(ioPorts, i, 0x30 + i, DBG_IO_READWRITE, i8255Peek(rm->i8255, 0x30 + i));
     }
 }
 
-int romMapperBeerIdeCreate(int hdId, char* fileName, UInt8* romData, 
+int romMapperBeerIdeCreate(int hdId, const char* fileName, UInt8* romData, 
                            int size, int slot, int sslot, int startPage)
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperBeerIde* rm;
     int i;
     int origSize = size;
@@ -248,12 +243,12 @@ int romMapperBeerIdeCreate(int hdId, char* fileName, UInt8* romData,
     
     rm->deviceHandle = deviceManagerRegister(ROM_BEERIDE, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_PORT, langDbgDevIdeBeer(), &dbgCallbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, (SlotRead)read, (SlotRead)read, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, read, read, NULL, destroy, rm);
 
-    rm->i8255 = i8255Create( NULL, (I8255Read)readA, (I8255Write)writeA,
-                             NULL, (I8255Read)readB, (I8255Write)writeB,
-                             NULL, NULL, (I8255Write)writeCLo,
-                             NULL, NULL, (I8255Write)writeCHi,
+    rm->i8255 = i8255Create( NULL, readA, writeA,
+                             NULL, readB, writeB,
+                             NULL, NULL,  writeCLo,
+                             NULL, NULL,  writeCHi,
                              rm);
 
     rm->romData = calloc(1, size);
@@ -272,10 +267,10 @@ int romMapperBeerIdeCreate(int hdId, char* fileName, UInt8* romData,
         slotMapPage(rm->slot, rm->sslot, rm->startPage + i, NULL, 0, 0);
     }
 
-    ioPortRegister(0x30, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255); // PPI Port A
-    ioPortRegister(0x31, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255); // PPI Port B
-    ioPortRegister(0x32, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255); // PPI Port C
-    ioPortRegister(0x33, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255); // PPI Mode
+    ioPortRegister(0x30, i8255Read, i8255Write, rm->i8255); // PPI Port A
+    ioPortRegister(0x31, i8255Read, i8255Write, rm->i8255); // PPI Port B
+    ioPortRegister(0x32, i8255Read, i8255Write, rm->i8255); // PPI Port C
+    ioPortRegister(0x33, i8255Read, i8255Write, rm->i8255); // PPI Mode
 
     rm->hdide = harddiskIdeCreate(diskGetHdDriveId(hdId, 0));
 

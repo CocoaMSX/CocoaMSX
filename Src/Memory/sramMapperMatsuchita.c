@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/sramMapperMatsuchita.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -49,6 +49,7 @@ typedef struct {
     UInt8  color2;
 	UInt8  pattern;
     int    cpu15;
+    int    inverted;
 } SramMapperMatsushita;
 
 static void saveState(SramMapperMatsushita* rm)
@@ -151,7 +152,7 @@ static void write(SramMapperMatsushita* rm, UInt16 ioPort, UInt8 value)
 {
 	switch (ioPort & 0x0f) {
     case 1:
-        rm->cpu15 = (value & 1) == 1;
+        rm->cpu15 = (value & 1) == (rm->inverted ? 0 : 1);
         msxEnableCpuFreq_1_5(rm->cpu15);
         break;
 	case 3:
@@ -190,28 +191,24 @@ static void getDebugInfo(SramMapperMatsushita* rm, DbgDevice* dbgDevice)
     }
 }
 
-int sramMapperMatsushitaCreate() 
+int sramMapperMatsushitaCreate(int inverted) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     SramMapperMatsushita* rm;
 
     rm = malloc(sizeof(SramMapperMatsushita));
 
-    rm->deviceHandle = deviceManagerRegister(SRAM_MATSUCHITA, &callbacks, rm);
+    rm->deviceHandle = deviceManagerRegister(inverted ? SRAM_MATSUCHITA_INV : SRAM_MATSUCHITA, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevMatsushita(), &dbgCallbacks, rm);
 
     memset(rm->sram, 0xff, 0x800);
     rm->address = 0;
+    rm->inverted = inverted;
 
     sramLoad(sramCreateFilename("Matsushita.SRAM"), rm->sram, 0x800, NULL, 0);
 
-    ioPortRegisterSub(0x08, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegisterSub(0x08, read, write, rm);
 
     return 1;
 }

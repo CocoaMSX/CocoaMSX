@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/ramMapperIo.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -145,13 +145,8 @@ static void getDebugInfo(RamMapperIo* rm, DbgDevice* dbgDevice)
 int ramMapperIoCreate() 
 {
     RamMapperIo* rm;
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
 
     rm = malloc(sizeof(RamMapperIo));
     rm->count = 0;
@@ -166,10 +161,10 @@ int ramMapperIoCreate()
     rm->deviceHandle = deviceManagerRegister(RAM_MAPPER, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevRamMapper(), &dbgCallbacks, rm);
 
-    ioPortRegister(0xfc, (IoPortRead)read, (IoPortWrite)write, rm);
-    ioPortRegister(0xfd, (IoPortRead)read, (IoPortWrite)write, rm);
-    ioPortRegister(0xfe, (IoPortRead)read, (IoPortWrite)write, rm);
-    ioPortRegister(0xff, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegister(0xfc, read, write, rm);
+    ioPortRegister(0xfd, read, write, rm);
+    ioPortRegister(0xfe, read, write, rm);
+    ioPortRegister(0xff, read, write, rm);
 
     mapperIo = rm;
 

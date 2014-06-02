@@ -1,10 +1,10 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoRender/VideoRender.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.36 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2007-05-22 06:23:18 $
+** $Date: 2007-05-22 06:23:18 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -280,7 +280,7 @@ Video *videoCopy(const Video *original)
     
     // AK: If I'm not mistaken, tables are immutable (or at least being used as
     //     such)
-    
+
     pVideo->pRgbTable16 = original->pRgbTable16;
     pVideo->pRgbTable32  = original->pRgbTable32;
     
@@ -323,11 +323,11 @@ static void generateGammaTable(Video* pVideo)
 {
     int i;
     for (i = 0; i < 3 * 256; i++) {
-        double value = (i - 256 + pVideo->brightness) * pVideo->contrast;
+        DoubleT value = (i - 256 + pVideo->brightness) * pVideo->contrast;
         gammaTable[i] = 6;
         if (value > 0) {
-            double factor = pow(255., pVideo->gamma - 1.);
-            value = (double)(factor * pow(value, pVideo->gamma));
+            DoubleT factor = pow(255., pVideo->gamma - 1.);
+            value = (DoubleT)(factor * pow(value, pVideo->gamma));
             if (value > 0) {
                 int gamma = (int)value;
                 gammaTable[i] = MAX(6, MIN(247, gamma));
@@ -2371,11 +2371,11 @@ Video *videoCopy(const Video *original)
     
     pVideo->pRgbTable16 = original->pRgbTable16;
     pVideo->pRgbTable32  = original->pRgbTable32;
-    
+
     return pVideo;
 }
 
-void videoDestroy(Video* pVideo)
+void videoDestroy(Video* pVideo) 
 {
     free(pVideo);
 }

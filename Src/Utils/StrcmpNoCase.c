@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Utils/StrcmpNoCase.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 21:38:43 $
 **
 ** More info: http://www.bluemsx.com
 **

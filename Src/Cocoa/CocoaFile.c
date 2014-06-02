@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <stdio.h>
 #include <unistd.h>
 
 
@@ -52,6 +53,11 @@ int archFileExists(const char* fileName)
 {
     struct stat s;
     return stat(fileName, &s) == 0;
+}
+
+int archFileDelete(const char *fileName)
+{
+    return remove(fileName) == 0;
 }
 
 /* File dialogs: */

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperGIDE.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.11 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -289,13 +289,8 @@ static void getDebugInfo(RomMapperGIde* rm, DbgDevice* dbgDevice)
 
 int romMapperGIdeCreate(int hdId) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperGIde* rm;
     int portBase;
 
@@ -306,18 +301,18 @@ int romMapperGIdeCreate(int hdId)
 
     portBase = (boardGetType() == BOARD_SVI) ? 0x40:0x60;
 
-    ioPortRegister(portBase | 0x04, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x05, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x06, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x07, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x08, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x09, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x0a, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x0b, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x0c, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x0d, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x0e, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(portBase | 0x0f, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
+    ioPortRegister(portBase | 0x04, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x05, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x06, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x07, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x08, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x09, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x0a, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x0b, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x0c, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x0d, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x0e, readIo, writeIo, rm);
+    ioPortRegister(portBase | 0x0f, readIo, writeIo, rm);
 
     rm->hdide = harddiskIdeCreate(diskGetHdDriveId(hdId, 0));
 

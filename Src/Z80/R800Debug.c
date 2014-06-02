@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Z80/R800Debug.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-04-18 04:09:54 $
 **
 ** Author: Daniel Vik
 **
@@ -63,6 +63,7 @@ static void getDebugInfo(R800Debug* dbg, DbgDevice* dbgDevice)
 
     dbgDeviceAddMemoryBlock(dbgDevice, langDbgMemVisible(), 0, 0, 0x10000, mappedRAM);
 
+#ifdef ENABLE_CALLSTACK
     if (dbg->r800->callstackSize > 255) {
         static UInt16 callstack[0x100];
         int beginning = dbg->r800->callstackSize & 0xff;
@@ -74,6 +75,7 @@ static void getDebugInfo(R800Debug* dbg, DbgDevice* dbgDevice)
     else {
         dbgDeviceAddCallstack(dbgDevice, langDbgCallstack(), dbg->r800->callstack, dbg->r800->callstackSize);
     }
+#endif
 
     regBank = dbgDeviceAddRegisterBank(dbgDevice, langDbgRegsCpu(), 20);
 
@@ -159,6 +161,23 @@ static void breakpointCb(R800Debug* dbg, UInt16 pc)
 {
     boardOnBreakpoint(pc);
 }
+  
+UInt8 readMem(void* ref, int address) {
+    if (address < 0x10000) {
+        return slotPeek(NULL, (UInt16)address);
+    }
+    return 0xff;
+}
+
+static void watchpointMemCb(R800Debug* dbg, UInt16 address, UInt8 value) 
+{
+    tryWatchpoint(DBGTYPE_CPU, address, value, dbg, readMem); 
+}
+
+static void watchpointIoCb(R800Debug* dbg, UInt16 port, UInt8 value) 
+{
+    tryWatchpoint(DBGTYPE_PORT, port, value, dbg, NULL); 
+}
 
 static void debugCb(R800Debug* dbg, int command, const char* data) 
 {
@@ -183,20 +202,17 @@ void trapCb(R800* r800, UInt8 value)
 
 void r800DebugCreate(R800* r800)
 {
-    DebugCallbacks dbgCallbacks = {
-        (void(*)(void*, DbgDevice*))getDebugInfo,
-        (int(*)(void*,char*,void*,int,int))dbgWriteMemory,
-        (int(*)(void*,char*,int,UInt32))dbgWriteRegister,
-        NULL
-    };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, dbgWriteMemory, dbgWriteRegister, NULL };
     
     dbg = (R800Debug*)malloc(sizeof(R800Debug));
     dbg->r800 = r800;
     dbg->debugHandle = debugDeviceRegister(DBGTYPE_CPU, langDbgDevZ80(), &dbgCallbacks, dbg);
 
-    r800->debugCb      = (R800DebugCb)debugCb;
-    r800->breakpointCb = (R800BreakptCb)breakpointCb;
-    r800->trapCb       = (R800TrapCb)trapCb;
+    r800->debugCb           = debugCb;
+    r800->breakpointCb      = breakpointCb;
+    r800->trapCb            = trapCb;
+    r800->watchpointMemCb   = watchpointMemCb;
+    r800->watchpointIoCb    = watchpointIoCb;
 }
 
 void r800DebugDestroy()

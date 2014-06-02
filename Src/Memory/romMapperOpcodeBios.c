@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperOpcodeBios.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -110,17 +110,12 @@ static void getDebugInfo(RomMapperOpcodeBios* rm, DbgDevice* dbgDevice)
     dbgDeviceAddMemoryBlock(dbgDevice, "BIOS", 0, 0, sizeof(rm->biosRom), rm->biosRom);
 }
 
-int romMapperOpcodeBiosCreate(char* filename, UInt8* romData, 
+int romMapperOpcodeBiosCreate(const char* filename, UInt8* romData, 
                               int size, int slot, int sslot, 
                               int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     
     RomMapperOpcodeBios* rm = malloc(sizeof(RomMapperOpcodeBios));
     
@@ -140,7 +135,7 @@ int romMapperOpcodeBiosCreate(char* filename, UInt8* romData,
     rm->deviceHandle = deviceManagerRegister(ROM_OPCODEBIOS, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, "BIOS", &dbgCallbacks, rm);
 
-    ioPortRegister(0x40, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegister(0x40, read, write, rm);
 
     reset(rm);
 

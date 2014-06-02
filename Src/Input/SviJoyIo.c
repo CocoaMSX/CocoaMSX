@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/SviJoyIo.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -133,10 +133,10 @@ UInt8 sviJoyIoReadTrigger(SviJoyIo* joyIo) {
 
 SviJoyIo* sviJoyIoCreate() 
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, (DeviceCallback)reset, (DeviceCallback)saveState, (DeviceCallback)loadState };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     SviJoyIo* sviJoyIo = (SviJoyIo*)calloc(1, sizeof(SviJoyIo));
 
-    joystickPortUpdateHandlerRegister((JoystickPortUpdateHandler)joyIoHandler, sviJoyIo);
+    joystickPortUpdateHandlerRegister(joyIoHandler, sviJoyIo);
 
     sviJoyIo->deviceHandle = deviceManagerRegister(ROM_UNKNOWN, &callbacks, sviJoyIo);
 

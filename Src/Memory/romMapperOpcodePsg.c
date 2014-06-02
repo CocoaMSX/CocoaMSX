@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperOpcodePsg.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -104,13 +104,8 @@ static void getDebugInfo(RomMapperOpcodePsg* rm, DbgDevice* dbgDevice)
 
 int romMapperOpcodePsgCreate() 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperOpcodePsg* rm = malloc(sizeof(RomMapperOpcodePsg));
 
     rm->deviceHandle = deviceManagerRegister(ROM_OPCODEPSG, &callbacks, rm);
@@ -118,9 +113,9 @@ int romMapperOpcodePsgCreate()
 
     rm->ay8910 = ay8910Create(boardGetMixer(), AY8910_MSX, PSGTYPE_AY8910, 0, NULL);
 
-    ioPortRegister(0x50, NULL, (IoPortWrite)write, rm);
-    ioPortRegister(0x51, NULL, (IoPortWrite)write, rm);
-    ioPortRegister(0x52, (IoPortRead)read, NULL, rm);
+    ioPortRegister(0x50, NULL, write, rm);
+    ioPortRegister(0x51, NULL, write, rm);
+    ioPortRegister(0x52, read, NULL, rm);
 
     reset(rm);
 

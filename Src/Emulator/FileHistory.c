@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cvsroot/bluemsx/blueMSX/Src/Emulator/FileHistory.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.39 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008/10/26 19:48:18 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -150,6 +150,7 @@ void verifyFileHistory(char* history, RomType* historyType) {
             strcmp(fname, CARTNAME_ESERAM512)   &&
             strcmp(fname, CARTNAME_ESERAM1MB)   &&
             strcmp(fname, CARTNAME_MEGAFLSHSCC) &&
+            strcmp(fname, CARTNAME_MEGAFLSHSCCPLUS) &&
             strcmp(fname, CARTNAME_WAVESCSI128) &&
             strcmp(fname, CARTNAME_WAVESCSI256) &&
             strcmp(fname, CARTNAME_WAVESCSI512) &&
@@ -286,7 +287,7 @@ char* fileGetNext(char* filename, char* zipFile) {
 
 void updateExtendedRomName(int drive, char* filename, char* zipFile) {
     int size;
-    char* buf = (char*)romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
+    char* buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
 
     if (buf != NULL) {
         strcpy(extendedName[drive], mediaDbGetPrettyString(mediaDbLookupRom(buf, size)));
@@ -306,7 +307,7 @@ void updateExtendedDiskName(int drive, char* filename, char* zipFile) {
 
 #ifndef WII
     if (drive < MAX_FDC_COUNT) {
-        buf = (char*)romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
+        buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
         if (buf != NULL) {
             strcpy(extendedDiskName[drive], mediaDbGetPrettyString(mediaDbLookupDisk(buf, size)));
             free(buf);
@@ -341,7 +342,7 @@ void updateExtendedDiskName(int drive, char* filename, char* zipFile) {
 
 void updateExtendedCasName(int drive, char* filename, char* zipFile) {
     int size;
-    char* buf = (char*)romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
+    char* buf = romLoad(filename, zipFile[0] ? zipFile : NULL, &size);
 
     extendedCasName[drive][0] = 0;
     if (buf != NULL) {
@@ -416,6 +417,7 @@ int createSaveFileBaseName(char* fileBase,Properties* properties, int useExtende
                 strcmp(properties->media.carts[i].fileName, CARTNAME_ESERAM512)    &&
                 strcmp(properties->media.carts[i].fileName, CARTNAME_ESERAM1MB)    &&
                 strcmp(properties->media.carts[i].fileName, CARTNAME_MEGAFLSHSCC)  &&
+                strcmp(properties->media.carts[i].fileName, CARTNAME_MEGAFLSHSCCPLUS) &&
                 strcmp(properties->media.carts[i].fileName, CARTNAME_WAVESCSI128)  &&
                 strcmp(properties->media.carts[i].fileName, CARTNAME_WAVESCSI256)  &&
                 strcmp(properties->media.carts[i].fileName, CARTNAME_WAVESCSI512)  &&
@@ -500,7 +502,7 @@ static UInt32 fileWriteTime(const char* filename)
 
   rv = stat(filename, &s);
 
-  return rv < 0 ? 0 : s.st_mtime;
+  return rv < 0 ? 0 : (UInt32)s.st_mtime;
 }
 
 char* generateSaveFilename(Properties* properties, char* directory, char* prefix, char* extension, int digits)

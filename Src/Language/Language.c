@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/Language.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.99 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -373,7 +373,7 @@ char* langMenuPropsEmulation() { return ls->menuPropsEmulation; }
 char* langMenuPropsVideo() { return ls->menuPropsVideo; }
 char* langMenuPropsSound() { return ls->menuPropsSound; }
 char* langMenuPropsControls() { return ls->menuPropsControls; }
-char* langMenuPropsPerformance() { return ls->menuPropsPerformance; }
+char* langMenuPropsEffects() { return ls->menuPropsEffects; }
 char* langMenuPropsSettings() { return ls->menuPropsSettings; }
 char* langMenuPropsFile() { return ls->menuPropsFile; }
 char* langMenuPropsDisk() { return ls->menuPropsDisk; }
@@ -418,6 +418,7 @@ char* langMenuToolsMachine() { return ls->menuToolsMachine; }
 char* langMenuToolsShortcuts() { return ls->menuToolsShortcuts; }
 char* langMenuToolsCtrlEditor() { return ls->menuToolsCtrlEditor; }
 char* langMenuToolsMixer() { return ls->menuToolsMixer; }
+char* langMenuToolsLoadMemory() { return ls->menuToolsLoadMemory; }
 char* langMenuToolsDebugger() { return ls->menuToolsDebugger; }
 char* langMenuToolsTrainer() { return ls->menuToolsTrainer; }
 char* langMenuToolsTraceLogger() { return ls->menuToolsTraceLogger; }
@@ -497,10 +498,12 @@ char* langDlgAboutLisence() { return ls->dlgAboutLisence; }
 
 char* langPropTitle() { return ls->propTitle; }
 char* langPropEmulation() { return ls->propEmulation; }
+char* langPropD3D() { return ls->propD3D; }
 char* langPropVideo() { return ls->propVideo; }
 char* langPropSound() { return ls->propSound; }
 char* langPropControls() { return ls->propControls; }
 char* langPropPerformance() { return ls->propPerformance; }
+char* langPropEffects() { return ls->propEffects; }
 char* langPropSettings() { return ls->propSettings; }
 char* langPropFile()  { return ls->propFile; }
 char* langPropDisk()  { return ls->propDisk; }
@@ -517,6 +520,8 @@ char* langPropEmuFrontSwitchGB() { return ls->propEmuFrontSwitchGB; }
 char* langPropEmuFrontSwitch() { return ls->propEmuFrontSwitch; }
 char* langPropEmuFdcTiming() { return ls->propEmuFdcTiming; }
 char* langPropEmuReversePlay() { return ls->propEmuReversePlay; }
+char* langPropEmuNoSpriteLimits() { return ls->propEmuNoSpriteLimits; }
+char* langPropEnableMsxKeyboardQuirk() { return ls->propEnableMsxKeyboardQuirk; }
 char* langPropEmuPauseSwitch() { return ls->propEmuPauseSwitch; }
 char* langPropEmuAudioSwitch() { return ls->propEmuAudioSwitch; }
 char* langPropVideoFreqText() { return ls->propVideoFreqText; }
@@ -631,6 +636,7 @@ char* langEnumVideoSizeFullscreen() { return ls->enumVideoSizeFullscreen; }
 char* langEnumVideoDrvDirectDrawHW() { return ls->enumVideoDrvDirectDrawHW; }
 char* langEnumVideoDrvDirectDraw() { return ls->enumVideoDrvDirectDraw; }
 char* langEnumVideoDrvGDI() { return ls->enumVideoDrvGDI; }
+char* langEnumVideoDrvD3D() { return ls->enumVideoDrvD3D; }
 
 char* langEnumVideoFrameskip0() { return ls->enumVideoFrameskip0; }
 char* langEnumVideoFrameskip1() { return ls->enumVideoFrameskip1; }
@@ -638,6 +644,32 @@ char* langEnumVideoFrameskip2() { return ls->enumVideoFrameskip2; }
 char* langEnumVideoFrameskip3() { return ls->enumVideoFrameskip3; }
 char* langEnumVideoFrameskip4() { return ls->enumVideoFrameskip4; }
 char* langEnumVideoFrameskip5() { return ls->enumVideoFrameskip5; }
+
+char* langEnumD3DARAuto() { return ls->enumD3DARAuto; }
+char* langEnumD3DARStretch() { return ls->enumD3DARStretch; }
+char* langEnumD3DARPAL() { return ls->enumD3DARPAL; }
+char* langEnumD3DARNTSC() { return ls->enumD3DARNTSC; }
+char* langEnumD3DAR11() { return ls->enumD3DAR11; }
+
+char* langEnumD3DCropNone() { return ls->enumD3DCropNone; }
+char* langEnumD3DCropMSX1() { return ls->enumD3DCropMSX1; }
+char* langEnumD3DCropMSX1Plus8() { return ls->enumD3DCropMSX1Plus8; }
+char* langEnumD3DCropMSX2() { return ls->enumD3DCropMSX2; }
+char* langEnumD3DCropMSX2Plus8() { return ls->enumD3DCropMSX2Plus8; }
+char* langEnumD3DCropCustom() { return ls->enumD3DCropCustom; }
+
+char* langPropD3DParametersGB() { return ls->propD3DParametersGB; }
+char* langPropD3DAspectRatioText() { return ls->propD3DAspectRatioText; }
+char* langPropD3DLinearFilteringText() { return ls->propD3DLinearFilteringText; }
+char* langPropD3DForceHighResText() { return ls->propD3DForceHighResText; }
+char* langPropD3DExtendBorderColorText() { return ls->propD3DExtendBorderColorText; }
+
+char* langpropD3DCroppingGB() { return ls->propD3DCroppingGB; }
+char* langpropD3DCroppingTypeText() { return ls->propD3DCroppingTypeText; }
+char* langpropD3DCroppingLeftText() { return ls->propD3DCroppingLeftText; }
+char* langpropD3DCroppingRightText() { return ls->propD3DCroppingRightText; }
+char* langpropD3DCroppingTopText() { return ls->propD3DCroppingTopText; }
+char* langpropD3DCroppingBottomText() { return ls->propD3DCroppingBottomText; }
 
 char* langEnumSoundDrvNone() { return ls->enumSoundDrvNone; }
 char* langEnumSoundDrvWMM() { return ls->enumSoundDrvWMM; }
@@ -816,7 +848,7 @@ char* langShortcutShowEmuProp() { return ls->shortcutShowEmuProp; }
 char* langShortcutShowVideoProp() { return ls->shortcutShowVideoProp; }
 char* langShortcutShowAudioProp() { return ls->shortcutShowAudioProp; }
 char* langShortcutShowCtrlProp() { return ls->shortcutShowCtrlProp; }
-char* langShortcutShowPerfProp() { return ls->shortcutShowPerfProp; }
+char* langShortcutShowEffectsProp() { return ls->shortcutShowEffectsProp; }
 char* langShortcutShowSettProp() { return ls->shortcutShowSettProp; }
 char* langShortcutShowPorts() { return ls->shortcutShowPorts; }
 char* langShortcutShowLanguage() { return ls->shortcutShowLanguage; }
@@ -831,6 +863,8 @@ char* langShortcutShowAbout() { return ls->shortcutShowAbout; }
 char* langShortcutShowFiles() { return ls->shortcutShowFiles; }
 char* langShortcutToggleSpriteEnable() { return ls->shortcutToggleSpriteEnable; }
 char* langShortcutToggleFdcTiming() { return ls->shortcutToggleFdcTiming; }
+char* langShortcutToggleNoSpriteLimits() { return ls->shortcutToggleNoSpriteLimits; }
+char* langShortcutEnableMsxKeyboardQuirk() { return ls->shortcutEnableMsxKeyboardQuirk; }
 char* langShortcutToggleCpuTrace() { return ls->shortcutToggleCpuTrace; }
 char* langShortcutVideoLoad() { return ls->shortcutVideoLoad; }
 char* langShortcutVideoPlay() { return ls->shortcutVideoPlay; }
@@ -889,6 +923,7 @@ char* langRomTypeTc8566afTrFdc() { return ls->romTypeTc8566afTrFdc; }
 char* langRomTypeMicrosolFdc() { return ls->romTypeMicrosolFdc; }
 char* langRomTypeNationalFdc() { return ls->romTypeNationalFdc; }
 char* langRomTypePhilipsFdc() { return ls->romTypePhilipsFdc; }
+char* langRomTypeSvi707Fdc() { return ls->romTypeSvi707Fdc; }
 char* langRomTypeSvi738Fdc() { return ls->romTypeSvi738Fdc; }
 char* langRomTypeMappedRam() { return ls->romTypeMappedRam; }
 char* langRomTypeMirroredRam1k() { return ls->romTypeMirroredRam1k; }
@@ -897,6 +932,7 @@ char* langRomTypeNormalRam() { return ls->romTypeNormalRam; }
 char* langRomTypeKanji() { return "Kanji"; }
 char* langRomTypeHolyQuran() { return "Holy Quran"; }
 char* langRomTypeMatsushitaSram() { return "Matsushita SRAM"; }
+char* langRomTypeMasushitaSramInv() { return "Matsushita SRAM - Turbo 5.37MHz"; }
 char* langRomTypePanasonic8()  { return "Panasonic FM 8kB SRAM"; }
 char* langRomTypePanasonicWx16() { return "Panasonic WX 16kB SRAM"; }
 char* langRomTypePanasonic16() { return "Panasonic 16kB SRAM"; }
@@ -913,6 +949,7 @@ char* langRomTypeTurborPause() { return ls->romTypeTurborPause; }
 char* langRomTypeF4deviceNormal() { return ls->romTypeF4deviceNormal; }
 char* langRomTypeF4deviceInvert() { return ls->romTypeF4deviceInvert; }
 char* langRomTypeMsxMidi() { return "MSX-MIDI"; }
+char* langRomTypeMsxMidiExternal() { return "MSX-MIDI external"; }
 char* langRomTypeTurborTimer() { return ls->romTypeTurborTimer; }
 char* langRomTypeKoei() { return "Koei (SRAM)"; }
 char* langRomTypeBasic() { return "Basic ROM"; }
@@ -948,11 +985,12 @@ char* langRomTypeSvi328Fdc() { return ls->romTypeSvi328Fdc; }
 char* langRomTypeSvi328Prn() { return ls->romTypeSvi328Prn; }
 char* langRomTypeSvi328Uart() { return ls->romTypeSvi328Uart; }
 char* langRomTypeSvi328col80() { return ls->romTypeSvi328col80; }
+char* langRomTypeSvi328RsIde() { return ls->romTypeSvi328RsIde; }
 char* langRomTypeSvi727col80() { return ls->romTypeSvi727col80; }
 char* langRomTypeColecoCart() { return ls->romTypeColecoCart; }
 char* langRomTypeSg1000Cart() { return ls->romTypeSg1000Cart; }
 char* langRomTypeSc3000Cart() { return ls->romTypeSc3000Cart; }
-char* langRomTypeTheCastle() { return "The Castle"; }
+char* langRomTypeTheCastle() { return "SG-1000 The Castle"; }
 char* langRomTypeSonyHbi55() { return "Sony HBI-55"; }
 char* langRomTypeMsxPrinter() { return ls->romTypeMsxPrinter; }
 char* langRomTypeTurborPcm() { return ls->romTypeTurborPcm; }
@@ -1014,6 +1052,7 @@ char* langDbgDevRamMapper() { return ls->dbgDevRamMapper; }
 char* langDbgDevRam() { return ls->dbgDevRam; }
 char* langDbgDevIdeBeer() { return "Beer IDE"; }
 char* langDbgDevIdeGide() { return "GIDE"; }
+char* langDbgDevIdeSviRs() { return "SVI-328 RS IDE"; }
 char* langDbgDevScsiGouda() { return "Gouda SCSI"; }
 char* langDbgDevF4Device() { return ls->dbgDevF4Device; }
 char* langDbgDevFmpac() { return "FMPAC"; }

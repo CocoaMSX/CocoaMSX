@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Emulator/Actions.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.34 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2007-03-24 05:20:32 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -60,6 +60,7 @@ void actionCartInsert1();
 void actionCartInsert2();
 void actionEmuTogglePause();
 void actionEmuStep();
+void actionEmuStepBack();
 void actionEmuStop();
 void actionDiskInsertA();
 void actionDiskInsertB();
@@ -96,11 +97,11 @@ void actionCasSave();
 void actionPropShowEmulation();
 void actionPropShowVideo();
 void actionPropShowAudio();
-void actionPropShowPerformance();
 void actionPropShowSettings();
 void actionPropShowDisk();
 void actionPropShowApearance();
 void actionPropShowPorts();
+void actionPropShowEffects();
 void actionOptionsShowLanguage();
 void actionToolsShowMachineEditor();
 void actionToolsShowShorcutEditor();
@@ -140,6 +141,8 @@ void actionToggleDiskAutoReset();
 void actionToggleCasAutoRewind();
 void actionToggleSpriteEnable();
 void actionToggleFdcTiming();
+void actionToggleNoSpriteLimits();
+void actionToggleMsxKeyboardQuirk();
 void actionToggleMsxAudioSwitch();
 void actionToggleFrontSwitch();
 void actionTogglePauseSwitch();
@@ -182,6 +185,7 @@ void actionSetCasAutoRewind(int value);
 void actionSetSpriteEnable(int value);
 void actionSetMsxAudioSwitch(int value);
 void actionSetFdcTiming(int value);
+void actionSetNoSpriteLimits(int value);
 void actionSetFrontSwitch(int value);
 void actionSetPauseSwitch(int value);
 void actionSetWaveCapture(int value);

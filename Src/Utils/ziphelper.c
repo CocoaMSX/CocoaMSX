@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cvsroot/bluemsx/blueMSX/Src/Utils/ziphelper.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.6 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008/03/30 21:38:43 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -40,8 +40,10 @@
 #include <direct.h>
 #endif
 
-#ifdef MINGW
+#if defined(MINGW)
  #define MKDIR(x) mkdir(x)
+#elif defined(WIN32)
+ #define MKDIR(x) _mkdir(x)
 #else
  #define MKDIR(x) mkdir(x,0777)
 #endif
@@ -53,6 +55,175 @@ static void toLower(char* str) {
     }
 }
 
+#if 1
+
+#define MAX_FILES_IN_ZIP 64
+
+typedef struct 
+{
+    char  filename[32];
+    int   size;
+    char* buffer;
+} MemFile;
+
+typedef struct 
+{
+    char    zipName[32];
+    MemFile* memFiles[MAX_FILES_IN_ZIP];
+    int     count;
+} MemZipFile;
+
+static MemZipFile** memZipFiles = NULL;
+static int memZipFileCount = 0;
+
+void memZipFileDestroy(MemZipFile* memZipFile)
+{
+    int i;
+
+    if (memZipFile == NULL)
+    {
+        return;
+    }
+
+    // Remove node
+    for (i = 0; i < memZipFileCount; i++)
+    {
+        if (memZipFiles[i] == memZipFile)
+        {
+            memZipFiles[i] = NULL;
+        }
+    }
+
+    // Delete file contents
+    for (i = 0; i < memZipFile->count; i++)
+    {
+        if (memZipFile->memFiles[i]->buffer != NULL)
+        {
+            free(memZipFile->memFiles[i]->buffer);
+        }
+        free(memZipFile->memFiles[i]);
+    }
+    free(memZipFile);
+}
+
+void memZipFileSystemCreate(int maxFiles)
+{
+    memZipFileCount = maxFiles;
+    memZipFiles = (MemZipFile**) calloc(memZipFileCount, sizeof(MemZipFile*));
+}
+
+void memZipFileSystemDestroy()
+{
+    int i;
+
+    if (memZipFileCount == 0)
+    {
+        return;
+    }
+
+    for (i = 0; i < memZipFileCount; i++)
+    {
+        memZipFileDestroy(memZipFiles[i]);
+    }
+    free(memZipFiles);
+
+    memZipFileCount = 0;
+}
+
+MemZipFile* memZipFileFind(const char* zipName)
+{
+    int i;
+    for (i = 0; i < memZipFileCount; i++)
+    {
+        if (memZipFiles[i] != NULL && 
+            strcmp(memZipFiles[i]->zipName, zipName) == 0)
+        {
+            return memZipFiles[i];
+        }
+    }
+    return NULL;
+}
+
+MemZipFile* memZipFileCreate(const char* zipName)
+{
+    int i;
+
+    for (i = 0; i < memZipFileCount; i++)
+    {
+        if (memZipFiles[i] == NULL)
+        {
+            memZipFiles[i] = malloc(sizeof(MemZipFile));
+            strcpy(memZipFiles[i]->zipName, zipName);
+            memZipFiles[i]->count = 0;
+            return memZipFiles[i];
+        }
+    }
+    return NULL;
+}
+
+MemFile* memFileFindInZip(MemZipFile* memZipFile, const char* filename)
+{
+    if (memZipFile != NULL)
+    {
+        int i;
+        for (i = 0; i < memZipFile->count; i++)
+        {
+            if (strcmp(memZipFile->memFiles[i]->filename, filename) == 0)
+            {
+                return memZipFile->memFiles[i];
+            }
+        }
+    }
+    return NULL;
+}
+
+void* memFileLoad(const char* zipName, const char* filename, int* size)
+{
+    MemFile* memFile = memFileFindInZip(memZipFileFind(zipName), filename);
+    if (memFile != NULL && memFile->size > 0)
+    {
+        void* buffer = malloc(memFile->size);
+        memcpy(buffer, memFile->buffer, memFile->size);
+        *size = memFile->size;
+        return buffer;
+    }
+    *size = 0;
+    return NULL;
+}
+
+int memFileSave(const char* zipName, const char* filename, int append, void* buffer, int size)
+{
+    MemZipFile* memZipFile = memZipFileFind(zipName);
+    MemFile* memFile;
+
+    if (!append)
+    {
+        memZipFileDestroy(memZipFile);
+        memZipFile = NULL;
+    }
+
+    if (memZipFile == NULL)
+    {
+        memZipFile = memZipFileCreate(zipName);
+    }
+
+    if (memZipFile == NULL || memZipFile->count == MAX_FILES_IN_ZIP)
+    {
+        return 0;
+    }
+    
+    memFile = malloc(sizeof(MemFile));
+    memFile->buffer = malloc(size);
+    memcpy(memFile->buffer, buffer, size);
+    memFile->size = size;
+    strcpy(memFile->filename, filename);
+
+    memZipFile->memFiles[memZipFile->count++] = memFile;
+
+    return 1;
+}
+
+#else
 //////////////////////////////////////////
 // Memory zip files
 
@@ -141,12 +312,14 @@ int memZipFileWrite(MemZipFile* zipFile, const char* filename, void* buffer, int
     memFile->size = memFile->data ? size : 0;
     memFile->compSize = compSize;
     strcpy(memFile->filename, filename);
+    free(compBuf);
     
     return 1;
 }
 
 //////////////////////////////////////////
 // Memory zip file system
+
 
 typedef struct {
     MemZipFile** zipFiles;
@@ -231,6 +404,7 @@ int memFileSave(const char* zipName, const char* filename, int append, void* buf
     return memZipFileWrite(zipFile, filename, buffer, size);
 }
 
+#endif
 
 /******************************************************************************
 *** Description
@@ -766,4 +940,3 @@ void* zipUncompress(void* buffer, int size, unsigned long* retSize)
 
     return retBuf;
 }
-

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/Casette.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.18 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -264,12 +264,12 @@ int tapeInsert(char *name, const char *fileInZipFile)
     rewindNextInsert=0;
 
     if (ramImageBuffer != NULL) {
-        UInt8* ptr = (UInt8*)(ramImageBuffer + ramImageSize - 17);
+        UInt8* ptr = ramImageBuffer + ramImageSize - 17;
         int cntFMSXDOS = 0;
         int cntFMSX98  = 0;
         int cntSVICAS  = 0;
 
-        while ((char*)ptr >= ramImageBuffer) {
+        while (ptr >= ramImageBuffer) {
             if (!memcmp(ptr, hdrFMSXDOS, sizeof(hdrFMSXDOS))) {
                 cntFMSXDOS++;
             }
@@ -346,8 +346,6 @@ int tapeSave(char *name, TapeFormat format)
                 case TAPE_SVICAS:
                     hdrData = hdrSVICAS;
                     hdrSize = sizeof(hdrSVICAS);
-                    break;
-                default:
                     break;
             }
 

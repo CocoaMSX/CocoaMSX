@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/Sg1000JoyIo.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.4 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -123,10 +123,10 @@ UInt16 sg1000JoyIoRead(Sg1000JoyIo* joyIo)
 
 Sg1000JoyIo* sg1000JoyIoCreate() 
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, (DeviceCallback)reset, (DeviceCallback)saveState, (DeviceCallback)loadState };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     Sg1000JoyIo* sg1000JoyIo = (Sg1000JoyIo*)calloc(1, sizeof(Sg1000JoyIo));
 
-    joystickPortUpdateHandlerRegister((JoystickPortUpdateHandler)joyIoHandler, sg1000JoyIo);
+    joystickPortUpdateHandlerRegister(joyIoHandler, sg1000JoyIo);
 
     sg1000JoyIo->deviceHandle = deviceManagerRegister(ROM_UNKNOWN, &callbacks, sg1000JoyIo);
 

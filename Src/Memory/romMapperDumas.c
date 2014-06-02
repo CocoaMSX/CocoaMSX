@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperDumas.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:43 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -168,22 +168,17 @@ static void write(RomMapperDumas* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperDumasCreate(char* filename, UInt8* romData, 
+int romMapperDumasCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage,
                          UInt8* eepromData, int eepromSize) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperDumas* rm;
 
     rm = malloc(sizeof(RomMapperDumas));
 
     rm->deviceHandle = deviceManagerRegister(ROM_DUMAS, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, read, peek, write, destroy, rm);
 
     rm->amdFlash = amdFlashCreate(AMD_TYPE_1, 0x80000, 0x10000, 0, romData, size, sramCreateFilenameWithSuffix("dumas.rom", "", ".rom"), 0);
     rm->slot  = slot;

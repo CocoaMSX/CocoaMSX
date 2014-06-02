@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cvsroot/bluemsx/blueMSX/Src/Input/MsxJoystick.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008/03/30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -66,8 +66,8 @@ void destroy(MsxJoystick* joystick)
 MsxJoystickDevice* msxJoystickCreate(int controller)
 {
     MsxJoystick* joystick = (MsxJoystick*)calloc(1, sizeof(MsxJoystick));
-    joystick->joyDevice.read    = (UInt8(*)(void*))read;
-    joystick->joyDevice.destroy = (void(*)(void*))destroy;
+    joystick->joyDevice.read    = read;
+    joystick->joyDevice.destroy = destroy;
     joystick->controller        = controller;
     
     return (MsxJoystickDevice*)joystick;

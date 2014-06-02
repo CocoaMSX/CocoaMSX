@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Emulator/Emulator.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.67 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 14:35:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -152,6 +152,7 @@ void savelog()
 
 static void emuCalcCpuUsage() {
     static UInt32 oldSysTime = 0;
+    static UInt32 oldAverage = 0;
     static UInt32 cnt = 0;
     UInt32 newSysTime;
     UInt32 emuTimeAverage;
@@ -243,6 +244,14 @@ void emulatorSetState(EmuState state) {
         state = EMU_RUNNING;
         emuSingleStep = 1;
     }
+    if (state == EMU_STEP_BACK) {
+        EmuState oldState = state;
+        state = EMU_RUNNING;
+        if (!boardRewindOne()) {
+            state = oldState;
+        }
+        
+    }
     emuState = state;
 }
 
@@ -266,7 +275,7 @@ static int timerCallback(void* timer) {
         static UInt32 oldSysTime = 0;
         static UInt32 refreshRate = 50;
         UInt32 framePeriod = (properties->video.frameSkip + 1) * 1000;
-//        UInt32 syncPeriod = emulatorGetSyncPeriod();
+        UInt32 syncPeriod = emulatorGetSyncPeriod();
         UInt32 sysTime = archGetSystemUpTime(1000);
         UInt32 diffTime = sysTime - oldSysTime;
         int syncMethod = emuUseSynchronousUpdate();
@@ -377,7 +386,7 @@ static void emulatorThread() {
     switchSetAudio(properties->emulation.audioSwitch);
 
     if (properties->emulation.reverseEnable && properties->emulation.reverseMaxTime > 0) {
-        reversePeriod = 150;
+        reversePeriod = 50;
         reverseBufferCnt = properties->emulation.reverseMaxTime * 1000 / reversePeriod;
     }
     success = boardRun(machine,
@@ -726,7 +735,7 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
         return WaitReverse();
     }
 
-//    boardEnableSnapshots(1); // AK TODO
+    boardEnableSnapshots(1);
 
     emuMaxEmuSpeed = maxSpeed;
 
@@ -778,15 +787,12 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
 #ifdef NO_TIMERS
             while (timerCallback(NULL) == 0) emuExitFlag |= archPollEvent();
 #endif
-            if (!emuExitFlag)
-                archEventWait(emuSyncEvent, -1);
-            
+            archEventWait(emuSyncEvent, -1);
             if (((emuMaxSpeed || emuMaxEmuSpeed) && !emuExitFlag) || overflowCount > 0) {
 #ifdef NO_TIMERS
                 while (timerCallback(NULL) == 0) emuExitFlag |= archPollEvent();
 #endif
-                if (!emuExitFlag)
-                    archEventWait(emuSyncEvent, -1);
+                archEventWait(emuSyncEvent, -1);
             }
             overflowCount = 0;
         } while (!emuExitFlag && emuState != EMU_RUNNING);
@@ -808,7 +814,7 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
     }
 
     if ((++cnt & 0x0f) == 0) {
-        emuCalcCpuUsage();
+        emuCalcCpuUsage(NULL);
     }
 
     overflowCount = emulatorGetCpuOverflow() ? 1 : 0;

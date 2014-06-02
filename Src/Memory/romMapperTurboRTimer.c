@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperTurboRTimer.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -113,12 +113,7 @@ static void write(RomMapperTurboRTimer* rm, UInt16 ioPort, UInt8 value)
 
 int romMapperTurboRTimerCreate() 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperTurboRTimer* rm = malloc(sizeof(RomMapperTurboRTimer));
 
     rm->deviceHandle = deviceManagerRegister(ROM_TURBORTIMER, &callbacks, rm);
@@ -127,8 +122,8 @@ int romMapperTurboRTimerCreate()
     rm->refFrag = 0;
     rm->counter = 0;
 
-    ioPortRegister(0xe6, (IoPortRead)read, (IoPortWrite)write, rm);
-    ioPortRegister(0xe7, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegister(0xe6, read, write, rm);
+    ioPortRegister(0xe7, read, write, rm);
 
     theTimer = rm;
 

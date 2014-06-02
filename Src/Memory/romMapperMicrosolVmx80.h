@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMicrosolVmx80.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -31,7 +31,7 @@
 
 #include "MsxTypes.h"
 
-int romMapperMicrosolVmx80Create(char* filename, UInt8* romData, int size,
+int romMapperMicrosolVmx80Create(const char* filename, UInt8* romData, int size,
                                  int slot, int sslot, int startPage,
                                  void* charRom, int charSize);
 

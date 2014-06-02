@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cvsroot/bluemsx/blueMSX/Src/Utils/SaveState.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008/06/25 22:26:17 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -31,7 +31,11 @@
 #include <string.h>
 #include <stdio.h>
 
+// Must be power of 2
+#define ALLOC_BLOCK_SIZE 256
+
 struct SaveState {
+    UInt32 allocSize;
     UInt32 size;
     UInt32 offset;
     UInt32 *buffer;
@@ -103,9 +107,7 @@ void saveStateCreateForRead(const char* fileName)
 {
     tableCount = 0;
     strcpy(stateFile, fileName);
-#if 0
     zipCacheReadOnlyZip(fileName);
-#endif
 }
 
 void saveStateCreateForWrite(const char* fileName)
@@ -124,6 +126,7 @@ SaveState* saveStateOpenForRead(const char* fileName) {
     Int32 size = 0;
     void* buffer = zipLoadFile(stateFile, getIndexedFilename(fileName), &size);
 
+    state->allocSize = size;
     state->buffer = buffer;
     state->size = size / sizeof(UInt32);
     state->offset = 0;
@@ -138,6 +141,7 @@ SaveState* saveStateOpenForWrite(const char* fileName) {
     state->size      = 0;
     state->offset    = 0;
     state->buffer    = NULL;
+    state->allocSize = 0;
 
     strcpy(state->fileName, getIndexedFilename(fileName));
 
@@ -151,12 +155,17 @@ void saveStateClose(SaveState* state) {
     if (state->buffer != NULL) {
         free(state->buffer);
     }
+    state->allocSize = 0;
     free(state);
 }
 
 static void stateExtendBuffer(SaveState* state, UInt32 extend) {
     state->size += extend;
-    state->buffer = realloc(state->buffer, state->size * sizeof(UInt32));
+    if (state->size > state->allocSize)
+    {
+        state->allocSize = (state->size + ALLOC_BLOCK_SIZE - 1) & ~(ALLOC_BLOCK_SIZE - 1);
+        state->buffer = realloc(state->buffer, state->allocSize * sizeof(UInt32));
+    }
 }
 
 void saveStateSet(SaveState* state, const char* tagName, UInt32 value)

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSegaBasic.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -92,21 +92,11 @@ static int dbgWriteMemory(RomMapperSegaBasic* rm, char* name, void* data, int st
     return 1;
 }
 
-int romMapperSegaBasicCreate(char* filename, UInt8* romData, 
+int romMapperSegaBasicCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = {
-        (void(*)(void*,DbgDevice*))getDebugInfo,
-        (int(*)(void*,char*,void*,int,int))dbgWriteMemory,
-        NULL,
-        NULL
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, dbgWriteMemory, NULL, NULL };
     RomMapperSegaBasic* rm;
     int pages = size / 0x2000 + ((size & 0x1fff) ? 1 : 0);
     int i;
@@ -121,7 +111,7 @@ int romMapperSegaBasicCreate(char* filename, UInt8* romData,
     
     rm->debugHandle = debugDeviceRegister(DBGTYPE_RAM, langDbgDevRam(), &dbgCallbacks, rm);
 
-    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, destroy, rm);
 
     rm->romData = malloc(pages * 0x2000);
     memcpy(rm->romData, romData, size);

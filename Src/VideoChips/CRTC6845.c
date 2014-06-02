@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/CRTC6845.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.46 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:23 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -245,8 +245,8 @@ UInt8 crtcMemRead(CRTC6845* crtc, UInt16 address)
 
 static void crtc6845Reset(CRTC6845* crtc)
 {
-    memset(&crtc->registers, 0, sizeof(crtc->registers));
-    memset(&crtc->cursor, 0, sizeof(crtc->cursor));
+    memset(&crtc->registers, 0, sizeof(&crtc->registers));
+    memset(&crtc->cursor, 0, sizeof(&crtc->cursor));
     memset(crtc->vram, 0xff, crtc->vramMask + 1);
     crtc->frameCounter = 0;
 }
@@ -340,34 +340,21 @@ CRTC6845* crtc6845Create(int frameRate, UInt8* romData, int size, int vramSize,
     }
 
     // Create and start frame refresh timer
-    crtc->timerDisplay = boardTimerCreate((BoardTimerCb)crtcOnDisplay, crtc);
+    crtc->timerDisplay = boardTimerCreate(crtcOnDisplay, crtc);
     crtc->timeDisplay = boardSystemTime() + REFRESH_PERIOD;
     boardTimerAdd(crtc->timerDisplay, crtc->timeDisplay);
 
     // Initialize device
     {
-        DeviceCallbacks callbacks = {
-            (DeviceCallback)crtc6845Destroy,
-            (DeviceCallback)crtc6845Reset,
-            (DeviceCallback)saveState,
-            (DeviceCallback)loadState
-        };
-        DebugCallbacks dbgCallbacks = {
-            (void(*)(void*,DbgDevice*))getDebugInfo,
-            (int(*)(void*,char*,void*,int,int))dbgWriteMemory,
-            (int(*)(void*,char*,int,UInt32))dbgWriteRegister,
-            NULL
-        };
-        crtc->deviceHandle = deviceManagerRegister(ROM_SVI80COL, &callbacks, crtc);
+        DeviceCallbacks callbacks = { crtc6845Destroy, crtc6845Reset, saveState, loadState };
+        DebugCallbacks dbgCallbacks = { getDebugInfo, dbgWriteMemory, dbgWriteRegister, NULL };
+        crtc->deviceHandle = deviceManagerRegister(ROM_SVI328COL80, &callbacks, crtc);
         crtc->debugHandle = debugDeviceRegister(DBGTYPE_VIDEO, langDbgDevCrtc6845(), &dbgCallbacks, crtc);
     }
 
     // Initialize video frame buffer
     {
-        VideoCallbacks videoCallbacks = {
-            (void(*)(void*))crtcVideoEnable,
-            (void(*)(void*))crtcVideoDisable
-        };
+        VideoCallbacks videoCallbacks = { crtcVideoEnable, crtcVideoDisable };
         crtc->frameBufferData = frameBufferDataCreate(crtc->displayWidth, DISPLAY_HEIGHT, pixelZoom);
         crtc->videoHandle = videoManagerRegister("CRTC6845", crtc->frameBufferData, &videoCallbacks, crtc);
     }

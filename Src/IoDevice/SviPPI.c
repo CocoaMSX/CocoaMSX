@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/SviPPI.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.18 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-20 05:07:32 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -259,34 +259,29 @@ static void getDebugInfo(SviPPI* ppi, DbgDevice* dbgDevice)
 
 void sviPPICreate(SviJoyIo* joyIO)
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     SviPPI* ppi = malloc(sizeof(SviPPI));
 
     ppi->deviceHandle = deviceManagerRegister(RAM_MAPPER, &callbacks, ppi);
     ppi->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevPpi(), &dbgCallbacks, ppi);
 
     ppi->joyIO = joyIO;
-    ppi->i8255 = i8255Create((I8255Read)peekA, (I8255Read)readA, NULL,
-                             (I8255Read)peekB, (I8255Read)readB, NULL,
-                             NULL,  NULL,  (I8255Write)writeCLo,
-                             NULL,  NULL, (I8255Write) writeCHi,
+    ppi->i8255 = i8255Create(peekA, readA, NULL,
+                             peekB, readB, NULL,
+                             NULL,  NULL,  writeCLo,
+                             NULL,  NULL,  writeCHi,
                              ppi);
 
     ppi->keyClick = audioKeyClickCreate(boardGetMixer());
 
     ppi->dac = dacCreate(boardGetMixer(), DAC_MONO);
 
-    ioPortRegister(0x98, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, ppi->i8255); // PPI Port A
-    ioPortRegister(0x99, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, ppi->i8255); // PPI Port B
-    ioPortRegister(0x96, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, ppi->i8255); // PPI Port C
-    ioPortRegister(0x97, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, ppi->i8255); // PPI Mode
-    ioPortRegister(0x9A, (IoPortRead)readRow, NULL,  ppi); // PPI Return Port C (Low)
+    ioPortRegister(0x98, i8255Read, i8255Write, ppi->i8255); // PPI Port A
+    ioPortRegister(0x99, i8255Read, i8255Write, ppi->i8255); // PPI Port B
+    ioPortRegister(0x96, i8255Read, i8255Write, ppi->i8255); // PPI Port C
+    ioPortRegister(0x97, i8255Read, i8255Write, ppi->i8255); // PPI Mode
+    ioPortRegister(0x9A, readRow, NULL,  ppi); // PPI Return Port C (Low)
 
     reset(ppi);
 }

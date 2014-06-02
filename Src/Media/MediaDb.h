@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Media/MediaDb.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.51 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-30 03:53:28 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -101,7 +101,7 @@ enum  {
     ROM_EXTRAM1MB   = 71,
     ROM_EXTRAM2MB   = 72,
     ROM_EXTRAM4MB   = 73,
-    ROM_SVI328      = 74,
+    ROM_SVI328CART  = 74,
     ROM_SVI328FDC   = 75,
     ROM_COLECO      = 76,
     ROM_SONYHBI55   = 77,
@@ -109,7 +109,7 @@ enum  {
     ROM_MOONSOUND   = 79,
     ROM_MSXAUDIODEV = 80,
     ROM_V9958       = 81,
-    ROM_SVI80COL    = 82,
+    ROM_SVI328COL80 = 82,
     ROM_SVI328PRN   = 83,
     ROM_MSXPRN      = 84,
     ROM_SVI328RS232 = 85,
@@ -130,7 +130,7 @@ enum  {
     ROM_MICROSOL80  = 100,
     ROM_NMS8280DIGI = 101,
     ROM_SONYHBIV1   = 102,
-    ROM_SVI727      = 103,
+    ROM_SVI727COL80 = 103,
     ROM_FMDAS       = 104,
     ROM_YAMAHASFG05 = 105,
     ROM_YAMAHASFG01 = 106,
@@ -186,7 +186,22 @@ enum  {
     ROM_OPCODESLOT  = 156,
     ROM_OPCODESAVE  = 157,
     ROM_OPCODEMEGA  = 158,
-    ROM_MAXROMID    = 158
+    SRAM_MATSUCHITA_INV = 159,
+    ROM_SVI328RSIDE = 160,
+    ROM_ACTIVISIONPCB_2K = 161,
+    ROM_SVI707FDC   = 162,
+    ROM_MANBOW2_V2  = 163,
+    ROM_HAMARAJANIGHT = 164,
+    ROM_MEGAFLSHSCCPLUS = 165,
+    ROM_DOOLY       = 166,
+    ROM_SG1000_RAMEXPANDER_A = 167,
+    ROM_SG1000_RAMEXPANDER_B = 168,
+    ROM_MSXMIDI_EXTERNAL     = 169,
+    ROM_MUPACK               = 170,
+    ROM_ACTIVISIONPCB_256K = 171,
+    ROM_ACTIVISIONPCB = 172,
+    ROM_ACTIVISIONPCB_16K = 173,
+    ROM_MAXROMID    = 173
 };
 
 typedef struct MediaType MediaType;

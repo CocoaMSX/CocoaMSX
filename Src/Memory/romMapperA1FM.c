@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperA1FM.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -63,7 +63,7 @@ typedef struct {
 static UInt8 emptyRam[0x2000];
 
 static int SRAM_BASE = 0x80;
-//static int RAM_BASE  = 0x180;
+static int RAM_BASE  = 0x180;
 
 static UInt8* panasonicSramData;
 static UInt32 panasonicSramMask = 0;
@@ -253,16 +253,11 @@ static void reset(RomMapperA1FM* rm)
     changeBank(rm, 7, 0);
 }
 
-int romMapperA1FMCreate(char* filename, UInt8* romData, 
+int romMapperA1FMCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage,
                              int sramSize) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperA1FM* rm;
     char suffix[16];
 
@@ -275,7 +270,7 @@ int romMapperA1FMCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperA1FM));
 
     rm->deviceHandle = deviceManagerRegister(ROM_PANASONIC8, &callbacks, rm);
-    slotRegister(slot, sslot, 0, 8, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, 0, 8, read, read, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

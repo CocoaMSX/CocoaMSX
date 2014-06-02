@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNormal.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.11 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -52,13 +52,15 @@ static void destroy(RomMapperNormal* rm)
     free(rm);
 }
 
-int romMapperNormalCreate(char* filename, UInt8* romData, 
+int romMapperNormalCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
     RomMapperNormal* rm;
-    int pages = size / 0x2000 + ((size & 0x1fff) ? 1 : 0);
+    int pages;
     int i;
+
+    pages = (size + 0x1fff) / 0x2000;
 
     if (pages == 0 || (startPage + pages) > 8) {
         return 0;
@@ -67,7 +69,7 @@ int romMapperNormalCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperNormal));
 
     rm->deviceHandle = deviceManagerRegister(ROM_NORMAL, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, destroy, rm);
 
     rm->romData = malloc(pages * 0x2000);
     memcpy(rm->romData, romData, size);

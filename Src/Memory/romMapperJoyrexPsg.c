@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperJoyrexPsg.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-10-26 19:48:18 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -90,13 +90,8 @@ static void getDebugInfo(RomMapperJoyrexPsg* rm, DbgDevice* dbgDevice)
 
 int romMapperJoyrexPsgCreate() 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperJoyrexPsg* rm = malloc(sizeof(RomMapperJoyrexPsg));
 
     rm->deviceHandle = deviceManagerRegister(ROM_JOYREXPSG, &callbacks, rm);
@@ -104,7 +99,7 @@ int romMapperJoyrexPsgCreate()
 
     rm->sn76489 = sn76489Create(boardGetMixer());
 
-    ioPortRegister(0xf0, NULL, (IoPortWrite)write, rm);
+    ioPortRegister(0xf0, NULL, write, rm);
 
     reset(rm);
 

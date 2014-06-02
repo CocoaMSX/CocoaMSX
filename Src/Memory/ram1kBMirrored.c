@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/ram1kBMirrored.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.12 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-05-19 19:25:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -107,18 +107,8 @@ static void write(Ram1kBMirrored* rm, UInt16 address, UInt8 value)
 int ramMirroredCreate(int size, int slot, int sslot, int startPage, 
                       UInt32 ramBlockSize, UInt8** ramPtr, UInt32* ramSize) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = {
-        (void(*)(void*,DbgDevice*))getDebugInfo,
-        (int(*)(void*,char*,void*,int,int))dbgWriteMemory,
-        NULL,
-        NULL
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, dbgWriteMemory, NULL, NULL };
     Ram1kBMirrored* rm;
     int pages = size / 0x2000;
     int i;
@@ -150,7 +140,7 @@ int ramMirroredCreate(int size, int slot, int sslot, int startPage,
 
     rm->deviceHandle = deviceManagerRegister(ramBlockSize == 0x400 ? RAM_1KB_MIRRORED : RAM_2KB_MIRRORED, 
                                              &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, read, read, write, destroy, rm);
 
     if (ramPtr != NULL) {
         *ramPtr = rm->ramData;

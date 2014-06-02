@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperOpcodeSlotManager.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -111,20 +111,15 @@ static void getDebugInfo(RomMapperOpcodeSlotManager* rm, DbgDevice* dbgDevice)
 
 int romMapperOpcodeSlotManagerCreate() 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     
     RomMapperOpcodeSlotManager* rm = malloc(sizeof(RomMapperOpcodeSlotManager));
 
     rm->deviceHandle = deviceManagerRegister(ROM_OPCODESLOT, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, "SLOTSELECT", &dbgCallbacks, rm);
 
-    ioPortRegister(0x41, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegister(0x41, read, write, rm);
 
     reset(rm);
 

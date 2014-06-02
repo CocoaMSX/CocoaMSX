@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperOpcodeSaveRam.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -136,13 +136,8 @@ static void getDebugInfo(RomMapperOpcodeSaveRam* rm, DbgDevice* dbgDevice)
 
 int romMapperOpcodeSaveRamCreate(int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     
     RomMapperOpcodeSaveRam* rm = malloc(sizeof(RomMapperOpcodeSaveRam));
     
@@ -152,7 +147,7 @@ int romMapperOpcodeSaveRamCreate(int slot, int sslot, int startPage)
     
     memset(rm->saveRam, 0xff, sizeof(rm->saveRam));
     
-    slotRegister(rm->slot, rm->sslot, rm->startPage, 4, NULL, NULL, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(rm->slot, rm->sslot, rm->startPage, 4, NULL, NULL, write, destroy, rm);
 
     rm->deviceHandle = deviceManagerRegister(ROM_OPCODESAVE, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_RAM, "SAVERAM", &dbgCallbacks, rm);

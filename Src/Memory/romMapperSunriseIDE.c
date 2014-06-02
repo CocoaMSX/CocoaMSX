@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSunriseIDE.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -173,15 +173,10 @@ static void reset(RomMapperSunriseIde* rm)
 }
 
 
-int romMapperSunriseIdeCreate(int hdId, char* filename, UInt8* romData, 
+int romMapperSunriseIdeCreate(int hdId, const char* filename, UInt8* romData, 
                               int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL, 
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperSunriseIde* rm;
     int i;
     int origSize = size;
@@ -203,7 +198,7 @@ int romMapperSunriseIdeCreate(int hdId, char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperSunriseIde));
 
     rm->deviceHandle = deviceManagerRegister(ROM_SUNRISEIDE, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 8, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 8, read, peek, write, destroy, rm);
 
     rm->ide = sunriseIdeCreate(hdId);
 

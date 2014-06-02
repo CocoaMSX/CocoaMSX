@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Arch/ArchUart.h,v $
 **
-** $Revision: 72 $
+** $Revision: 1.4 $
 **
-** $Date: 2012-10-19 17:09:05 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:19 $
 **
 ** More info: http://www.bluemsx.com
 **

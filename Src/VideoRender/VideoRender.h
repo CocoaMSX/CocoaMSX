@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoRender/VideoRender.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.18 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:23 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -61,16 +61,15 @@ struct Video {
     int scanLinesPct;
     int colorSaturationEnable;
     int colorSaturationWidth;
-    double gamma;
-    double saturation;
-    double brightness;
-    double contrast;
+    DoubleT gamma;
+    DoubleT saturation;
+    DoubleT brightness;
+    DoubleT contrast;
     int deInterlace;
     int invertRGB;
 };
 
 Video* videoCreate();
-Video* videoCopy(const Video *original);
 
 void videoDestroy(Video* video);
 

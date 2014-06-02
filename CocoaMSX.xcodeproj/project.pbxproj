@@ -179,7 +179,6 @@
 		E99733FA1298B4B500766C90 /* romMapperNms1210Rs232.c in Sources */ = {isa = PBXBuildFile; fileRef = E997326D1298B4B400766C90 /* romMapperNms1210Rs232.c */; };
 		E99733FB1298B4B500766C90 /* romMapperNms8280VideoDa.c in Sources */ = {isa = PBXBuildFile; fileRef = E997326F1298B4B400766C90 /* romMapperNms8280VideoDa.c */; };
 		E99733FC1298B4B500766C90 /* romMapperNormal.c in Sources */ = {isa = PBXBuildFile; fileRef = E99732711298B4B400766C90 /* romMapperNormal.c */; };
-		E99733FE1298B4B500766C90 /* romMapperNoWind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99732741298B4B400766C90 /* romMapperNoWind.cpp */; };
 		E99733FF1298B4B500766C90 /* romMapperObsonet.c in Sources */ = {isa = PBXBuildFile; fileRef = E99732761298B4B400766C90 /* romMapperObsonet.c */; };
 		E99734001298B4B500766C90 /* romMapperOpcodeBios.c in Sources */ = {isa = PBXBuildFile; fileRef = E99732781298B4B400766C90 /* romMapperOpcodeBios.c */; };
 		E99734011298B4B500766C90 /* romMapperOpcodeMegaRam.c in Sources */ = {isa = PBXBuildFile; fileRef = E997327A1298B4B400766C90 /* romMapperOpcodeMegaRam.c */; };
@@ -554,7 +553,6 @@
 		FEA84263187FD10E00F5CD6D /* romMapperNms1210Rs232.c in Sources */ = {isa = PBXBuildFile; fileRef = E997326D1298B4B400766C90 /* romMapperNms1210Rs232.c */; };
 		FEA84264187FD10E00F5CD6D /* romMapperNms8280VideoDa.c in Sources */ = {isa = PBXBuildFile; fileRef = E997326F1298B4B400766C90 /* romMapperNms8280VideoDa.c */; };
 		FEA84265187FD10E00F5CD6D /* romMapperNormal.c in Sources */ = {isa = PBXBuildFile; fileRef = E99732711298B4B400766C90 /* romMapperNormal.c */; };
-		FEA84266187FD10E00F5CD6D /* romMapperNoWind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99732741298B4B400766C90 /* romMapperNoWind.cpp */; };
 		FEA84267187FD10E00F5CD6D /* romMapperObsonet.c in Sources */ = {isa = PBXBuildFile; fileRef = E99732761298B4B400766C90 /* romMapperObsonet.c */; };
 		FEA84268187FD10E00F5CD6D /* romMapperOpcodeBios.c in Sources */ = {isa = PBXBuildFile; fileRef = E99732781298B4B400766C90 /* romMapperOpcodeBios.c */; };
 		FEA84269187FD10E00F5CD6D /* romMapperOpcodeMegaRam.c in Sources */ = {isa = PBXBuildFile; fileRef = E997327A1298B4B400766C90 /* romMapperOpcodeMegaRam.c */; };
@@ -695,6 +693,15 @@
 		FED5C8691938629B0045FE8C /* power_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C8651938629B0045FE8C /* power_led_off@2x.png */; };
 		FED5C86A1938629B0045FE8C /* power_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C8661938629B0045FE8C /* power_led_on.png */; };
 		FED5C86B1938629B0045FE8C /* power_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5C8671938629B0045FE8C /* power_led_on@2x.png */; };
+		FEE02D7B193C3F0D004585C1 /* Microchip24x00.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D77193C3F0D004585C1 /* Microchip24x00.c */; };
+		FEE02D8F193C3F4C004585C1 /* romMapperActivisionPcb.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D80193C3F4C004585C1 /* romMapperActivisionPcb.c */; };
+		FEE02D90193C3F4C004585C1 /* romMapperDooly.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D82193C3F4C004585C1 /* romMapperDooly.c */; };
+		FEE02D92193C3F4C004585C1 /* romMapperOpcodeModule.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D86193C3F4C004585C1 /* romMapperOpcodeModule.c */; };
+		FEE02D93193C3F4C004585C1 /* romMapperSg1000RamExpander.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D88193C3F4C004585C1 /* romMapperSg1000RamExpander.c */; };
+		FEE02D94193C3F4C004585C1 /* romMapperSvi328RsIDE.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D8A193C3F4C004585C1 /* romMapperSvi328RsIDE.c */; };
+		FEE02D95193C3F4C004585C1 /* romMapperSvi707Fdc.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D8C193C3F4C004585C1 /* romMapperSvi707Fdc.c */; };
+		FEE02D9B193C4063004585C1 /* romMapperMuPack.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D98193C4063004585C1 /* romMapperMuPack.c */; };
+		FEE02D9C193C4063004585C1 /* romMapperNoWind.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D9A193C4063004585C1 /* romMapperNoWind.c */; };
 		FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */; };
 		FEE4D8B818470E5800C4BAFA /* CMSlotEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */; };
 		FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEE801571674ACD000695F38 /* CartridgeDocument.icns */; };
@@ -811,7 +818,6 @@
 		E99731481298B4B300766C90 /* Emulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emulator.h; sourceTree = "<group>"; };
 		E99731491298B4B300766C90 /* FileHistory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FileHistory.c; sourceTree = "<group>"; };
 		E997314A1298B4B300766C90 /* FileHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHistory.h; sourceTree = "<group>"; };
-		E997314B1298B4B300766C90 /* Keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keyboard.h; sourceTree = "<group>"; };
 		E997314C1298B4B300766C90 /* LaunchFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LaunchFile.c; sourceTree = "<group>"; };
 		E997314D1298B4B300766C90 /* LaunchFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchFile.h; sourceTree = "<group>"; };
 		E997314E1298B4B300766C90 /* Properties.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Properties.c; sourceTree = "<group>"; };
@@ -1083,7 +1089,6 @@
 		E99732701298B4B400766C90 /* romMapperNms8280VideoDa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperNms8280VideoDa.h; sourceTree = "<group>"; };
 		E99732711298B4B400766C90 /* romMapperNormal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperNormal.c; sourceTree = "<group>"; };
 		E99732721298B4B400766C90 /* romMapperNormal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperNormal.h; sourceTree = "<group>"; };
-		E99732741298B4B400766C90 /* romMapperNoWind.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = romMapperNoWind.cpp; sourceTree = "<group>"; };
 		E99732751298B4B400766C90 /* romMapperNoWind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperNoWind.h; sourceTree = "<group>"; };
 		E99732761298B4B400766C90 /* romMapperObsonet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperObsonet.c; sourceTree = "<group>"; };
 		E99732771298B4B400766C90 /* romMapperObsonet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperObsonet.h; sourceTree = "<group>"; };
@@ -1505,6 +1510,24 @@
 		FED5C8651938629B0045FE8C /* power_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "power_led_off@2x.png"; sourceTree = "<group>"; };
 		FED5C8661938629B0045FE8C /* power_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = power_led_on.png; sourceTree = "<group>"; };
 		FED5C8671938629B0045FE8C /* power_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "power_led_on@2x.png"; sourceTree = "<group>"; };
+		FEE02D77193C3F0D004585C1 /* Microchip24x00.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Microchip24x00.c; sourceTree = "<group>"; };
+		FEE02D78193C3F0D004585C1 /* Microchip24x00.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Microchip24x00.h; sourceTree = "<group>"; };
+		FEE02D7D193C3F4C004585C1 /* romExclusion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romExclusion.h; sourceTree = "<group>"; };
+		FEE02D80193C3F4C004585C1 /* romMapperActivisionPcb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperActivisionPcb.c; sourceTree = "<group>"; };
+		FEE02D81193C3F4C004585C1 /* romMapperActivisionPcb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperActivisionPcb.h; sourceTree = "<group>"; };
+		FEE02D82193C3F4C004585C1 /* romMapperDooly.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperDooly.c; sourceTree = "<group>"; };
+		FEE02D83193C3F4C004585C1 /* romMapperDooly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperDooly.h; sourceTree = "<group>"; };
+		FEE02D86193C3F4C004585C1 /* romMapperOpcodeModule.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperOpcodeModule.c; sourceTree = "<group>"; };
+		FEE02D87193C3F4C004585C1 /* romMapperOpcodeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperOpcodeModule.h; sourceTree = "<group>"; };
+		FEE02D88193C3F4C004585C1 /* romMapperSg1000RamExpander.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperSg1000RamExpander.c; sourceTree = "<group>"; };
+		FEE02D89193C3F4C004585C1 /* romMapperSg1000RamExpander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperSg1000RamExpander.h; sourceTree = "<group>"; };
+		FEE02D8A193C3F4C004585C1 /* romMapperSvi328RsIDE.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperSvi328RsIDE.c; sourceTree = "<group>"; };
+		FEE02D8B193C3F4C004585C1 /* romMapperSvi328RsIDE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperSvi328RsIDE.h; sourceTree = "<group>"; };
+		FEE02D8C193C3F4C004585C1 /* romMapperSvi707Fdc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperSvi707Fdc.c; sourceTree = "<group>"; };
+		FEE02D8D193C3F4C004585C1 /* romMapperSvi707Fdc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperSvi707Fdc.h; sourceTree = "<group>"; };
+		FEE02D98193C4063004585C1 /* romMapperMuPack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperMuPack.c; sourceTree = "<group>"; };
+		FEE02D99193C4063004585C1 /* romMapperMuPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperMuPack.h; sourceTree = "<group>"; };
+		FEE02D9A193C4063004585C1 /* romMapperNoWind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperNoWind.c; sourceTree = "<group>"; };
 		FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SlotEditor.xib; sourceTree = "<group>"; };
 		FEE4D8B618470E5800C4BAFA /* CMSlotEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSlotEditorController.h; sourceTree = "<group>"; };
 		FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSlotEditorController.m; sourceTree = "<group>"; };
@@ -1856,7 +1879,6 @@
 				E99731481298B4B300766C90 /* Emulator.h */,
 				E99731491298B4B300766C90 /* FileHistory.c */,
 				E997314A1298B4B300766C90 /* FileHistory.h */,
-				E997314B1298B4B300766C90 /* Keyboard.h */,
 				E997314C1298B4B300766C90 /* LaunchFile.c */,
 				E997314D1298B4B300766C90 /* LaunchFile.h */,
 				E997314E1298B4B300766C90 /* Properties.c */,
@@ -1942,6 +1964,8 @@
 				E99731921298B4B300766C90 /* Led.h */,
 				E99731931298B4B300766C90 /* MB89352.c */,
 				E99731941298B4B300766C90 /* MB89352.h */,
+				FEE02D77193C3F0D004585C1 /* Microchip24x00.c */,
+				FEE02D78193C3F0D004585C1 /* Microchip24x00.h */,
 				E99731951298B4B300766C90 /* Microwire93Cx6.c */,
 				E99731961298B4B300766C90 /* Microwire93Cx6.h */,
 				E99731971298B4B300766C90 /* MidiIO.c */,
@@ -2026,10 +2050,13 @@
 				E99731EE1298B4B400766C90 /* ram1kBMirrored.h */,
 				E99731EF1298B4B400766C90 /* ramMapper.c */,
 				E99731F01298B4B400766C90 /* ramMapper.h */,
+				FEE02D80193C3F4C004585C1 /* romMapperActivisionPcb.c */,
+				FEE02D81193C3F4C004585C1 /* romMapperActivisionPcb.h */,
 				E99731F11298B4B400766C90 /* ramMapperIo.c */,
 				E99731F21298B4B400766C90 /* ramMapperIo.h */,
 				E99731F31298B4B400766C90 /* ramNormal.c */,
 				E99731F41298B4B400766C90 /* ramNormal.h */,
+				FEE02D7D193C3F4C004585C1 /* romExclusion.h */,
 				E99731F51298B4B400766C90 /* RomLoader.c */,
 				E99731F61298B4B400766C90 /* RomLoader.h */,
 				E99731F71298B4B400766C90 /* romMapperA1FM.c */,
@@ -2062,6 +2089,8 @@
 				E99732121298B4B400766C90 /* romMapperCvMegaCart.h */,
 				E99732131298B4B400766C90 /* romMapperDisk.c */,
 				E99732141298B4B400766C90 /* romMapperDisk.h */,
+				FEE02D82193C3F4C004585C1 /* romMapperDooly.c */,
+				FEE02D83193C3F4C004585C1 /* romMapperDooly.h */,
 				E99732151298B4B400766C90 /* romMapperDRAM.c */,
 				E99732161298B4B400766C90 /* romMapperDRAM.h */,
 				E99732171298B4B400766C90 /* romMapperDumas.c */,
@@ -2142,6 +2171,8 @@
 				E99732621298B4B400766C90 /* romMapperMsxPrn.h */,
 				E99732631298B4B400766C90 /* romMapperMsxRs232.c */,
 				E99732641298B4B400766C90 /* romMapperMsxRs232.h */,
+				FEE02D98193C4063004585C1 /* romMapperMuPack.c */,
+				FEE02D99193C4063004585C1 /* romMapperMuPack.h */,
 				E99732651298B4B400766C90 /* romMapperNational.c */,
 				E99732661298B4B400766C90 /* romMapperNational.h */,
 				E99732671298B4B400766C90 /* romMapperNationalFdc.c */,
@@ -2156,7 +2187,7 @@
 				E99732701298B4B400766C90 /* romMapperNms8280VideoDa.h */,
 				E99732711298B4B400766C90 /* romMapperNormal.c */,
 				E99732721298B4B400766C90 /* romMapperNormal.h */,
-				E99732741298B4B400766C90 /* romMapperNoWind.cpp */,
+				FEE02D9A193C4063004585C1 /* romMapperNoWind.c */,
 				E99732751298B4B400766C90 /* romMapperNoWind.h */,
 				E99732761298B4B400766C90 /* romMapperObsonet.c */,
 				E99732771298B4B400766C90 /* romMapperObsonet.h */,
@@ -2164,6 +2195,8 @@
 				E99732791298B4B400766C90 /* romMapperOpcodeBios.h */,
 				E997327A1298B4B400766C90 /* romMapperOpcodeMegaRam.c */,
 				E997327B1298B4B400766C90 /* romMapperOpcodeMegaRam.h */,
+				FEE02D86193C3F4C004585C1 /* romMapperOpcodeModule.c */,
+				FEE02D87193C3F4C004585C1 /* romMapperOpcodeModule.h */,
 				E997327C1298B4B400766C90 /* romMapperOpcodePsg.c */,
 				E997327D1298B4B400766C90 /* romMapperOpcodePsg.h */,
 				E997327E1298B4B400766C90 /* romMapperOpcodeSaveRam.c */,
@@ -2196,6 +2229,8 @@
 				E99732991298B4B400766C90 /* romMapperSg1000.h */,
 				E997329A1298B4B400766C90 /* romMapperSg1000Castle.c */,
 				E997329B1298B4B400766C90 /* romMapperSg1000Castle.h */,
+				FEE02D88193C3F4C004585C1 /* romMapperSg1000RamExpander.c */,
+				FEE02D89193C3F4C004585C1 /* romMapperSg1000RamExpander.h */,
 				E997329C1298B4B400766C90 /* romMapperSonyHBI55.c */,
 				E997329D1298B4B400766C90 /* romMapperSonyHBI55.h */,
 				E997329E1298B4B400766C90 /* romMapperSonyHBIV1.c */,
@@ -2210,6 +2245,10 @@
 				E99732A71298B4B400766C90 /* romMapperSvi328Prn.h */,
 				E99732A81298B4B400766C90 /* romMapperSvi328Rs232.c */,
 				E99732A91298B4B400766C90 /* romMapperSvi328Rs232.h */,
+				FEE02D8A193C3F4C004585C1 /* romMapperSvi328RsIDE.c */,
+				FEE02D8B193C3F4C004585C1 /* romMapperSvi328RsIDE.h */,
+				FEE02D8C193C3F4C004585C1 /* romMapperSvi707Fdc.c */,
+				FEE02D8D193C3F4C004585C1 /* romMapperSvi707Fdc.h */,
 				E99732AA1298B4B400766C90 /* romMapperSvi727.c */,
 				E99732AB1298B4B400766C90 /* romMapperSvi727.h */,
 				E99732AC1298B4B400766C90 /* romMapperSvi738Fdc.c */,
@@ -2924,6 +2963,7 @@
 			files = (
 				E99733681298B4B500766C90 /* Patch.c in Sources */,
 				E99733691298B4B500766C90 /* Adam.c in Sources */,
+				FEE02D8F193C3F4C004585C1 /* romMapperActivisionPcb.c in Sources */,
 				E997336A1298B4B500766C90 /* Board.c in Sources */,
 				E997336B1298B4B500766C90 /* Coleco.c in Sources */,
 				E997336C1298B4B500766C90 /* Machine.c in Sources */,
@@ -2934,6 +2974,7 @@
 				E99733721298B4B500766C90 /* DebugDeviceManager.c in Sources */,
 				E99733731298B4B500766C90 /* Debugger.c in Sources */,
 				E99733741298B4B500766C90 /* Actions.c in Sources */,
+				FEE02D94193C3F4C004585C1 /* romMapperSvi328RsIDE.c in Sources */,
 				E99733751298B4B500766C90 /* AppConfig.c in Sources */,
 				E99733761298B4B500766C90 /* CommandLine.c in Sources */,
 				E99733771298B4B500766C90 /* Emulator.c in Sources */,
@@ -2988,6 +3029,7 @@
 				E99733A81298B4B500766C90 /* Switches.c in Sources */,
 				E99733A91298B4B500766C90 /* TC8566AF.c in Sources */,
 				E99733AA1298B4B500766C90 /* TurboRIO.c in Sources */,
+				FEE02D95193C3F4C004585C1 /* romMapperSvi707Fdc.c in Sources */,
 				E99733AB1298B4B500766C90 /* UartIO.c in Sources */,
 				E99733AC1298B4B500766C90 /* WD2793.c in Sources */,
 				E99733AD1298B4B500766C90 /* wd33c93.c in Sources */,
@@ -3034,9 +3076,11 @@
 				E99733D71298B4B500766C90 /* romMapperGIDE.c in Sources */,
 				E99733D81298B4B500766C90 /* romMapperGoudaSCSI.c in Sources */,
 				E99733D91298B4B500766C90 /* romMapperHalnote.c in Sources */,
+				FEE02D93193C3F4C004585C1 /* romMapperSg1000RamExpander.c in Sources */,
 				E99733DA1298B4B500766C90 /* romMapperHarryFox.c in Sources */,
 				E99733DB1298B4B500766C90 /* romMapperHolyQuran.c in Sources */,
 				E99733DC1298B4B500766C90 /* romMapperJoyrexPsg.c in Sources */,
+				FEE02D92193C3F4C004585C1 /* romMapperOpcodeModule.c in Sources */,
 				E99733DD1298B4B500766C90 /* romMapperKanji.c in Sources */,
 				E99733DE1298B4B500766C90 /* romMapperKanji12.c in Sources */,
 				E99733DF1298B4B500766C90 /* romMapperKoei.c in Sources */,
@@ -3064,6 +3108,7 @@
 				FE0C5F08192F3F7500FBE461 /* CMGamepadEventData.m in Sources */,
 				E99733F51298B4B500766C90 /* romMapperMsxRs232.c in Sources */,
 				E99733F61298B4B500766C90 /* romMapperNational.c in Sources */,
+				FEE02D9C193C4063004585C1 /* romMapperNoWind.c in Sources */,
 				E99733F71298B4B500766C90 /* romMapperNationalFdc.c in Sources */,
 				FEFF3F751935AFB500434DED /* CMIsMachineDownloadable.m in Sources */,
 				E99733F81298B4B500766C90 /* romMapperNet.c in Sources */,
@@ -3071,7 +3116,6 @@
 				E99733FA1298B4B500766C90 /* romMapperNms1210Rs232.c in Sources */,
 				E99733FB1298B4B500766C90 /* romMapperNms8280VideoDa.c in Sources */,
 				E99733FC1298B4B500766C90 /* romMapperNormal.c in Sources */,
-				E99733FE1298B4B500766C90 /* romMapperNoWind.cpp in Sources */,
 				E99733FF1298B4B500766C90 /* romMapperObsonet.c in Sources */,
 				E99734001298B4B500766C90 /* romMapperOpcodeBios.c in Sources */,
 				E99734011298B4B500766C90 /* romMapperOpcodeMegaRam.c in Sources */,
@@ -3097,6 +3141,7 @@
 				E99734151298B4B500766C90 /* romMapperSunriseIDE.c in Sources */,
 				E99734161298B4B500766C90 /* romMapperSvi328Fdc.c in Sources */,
 				E99734171298B4B500766C90 /* romMapperSvi328Prn.c in Sources */,
+				FEE02D7B193C3F0D004585C1 /* Microchip24x00.c in Sources */,
 				E99734181298B4B500766C90 /* romMapperSvi328Rs232.c in Sources */,
 				E99734191298B4B500766C90 /* romMapperSvi727.c in Sources */,
 				E997341A1298B4B500766C90 /* romMapperSvi738Fdc.c in Sources */,
@@ -3144,6 +3189,7 @@
 				E99734561298B4B500766C90 /* crc32.c in Sources */,
 				E99734571298B4B500766C90 /* deflate.c in Sources */,
 				E99734581298B4B500766C90 /* gzio.c in Sources */,
+				FEE02D9B193C4063004585C1 /* romMapperMuPack.c in Sources */,
 				E99734591298B4B500766C90 /* infback.c in Sources */,
 				E997345A1298B4B500766C90 /* inffast.c in Sources */,
 				E997345B1298B4B500766C90 /* inflate.c in Sources */,
@@ -3249,6 +3295,7 @@
 				FE81439316F7A191000FABC7 /* CMGamepad.m in Sources */,
 				FE05CAD4176CD21200D6CAC0 /* CMConfigureJoystickController.m in Sources */,
 				FE6BDBA6176FB20500341948 /* CMGamepadConfiguration.m in Sources */,
+				FEE02D90193C3F4C004585C1 /* romMapperDooly.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3424,7 +3471,6 @@
 				FEA842B5187FD18F00F5CD6D /* unzip.c in Sources */,
 				FEA842B9187FD1A700F5CD6D /* IniFileParser.c in Sources */,
 				FEA84292187FD16A00F5CD6D /* MameVLM5030.c in Sources */,
-				FEA84266187FD10E00F5CD6D /* romMapperNoWind.cpp in Sources */,
 				FEA841F5187FD07000F5CD6D /* Casette.c in Sources */,
 				FEA841E2187FD01900F5CD6D /* LaunchFile.c in Sources */,
 				FEA841C6187FCFEF00F5CD6D /* CMSemaphore.m in Sources */,
@@ -3565,6 +3611,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)\"";
@@ -3595,6 +3642,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)\"";

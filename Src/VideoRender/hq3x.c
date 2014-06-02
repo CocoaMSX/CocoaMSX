@@ -253,7 +253,7 @@ void hq3x_32(void* pSrc, void* pDest, int Xres, int Yres, int BpL)
 
     for (j=0; j<Yres; j++)
     {
-        char* pOutOrig = (char*)pOut;
+        char* pOutOrig = pOut;
 
         if (j>0)      prevline = -Xres*2; else prevline = 0;
         if (j<Yres-1) nextline =  Xres*2; else nextline = 0;
@@ -3924,7 +3924,7 @@ void hq3x_32(void* pSrc, void* pDest, int Xres, int Yres, int BpL)
             pIn+=2;
             pOut+=12;
         }
-        pOut=(unsigned char*)(pOutOrig+3*BpL);
+        pOut=pOutOrig+3*BpL;
     }
 }
 

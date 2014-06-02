@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKonamiKeyboardMaster.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.6 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -119,18 +119,13 @@ static void getDebugInfo(RomMapperKonamiKeyboardMaster* rm, DbgDevice* dbgDevice
     dbgIoPortsAddPort(ioPorts, 1, 0x20, DBG_IO_READWRITE, read(rm, 0x20));
 }
 
-int romMapperKonamiKeyboardMasterCreate(char* filename, UInt8* romData, 
+int romMapperKonamiKeyboardMasterCreate(const char* filename, UInt8* romData, 
                                         int size, int slot, int sslot, 
                                         int startPage,
                                        void* voiceRom, int voiceSize) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperKonamiKeyboardMaster* rm;
     int i;
 
@@ -143,7 +138,7 @@ int romMapperKonamiKeyboardMasterCreate(char* filename, UInt8* romData,
     rm->deviceHandle = deviceManagerRegister(ROM_KONAMKBDMAS, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_CART, langDbgDevKonamiKbd(), &dbgCallbacks, rm);
 
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);
@@ -159,7 +154,7 @@ int romMapperKonamiKeyboardMasterCreate(char* filename, UInt8* romData,
         memcpy(rm->voiceData, voiceData, 0x4000);
     }
 
-    rm->vlm5030 = vlm5030Create(boardGetMixer(), voiceData, 0x4000);
+    rm->vlm5030 = vlm5030Create(boardGetMixer(), rm->voiceData, 0x4000);
     rm->slot  = slot;
     rm->sslot = sslot;
     rm->startPage  = startPage;
@@ -168,8 +163,8 @@ int romMapperKonamiKeyboardMasterCreate(char* filename, UInt8* romData,
         slotMapPage(rm->slot, rm->sslot, rm->startPage + i, rm->romData + i * 0x2000, 1, 0);
     }
 
-    ioPortRegister(0x00, (IoPortRead)read, (IoPortWrite)write, rm);
-    ioPortRegister(0x20, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegister(0x00, read, write, rm);
+    ioPortRegister(0x20, read, write, rm);
 
     return 1;
 }

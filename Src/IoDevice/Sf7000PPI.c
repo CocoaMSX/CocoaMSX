@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/Sf7000PPI.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.6 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:20 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -171,13 +171,8 @@ static void fdcWrite(Sf7000PPI* ppi, UInt16 port, UInt8 value)
 
 void sf7000PPICreate()
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     Sf7000PPI* ppi = malloc(sizeof(Sf7000PPI));
 
     ppi->deviceHandle = deviceManagerRegister(RAM_MAPPER, &callbacks, ppi);
@@ -185,19 +180,19 @@ void sf7000PPICreate()
     
     ppi->nec765 = nec765Create();
 
-    ppi->i8255 = i8255Create(NULL,  (I8255Read)readA,  NULL,
+    ppi->i8255 = i8255Create(NULL,  readA,  NULL,
                              NULL,  NULL,  NULL,
-                             NULL,  NULL,  (I8255Write)writeCLo,
-                             NULL,  NULL,  (I8255Write)writeCHi,
+                             NULL,  NULL,  writeCLo,
+                             NULL,  NULL,  writeCHi,
                              ppi);
 
-	ioPortRegister(0xe0, (IoPortRead)fdcRead, NULL, ppi);
-	ioPortRegister(0xe1, (IoPortRead)fdcRead, (IoPortWrite)fdcWrite, ppi);
+	ioPortRegister(0xe0, fdcRead, NULL, ppi);
+	ioPortRegister(0xe1, fdcRead, fdcWrite, ppi);
 
-    ioPortRegister(0xe4, (IoPortRead)read, (IoPortWrite)write, ppi); // PPI Port A
-    ioPortRegister(0xe5, (IoPortRead)read, (IoPortWrite)write, ppi); // PPI Port B
-    ioPortRegister(0xe6, (IoPortRead)read, (IoPortWrite)write, ppi); // PPI Port C
-    ioPortRegister(0xe7, (IoPortRead)read, (IoPortWrite)write, ppi); // PPI Mode
+    ioPortRegister(0xe4, read, write, ppi); // PPI Port A
+    ioPortRegister(0xe5, read, write, ppi); // PPI Port B
+    ioPortRegister(0xe6, read, write, ppi); // PPI Port C
+    ioPortRegister(0xe7, read, write, ppi); // PPI Mode
 
     reset(ppi);
 }

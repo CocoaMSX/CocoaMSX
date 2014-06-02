@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Utils/VeryTinyXpath.cpp,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 17:16:36 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -159,7 +159,6 @@ static void vtXpathSetStringFromPath(VtXpath* xpath, PathVector& pathVector, con
     }
 }
 
-#if 0
 extern "C" int vtXpathGetInt(VtXpath* xpath, int numLevels, const char* first, ...)
 {
     PathVector pathVector;
@@ -215,4 +214,3 @@ extern "C" void vtXpathSetString(VtXpath* xpath, const char* value, int numLevel
 
     vtXpathSetStringFromPath(xpath, pathVector, value);
 }
-#endif

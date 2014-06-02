@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/WDCRC.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.4 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:41 $
 **
 ** Description: Calculates a 16-bit Cyclic Redundancy Check (CRC) that is
 **              compliant with the CCITT/ITU standard.

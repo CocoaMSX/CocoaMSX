@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/MegaromCartridge.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -34,6 +34,6 @@
 
 void cartridgeSetSlotInfo(int cartNo, int slot, int sslot);
 
-int cartridgeInsert(int cartNo, RomType romType, char* cart, char* cartZip);
+int cartridgeInsert(int cartNo, RomType romType, const char* cart, const char* cartZip);
 
 #endif

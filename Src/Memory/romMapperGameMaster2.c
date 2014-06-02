@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperGameMaster2.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.6 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -143,15 +143,10 @@ static void write(RomMapperGameMaster2* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperGameMaster2Create(char* filename, UInt8* romData, 
+int romMapperGameMaster2Create(const char* filename, UInt8* romData, 
                                int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperGameMaster2* rm;
     int i;
 
@@ -162,7 +157,7 @@ int romMapperGameMaster2Create(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperGameMaster2));
 
     rm->deviceHandle = deviceManagerRegister(ROM_GAMEMASTER2, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

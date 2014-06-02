@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperRType.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-02 22:32:06 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -71,7 +71,8 @@ static void loadState(RomMapperRType* rm)
     }
 
     saveStateClose(state);
-
+    //DINK: Nov 27, 2013 - fix for save state load at level2+
+    bank = 2;
     bankData = rm->romData + (rm->romMapper[bank] << 14);
     slotMapPage(rm->slot, rm->sslot, rm->startPage + bank,     bankData, 1, 0);
     slotMapPage(rm->slot, rm->sslot, rm->startPage + bank + 1, bankData + 0x2000, 1, 0);
@@ -109,15 +110,10 @@ static void write(RomMapperRType* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperRTypeCreate(char* filename, UInt8* romData, 
+int romMapperRTypeCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperRType* rm;
     int i;
 
@@ -128,7 +124,7 @@ int romMapperRTypeCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperRType));
 
     rm->deviceHandle = deviceManagerRegister(ROM_RTYPE, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

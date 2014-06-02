@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperTurboRPcm.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.13 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-03 21:27:14 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -166,13 +166,8 @@ static void getDebugInfo(RomMapperTurboRPcm* rm, DbgDevice* dbgDevice)
 
 int romMapperTurboRPcmCreate() 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperTurboRPcm* rm = malloc(sizeof(RomMapperTurboRPcm));
 
     rm->deviceHandle = deviceManagerRegister(ROM_TURBORPCM, &callbacks, rm);
@@ -184,8 +179,8 @@ int romMapperTurboRPcmCreate()
 	rm->status = 0;
     rm->time   = 0;
 
-    ioPortRegister(0xa4, (IoPortRead)read, (IoPortWrite)write, rm);
-    ioPortRegister(0xa5, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegister(0xa4, read, write, rm);
+    ioPortRegister(0xa5, read, write, rm);
 
     return 1;
 }

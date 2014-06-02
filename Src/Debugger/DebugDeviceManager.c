@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Debugger/DebugDeviceManager.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.14 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:39 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -26,6 +26,7 @@
 ******************************************************************************
 */
 #include "DebugDeviceManager.h"
+#include "Board.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -303,3 +304,101 @@ void dbgIoPortsAddPort(DbgIoPorts* ioPorts,
     }
 }
 
+typedef struct Watchpoint {
+    struct Watchpoint* next;
+    int address;
+    DbgWatchpointCondition condition;
+    UInt32 refValue;
+    int size;
+} Watchpoint;
+
+Watchpoint* watchpoints[MAX_DEVICES];
+
+void debugDeviceSetMemoryWatchpoint(DbgDeviceType devType, int address, DbgWatchpointCondition condition, UInt32 refValue, int size)
+{
+    Watchpoint* watchpoint = watchpoints[devType];
+
+    while (watchpoint != NULL) {
+        if (watchpoint->address == address) {
+            break;
+        }
+        watchpoint = watchpoint->next;
+    }
+    if (watchpoint == NULL) {
+        watchpoint = (Watchpoint*)calloc(1, sizeof(Watchpoint));
+        watchpoint->next = watchpoints[devType];
+        watchpoints[devType] = watchpoint;
+    }
+
+    watchpoint->address = address;
+    watchpoint->condition = condition;
+    watchpoint->refValue = refValue;
+    watchpoint->size = size;
+}
+
+void debugDeviceClearMemoryWatchpoint(DbgDeviceType devType, int address)
+{
+    Watchpoint* watchpoint = watchpoints[devType];
+    Watchpoint* prevWatchpoint = NULL;
+    while (watchpoint != NULL) {
+        if (watchpoint->address == address) {
+            if (prevWatchpoint == NULL) {
+                watchpoints[devType] = watchpoint->next;
+            }
+            else {
+                prevWatchpoint->next = watchpoint->next;
+            }
+            free(watchpoint);
+            break;
+        }
+        prevWatchpoint = watchpoint;
+        watchpoint = watchpoint->next;
+    }
+}
+
+void tryWatchpoint(DbgDeviceType devType, int address, UInt8 value, void* ref, WatchpointReadMemCallback callback) {
+    Watchpoint* watchpoint = watchpoints[devType];
+    while (watchpoint != NULL) {
+        if (address >= watchpoint->address && address < watchpoint->address + watchpoint->size) {
+            UInt32 checkValue = 0;
+            int breakpointHit = 0;
+            if (watchpoint->size == 1) {
+                checkValue = value;
+            }
+            else {
+                int i;
+                for (i = 0; i < watchpoint->size; i++) {
+                    checkValue <<= 8;
+                    if (callback) {
+                        checkValue |= callback(ref, watchpoint->address + i);
+                    }
+                    else if (watchpoint->address + i == address) {
+                        checkValue |= value;
+                    }
+                }
+            }
+            switch (watchpoint->condition) {
+            case DBGWP_ANY:
+                breakpointHit = 1;
+                break;
+            case DBGWP_EQUALS:
+                breakpointHit = checkValue == watchpoint->refValue;
+                break;
+            case DBGWP_NOT_EQUALS:
+                breakpointHit = checkValue != watchpoint->refValue;
+                break;
+            case DBGWP_GREATER_THAN:
+                breakpointHit = checkValue > watchpoint->refValue;
+                break;
+            case DBGWP_LESS_THAN:
+                breakpointHit = checkValue < watchpoint->refValue;
+                break;
+            }
+            if (breakpointHit) {
+                boardOnBreakpoint(0);
+                return;
+            }
+        }
+        watchpoint = watchpoint->next;
+    }
+}

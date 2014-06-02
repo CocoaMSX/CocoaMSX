@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/Casette.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.11 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-09-09 04:40:32 $
 **
 ** More info: http://www.bluemsx.com
 **

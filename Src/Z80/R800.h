@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Z80/R800.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.20 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-06-29 07:53:25 $
 **
 ** Author: Daniel Vik
 **
@@ -85,10 +85,14 @@
 /*****************************************************
 ** Configuration options
 */
+#ifndef Z80_CUSTOM_CONFIGURATION
 #define ENABLE_BREAKPOINTS
 #define ENABLE_CALLSTACK
+#define ENABLE_WATCHPOINTS
 #define ENABLE_ASMSX_DEBUG_COMMANDS
 #define ENABLE_TRAP_CALLBACK
+#define TIME_TRACE_SIZE 1024
+#endif
 
 /*****************************************************
 ** CpuMode
@@ -266,6 +270,8 @@ typedef struct
     R800TimerCb   timerCb;
     R800BreakptCb breakpointCb;
     R800DebugCb   debugCb;
+    R800WriteCb   watchpointMemCb;
+    R800WriteCb   watchpointIoCb;
     R800TrapCb    trapCb;
     void*         ref;              /* User defined pointer which is   */
                                     /* passed to the callbacks         */
@@ -280,6 +286,12 @@ typedef struct
     int           breakpointCount;  /* Number of breakpoints set       */
     char          breakpoints[0x10000];
 #endif
+
+#if TIME_TRACE_SIZE > 0
+    SystemTime    timeTraceBuffer[TIME_TRACE_SIZE];
+    UInt32        timeTraceIndex;
+    UInt16        lastPC;
+#endif
 } R800;
 
 
@@ -290,18 +302,20 @@ typedef struct
 ** object. The CPU is started in Z80 mode.
 **
 ** Arguments:
-**      readMemory   - Function called on read access to RAM
-**      writeMemory  - Function called on write access to RAM
-**      readIoPort   - Function called on read access to I/O ports
-**      writeIoPort  - Function called on write access to I/O ports
-**      patch        - Function called when the patch instruction ED FE
-**                     is executed. 
-**      timerCb      - Function called on user scheduled timeouts
-**      breakpointCb - Function called when a breakpoint is hit
-**      debugCb      - Function called when a debug trap is hit
-**      trapCb       - Function called when a trap is hit
-**      ref          - User defined reference that will be passed to the
-**                     callbacks.
+**      readMemory      - Function called on read access to RAM
+**      writeMemory     - Function called on write access to RAM
+**      readIoPort      - Function called on read access to I/O ports
+**      writeIoPort     - Function called on write access to I/O ports
+**      patch           - Function called when the patch instruction 
+**                        ED FE is executed. 
+**      timerCb         - Function called on user scheduled timeouts
+**      breakpointCb    - Function called when a breakpoint is hit
+**      debugCb         - Function called when a debug trap is hit
+**      trapCb          - Function called when a trap is hit
+**      watchpointMemCb - Function called after memory write
+**      watchpointIoCb  - Function called after io port write
+**      ref             - User defined reference that will be passed to 
+**                        the callbacks.
 **
 ** Return value:
 **      A pointer to a new R800 object.
@@ -312,7 +326,8 @@ R800* r800Create(UInt32 cpuFlags,
                  R800ReadCb readIoPort, R800WriteCb writeIoPort, 
                  R800PatchCb patch,     R800TimerCb timerCb,
                  R800BreakptCb bpCb,    R800DebugCb debugCb,
-                 R800TrapCb trapCb,
+                 R800TrapCb trapCb,     R800WriteCb watchpointMemCb,
+                 R800WriteCb watchpointIoCb,
                  void* ref);
 
 /************************************************************************
@@ -475,6 +490,8 @@ void r800SetTimeoutAt(R800* r800, SystemTime time);
 
 void r800SetBreakpoint(R800* r800, UInt16 address);
 void r800ClearBreakpoint(R800* r800, UInt16 address);
+
+SystemTime r800GetTimeTrace(R800* r800, int offset);
 
 /************************************************************************
 ** r800GetSystemTime

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/I8251.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.12 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -108,7 +108,7 @@ static void onRxPoll(I8251* i8251, UInt32 time);
 #define PHASE_SYNC2         2
 #define PHASE_CMD           3
 
-#define RX_QUEUE_SIZE 256
+#define RX_QUEUE_SIZE 16
 
 struct I8251
 {
@@ -244,7 +244,6 @@ static void writeCommand(I8251* i8251, UInt8 value)
 	if (value & CMD_RSTERR) {
 		i8251->status &= ~(STAT_PE | STAT_OE | STAT_FE);
 	}
-
 	if ((value ^ oldCommand) & CMD_RXE) {
 		if (value & CMD_RXE) {
 			i8251->status &= ~(STAT_PE | STAT_OE | STAT_FE);
@@ -445,6 +444,7 @@ void i8251SaveState(I8251* i8251)
 void i8251Reset(I8251* i8251)
 {	
     i8251->charLength = 1024;
+    i8251->rxPending = 0;
 
     i8251->status = STAT_TXRDY | STAT_TXEMPTY;
 	i8251->command = 0xff;
@@ -454,7 +454,7 @@ void i8251Reset(I8251* i8251)
 
 static void onRxPoll(I8251* i8251, UInt32 time)
 {
-    UInt8 value;
+    UInt8 value = 0;
 
     if (i8251->timeRxPoll != 0) {
         boardTimerRemove(i8251->timerRxPoll);
@@ -466,20 +466,16 @@ static void onRxPoll(I8251* i8251, UInt32 time)
         boardTimerAdd(i8251->timerRxPoll, i8251->timeRxPoll);
         return;
     }
-
-	if (i8251->status & STAT_RXRDY) {
-		i8251->status |= STAT_OE;
-	} 
-    else {
+    
+    if (i8251->rxPending != 0) {
         archSemaphoreWait(i8251->semaphore, -1);
         value = i8251->rxQueue[(i8251->rxHead - i8251->rxPending) & (RX_QUEUE_SIZE - 1)];
         i8251->rxPending--;
         archSemaphoreSignal(i8251->semaphore);
-
-		i8251->recvBuf = value;
-		i8251->status |= STAT_RXRDY;
-		i8251->setRxReady(i8251->ref, 1);
-	}
+    }
+	i8251->recvBuf = value;
+	i8251->status |= STAT_RXRDY;
+	i8251->setRxReady(i8251->ref, 1);
 	i8251->recvReady = 0;
 
     i8251->timeRecv = (UInt32)(boardSystemTime() + (UInt64)i8251->charLength * boardFrequency() / 4000000);
@@ -498,10 +494,14 @@ static void onRecv(I8251* i8251, UInt32 time)
 void i8251RxData(I8251* i8251, UInt8 value)
 {
     archSemaphoreWait(i8251->semaphore, -1);
+
     if (i8251->rxPending < RX_QUEUE_SIZE) {
         i8251->rxQueue[i8251->rxHead & (RX_QUEUE_SIZE - 1)] = value;
         i8251->rxHead++;
         i8251->rxPending++;
+    }
+    else {
+        i8251->status |= STAT_OE;
     }
     archSemaphoreSignal(i8251->semaphore);
 }
@@ -539,9 +539,9 @@ I8251* i8251Create(I8251Transmit transmit,    I8251Signal   signal,
     
     i8251->ref = ref;
 
-    i8251->timerRecv   = boardTimerCreate((BoardTimerCb)onRecv, i8251);
-    i8251->timerRxPoll = boardTimerCreate((BoardTimerCb)onRxPoll, i8251);
-    i8251->timerTrans  = boardTimerCreate((BoardTimerCb)onTrans, i8251);
+    i8251->timerRecv   = boardTimerCreate(onRecv, i8251);
+    i8251->timerRxPoll = boardTimerCreate(onRxPoll, i8251);
+    i8251->timerTrans  = boardTimerCreate(onTrans, i8251);
 
     i8251->semaphore = archSemaphoreCreate(1);
 

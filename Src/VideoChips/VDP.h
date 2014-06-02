@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/VDP.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.16 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-06-25 22:26:17 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -35,7 +35,7 @@ typedef enum { VDP_V9938, VDP_V9958, VDP_TMS9929A, VDP_TMS99x8A } VdpVersion;
 typedef enum { VDP_SYNC_AUTO, VDP_SYNC_50HZ, VDP_SYNC_60HZ } VdpSyncMode; 
 typedef enum { VDP_MSX, VDP_SVI, VDP_COLECO, VDP_SG1000 } VdpConnector;
 
-extern const char* VdpNames[];
+static const char* VdpNames[] = { "V9938", "V9958", "TMS9929A", "TMS99x8A" };
 
 void vdpCreate(VdpConnector connector, VdpVersion version, VdpSyncMode sync, int vramPages);
 
@@ -43,6 +43,8 @@ int  vdpGetRefreshRate();
 
 void vdpSetSpritesEnable(int enable);
 int  vdpGetSpritesEnable();
+void vdpSetNoSpriteLimits(int enable);
+int  vdpGetNoSpritesLimit();
 void vdpSetDisplayEnable(int enable);
 int  vdpGetDisplayEnable();
 

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/Board.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.40 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2007-03-20 02:30:31 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -81,6 +81,8 @@ typedef struct {
     void   (*clearBreakpoint)(void*, UInt16);
 
     void   (*changeCartridge)(void*, int, int);
+
+    UInt32   (*getTimeTrace)(int);
 } BoardInfo;
 
 void boardInit(UInt32* systemTime);
@@ -94,7 +96,8 @@ int boardRun(Machine* machine,
              int reverseBufferCnt,
              int (*syncCallback)(int, int));
 
-void boardRewind();
+int boardRewind();
+int boardRewindOne();
 void boardEnableSnapshots(int enable);
 
 BoardType boardGetType();
@@ -136,14 +139,16 @@ int boardUseMegaRom();
 int boardUseMegaRam();
 int boardUseFmPac();
 
+void boardSetNoSpriteLimits(int enable);
+int boardGetNoSpriteLimits();
+
 RomType boardGetRomType(int cartNo);
 
-typedef enum { HD_NONE, HD_SUNRISEIDE, HD_BEERIDE, HD_GIDE,
+typedef enum { HD_NONE, HD_SUNRISEIDE, HD_BEERIDE, HD_GIDE, HD_RSIDE,
                HD_MEGASCSI, HD_WAVESCSI, HD_GOUDASCSI, HD_NOWIND } HdType;
 HdType boardGetHdType(int hdIndex);
 
-
-char* boardGetBaseDirectory();
+const char* boardGetBaseDirectory();
 
 Mixer* boardGetMixer();
 
@@ -170,7 +175,7 @@ BoardTimer* boardTimerCreate(BoardTimerCb callback, void* ref);
 void boardTimerDestroy(BoardTimer* timer);
 void boardTimerAdd(BoardTimer* timer, UInt32 timeout);
 void boardTimerRemove(BoardTimer* timer);
-UInt32 boardTimerCheckTimeout(void* dummy);
+void boardTimerCheckTimeout(void* dummy);
 UInt32 boardCalcRelativeTimeout(UInt32 timerFrequency, UInt32 nextTimeout);
 
 void   boardOnBreakpoint(UInt16 pc);
@@ -180,7 +185,7 @@ int boardRemoveExternalDevices();
 
 // The following methods are more generic config than board specific
 // They should be moved from board.
-void boardSetDirectory(const char* dir);
+void boardSetDirectory(char* dir);
 
 void boardSetFdcTimingEnable(int enable);
 int  boardGetFdcTimingEnable();

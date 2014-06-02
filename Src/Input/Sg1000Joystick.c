@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/Sg1000Joystick.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -61,7 +61,7 @@ static UInt8 read(Sg1000Joystick* joystick) {
 Sg1000JoystickDevice* sg1000JoystickCreate(int controller)
 {
     Sg1000Joystick* joystick = (Sg1000Joystick*)calloc(1, sizeof(Sg1000Joystick));
-    joystick->joyDevice.read   = (UInt8(*)(void*))read;
+    joystick->joyDevice.read   = read;
     joystick->controller       = controller;
     
     return (Sg1000JoystickDevice*)joystick;

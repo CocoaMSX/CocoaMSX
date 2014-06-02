@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperObsonet.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.14 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-09-09 04:33:47 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -150,21 +150,16 @@ static void write(RomMapperObsonet* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperObsonetCreate(char* filename, UInt8* romData, 
+int romMapperObsonetCreate(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperObsonet* rm;
 
     rm = malloc(sizeof(RomMapperObsonet));
 
     rm->deviceHandle = deviceManagerRegister(ROM_OBSONET, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, read, peek, write, destroy, rm);
 
     rm->amdFlash = amdFlashCreate(AMD_TYPE_1, 0x80000, 0x10000, 0, romData, size, sramCreateFilenameWithSuffix("obsonet.rom", "", ".rom"), 0);
     rm->slot  = slot;

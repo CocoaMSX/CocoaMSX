@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKanji.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.7 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -140,13 +140,8 @@ static void getDebugInfo(RomMapperKanji* rm, DbgDevice* dbgDevice)
 
 int romMapperKanjiCreate(UInt8* romData, int size) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperKanji* rm;
 
 	if (size != 0x20000 && size != 0x40000) {
@@ -165,10 +160,10 @@ int romMapperKanjiCreate(UInt8* romData, int size)
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);
     
-    ioPortRegister(0xd8, NULL, (IoPortWrite)write, rm);
-    ioPortRegister(0xd9, (IoPortRead)read, (IoPortWrite)write, rm);
-    ioPortRegister(0xda, NULL, (IoPortWrite)write, rm);
-    ioPortRegister(0xdb, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegister(0xd8, NULL, write, rm);
+    ioPortRegister(0xd9, read, write, rm);
+    ioPortRegister(0xda, NULL, write, rm);
+    ioPortRegister(0xdb, read, write, rm);
 
     return 1;
 }

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/Machine.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.18 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:39 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -120,7 +120,6 @@ int machineInitialize(Machine* machine, UInt8** mainRam, UInt32* mainRamSize, UI
 void machineLoadState(Machine* machine);
 void machineSaveState(Machine* machine);
 
-const char* machineGetDirectory();
 void machineSetDirectory(const char* dir);
 
 #endif

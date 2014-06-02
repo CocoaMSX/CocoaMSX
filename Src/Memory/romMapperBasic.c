@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperBasic.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.6 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -54,7 +54,7 @@ static void destroy(void* arg)
     free(rm->romData);
     free(rm);
 }
-int romMapperBasicCreate(char* filename, UInt8* romData, 
+int romMapperBasicCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };

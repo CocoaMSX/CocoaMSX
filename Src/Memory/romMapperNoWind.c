@@ -1,9 +1,9 @@
 /*****************************************************************************
-** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNoWind.cpp,v $
+** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNoWind.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.16 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -25,9 +25,6 @@
 **
 ******************************************************************************
 */
-
-extern "C" {
-
 #include "romMapperNoWind.h"
 #include "AmdFlash.h"
 #include "MediaDb.h"
@@ -36,7 +33,6 @@ extern "C" {
 #include "Board.h"
 #include "SaveState.h"
 #include "sramLoader.h"
-#include "Properties.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -46,63 +42,23 @@ extern "C" {
 #include "Properties.h"
 #include <windows.h>
 
-static int DeviceIds[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-
-static int deviceIdAlloc() 
-{
-    int i;
-    for (i = 0; i < sizeof(DeviceIds) / sizeof(DeviceIds[0]); ++i) {
-        if (DeviceIds[i] == 0) {
-            DeviceIds[i] = 1;
-            return i;
-        }
-    }
-    return -1;
-}
-
-static void deviceIdFree(int id)
-{
-    if (id >= 0 && id < sizeof(DeviceIds) / sizeof(DeviceIds[0])) {
-        DeviceIds[id] = 0;
-    }
-}
-
-static int deviceIdCount()
-{
-    int cnt = 0;
-    int i;
-    for (i = 0; i < sizeof(DeviceIds) / sizeof(DeviceIds[0]); ++i) {
-        if (DeviceIds[i] != 0) {
-            cnt++;
-        }
-    }
-    return cnt;
-}
-
 typedef void (*Nowind_DebugCb)(const char*);
 
-#define ATTR_NONE                   0
-#define ATTR_ENABLE_PHANTOM_DRIVES  1
-#define ATTR_ENABLE_OTHER_DISKROMS  2
-#define ATTR_ENABLE_DOS2            3
-
+typedef void (__cdecl *NoWind_Init)(void);
 typedef void (__cdecl *NoWind_StartUp)(void);
 typedef void (__cdecl *NoWind_Cleanup)(void);
-typedef bool (__cdecl *NoWind_SetImage)(int, const char*);
-typedef unsigned int (__cdecl *NoWind_SetHarddiskImage)(int,  int, bool, const char*);
+typedef void (__cdecl *NoWind_SetImage)(int, const char*);
 typedef void (__cdecl *NoWind_Write)(unsigned char);
 typedef unsigned char (__cdecl *NoWind_Read)(void);
 typedef void (__cdecl *NoWind_SetDebugCb)(Nowind_DebugCb);
-typedef int (__cdecl *NoWind_SetAttribute)(int, bool);
 
-static NoWind_StartUp               nowindusb_startup               = NULL;
-static NoWind_Cleanup               nowindusb_cleanup               = NULL;
-static NoWind_SetImage              nowindusb_set_image             = NULL;
-static NoWind_SetHarddiskImage      nowindusb_set_harddisk_image    = NULL;
-static NoWind_Write                 nowindusb_write                 = NULL;
-static NoWind_Read                  nowindusb_read                  = NULL;
-static NoWind_SetDebugCb            nowindusb_set_debug_callback    = NULL;
-static NoWind_SetAttribute          nowindusb_attribute             = NULL;
+static NoWind_Init       nowindusb_init       = NULL;
+static NoWind_StartUp    nowindusb_startup    = NULL;
+static NoWind_Cleanup    nowindusb_cleanup    = NULL;
+static NoWind_SetImage   nowindusb_set_image  = NULL;
+static NoWind_Write      nowindusb_write      = NULL;
+static NoWind_Read       nowindusb_read       = NULL;
+static NoWind_SetDebugCb nowindusb_set_debug_callback = NULL;
 static HINSTANCE hLib = NULL;
 
 void nowindLoadDll()
@@ -115,25 +71,23 @@ void nowindLoadDll()
 		return;
 	}
 
+	nowindusb_init      = (NoWind_Init)    GetProcAddress(hLib, "nowindusb_init");
 	nowindusb_startup   = (NoWind_StartUp) GetProcAddress(hLib, "nowindusb_startup");
 	nowindusb_cleanup   = (NoWind_Cleanup) GetProcAddress(hLib, "nowindusb_cleanup");
 	nowindusb_set_image = (NoWind_SetImage)GetProcAddress(hLib, "nowindusb_set_image");
-    nowindusb_set_harddisk_image = (NoWind_SetHarddiskImage)GetProcAddress(hLib, "nowindusb_set_harddisk_image");
 	nowindusb_write     = (NoWind_Write)   GetProcAddress(hLib, "nowindusb_write");
 	nowindusb_read      = (NoWind_Read)    GetProcAddress(hLib, "nowindusb_read");
     nowindusb_set_debug_callback = (NoWind_SetDebugCb) GetProcAddress(hLib, "nowindusb_set_debug_callback");
-    nowindusb_attribute = (NoWind_SetAttribute) GetProcAddress(hLib, "nowindusb_attribute");
 }
 
 void nowindUnloadDll()
 {
+    nowindusb_init      = NULL;
     nowindusb_startup   = NULL;
     nowindusb_cleanup   = NULL;
     nowindusb_set_image = NULL;
     nowindusb_write     = NULL;
     nowindusb_read      = NULL;
-    nowindusb_attribute = NULL;
-    nowindusb_set_harddisk_image = NULL;
 
     if (hLib != NULL) {
 	    FreeLibrary(hLib);
@@ -155,55 +109,12 @@ typedef struct {
     int slot;
     int sslot;
     int startPage;
-    int deviceId[4];
     UInt8 romMapper;
     UInt8* flashPage;
 } RomMapperNoWind;
 
 
-#ifdef USE_NOWIND_DLL
-static int nowindLoaded = 0;
 
-static void diskInsert(RomMapperNoWind* rm, int driveId, int driveNo)
-{
-    NoWindProperties* prop = &propGetGlobalProperties()->nowind;
-    FileProperties* disk = &propGetGlobalProperties()->media.disks[diskGetHdDriveId(driveId, driveNo)];
-    int diskHasPartitionTable = 0;
-    FILE* f;
-    
-    UInt8 header[512];
-
-    f = fopen(disk->fileName, "rb");    
-    if (f == NULL) {
-        rm->deviceId[driveNo] = -1;
-        return;
-    }
-    rm->deviceId[driveNo] = deviceIdAlloc();
-    if (rm->deviceId[driveNo] < 0) {
-        fclose(f);
-        return;
-    }
-
-    if (fread(header, 1, sizeof(header), f) != 0) {
-        diskHasPartitionTable =
-                header[510] == 0x55 && 
-                header[511] == 0xaa;
-    }
-    fclose(f);
-
-    if (diskHasPartitionTable) {
-        if (nowindusb_set_harddisk_image) {
-            nowindusb_set_harddisk_image(rm->deviceId[driveNo], prop->partitionNumber, 
-                prop->ignoreBootFlag != 0, disk->fileName);
-        }
-    }
-    else {
-        if (nowindusb_set_image) {
-            nowindusb_set_image(rm->deviceId[driveNo], disk->fileName);
-        }
-    }
-}
-#endif
 
 static void updateMapper(RomMapperNoWind* rm, UInt8 page)
 {
@@ -219,10 +130,8 @@ static void updateMapper(RomMapperNoWind* rm, UInt8 page)
 }
 
 
-static void saveState(void* _rm)
+static void saveState(RomMapperNoWind* rm)
 {
-    RomMapperNoWind* rm = (RomMapperNoWind*)_rm;
-
     SaveState* state = saveStateOpenForWrite("mapperDumas");
 
     saveStateSet(state, "romMapper", rm->romMapper);
@@ -232,10 +141,8 @@ static void saveState(void* _rm)
     amdFlashSaveState(rm->amdFlash);
 }
 
-static void loadState(void* _rm)
+static void loadState(RomMapperNoWind* rm)
 {
-    RomMapperNoWind* rm = (RomMapperNoWind*)_rm;
-
     SaveState* state = saveStateOpenForRead("mapperDumas");
 
     rm->romMapper = (UInt8)saveStateGet(state, "romMapper", 0);
@@ -247,23 +154,12 @@ static void loadState(void* _rm)
     updateMapper(rm, rm->romMapper);
 }
 
-static void destroy(void* _rm)
+static void destroy(RomMapperNoWind* rm)
 {
-    RomMapperNoWind* rm = (RomMapperNoWind*)_rm;
-
     amdFlashDestroy(rm->amdFlash);
 #ifdef USE_NOWIND_DLL
-    int i;
-    for (i = 0; i < 4; i++) {
-        if (rm->deviceId[i] != -1) {
-            deviceIdFree(rm->deviceId[i]);
-        } 
-    }
-
-    if (--nowindLoaded == 0) {
-        if (nowindusb_cleanup) nowindusb_cleanup();
-        nowindUnloadDll();
-    }
+    if (nowindusb_cleanup) nowindusb_cleanup();
+    nowindUnloadDll();
 #endif
     slotUnregister(rm->slot, rm->sslot, rm->startPage);
     deviceManagerUnregister(rm->deviceHandle);
@@ -271,10 +167,8 @@ static void destroy(void* _rm)
     free(rm);
 }
 
-static void reset(void* _rm)
+static void reset(RomMapperNoWind* rm)
 {
-    RomMapperNoWind* rm = (RomMapperNoWind*)_rm;
-
     amdFlashReset(rm->amdFlash);
 
     updateMapper(rm, 0);
@@ -325,48 +219,35 @@ static void write(RomMapperNoWind* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperNoWindCreate(int driveId, char* filename, UInt8* romData, 
+int romMapperNoWindCreate(int driveId, const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
-//    NoWindProperties* prop = &propGetGlobalProperties()->nowind;
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperNoWind* rm;
 
-    rm = (RomMapperNoWind*)malloc(sizeof(RomMapperNoWind));
+    rm = malloc(sizeof(RomMapperNoWind));
 
     rm->deviceHandle = deviceManagerRegister(ROM_NOWIND, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 6, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, destroy, rm);
+    slotRegister(slot, sslot, startPage, 6, read, peek, write, destroy, rm);
 
     if (filename == NULL) {
-        filename = (char*)"nowind.rom";
+        filename = "nowind.rom";
     }
-    rm->amdFlash = amdFlashCreate(AMD_TYPE_1, 0x80000, 0x10000, 0, romData, size, sramCreateFilenameWithSuffix(filename, (char*)"", (char*)".rom"), 0);
+    rm->amdFlash = amdFlashCreate(AMD_TYPE_1, 0x80000, 0x10000, 0, romData, size, sramCreateFilenameWithSuffix(filename, "", ".rom"), 0);
     rm->slot  = slot;
     rm->sslot = sslot;
     rm->startPage  = startPage;
 
 #ifdef USE_NOWIND_DLL
-    if (++nowindLoaded == 1) {
-        nowindLoadDll();
-        if (nowindusb_startup)  nowindusb_startup();
-    }
-    if (nowindusb_attribute) {
-        nowindusb_attribute(ATTR_ENABLE_DOS2, prop->enableDos2 != 0);
-        nowindusb_attribute(ATTR_ENABLE_OTHER_DISKROMS, prop->enableOtherDiskRoms != 0);
-        nowindusb_attribute(ATTR_ENABLE_PHANTOM_DRIVES, prop->enablePhantomDrives != 0);
-    }
-    if (nowindusb_set_debug_callback) {
-        nowindusb_set_debug_callback(debugCb);
-    }
-
-    for (i = 0; i < 4; i++) {
-        diskInsert(rm, driveId, i);
-    }
+    nowindLoadDll();
+    if (nowindusb_init)     nowindusb_init();
+    if (nowindusb_startup)  nowindusb_startup();
+    if (nowindusb_set_image) nowindusb_set_image(driveId, propGetGlobalProperties()->media.disks[
+                                                 diskGetUsbDriveId(driveId, 0)].fileName);
+    if (nowindusb_set_debug_callback) nowindusb_set_debug_callback(debugCb);
 #endif
 
     reset(rm);
 
     return 1;
-}
-
 }

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSonyHBI55.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.12 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -184,13 +184,8 @@ static void getDebugInfo(SonyHBI55* rm, DbgDevice* dbgDevice)
 
 int romMapperSonyHBI55Create()
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     SonyHBI55* rm = malloc(sizeof(SonyHBI55));
 
     rm->deviceHandle = deviceManagerRegister(ROM_SONYHBI55, &callbacks, rm);
@@ -201,16 +196,16 @@ int romMapperSonyHBI55Create()
 
     rm->sram[0] = 0x53;
 
-    rm->i8255 = i8255Create(NULL,    NULL,    (I8255Write)writeA,
-                            NULL,    NULL,    (I8255Write)writeB,
-                            (I8255Read)readCLo, (I8255Read)readCLo, (I8255Write)writeCLo,
-                            (I8255Read)readCHi, (I8255Read)readCHi, (I8255Write)writeCHi,
+    rm->i8255 = i8255Create(NULL,    NULL,    writeA,
+                            NULL,    NULL,    writeB,
+                            readCLo, readCLo, writeCLo,
+                            readCHi, readCHi, writeCHi,
                             rm);
 
-    ioPortRegister(0xb0, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255);
-    ioPortRegister(0xb1, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255);
-    ioPortRegister(0xb2, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255);
-    ioPortRegister(0xb3, (IoPortRead)i8255Read, (IoPortWrite)i8255Write, rm->i8255);
+    ioPortRegister(0xb0, i8255Read, i8255Write, rm->i8255);
+    ioPortRegister(0xb1, i8255Read, i8255Write, rm->i8255);
+    ioPortRegister(0xb2, i8255Read, i8255Write, rm->i8255);
+    ioPortRegister(0xb3, i8255Read, i8255Write, rm->i8255);
 
     reset(rm);
 

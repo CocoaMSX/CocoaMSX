@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperPanasonic.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.15 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-03 21:27:14 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -85,6 +85,7 @@ static void saveState(RomMapperPanasonic* rm)
     saveStateSet(state, "readSection", rm->readSection);
     saveStateSet(state, "readOffset", rm->readOffset);
     saveStateSet(state, "control", rm->control);
+    saveStateSetBuffer(state, "sram", rm->sram, rm->sramSize);
 
     saveStateClose(state);
 }
@@ -104,6 +105,7 @@ static void loadState(RomMapperPanasonic* rm)
     rm->readSection = saveStateGet(state, "readSection", 0);
     rm->readOffset  = saveStateGet(state, "readOffset", 0);
     rm->control     = (UInt8)saveStateGet(state, "control", 0);
+    saveStateGetBuffer(state, "sram", rm->sram, rm->sramSize);
 
     saveStateClose(state);
 
@@ -292,16 +294,11 @@ static void reset(RomMapperPanasonic* rm)
     }
 }
 
-int romMapperPanasonicCreate(char* filename, UInt8* romData, 
+int romMapperPanasonicCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage,
                              int sramSize, int mappedSlots) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperPanasonic* rm;
     RomType romType;
     char suffix[16];
@@ -334,7 +331,7 @@ int romMapperPanasonicCreate(char* filename, UInt8* romData,
     }
 
     rm->deviceHandle = deviceManagerRegister(romType, &callbacks, rm);
-    slotRegister(slot, sslot, 0, rm->mappedSlots, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, 0, rm->mappedSlots, read, read, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/sramMapperS1985.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -161,13 +161,8 @@ static void getDebugInfo(SramMapperS1985* rm, DbgDevice* dbgDevice)
 
 int sramMapperS1985Create() 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     SramMapperS1985* rm;
 
     rm = malloc(sizeof(SramMapperS1985));
@@ -180,7 +175,7 @@ int sramMapperS1985Create()
 
     sramLoad(sramCreateFilename("S1985.SRAM"), rm->sram, 0x10, NULL, 0);
 
-    ioPortRegisterSub(0xfe, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegisterSub(0xfe, read, write, rm);
 
     return 1;
 }

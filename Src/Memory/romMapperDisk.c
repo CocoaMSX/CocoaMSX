@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperDisk.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.6 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:43 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -54,10 +54,10 @@ static void destroy(RomMapperDisk* rm)
     free(rm);
 }
 
-int romMapperDiskCreate(char* filename, UInt8* romData, 
+int romMapperDiskCreate(const char* filename, UInt8* romData, 
                         int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
     RomMapperDisk* rm;
     int pages = size / 0x2000;
     int i;
@@ -69,7 +69,7 @@ int romMapperDiskCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperDisk));
 
     rm->deviceHandle = deviceManagerRegister(ROM_DISKPATCH, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

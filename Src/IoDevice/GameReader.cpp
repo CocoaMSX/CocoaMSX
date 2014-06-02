@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/GameReader.cpp,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -112,6 +112,7 @@ bool GameReader::readMemory(UInt16 address, void* buffer, int length)
     }
     
     if (inserted) {
+        //printf("### Reading address %.4x - %.4x\n", address, address + length - 1);
         if (MsxGr->ReadMemory(slot, globalBuffer, address, length) != 0) {
             inserted = MsxGr->IsCartridgeInserted(slot);
             return false;
@@ -133,6 +134,7 @@ bool GameReader::writeMemory(UInt16 address, void* buffer, int length)
     
     if (inserted) {
         memcpy(globalBuffer, buffer, length);
+        //printf("### Writing address %.4x - %.4x\n", address, address + length - 1);
         if (MsxGr->WriteMemory(slot, globalBuffer, address, length) != 0) {
             inserted = MsxGr->IsCartridgeInserted(slot);
             return false;

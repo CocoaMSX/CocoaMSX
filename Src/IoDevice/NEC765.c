@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/NEC765.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.6 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 15:08:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -371,6 +371,7 @@ static void nec765CommandPhaseWrite(NEC765* fdc, UInt8 value)
                 }
                 if (rv == DSKE_CRC_ERROR) {
                     fdc->status0 |= ST0_IC0;
+                    fdc->status1 |= ST1_DE; 
                     fdc->status2 |= ST2_DD;
                 }
                 fdc->mainStatus |= STM_DIO;

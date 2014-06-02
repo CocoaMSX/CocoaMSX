@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperCrossBlaim.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-06-14 12:20:25 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -125,15 +125,10 @@ static void write(RomMapperCrossBlaim* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperCrossBlaimCreate(char* filename, UInt8* romData, 
+int romMapperCrossBlaimCreate(const char* filename, UInt8* romData, 
                               int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperCrossBlaim* rm;
 
     if (size < 0x8000) {
@@ -143,7 +138,7 @@ int romMapperCrossBlaimCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperCrossBlaim));
 
     rm->deviceHandle = deviceManagerRegister(ROM_CROSSBLAIM, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 8, NULL, NULL, (SlotWrite)write, (SlotEject)destroy, rm); // $0000-$FFFF
+    slotRegister(slot, sslot, startPage, 8, NULL, NULL, write, destroy, rm); // $0000-$FFFF
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

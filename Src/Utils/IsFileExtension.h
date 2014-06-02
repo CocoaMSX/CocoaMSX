@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Utils/IsFileExtension.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:47 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -28,6 +28,6 @@
 #ifndef IS_FILE_EXTENSION_H
 #define IS_FILE_EXTENSION_H
 
-int isFileExtension(const char* fileName, const char* extension);
+int isFileExtension(const char* fileName, char* extension);
 
 #endif

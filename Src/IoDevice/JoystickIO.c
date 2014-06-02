@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/JoystickIO.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.16 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -38,7 +38,6 @@
 
 #define OFFSETOF(s, a) ((int)(&((s*)0)->a))
 
-UInt8 archJoystickGetState(int joystickNo);
 
 #if 0
 
@@ -287,7 +286,7 @@ JoystickIO* joystickIoCreate(AY8910* ay8910)
     joyIO->ay8910 = ay8910;
     joyIO->mouseAsJoystick = buttons & 1;
 
-    ay8910SetIoPort(ay8910, (AY8910ReadCb)read, (AY8910ReadCb)poll, (AY8910WriteCb)write, joyIO);
+    ay8910SetIoPort(ay8910, read, poll, write, joyIO);
 
     ledSetKana(0);
 

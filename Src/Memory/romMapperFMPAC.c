@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperFMPAC.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.18 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -234,16 +234,11 @@ static void getDebugInfo(RomMapperFMPAC* rm, DbgDevice* dbgDevice)
     ym2413GetDebugInfo(rm->ym2413, dbgDevice);
 }
 
-int romMapperFMPACCreate(char* filename, UInt8* romData, 
+int romMapperFMPACCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperFMPAC* rm;
 
     if (size != 0x10000) {
@@ -254,14 +249,14 @@ int romMapperFMPACCreate(char* filename, UInt8* romData,
 
     rm->deviceHandle = deviceManagerRegister(ROM_FMPAC, &callbacks, rm);
 
-    slotRegister(slot, sslot, startPage, 2, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 2, read, read, write, destroy, rm);
 
     rm->ym2413 = NULL;
     if (boardGetYm2413Enable()) {
         rm->ym2413 = ym2413Create(boardGetMixer());
         rm->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, langDbgDevFmpac(), &dbgCallbacks, rm);
-        ioPortRegister(0x7c, NULL, (IoPortWrite)writeIo, rm);
-        ioPortRegister(0x7d, NULL, (IoPortWrite)writeIo, rm);
+        ioPortRegister(0x7c, NULL, writeIo, rm);
+        ioPortRegister(0x7d, NULL, writeIo, rm);
     }
 
     memcpy(rm->romData, romData, 0x10000);

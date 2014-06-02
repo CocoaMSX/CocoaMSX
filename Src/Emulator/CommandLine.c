@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cvsroot/bluemsx/blueMSX/Src/Emulator/CommandLine.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.35 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008/08/31 06:13:13 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -95,6 +95,13 @@ static int isRomFileType(char* filename, char* inZip) {
             return 1;
         }
 
+        fileList = zipGetFileList(filename, ".sms", &count);
+        if (fileList) {
+            strcpy(inZip, fileList);
+            free(fileList);
+            return 1;
+        }
+
         fileList = zipGetFileList(filename, ".col", &count);
         if (fileList) {
             strcpy(inZip, fileList);
@@ -123,6 +130,7 @@ static int isRomFileType(char* filename, char* inZip) {
            isFileExtension(filename, ".ri")  ||
            isFileExtension(filename, ".mx1") ||
            isFileExtension(filename, ".mx2") ||
+           isFileExtension(filename, ".sms") ||
            isFileExtension(filename, ".col") ||
            isFileExtension(filename, ".sg") ||
            isFileExtension(filename, ".sc");
@@ -313,8 +321,7 @@ static int emuStartWithArguments(Properties* properties, char* commandLine, char
     if (!extractToken(cmdLine, 1)) {
         argument = extractToken(cmdLine, 0);
 
-        // AK: if (argument && *argument != '/') {
-        if (argument) {
+        if (argument && *argument != '/') {
             if (*argument == '\"') argument++;
 
             if (*argument) {

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/Disk.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.20 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 15:08:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -47,7 +47,7 @@ typedef enum {
     DSKE_CRC_ERROR
 } DSKE;
 
-UInt8 diskChange(int driveId, char* fileName, const char* fileInZipFile);
+UInt8 diskChange(int driveId, const char* fileName, const char* fileInZipFile);
 void diskSetInfo(int driveId, char* fileName, const char* fileInZipFile);
 void  diskEnable(int driveId, int enable);
 UInt8 diskEnabled(int driveId);

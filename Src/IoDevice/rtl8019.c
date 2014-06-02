@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/rtl8019.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:41 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -39,7 +39,7 @@
 #define RX_FREQUENCY  10000
 
 
-struct RTL8019
+typedef struct RTL8019
 {
     UInt8  regCr;
     UInt8  regPstart;
@@ -58,7 +58,7 @@ struct RTL8019
     UInt16 regClda;
     UInt8  regRppr;
     UInt8  regLppr;
-    UInt8  regAcnt;
+    UInt16  regAcnt;
     UInt8  regTsr;
     UInt8  regNcr;
     UInt8  regFifo;
@@ -208,8 +208,8 @@ RTL8019* rtl8019Create()
     int i;
 
     rtl->archInit = 0;
-    rtl->timerTx = boardTimerCreate((BoardTimerCb)onTxTimer, rtl);
-    rtl->timerRx = boardTimerCreate((BoardTimerCb)onRxTimer, rtl);
+    rtl->timerTx = boardTimerCreate(onTxTimer, rtl);
+    rtl->timerRx = boardTimerCreate(onRxTimer, rtl);
 
     boardTimerAdd(rtl->timerRx, boardSystemTime() + 1);
 
@@ -333,7 +333,7 @@ static void setIrq(int enable)
 
 static void writeCr(RTL8019* rtl, UInt8 value)
 {
-//    UInt8 changed = rtl->regCr ^ value;
+    UInt8 changed = rtl->regCr ^ value;
 
     rtl->regCr = value | (rtl->regCr & CR_TXP);
 

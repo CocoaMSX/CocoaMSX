@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperASCII16.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -112,15 +112,10 @@ static void write(RomMapperASCII16* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperASCII16Create(char* filename, UInt8* romData, 
+int romMapperASCII16Create(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperASCII16* rm;
     int i;
     int origSize = size;
@@ -133,7 +128,7 @@ int romMapperASCII16Create(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperASCII16));
 
     rm->deviceHandle = deviceManagerRegister(ROM_ASCII16, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, write, destroy, rm);
 
     size = (size + 0x3fff) & ~0x3fff;
 

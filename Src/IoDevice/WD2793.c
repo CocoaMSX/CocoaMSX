@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/WD2793.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.16 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 15:08:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -352,7 +352,7 @@ int wd2793PeekDataRequest(WD2793* wd)
 	}
 
     if ((wd->regCommand & 0xe0) == 0x80 && (wd->regStatus & ST_BUSY)) {
-//        UInt32 pulses = (boardSystemTime() - wd->dataRequsetTime) / (boardFrequency() / 25);
+        UInt32 pulses = (boardSystemTime() - wd->dataRequsetTime) / (boardFrequency() / 25);
 		if (wd->dataReady) {
 			dataRequest = 1;
 		}

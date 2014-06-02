@@ -138,6 +138,22 @@
 	<string>Panasonic 32kB SRAM</string>
 	<key>7</key>
 	<string>Game Master 2 (SRAM)</string>
+	<key>160</key>
+	<string>SVI-328 Disk Controller</string>
+	<key>162</key>
+	<string>SVI-707 Floppy Disk Controller</string>
+	<key>163</key>
+	<string>Manbow 2 version 2</string>
+	<key>164</key>
+	<string>Hamaraja Night</string>
+	<key>165</key>
+	<string>Mega Flash ROM SCC+</string>
+	<key>166</key>
+	<string>Dooly</string>
+	<key>169</key>
+	<string>External MSX MIDI</string>
+	<key>170</key>
+	<string>MuPack</string>
 	<key>77</key>
 	<string>Sony HBI-55</string>
 	<key>78</key>

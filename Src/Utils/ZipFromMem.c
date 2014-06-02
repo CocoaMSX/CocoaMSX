@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cvsroot/bluemsx/blueMSX/Src/Utils/ZipFromMem.c,v $
 **
-** $Revision: 73 $
+** $Revision: 0.0 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008/03/30 21:38:43 $
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ long fseek_mem_func(void *opaque, void *stream, unsigned long offset, int origin
     default: return -1;
     }
     if( memfile->index > memfile->size ) memfile->index = memfile->size;
-    memfile->index = 0;
+    if( memfile->index < 0 ) memfile->index = 0;
     return 0;
 }
 

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperFmDas.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -50,10 +50,10 @@ static void destroy(RomMapperFmDas* rm)
     free(rm);
 }
 
-int romMapperFmDasCreate(char* filename, UInt8* romData, 
+int romMapperFmDasCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
     RomMapperFmDas* rm;
 
     if (size != 0x8000 || startPage != 0) {
@@ -63,7 +63,7 @@ int romMapperFmDasCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperFmDas));
 
     rm->deviceHandle = deviceManagerRegister(ROM_FMDAS, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 8, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 8, NULL, NULL, NULL, destroy, rm);
 
     rm->romData = malloc(0x8000);
     memcpy(rm->romData, romData, 0x8000);

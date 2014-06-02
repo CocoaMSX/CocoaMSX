@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/TurboRIO.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -75,15 +75,15 @@ static void getDebugInfo(TurboRIO* turboRIO, DbgDevice* dbgDevice)
 
 int romMapperTurboRIOCreate()
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, NULL, NULL, NULL };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
 
     TurboRIO* turboRIO = (TurboRIO*)calloc(1, sizeof(TurboRIO));
 
     turboRIO->deviceHandle = deviceManagerRegister(ROM_TURBORIO, &callbacks, turboRIO);
     turboRIO->debugHandle = debugDeviceRegister(DBGTYPE_PORT, langDbgDevTrPause(), &dbgCallbacks, turboRIO);
 
-    ioPortRegister(0xa7, (IoPortRead)read, (IoPortWrite)write, turboRIO);
+    ioPortRegister(0xa7, read, write, turboRIO);
 
     return 1;
 }

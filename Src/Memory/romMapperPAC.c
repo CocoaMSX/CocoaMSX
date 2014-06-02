@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperPAC.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.7 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -132,21 +132,16 @@ static void write(RomMapperPAC* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperPACCreate(char* filename, UInt8* romData, 
+int romMapperPACCreate(const char* filename, UInt8* romData, 
                          int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperPAC* rm;
 
     rm = malloc(sizeof(RomMapperPAC));
 
     rm->deviceHandle = deviceManagerRegister(ROM_PAC, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 2, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 2, read, read, write, destroy, rm);
 
     memset(rm->sram, 0xff, 0x2000);
     rm->slot  = slot;

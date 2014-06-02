@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/MsxArkanoidPad.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-15 08:56:46 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -103,11 +103,11 @@ static void reset(MsxArkanoidPad* arkPad) {
 MsxJoystickDevice* msxArkanoidPadCreate()
 {
     MsxArkanoidPad* arkPad = (MsxArkanoidPad*)calloc(1, sizeof(MsxArkanoidPad));
-    arkPad->joyDevice.read       = (UInt8(*)(void*))read;
-    arkPad->joyDevice.write      = (void(*)(void*, UInt8))write;
-    arkPad->joyDevice.reset      = (void(*)(void*))reset;
-    arkPad->joyDevice.loadState  = (void(*)(void*))loadState;
-    arkPad->joyDevice.saveState  = (void(*)(void*))saveState;
+    arkPad->joyDevice.read       = read;
+    arkPad->joyDevice.write      = write;
+    arkPad->joyDevice.reset      = reset;
+    arkPad->joyDevice.loadState  = loadState;
+    arkPad->joyDevice.saveState  = saveState;
 
     reset(arkPad);
 

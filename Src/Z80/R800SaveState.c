@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Z80/R800SaveState.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:48 $
 **
 ** Author: Daniel Vik
 **
@@ -87,7 +87,8 @@ void r800LoadState(R800* r800)
     SaveState* state = saveStateOpenForRead("r800");
     char tag[32];
     int i;
-
+    
+    r800->systemTime =         saveStateGet(state, "systemTime", 0);
     r800->systemTime =         saveStateGet(state, "systemTime", 0);
     r800->vdpTime    =         saveStateGet(state, "vdpTime",    0);
     r800->cachePage  = (UInt16)saveStateGet(state, "cachePage",  0);
@@ -95,8 +96,8 @@ void r800LoadState(R800* r800)
     r800->intState   =         saveStateGet(state, "intState",   0);
     r800->nmiState   =         saveStateGet(state, "nmiState",   0);
     r800->nmiEdge    =         saveStateGet(state, "nmiEdge",    0);
-    r800->cpuMode    =         saveStateGet(state, "cpuMode",    0);
-    r800->oldCpuMode =         saveStateGet(state, "oldCpuMode", 0);
+    r800->cpuMode    = (CpuMode)saveStateGet(state, "cpuMode",    0);
+    r800->oldCpuMode = (CpuMode)saveStateGet(state, "oldCpuMode", 0);
     
     for (i = 0; i < sizeof(r800->delay) / sizeof(r800->delay[0]); i++) {
         sprintf(tag, "delay%d", i);
@@ -107,6 +108,12 @@ void r800LoadState(R800* r800)
     r800LoadRegisterState(state, r800->regBanks[0], 01);
     r800LoadRegisterState(state, r800->regBanks[1], 02);
 
+#if TIME_TRACE_SIZE > 0
+    saveStateGetBuffer(state, "timeTraceBuffer", r800->timeTraceBuffer, TIME_TRACE_SIZE * sizeof(SystemTime));
+    r800->timeTraceIndex = saveStateGet(state, "timeTraceIndex", 0);
+    r800->lastPC = (UInt16)saveStateGet(state, "lastPC", 0);
+#endif
+
     saveStateClose(state);
 }
 
@@ -115,7 +122,7 @@ void r800SaveState(R800* r800)
     SaveState* state = saveStateOpenForWrite("r800");
     char tag[32];
     int i;
-
+    
     saveStateSet(state, "systemTime", r800->systemTime);
     saveStateSet(state, "vdpTime",    r800->vdpTime);
     saveStateSet(state, "cachePage",  r800->cachePage);
@@ -134,6 +141,12 @@ void r800SaveState(R800* r800)
     r800SaveRegisterState(state, r800->regs,        00);
     r800SaveRegisterState(state, r800->regBanks[0], 01);
     r800SaveRegisterState(state, r800->regBanks[1], 02);
+    
+#if TIME_TRACE_SIZE > 0
+    saveStateSetBuffer(state, "timeTraceBuffer", r800->timeTraceBuffer, TIME_TRACE_SIZE * sizeof(SystemTime));
+    saveStateSet(state, "timeTraceIndex", r800->timeTraceIndex);
+    saveStateSet(state, "lastPC", r800->lastPC);
+#endif
 
     saveStateClose(state);
 }

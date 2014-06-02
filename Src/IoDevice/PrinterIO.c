@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/PrinterIO.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.12 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct PrinterIO {
+typedef struct PrinterIO {
     PrinterType type;
     DAC* dac;
     FILE* file;
@@ -58,8 +58,6 @@ static void setType(PrinterIO* printerIO)
     case PRN_SIMPL:
         printerIO->dac = dacCreate(boardGetMixer(), DAC_MONO);
         break;
-    default:
-        break;
     }
 }
 
@@ -76,8 +74,6 @@ static void removeType(PrinterIO* printerIO)
     case PRN_SIMPL:
         dacDestroy(printerIO->dac);
         break;
-    default:
-        break;
     }
 }
 
@@ -93,8 +89,6 @@ void printerIOWrite(PrinterIO* printerIO, UInt8 value)
     case PRN_SIMPL:
         dacWrite(printerIO->dac, DAC_CH_MONO, value);
         break;
-    default:
-        break;
     }
 }
 
@@ -107,8 +101,6 @@ int printerIOGetStatus(PrinterIO* printerIO)
         return printerIO->file != NULL;
     case PRN_SIMPL:
         return 1;
-    default:
-        break;
     }
     return 0;
 }

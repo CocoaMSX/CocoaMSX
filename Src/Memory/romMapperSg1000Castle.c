@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSg1000Castle.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -57,10 +57,10 @@ static void destroy(RomMapperSg1000Castle* rm)
     free(rm);
 }
 
-int romMapperSg1000CastleCreate(char* filename, UInt8* romData, 
+int romMapperSg1000CastleCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
     RomMapperSg1000Castle* rm;
     int pages = size / 0x2000 + ((size & 0x1fff) ? 1 : 0);
     int i;
@@ -72,7 +72,7 @@ int romMapperSg1000CastleCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperSg1000Castle));
 
     rm->deviceHandle = deviceManagerRegister(ROM_SG1000CASTLE, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, destroy, rm);
 
     rm->romData = malloc(pages * 0x2000);
     memcpy(rm->romData, romData, size);

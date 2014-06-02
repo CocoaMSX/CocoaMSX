@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Emulator/Properties.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.80 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-07 02:38:25 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -78,6 +78,7 @@
 #define CARTNAME_NOWINDDOS1  "Nowind MSXDOS1"
 #define CARTNAME_NOWINDDOS2  "Nowind MSXDOS2"
 #define CARTNAME_MEGAFLSHSCC "MegaFlashRomScc"
+#define CARTNAME_MEGAFLSHSCCPLUS "MegaFlashRomSccPlus"
 #define CARTNAME_WAVESCSI128 "128kB WAVE-SCSI"
 #define CARTNAME_WAVESCSI256 "256kB WAVE-SCSI"
 #define CARTNAME_WAVESCSI512 "512kB WAVE-SCSI"
@@ -94,7 +95,8 @@ typedef enum {
     PROP_SETTINGS, 
     PROP_DISK,
     PROP_APEARANCE, 
-    PROP_PORTS 
+    PROP_PORTS,
+	PROP_D3D
 } PropPage;
 
 typedef enum { 
@@ -186,7 +188,8 @@ enum {
 enum { 
     P_VIDEO_DRVDIRECTX_VIDEO = 0, 
     P_VIDEO_DRVDIRECTX, 
-    P_VIDEO_DRVGDI 
+    P_VIDEO_DRVGDI,
+    P_VIDEO_DRVDIRECTX_D3D
 };
 
 enum { 
@@ -208,6 +211,7 @@ typedef struct {
     char machineName[PROP_MAXPATH];
     char shortcutProfile[PROP_MAXPATH];
     int  enableFdcTiming;
+    int  noSpriteLimits;
     int  frontSwitch;
     int  audioSwitch;
     int  pauseSwitch;
@@ -217,10 +221,27 @@ typedef struct {
     int  disableWinKeys;
     int  priorityBoost;
     int  syncMethod;
+    int  syncMethodGdi;
+    int  syncMethodD3D;
+    int  syncMethodDirectX;
     int  vdpSyncMode;
     int  reverseEnable;
     int  reverseMaxTime;
 } EmulationProperties;
+
+typedef struct {
+		int linearFiltering;
+		int extendBorderColor;
+		int forceHighRes;
+
+		int aspectRatioType;
+		int cropType;
+
+		int cropLeft;
+		int cropRight;
+		int cropTop;
+		int cropBottom;
+} D3DProperties;
 
 typedef struct {
     int monitorColor;
@@ -254,7 +275,34 @@ typedef struct {
     int detectActiveMonitor;
     int captureFps;
     int captureSize;
+	D3DProperties d3d;
 } VideoProperties;
+
+enum {
+	P_D3D_AR_AUTO = 0,
+	P_D3D_AR_STRETCH,
+	P_D3D_AR_PAL,
+	P_D3D_AR_NTSC,
+	P_D3D_AR_1
+};
+
+enum {
+	P_D3D_RES_AUTO = 0,
+	P_D3D_RES_256,
+	P_D3D_RES_512
+};
+
+enum {
+	P_D3D_CROP_SIZE_NONE = 0,
+	P_D3D_CROP_SIZE_MSX1,
+	P_D3D_CROP_SIZE_MSX1_PLUS_8,
+	P_D3D_CROP_SIZE_MSX2,
+	P_D3D_CROP_SIZE_MSX2_PLUS_8,
+	P_D3D_CROP_SIZE_CUSTOM
+};
+
+
+
 
 typedef struct {
     int disabled;
@@ -322,6 +370,7 @@ typedef struct {
 
 typedef struct {
     char configFile[PROP_MAXPATH];
+    int enableKeyboardQuirk;
 } KeyboardProperties;
 
 typedef struct {
@@ -349,6 +398,9 @@ typedef struct {
 typedef struct {
     RomType defaultType;
     char    defDir[PROP_MAXPATH];
+    char    defDirSEGA[PROP_MAXPATH];
+    char    defDirCOLECO[PROP_MAXPATH];
+    char    defDirSVI[PROP_MAXPATH];
     int     autoReset;
     int     quickStartDrive;
 } CartridgeProperties;

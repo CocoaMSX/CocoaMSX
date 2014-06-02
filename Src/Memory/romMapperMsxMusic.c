@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMsxMusic.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.11 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 14:35:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -113,21 +113,17 @@ static void getDebugInfo(MsxMusic* rm, DbgDevice* dbgDevice)
     ym2413GetDebugInfo(rm->ym2413, dbgDevice);
 }
 
-int romMapperMsxMusicCreate(char* filename, UInt8* romData, 
+int romMapperMsxMusicCreate(const char* filename, UInt8* romData, 
                             int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     MsxMusic* rm = malloc(sizeof(MsxMusic));
     int pages = size / 0x2000 + ((size & 0x1fff) ? 1 : 0);
     int i;
 
     if (pages == 0 || (startPage + pages) > 8) {
+        free(rm);
         return 0;
     }
 
@@ -137,8 +133,8 @@ int romMapperMsxMusicCreate(char* filename, UInt8* romData,
     if (boardGetYm2413Enable()) {
         rm->ym2413 = ym2413Create(boardGetMixer());
         rm->debugHandle = debugDeviceRegister(DBGTYPE_AUDIO, langDbgDevMsxMusic(), &dbgCallbacks, rm);
-        ioPortRegister(0x7c, NULL, (SlotWrite)write, rm);
-        ioPortRegister(0x7d, NULL, (SlotWrite)write, rm);
+        ioPortRegister(0x7c, NULL, write, rm);
+        ioPortRegister(0x7d, NULL, write, rm);
     }
 
     rm->romData = malloc(pages * 0x2000);

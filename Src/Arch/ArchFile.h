@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Arch/ArchFile.h,v $
 **
-** $Revision: 72 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:09:05 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:39 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -35,6 +35,7 @@ int archCreateDirectory(const char* pathname);
 const char* archGetCurrentDirectory();
 void archSetCurrentDirectory(const char* pathname);
 int archFileExists(const char* fileName);
+int archFileDelete(const char *fileName);
 
 // File dialogs:
 char* archFilenameGetOpenRom(Properties* properties, int cartSlot, RomType* romType);

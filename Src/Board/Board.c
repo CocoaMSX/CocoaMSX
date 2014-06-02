@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/Board.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.79 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 14:35:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -53,6 +53,7 @@
 
 extern void PatchReset(BoardType boardType);
 
+static int skipSync;
 static int pendingInt;
 static int boardType;
 static Mixer* boardMixer = NULL;
@@ -67,6 +68,7 @@ static BoardTimer* fdcTimer;
 static BoardTimer* syncTimer;
 static BoardTimer* mixerTimer;
 static BoardTimer* stateTimer;
+static BoardTimer* breakpointTimer;
 static BoardDeviceInfo* boardDeviceInfo;
 static Machine* boardMachine;
 static BoardInfo boardInfo;
@@ -412,7 +414,7 @@ static void boardCaptureSaveState()
             saveStateSetBuffer(state, "inputs", cap.inputs, cap.inputCnt * sizeof(RleData));
         }
         saveStateSet(state, "initStateSize", cap.initStateSize);
-        if (cap.inputCnt > 0) {
+        if (cap.initStateSize > 0) {
             saveStateSetBuffer(state, "initState", cap.initState, cap.initStateSize);
         }
         
@@ -469,6 +471,14 @@ static void boardCaptureLoadState()
 //------------------------------------------------------
 
 
+int boardGetNoSpriteLimits() {
+    return vdpGetNoSpritesLimit();
+}
+
+void boardSetNoSpriteLimits(int enable) {
+    vdpSetNoSpriteLimits(enable);
+}
+
 RomType boardGetRomType(int cartNo)
 {
     return currentRomType[cartNo];
@@ -508,7 +518,10 @@ static void onFdcDone(void* ref, UInt32 time)
 
 static void doSync(UInt32 time, int breakpointHit)
 {
-    int execTime = syncToRealClock(fdcActive, breakpointHit);
+    int execTime = 10;
+    if (!skipSync) {
+        execTime = syncToRealClock(fdcActive, breakpointHit);
+    }
     if (execTime == -99) {
         boardInfo.stop(boardInfo.cpuRef);
         return;
@@ -545,7 +558,7 @@ static void onStateSync(void* ref, UInt32 time)
         }
 
         sprintf(memFilename, "mem%d", ramStateCur);
-
+        
         boardSaveState(memFilename, 0);
     }
 
@@ -597,24 +610,36 @@ int boardRemoveExternalDevices()
      return 1;
 }
 
-void boardRewind()
+static void onBreakpointSync(void* ref, UInt32 time) {
+    skipSync = 0;
+    doSync(time, 1);
+}
+
+int boardRewindOne() {
+    UInt32 rewindTime;
+    if (stateFrequency <= 0) {
+        return 0;
+    }
+    rewindTime = boardInfo.getTimeTrace(1);
+    if (rewindTime == 0 || !boardRewind()) {
+        return 0;
+    }
+    boardTimerAdd(breakpointTimer, rewindTime);
+    skipSync = 1;
+    return 1;
+}
+
+int boardRewind()
 {
     char stateFile[8];
 
-    if (ramStateCount == 0) {
-        return;
+    if (ramStateCount < 2) {
+        return 0;
     }
 
-    if (ramStateCount > 1) {
-        ramStateCount--;
-        sprintf(stateFile, "mem%d", ramStateCur);
-        ramStateCur = (ramStateCur + ramMaxStates - 1) % ramMaxStates;
-    }
-    else {
-        sprintf(stateFile, "mem%d", ramStateCur);
-    }
-
-    //printf("Reverting state %s\n", stateFile);
+    ramStateCount--;
+    sprintf(stateFile, "mem%d", ramStateCur);
+    ramStateCur = (ramStateCur + ramMaxStates - 1) % ramMaxStates;
 
     boardTimerCleanup();
 
@@ -637,6 +662,7 @@ void boardRewind()
         boardTimerAdd(periodicTimer, boardSystemTime() + periodicInterval);
     }
 #endif
+    return 1;
 }
 
 void boardEnableSnapshots(int enable)
@@ -755,6 +781,7 @@ int boardRun(Machine* machine,
             ramMaxStates = reverseBufferCnt;
             memZipFileSystemCreate(ramMaxStates);
             stateTimer = boardTimerCreate(onStateSync, NULL);
+            breakpointTimer = boardTimerCreate(onBreakpointSync, NULL); 
             boardTimerAdd(stateTimer, boardSystemTime() + stateFrequency);
         }
         else {
@@ -769,7 +796,9 @@ int boardRun(Machine* machine,
             boardTimerAdd(periodicTimer, boardSystemTime() + periodicInterval);
         }
 
-        syncToRealClock(0, 0);
+        if (!skipSync) {
+            syncToRealClock(0, 0);
+        }
 
         boardInfo.run(boardInfo.cpuRef);
 
@@ -785,6 +814,9 @@ int boardRun(Machine* machine,
         boardTimerDestroy(fdcTimer);
         boardTimerDestroy(syncTimer);
         boardTimerDestroy(mixerTimer);
+        if (breakpointTimer != NULL) {
+            boardTimerDestroy(breakpointTimer);
+        }
         if (stateTimer != NULL) {
             boardTimerDestroy(stateTimer);
             memZipFileSystemDestroy();
@@ -820,13 +852,14 @@ void boardSetMachine(Machine* machine)
     }
     for (i = 0; i < machine->slotInfoCount; i++) {
         switch (machine->slotInfo[i].romType) {
-        case ROM_SUNRISEIDE: hdType[hdIndex++] = HD_SUNRISEIDE; break;
-        case ROM_BEERIDE:    hdType[hdIndex++] = HD_BEERIDE;    break;
-        case ROM_GIDE:       hdType[hdIndex++] = HD_GIDE;       break;
-        case ROM_NOWIND:     hdType[hdIndex++] = HD_NOWIND;     break;
-        case SRAM_MEGASCSI:  hdType[hdIndex++] = HD_MEGASCSI;   break;
-        case SRAM_WAVESCSI:  hdType[hdIndex++] = HD_WAVESCSI;   break;
-        case ROM_GOUDASCSI:  hdType[hdIndex++] = HD_GOUDASCSI;  break;
+        case ROM_SUNRISEIDE:  hdType[hdIndex++] = HD_SUNRISEIDE; break;
+        case ROM_BEERIDE:     hdType[hdIndex++] = HD_BEERIDE;    break;
+        case ROM_GIDE:        hdType[hdIndex++] = HD_GIDE;       break;
+        case ROM_SVI328RSIDE: hdType[hdIndex++] = HD_RSIDE;      break;
+        case ROM_NOWIND:      hdType[hdIndex++] = HD_NOWIND;     break;
+        case SRAM_MEGASCSI:   hdType[hdIndex++] = HD_MEGASCSI;   break;
+        case SRAM_WAVESCSI:   hdType[hdIndex++] = HD_WAVESCSI;   break;
+        case ROM_GOUDASCSI:   hdType[hdIndex++] = HD_GOUDASCSI;  break;
         }
     }
 
@@ -1001,15 +1034,15 @@ void boardSaveState(const char* stateFile, int screenshot)
     machineSaveState(boardMachine);
 
     // Call board dependent save state
-    boardInfo.saveState();
+    boardInfo.saveState(stateFile);
 
     if (screenshot) {
         bitmap = archScreenCapture(SC_SMALL, &size, 1);
         if( bitmap != NULL && size > 0 ) {
-#ifdef WIN32
-            zipSaveFile(stateFile, "screenshot.bmp", 1, bitmap, size);
-#else
+#ifdef WII
             zipSaveFile(stateFile, "screenshot.png", 1, bitmap, size);
+#else
+            zipSaveFile(stateFile, "screenshot.bmp", 1, bitmap, size);
 #endif
         }
         if( bitmap != NULL ) {
@@ -1127,15 +1160,11 @@ void boardChangeCartridge(int cartNo, RomType romType, char* cart, char* cartZip
     }
 
     if (boardDeviceInfo != NULL) {
-        int maxLen = sizeof(boardDeviceInfo->carts[cartNo].name) - 1;
-        
         boardDeviceInfo->carts[cartNo].inserted = cart != NULL;
         boardDeviceInfo->carts[cartNo].type = romType;
-        
-        if (boardDeviceInfo->carts[cartNo].name != cart)
-            strncpy(boardDeviceInfo->carts[cartNo].name, cart ? cart : "", maxLen);
-        if (boardDeviceInfo->carts[cartNo].inZipName != cartZip)
-            strncpy(boardDeviceInfo->carts[cartNo].inZipName, cartZip ? cartZip : "", maxLen);
+
+        strcpy(boardDeviceInfo->carts[cartNo].name, cart ? cart : "");
+        strcpy(boardDeviceInfo->carts[cartNo].inZipName, cartZip ? cartZip : "");
     }
 
     useRom     -= romTypeIsRom(currentRomType[cartNo]);
@@ -1154,6 +1183,7 @@ void boardChangeCartridge(int cartNo, RomType romType, char* cart, char* cartZip
         if (currentRomType[cartNo] == ROM_SUNRISEIDE)   hdType[cartNo] = HD_SUNRISEIDE;
         if (currentRomType[cartNo] == ROM_BEERIDE)      hdType[cartNo] = HD_BEERIDE;
         if (currentRomType[cartNo] == ROM_GIDE)         hdType[cartNo] = HD_GIDE;
+        if (currentRomType[cartNo] == ROM_SVI328RSIDE)  hdType[cartNo] = HD_RSIDE;
         if (currentRomType[cartNo] == ROM_NOWIND)       hdType[cartNo] = HD_NOWIND;
         if (currentRomType[cartNo] == SRAM_MEGASCSI)    hdType[cartNo] = HD_MEGASCSI;
         if (currentRomType[cartNo] == SRAM_MEGASCSI128) hdType[cartNo] = HD_MEGASCSI;
@@ -1248,7 +1278,7 @@ UInt32 boardCalcRelativeTimeout(UInt32 timerFrequency, UInt32 nextTimeout)
 /////////////////////////////////////////////////////////////
 // Board timer
 
-struct BoardTimer {
+typedef struct BoardTimer {
     BoardTimer*  next;
     BoardTimer*  prev;
     BoardTimerCb callback;
@@ -1355,7 +1385,7 @@ void boardTimerCleanup()
     timeoutCheckBreak = 1;
 }
 
-UInt32 boardTimerCheckTimeout(void* dummy)
+void boardTimerCheckTimeout(void* dummy)
 {
     UInt32 currentTime = boardSystemTime();
     timerList->timeout = currentTime + MAX_TIME;
@@ -1364,7 +1394,7 @@ UInt32 boardTimerCheckTimeout(void* dummy)
     while (!timeoutCheckBreak) {
         BoardTimer* timer = timerList->next;
         if (timer == timerList) {
-            return currentTime + 1000;
+            return;
         }
         if (timer->timeout - timeAnchor > currentTime - timeAnchor) {
             break;
@@ -1377,8 +1407,6 @@ UInt32 boardTimerCheckTimeout(void* dummy)
     timeAnchor = boardSystemTime();    
 
     boardInfo.setCpuTimeout(boardInfo.cpuRef, timerList->next->timeout);
-
-    return timerList->next->timeout - currentTime;
 }
 
 UInt64 boardSystemTime64() {
@@ -1420,11 +1448,11 @@ static int enableY8950           = 1;
 static int enableMoonsound       = 1;
 static int videoAutodetect       = 1;
 
-char* boardGetBaseDirectory() {
+const char* boardGetBaseDirectory() {
     return baseDirectory;
 }
 
-void boardSetDirectory(const char* dir) {
+void boardSetDirectory(char* dir) {
     strcpy(baseDirectory, dir);
 }
 

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/SVI.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.64 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-01 21:13:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -60,16 +60,16 @@ static UInt32          sviRamSize;
 static UInt32          sviRamStart;
 static UInt8*          sviRam;
 static UInt8           psgAYReg15;
-static int             svi80ColEnabled;
+static int             svi328Col80Enabled;
 static UInt8           lastJoystickValue;
 
 extern void PatchZ80(void* ref, CpuRegs* cpu);
 
 static void sviMemWrite(void* ref, UInt16 address, UInt8 value)
 {
-    if ((svi80ColEnabled && svi80colMemBankCtrlStatus()) && (address & 0xf800) == 0xf000)
+    if ((svi328Col80Enabled && svi328Col80MemBankCtrlStatus()) && (address & 0xf800) == 0xf000)
     {
-        svi80colMemWrite(address & 0xfff, value);
+        svi328Col80MemWrite(address & 0xfff, value);
     }
     else
         slotWrite(ref, address, value);
@@ -77,8 +77,8 @@ static void sviMemWrite(void* ref, UInt16 address, UInt8 value)
 
 static UInt8 sviMemRead(void* ref, UInt16 address)
 {
-    if ((svi80ColEnabled && svi80colMemBankCtrlStatus()) && (address & 0xf800) == 0xf000) 
-        return svi80colMemRead(address & 0xfff);
+    if ((svi328Col80Enabled && svi328Col80MemBankCtrlStatus()) && (address & 0xf800) == 0xf000) 
+        return svi328Col80MemRead(address & 0xfff);
     else
         return slotRead(ref, address);
 }
@@ -88,7 +88,7 @@ static UInt8 sviMemRead(void* ref, UInt16 address)
 FFFF +---------+---------+---------+---------+
      | BANK 02 | BANK 12 | BANK 22 | BANK 32 | PAGE 3
      |   RAM   |ROM CART |   RAM   |   RAM   |
-8000 |00000000 |00000000 |10100000 |11110000 | PAGE 2
+8000 |00000000 |01010000 |10100000 |11110000 | PAGE 2
      +---------+---------+---------+---------+
 7FFF | BANK 01 | BANK 11 | BANK 21 | BANK 31 | PAGE 1
      |ROM BASIC|ROM CART |   RAM   |   RAM   |
@@ -96,22 +96,44 @@ FFFF +---------+---------+---------+---------+
 0000 +---------+---------+---------+---------+
 */
 
-typedef enum { BANK_02=0x00, BANK_12=0x00, BANK_22=0xa0, BANK_32=0xf0 } sviBanksHigh;
-typedef enum { BANK_01=0x00, BANK_11=0x05, BANK_21=0x0a, BANK_31=0x0f } sviBanksLow;
-
 static void sviMemSetBank(UInt8 value)
 {
-    UInt8 pages;
+    UInt8 psreg;
     int i;
     psgAYReg15 = value;
 
-    /* Map the SVI-328 bank to pages */
-    pages = (value&1)?(value&2)?(value&8)?BANK_01:BANK_31:BANK_21:BANK_11;
-    pages |= (value&4)?(value&16)?BANK_02:BANK_32:BANK_22;
+    // Default to bank 1 and 2
+    psreg = 0;
 
+    switch (~value & 0x14) {
+    case 4: // bk22
+        psreg = 0xa0;
+        break;
+    case 16: // bk32
+        psreg = 0xf0;
+        break;
+    }
+
+    switch (~value & 0x0B) {
+    case 1: // bk12 (cart)?
+        if ((~value & 0x80) || (~value & 0x40)) {
+            psreg = 0x50;
+        }
+        // bk11 (cart)
+        psreg |= 0x05;
+        break;
+    case 2: // bk21
+        psreg |= 0x0a;
+        break;
+    case 8: // bk31
+        psreg |= 0x0f;
+        break;
+    }
+
+    /* Map the SVI-328 bank to slot and page */
     for (i = 0; i < 4; i++) {
-        slotSetRamSlot(i, pages & 3);
-        pages >>= 2;
+        slotSetRamSlot(i, psreg & 3);
+        psreg >>= 2;
     }
 }
 
@@ -200,10 +222,10 @@ static int sviLoad80Col(Machine* machine, VdpSyncMode vdpSyncMode)
             UInt8* buf = romLoad(machine->slotInfo[i].name, machine->slotInfo[i].inZipName, &size);
 
             if (buf != NULL) {
-                if (machine->slotInfo[i].romType == ROM_SVI80COL) {
+                if (machine->slotInfo[i].romType == ROM_SVI328COL80) {
                     int frameRate = (vdpSyncMode == VDP_SYNC_60HZ) ? 60 : 50;
-                    svi80ColEnabled = romMapperSvi80ColCreate(frameRate, buf, size);
-                    success &= svi80ColEnabled;
+                    svi328Col80Enabled = romMapperSvi328Col80Create(frameRate, buf, size);
+                    success &= svi328Col80Enabled;
                 }
                 free(buf);
             }
@@ -251,11 +273,15 @@ static int getRefreshRate()
     return vdpGetRefreshRate();
 }
 
+static UInt32 getTimeTrace(int offset) {
+    return r800GetTimeTrace(r800, offset);
+}
+
 static void saveState()
 {
     SaveState* state = saveStateOpenForWrite("svi");
 
-    saveStateSet(state, "svi80ColEnabled", svi80ColEnabled);
+    saveStateSet(state, "svi328Col80Enabled", svi328Col80Enabled);
     saveStateSet(state, "psgAYReg15", psgAYReg15);
 
     saveStateClose(state);
@@ -270,7 +296,7 @@ static void loadState()
 {
     SaveState* state = saveStateOpenForRead("svi");
 
-    svi80ColEnabled = saveStateGet(state, "svi80ColEnabled", 0);
+    svi328Col80Enabled = saveStateGet(state, "svi328Col80Enabled", 0);
     psgAYReg15      = (UInt8)saveStateGet(state, "psgAYReg15", 0);
 
     saveStateClose(state);
@@ -289,7 +315,7 @@ int sviCreate(Machine* machine,
     int success;
     int i;
 
-    r800 = r800Create(CPU_ENABLE_M1, sviMemRead, sviMemWrite, ioPortRead, ioPortWrite, PatchZ80, (R800TimerCb)boardTimerCheckTimeout, NULL, NULL, NULL, NULL);
+    r800 = r800Create(CPU_ENABLE_M1, sviMemRead, sviMemWrite, ioPortRead, ioPortWrite, PatchZ80, boardTimerCheckTimeout, NULL, NULL, NULL, NULL, NULL, NULL);
 
     boardInfo->cartridgeCount   = 1;
     boardInfo->diskdriveCount   = 2;
@@ -303,14 +329,16 @@ int sviCreate(Machine* machine,
     boardInfo->getRefreshRate   = getRefreshRate;
     boardInfo->getRamPage       = NULL;
 
-    boardInfo->run              = (void(*)(void*))r800Execute;
-    boardInfo->stop             = (void(*)(void*))r800StopExecution;
-    boardInfo->setInt           = (void(*)(void*))r800SetInt;
-    boardInfo->clearInt         = (void(*)(void*))r800ClearInt;
-    boardInfo->setCpuTimeout    = (void(*)(void*, UInt32))r800SetTimeoutAt;
-    boardInfo->setBreakpoint    = (void(*)(void*, UInt16))r800SetBreakpoint;
-    boardInfo->clearBreakpoint  = (void(*)(void*, UInt16))r800ClearBreakpoint;
-    boardInfo->setDataBus       = (void(*)(void*, UInt8, UInt8, int))r800SetDataBus;
+    boardInfo->run              = r800Execute;
+    boardInfo->stop             = r800StopExecution;
+    boardInfo->setInt           = r800SetInt;
+    boardInfo->clearInt         = r800ClearInt;
+    boardInfo->setCpuTimeout    = r800SetTimeoutAt;
+    boardInfo->setBreakpoint    = r800SetBreakpoint;
+    boardInfo->clearBreakpoint  = r800ClearBreakpoint;
+    boardInfo->setDataBus       = r800SetDataBus;
+    
+    boardInfo->getTimeTrace     = getTimeTrace;
 
     deviceManagerCreate();
     boardInit(&r800->systemTime);
@@ -330,7 +358,7 @@ int sviCreate(Machine* machine,
     sviPPICreate(joyIO);
     slotManagerCreate();
 
-    svi80ColEnabled = 0;
+    svi328Col80Enabled = 0;
 
     /* Initialize VDP */
     vdpCreate(VDP_SVI, machine->video.vdpVersion, vdpSyncMode, machine->video.vramSize / 0x4000);

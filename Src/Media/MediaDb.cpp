@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Media/MediaDb.cpp,v $
 **
-** $Revision: 73 $
+** $Revision: 1.91 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-30 03:53:28 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -93,157 +93,184 @@ static string parseCountryCode(const string& code)
     return code;
 }
 
+static bool iequals(const string& a, const string& b)
+{
+    unsigned int sz = a.size();
+    if (b.size() != sz)
+        return false;
+    for (unsigned int i = 0; i < sz; ++i)
+        if (tolower(a[i]) != tolower(b[i]))
+            return false;
+    return true;
+}
+
 RomType mediaDbStringToType(const char* romName)
 {
     const std::string name = romName;
 
     // Megaroms
-    if (name == "ASCII16")          return ROM_ASCII16;
-    if (name == "ASCII16SRAM2")     return ROM_ASCII16SRAM;
-    if (name == "ASCII8")           return ROM_ASCII8;
-    if (name == "ASCII8SRAM8")      return ROM_ASCII8SRAM;
-    if (name == "KoeiSRAM8")        return ROM_KOEI;
-    if (name == "KoeiSRAM32")       return ROM_KOEI;
-    if (name == "Konami")           return ROM_KONAMI4;
-    if (name == "KonamiSCC")        return ROM_KONAMI5;
-    if (name == "Manbow2")          return ROM_MANBOW2;
-    if (name == "MegaFlashRomScc")  return ROM_MEGAFLSHSCC;
-    if (name == "Halnote")          return ROM_HALNOTE;
-    if (name == "HarryFox")         return ROM_HARRYFOX;
-    if (name == "Playball")         return ROM_PLAYBALL;
-    if (name == "HolyQuran")        return ROM_HOLYQURAN;
-    if (name == "CrossBlaim")       return ROM_CROSSBLAIM;
-    if (name == "Zemina80in1")      return ROM_KOREAN80;
-    if (name == "Zemina90in1")      return ROM_KOREAN90;
-    if (name == "Zemina126in1")     return ROM_KOREAN126;
-    if (name == "Wizardry")         return ROM_ASCII8SRAM;
-    if (name == "GameMaster2")      return ROM_GAMEMASTER2;
-    if (name == "SuperLodeRunner")  return ROM_LODERUNNER;
-    if (name == "R-Type")           return ROM_RTYPE;
-    if (name == "Majutsushi")       return ROM_MAJUTSUSHI;
-    if (name == "Synthesizer")      return ROM_KONAMISYNTH;
-    if (name == "KeyboardMaster")   return ROM_KONAMKBDMAS;
-    if (name == "GenericKonami")    return ROM_KONAMI4NF;
-    if (name == "SuperPierrot")     return ROM_ASCII16NF;
-    if (name == "WordPro")          return ROM_KONWORDPRO;
-    if (name == "Normal")           return ROM_STANDARD;
-    if (name == "MatraInk")         return ROM_MATRAINK;
-    if (name == "NettouYakyuu")     return ROM_NETTOUYAKYUU;
+    if (iequals(name, "ASCII16"))          return ROM_ASCII16;
+    if (iequals(name, "ASCII16SRAM2"))     return ROM_ASCII16SRAM;
+    if (iequals(name, "ASCII8"))           return ROM_ASCII8;
+    if (iequals(name, "ASCII8SRAM8"))      return ROM_ASCII8SRAM;
+    if (iequals(name, "KoeiSRAM8"))        return ROM_KOEI;
+    if (iequals(name, "KoeiSRAM32"))       return ROM_KOEI;
+    if (iequals(name, "Konami"))           return ROM_KONAMI4;
+    if (iequals(name, "KonamiSCC"))        return ROM_KONAMI5;
+    if (iequals(name, "MuPack"))           return ROM_MUPACK;
+    if (iequals(name, "Manbow2"))          return ROM_MANBOW2;
+    if (iequals(name, "Manbow2v2"))        return ROM_MANBOW2_V2;
+    if (iequals(name, "HamarajaNight"))    return ROM_HAMARAJANIGHT;
+    if (iequals(name, "MegaFlashRomScc"))  return ROM_MEGAFLSHSCC;
+    if (iequals(name, "MegaFlashRomSccPlus")) return ROM_MEGAFLSHSCCPLUS;
+    if (iequals(name, "Halnote"))          return ROM_HALNOTE;
+    if (iequals(name, "HarryFox"))         return ROM_HARRYFOX;
+    if (iequals(name, "Playball"))         return ROM_PLAYBALL;
+    if (iequals(name, "Dooly"))            return ROM_DOOLY;
+    if (iequals(name, "HolyQuran"))        return ROM_HOLYQURAN;
+    if (iequals(name, "CrossBlaim"))       return ROM_CROSSBLAIM;
+    if (iequals(name, "Zemina80in1"))      return ROM_KOREAN80;
+    if (iequals(name, "Zemina90in1"))      return ROM_KOREAN90;
+    if (iequals(name, "Zemina126in1"))     return ROM_KOREAN126;
+    if (iequals(name, "Wizardry"))         return ROM_ASCII8SRAM;
+    if (iequals(name, "GameMaster2"))      return ROM_GAMEMASTER2;
+    if (iequals(name, "SuperLodeRunner"))  return ROM_LODERUNNER;
+    if (iequals(name, "R-Type"))           return ROM_RTYPE;
+    if (iequals(name, "Majutsushi"))       return ROM_MAJUTSUSHI;
+    if (iequals(name, "Synthesizer"))      return ROM_KONAMISYNTH;
+    if (iequals(name, "KeyboardMaster"))   return ROM_KONAMKBDMAS;
+    if (iequals(name, "GenericKonami"))    return ROM_KONAMI4NF;
+    if (iequals(name, "SuperPierrot"))     return ROM_ASCII16NF;
+    if (iequals(name, "WordPro"))          return ROM_KONWORDPRO;
+    if (iequals(name, "Normal"))           return ROM_STANDARD;
+    if (iequals(name, "MatraInk"))         return ROM_MATRAINK;
+    if (iequals(name, "NettouYakyuu"))     return ROM_NETTOUYAKYUU;
 
     // System roms
-    if (name == "Bunsetsu")     return ROM_BUNSETU;
-    if (name == "CasPatch")     return ROM_CASPATCH;
-    if (name == "Coleco")       return ROM_COLECO;
-    if (name == "MegaCart")     return ROM_CVMEGACART;
-    if (name == "SG1000")       return ROM_SG1000;
-    if (name == "SC3000")       return ROM_SC3000;
-    if (name == "SG1000Castle") return ROM_SG1000CASTLE;
-    if (name == "SegaBasic")    return ROM_SEGABASIC;
-    if (name == "FMPAC")        return ROM_FMPAC;
-    if (name == "FMPAK")        return ROM_FMPAK;
-    if (name == "DiskPatch")    return ROM_DISKPATCH;
-    if (name == "Jisyo")        return ROM_JISYO;
-    if (name == "Kanji1")       return ROM_KANJI;
-    if (name == "Kanji12")      return ROM_KANJI12;
-    if (name == "MB8877A")      return ROM_NATIONALFDC;
-    if (name == "SVI738FDC")    return ROM_SVI738FDC;
-    if (name == "TC8566AF")     return ROM_TC8566AF;
-    if (name == "TC8566AFTR")   return ROM_TC8566AF_TR;
-    if (name == "WD2793")       return ROM_PHILIPSFDC;
-    if (name == "Microsol")     return ROM_MICROSOL;
-    if (name == "ARC")          return ROM_ARC;
-    if (name == "MoonSound")    return ROM_MOONSOUND;
+    if (iequals(name, "Bunsetsu"))     return ROM_BUNSETU;
+    if (iequals(name, "CasPatch"))     return ROM_CASPATCH;
+    if (iequals(name, "Coleco"))       return ROM_COLECO;
+    if (iequals(name, "MegaCart"))     return ROM_CVMEGACART;
+    if (iequals(name, "ActivisionPCB")) return ROM_ACTIVISIONPCB;
+    if (iequals(name, "ActivisionPCB 2K")) return ROM_ACTIVISIONPCB_2K;
+    if (iequals(name, "ActivisionPCB 16K")) return ROM_ACTIVISIONPCB_16K;
+    if (iequals(name, "ActivisionPCB 256K")) return ROM_ACTIVISIONPCB_256K;
+    if (iequals(name, "SG1000"))       return ROM_SG1000;
+    if (iequals(name, "SC3000"))       return ROM_SC3000;
+    if (iequals(name, "SG1000Castle")) return ROM_SG1000CASTLE;
+    if (iequals(name, "SG1000RamA"))   return ROM_SG1000_RAMEXPANDER_A;
+    if (iequals(name, "SG1000RamB"))   return ROM_SG1000_RAMEXPANDER_B;
+    if (iequals(name, "SegaBasic"))    return ROM_SEGABASIC;
+    if (iequals(name, "FMPAC"))        return ROM_FMPAC;
+    if (iequals(name, "FMPAK"))        return ROM_FMPAK;
+    if (iequals(name, "DiskPatch"))    return ROM_DISKPATCH;
+    if (iequals(name, "Jisyo"))        return ROM_JISYO;
+    if (iequals(name, "Kanji1"))       return ROM_KANJI;
+    if (iequals(name, "Kanji12"))      return ROM_KANJI12;
+    if (iequals(name, "MB8877A"))      return ROM_NATIONALFDC;
+    if (iequals(name, "SVI707FDC"))    return ROM_SVI707FDC;
+    if (iequals(name, "SVI738FDC"))    return ROM_SVI738FDC;
+    if (iequals(name, "TC8566AF"))     return ROM_TC8566AF;
+    if (iequals(name, "TC8566AFTR"))   return ROM_TC8566AF_TR;
+    if (iequals(name, "WD2793"))       return ROM_PHILIPSFDC;
+    if (iequals(name, "Microsol"))     return ROM_MICROSOL;
+    if (iequals(name, "ARC"))          return ROM_ARC;
+    if (iequals(name, "MoonSound"))    return ROM_MOONSOUND;
 
-    if (name == "SunriseIDE")   return ROM_SUNRISEIDE;
-    if (name == "BeerIDE")      return ROM_BEERIDE;
-    if (name == "GIDE")         return ROM_GIDE;
-    if (name == "GoudaSCSI")    return ROM_GOUDASCSI;
+    if (iequals(name, "SunriseIDE"))   return ROM_SUNRISEIDE;
+    if (iequals(name, "BeerIDE"))      return ROM_BEERIDE;
+    if (iequals(name, "GIDE"))         return ROM_GIDE;
+    if (iequals(name, "GoudaSCSI"))    return ROM_GOUDASCSI;
 
-    if (name == "NMS1210")      return ROM_NMS1210;
+    if (iequals(name, "NMS1210"))      return ROM_NMS1210;
 
-    if (name == "fsa1fm2")      return ROM_PANASONIC8;
-    if (name == "FSA1FM2")      return ROM_PANASONIC8;
-    if (name == "Panasonic8")   return ROM_PANASONIC8;
-    if (name == "PanasonicDram")return ROM_DRAM;
-    if (name == "PanasonicWx16")return ROM_PANASONICWX16;
-    if (name == "Panasonic16")  return ROM_PANASONIC16;
-    if (name == "Panasonic32")  return ROM_PANASONIC32;
-    if (name == "A1FMModem")    return ROM_FSA1FMMODEM;
-    if (name == "fsa1fm1")      return ROM_FSA1FMMODEM;
-    if (name == "FSA1FM1")      return ROM_FSA1FMMODEM;
-    if (name == "Standard16K")  return ROM_MSXDOS2;
-    if (name == "SVI328CART")   return ROM_SVI328;
-    if (name == "SVI80COL")     return ROM_SVI80COL;
-    if (name == "SVI727")       return ROM_SVI727;
-    if (name == "SVI738FDC")    return ROM_SVI738FDC;
-    if (name == "MSX-AUDIO")    return ROM_MSXAUDIO;
-    if (name == "MSX-MUSIC")    return ROM_MSXMUSIC;
-    if (name == "National")     return ROM_NATIONAL;
-    if (name == "CX5M-MUSIC")   return ROM_YAMAHASFG05;
-    if (name == "VMX80")        return ROM_MICROSOL80;
-    if (name == "HBI-V1")       return ROM_SONYHBIV1;
-    if (name == "SFG-01")       return ROM_YAMAHASFG01;
-    if (name == "SFG-05")       return ROM_YAMAHASFG05;
-    if (name == "NET")          return ROM_YAMAHANET;
-    if (name == "SF-7000IPL")   return ROM_SF7000IPL;
-    if (name == "FMDAS")        return ROM_FMDAS;
-    if (name == "Obsonet")      return ROM_OBSONET;
-    if (name == "Dumas")        return ROM_DUMAS;
-    if (name == "NoWind")       return ROM_NOWIND;
+    if (iequals(name, "fsa1fm2"))      return ROM_PANASONIC8;
+    if (iequals(name, "FSA1FM2"))      return ROM_PANASONIC8;
+    if (iequals(name, "Panasonic8"))   return ROM_PANASONIC8;
+    if (iequals(name, "PanasonicDram"))return ROM_DRAM;
+    if (iequals(name, "PanasonicWx16"))return ROM_PANASONICWX16;
+    if (iequals(name, "Panasonic16"))  return ROM_PANASONIC16;
+    if (iequals(name, "Panasonic32"))  return ROM_PANASONIC32;
+    if (iequals(name, "A1FMModem"))    return ROM_FSA1FMMODEM;
+    if (iequals(name, "fsa1fm1"))      return ROM_FSA1FMMODEM;
+    if (iequals(name, "FSA1FM1"))      return ROM_FSA1FMMODEM;
+    if (iequals(name, "Standard16K"))  return ROM_MSXDOS2;
+    if (iequals(name, "SVI328CART"))   return ROM_SVI328CART;
+    if (iequals(name, "SVI328COL80"))  return ROM_SVI328COL80;
+    if (iequals(name, "SVI727COL80"))  return ROM_SVI727COL80;
+    if (iequals(name, "SVI707FDC"))    return ROM_SVI707FDC;
+    if (iequals(name, "SVI738FDC"))    return ROM_SVI738FDC;
+    if (iequals(name, "MSX-AUDIO"))    return ROM_MSXAUDIO;
+    if (iequals(name, "MSX-MUSIC"))    return ROM_MSXMUSIC;
+    if (iequals(name, "National"))     return ROM_NATIONAL;
+    if (iequals(name, "CX5M-MUSIC"))   return ROM_YAMAHASFG05;
+    if (iequals(name, "VMX80"))        return ROM_MICROSOL80;
+    if (iequals(name, "HBI-V1"))       return ROM_SONYHBIV1;
+    if (iequals(name, "SFG-01"))       return ROM_YAMAHASFG01;
+    if (iequals(name, "SFG-05"))       return ROM_YAMAHASFG05;
+    if (iequals(name, "NET"))          return ROM_YAMAHANET;
+    if (iequals(name, "SF-7000IPL"))   return ROM_SF7000IPL;
+    if (iequals(name, "FMDAS"))        return ROM_FMDAS;
+    if (iequals(name, "Obsonet"))      return ROM_OBSONET;
+    if (iequals(name, "Dumas"))        return ROM_DUMAS;
+    if (iequals(name, "NoWind"))       return ROM_NOWIND;
 
     // Roms not supproted in this format in the db
-    if (name == "0x4000")       return ROM_0x4000;
-    if (name == "0xC000")       return ROM_0xC000;
-    if (name == "auto")         return ROM_PLAIN;
-    if (name == "basic")        return ROM_BASIC;
+    if (iequals(name, "0x4000"))       return ROM_0x4000;
+    if (iequals(name, "0xC000"))       return ROM_0xC000;
+    if (iequals(name, "auto"))         return ROM_PLAIN;
+    if (iequals(name, "basic"))        return ROM_BASIC;
 
-    if (name == "mirrored")     return ROM_PLAIN;
-    if (name == "forteII")      return ROM_FORTEII;
-    if (name == "msxdos2")      return ROM_MSXDOS2;
-    if (name == "konami5")      return ROM_KONAMI5;
-    if (name == "konami4")      return ROM_KONAMI4;
-    if (name == "ascii8")       return ROM_ASCII8;
-    if (name == "halnote")      return ROM_HALNOTE;
-    if (name == "konamisynth")  return ROM_KONAMISYNTH;
-    if (name == "kbdmaster")    return ROM_KONAMKBDMAS;
-    if (name == "majutsushi")   return ROM_MAJUTSUSHI;
-    if (name == "ascii16")      return ROM_ASCII16;
-    if (name == "gamemaster2")  return ROM_GAMEMASTER2;
-    if (name == "ascii8sram")   return ROM_ASCII8SRAM;
-    if (name == "koei")         return ROM_KOEI;
-    if (name == "ascii16sram")  return ROM_ASCII16SRAM;
-    if (name == "konami4nf")    return ROM_KONAMI4NF;
-    if (name == "ascii16nf")    return ROM_ASCII16NF;
-    if (name == "snatcher")     return ROM_SNATCHER;
-    if (name == "sdsnatcher")   return ROM_SDSNATCHER;
-    if (name == "sccmirrored")  return ROM_SCCMIRRORED;
-    if (name == "sccexpanded")  return ROM_SCCEXTENDED;
-    if (name == "scc")          return ROM_SCC;
-    if (name == "sccplus")      return ROM_SCCPLUS;
-    if (name == "scc-i")        return ROM_SCCPLUS;
-    if (name == "scc+")         return ROM_SCCPLUS;
-    if (name == "pac")          return ROM_PAC;
-    if (name == "fmpac")        return ROM_FMPAC;
-    if (name == "fmpak")        return ROM_FMPAK;
-    if (name == "rtype")        return ROM_RTYPE;
-    if (name == "crossblaim")   return ROM_CROSSBLAIM;
-    if (name == "harryfox")     return ROM_HARRYFOX;
-    if (name == "loderunner")   return ROM_LODERUNNER;
-    if (name == "korean80")     return ROM_KOREAN80;
-    if (name == "korean90")     return ROM_KOREAN90;
-    if (name == "korean126")    return ROM_KOREAN126;
-    if (name == "holyquran")    return ROM_HOLYQURAN;  
-    if (name == "opcodesave")   return ROM_OPCODESAVE;
-    if (name == "opcodebios")   return ROM_OPCODEBIOS;
-    if (name == "opcodeslot")   return ROM_OPCODESLOT;
-    if (name == "opcodeega")    return ROM_OPCODEMEGA;
-    if (name == "coleco")       return ROM_COLECO;
-    if (name == "sg1000")       return ROM_SG1000;
-    if (name == "castle")       return ROM_SG1000CASTLE;
+    if (iequals(name, "mirrored"))     return ROM_PLAIN;
+    if (iequals(name, "forteII"))      return ROM_FORTEII;
+    if (iequals(name, "msxdos2"))      return ROM_MSXDOS2;
+    if (iequals(name, "konami5"))      return ROM_KONAMI5;
+    if (iequals(name, "MuPack"))       return ROM_MUPACK;
+    if (iequals(name, "konami4"))      return ROM_KONAMI4;
+    if (iequals(name, "ascii8"))       return ROM_ASCII8;
+    if (iequals(name, "halnote"))      return ROM_HALNOTE;
+    if (iequals(name, "konamisynth"))  return ROM_KONAMISYNTH;
+    if (iequals(name, "kbdmaster"))    return ROM_KONAMKBDMAS;
+    if (iequals(name, "majutsushi"))   return ROM_MAJUTSUSHI;
+    if (iequals(name, "ascii16"))      return ROM_ASCII16;
+    if (iequals(name, "gamemaster2"))  return ROM_GAMEMASTER2;
+    if (iequals(name, "ascii8sram"))   return ROM_ASCII8SRAM;
+    if (iequals(name, "koei"))         return ROM_KOEI;
+    if (iequals(name, "ascii16sram"))  return ROM_ASCII16SRAM;
+    if (iequals(name, "konami4nf"))    return ROM_KONAMI4NF;
+    if (iequals(name, "ascii16nf"))    return ROM_ASCII16NF;
+    if (iequals(name, "snatcher"))     return ROM_SNATCHER;
+    if (iequals(name, "sdsnatcher"))   return ROM_SDSNATCHER;
+    if (iequals(name, "sccmirrored"))  return ROM_SCCMIRRORED;
+    if (iequals(name, "sccexpanded"))  return ROM_SCCEXTENDED;
+    if (iequals(name, "scc"))          return ROM_SCC;
+    if (iequals(name, "sccplus"))      return ROM_SCCPLUS;
+    if (iequals(name, "scc-i"))        return ROM_SCCPLUS;
+    if (iequals(name, "scc+"))         return ROM_SCCPLUS;
+    if (iequals(name, "pac"))          return ROM_PAC;
+    if (iequals(name, "fmpac"))        return ROM_FMPAC;
+    if (iequals(name, "fmpak"))        return ROM_FMPAK;
+    if (iequals(name, "rtype"))        return ROM_RTYPE;
+    if (iequals(name, "crossblaim"))   return ROM_CROSSBLAIM;
+    if (iequals(name, "harryfox"))     return ROM_HARRYFOX;
+    if (iequals(name, "loderunner"))   return ROM_LODERUNNER;
+    if (iequals(name, "korean80"))     return ROM_KOREAN80;
+    if (iequals(name, "korean90"))     return ROM_KOREAN90;
+    if (iequals(name, "korean126"))    return ROM_KOREAN126;
+    if (iequals(name, "holyquran"))    return ROM_HOLYQURAN;  
+    if (iequals(name, "opcodesave"))   return ROM_OPCODESAVE;
+    if (iequals(name, "opcodebios"))   return ROM_OPCODEBIOS;
+    if (iequals(name, "opcodeslot"))   return ROM_OPCODESLOT;
+    if (iequals(name, "opcodeega"))    return ROM_OPCODEMEGA;
+    if (iequals(name, "coleco"))       return ROM_COLECO;
 
 
     // SG-1000 roms
-    if (name == "sg1000castle") return ROM_SG1000CASTLE;
+    if (iequals(name, "sg1000"))       return ROM_SG1000;
+    if (iequals(name, "castle"))       return ROM_SG1000CASTLE;
+    if (iequals(name, "sg1000ramA"))   return ROM_SG1000_RAMEXPANDER_A;
+    if (iequals(name, "sg1000ramB"))   return ROM_SG1000_RAMEXPANDER_B;
+    if (iequals(name, "sg1000castle")) return ROM_SG1000CASTLE;
 
 
     return ROM_UNKNOWN;
@@ -338,19 +365,22 @@ static void mediaDbAddDump(TiXmlElement* dmp,
             }
         }
 
-        if (romType != ROM_CVMEGACART) {
+        if (romType != ROM_CVMEGACART && 
+            romType != ROM_ACTIVISIONPCB && romType != ROM_ACTIVISIONPCB_2K && 
+            romType != ROM_ACTIVISIONPCB_16K && romType != ROM_ACTIVISIONPCB_256K) {
             if (strcmpnocase(system.c_str(), "coleco") == 0) {
                 romType = ROM_COLECO;
             }
         }
 
         if (strcmpnocase(system.c_str(), "svi") == 0) {
-            if (romType != ROM_SVI80COL) {
-                romType = ROM_SVI328;
+            if (romType != ROM_SVI328COL80) {
+                romType = ROM_SVI328CART;
             }
         }
 
-        if (romType != ROM_SG1000CASTLE && romType != ROM_SEGABASIC) {
+        if (romType != ROM_SG1000CASTLE && romType != ROM_SEGABASIC &&
+            romType != ROM_SG1000_RAMEXPANDER_A && romType != ROM_SG1000_RAMEXPANDER_B) {
             if (strcmpnocase(system.c_str(), "sg1000") == 0) {
                 romType = ROM_SG1000;
             }
@@ -555,8 +585,12 @@ extern "C" const char* romTypeToString(RomType romType)
     case ROM_STANDARD:    return langRomTypeStandard();
     case ROM_MSXDOS2:     return langRomTypeMsxdos2();
     case ROM_KONAMI5:     return langRomTypeKonamiScc();
+    case ROM_MUPACK:      return "Mu-Pack";
     case ROM_MANBOW2:     return langRomTypeManbow2();
+    case ROM_HAMARAJANIGHT:return "Hamaraja Night";
+    case ROM_MANBOW2_V2:  return "Manbow 2 v2";
     case ROM_MEGAFLSHSCC: return langRomTypeMegaFlashRomScc();
+    case ROM_MEGAFLSHSCCPLUS: return "Mega Flash Rom SCC+";
     case ROM_OBSONET:     return langRomTypeObsonet();
     case ROM_DUMAS:       return langRomTypeDumas();
     case ROM_NOWIND:      return langRomTypeNoWind();
@@ -596,6 +630,7 @@ extern "C" const char* romTypeToString(RomType romType)
     case ROM_ARC:         return "Parallax ARC";
     case ROM_NATIONALFDC: return langRomTypeNationalFdc();
     case ROM_PHILIPSFDC:  return langRomTypePhilipsFdc();
+    case ROM_SVI707FDC:   return langRomTypeSvi707Fdc();
     case ROM_SVI738FDC:   return langRomTypeSvi738Fdc();
     case RAM_MAPPER:      return langRomTypeMappedRam();
     case RAM_1KB_MIRRORED:return langRomTypeMirroredRam1k();
@@ -604,6 +639,7 @@ extern "C" const char* romTypeToString(RomType romType)
     case ROM_KANJI:       return langRomTypeKanji();
     case ROM_HOLYQURAN:   return langRomTypeHolyQuran();
     case SRAM_MATSUCHITA: return langRomTypeMatsushitaSram();
+    case SRAM_MATSUCHITA_INV: return langRomTypeMasushitaSramInv();
     case ROM_PANASONIC8:  return langRomTypePanasonic8();
     case ROM_PANASONICWX16:return langRomTypePanasonicWx16();
     case ROM_PANASONIC16: return langRomTypePanasonic16();
@@ -620,6 +656,7 @@ extern "C" const char* romTypeToString(RomType romType)
     case ROM_F4DEVICE:    return langRomTypeF4deviceNormal();
     case ROM_F4INVERTED:  return langRomTypeF4deviceInvert();
     case ROM_MSXMIDI:     return langRomTypeMsxMidi();
+    case ROM_MSXMIDI_EXTERNAL: return langRomTypeMsxMidiExternal();
     case ROM_TURBORTIMER: return langRomTypeTurborTimer();
     case ROM_KOEI:        return langRomTypeKoei();
     case ROM_BASIC:       return langRomTypeBasic();
@@ -649,16 +686,19 @@ extern "C" const char* romTypeToString(RomType romType)
     case ROM_MSXMUSIC:    return langRomTypeMsxMusic();
     case ROM_MSXAUDIO:    return langRomTypeMsxAudio();
     case ROM_MOONSOUND:   return langRomTypeMoonsound();
-    case ROM_SVI328:      return langRomTypeSvi328Cart();
+    case ROM_SVI328CART:  return langRomTypeSvi328Cart();
     case ROM_SVI328FDC:   return langRomTypeSvi328Fdc();
     case ROM_SVI328PRN:   return langRomTypeSvi328Prn();
     case ROM_SVI328RS232: return langRomTypeSvi328Uart();
-    case ROM_SVI80COL:    return langRomTypeSvi328col80();
-    case ROM_SVI727:      return langRomTypeSvi727col80();
+    case ROM_SVI328COL80: return langRomTypeSvi328col80();
+    case ROM_SVI328RSIDE: return langRomTypeSvi328RsIde();
+    case ROM_SVI727COL80: return langRomTypeSvi727col80();
     case ROM_COLECO:      return langRomTypeColecoCart();
     case ROM_SG1000:      return langRomTypeSg1000Cart();
     case ROM_SC3000:      return langRomTypeSc3000Cart();
     case ROM_SG1000CASTLE:return langRomTypeTheCastle();
+    case ROM_SG1000_RAMEXPANDER_A: return "Sega Ram Expander Type A";
+    case ROM_SG1000_RAMEXPANDER_B: return "Sega Ram Expander Type B";
     case ROM_SEGABASIC:   return langRomTypeSegaBasic();
     case ROM_SONYHBI55:   return langRomTypeSonyHbi55();
     case ROM_MSXAUDIODEV: return langRomTypeY8950();
@@ -675,6 +715,7 @@ extern "C" const char* romTypeToString(RomType romType)
     case ROM_NMS8280DIGI: return langRomTypeNms8280Digitiz();
     case ROM_SONYHBIV1:   return langRomTypeHbiV1Digitiz();
     case ROM_PLAYBALL:    return langRomTypePlayBall();
+    case ROM_DOOLY:       return "Dooly";
     case ROM_FMDAS:       return langRomTypeFmdas();
     case ROM_YAMAHASFG01: return langRomTypeSfg01();
     case ROM_YAMAHASFG05: return langRomTypeSfg05();
@@ -685,6 +726,10 @@ extern "C" const char* romTypeToString(RomType romType)
     case ROM_OPCODESAVE:  return "ColecoVision Opcode SaveRam";
     case ROM_OPCODESLOT:  return "ColecoVision Opcode Slot Manager";
     case ROM_CVMEGACART:  return "ColecoVision MegaCart(R)";
+    case ROM_ACTIVISIONPCB:  return "Colecovision Activision PCB";
+    case ROM_ACTIVISIONPCB_2K:  return "Colecovision Activision PCB 2K";
+    case ROM_ACTIVISIONPCB_16K:  return "Colecovision Activision PCB 16K";
+    case ROM_ACTIVISIONPCB_256K: return "Colecovision Activision PCB 256K";
     case SRAM_MEGASCSI:   return langRomTypeMegaSCSI();
     case SRAM_MEGASCSI128:return langRomTypeMegaSCSI128();
     case SRAM_MEGASCSI256:return langRomTypeMegaSCSI256();
@@ -718,8 +763,12 @@ extern "C" const char* romTypeToShortString(RomType romType)
     case ROM_STANDARD:    return "STANDARD";
     case ROM_MSXDOS2:     return "MSXDOS2";
     case ROM_KONAMI5:     return "KONAMI SCC";
+    case ROM_MUPACK:      return "MU-PACK";
     case ROM_MANBOW2:     return "MANBOW 2";
+    case ROM_HAMARAJANIGHT:return "HAMARAJANGT";
+    case ROM_MANBOW2_V2:  return "MANBOW 2 v2";
     case ROM_MEGAFLSHSCC: return "MEGAFLSHSCC";
+    case ROM_MEGAFLSHSCCPLUS: return "MEGAFLSHSCC+";
     case ROM_OBSONET:     return "OBSONET";
     case ROM_DUMAS:       return "DUMAS";
     case ROM_NOWIND:      return "NOWIND";
@@ -759,6 +808,7 @@ extern "C" const char* romTypeToShortString(RomType romType)
     case ROM_ARC:         return "ARC";
     case ROM_NATIONALFDC: return "NATNL FDC";
     case ROM_PHILIPSFDC:  return "PHILIPSFDC";
+    case ROM_SVI707FDC:   return "SVI707 FDC";
     case ROM_SVI738FDC:   return "SVI738 FDC";
     case RAM_MAPPER:      return "MAPPED RAM";
     case RAM_1KB_MIRRORED:return "1K MIR RAM";
@@ -766,8 +816,9 @@ extern "C" const char* romTypeToShortString(RomType romType)
     case RAM_NORMAL:      return "NORMAL RAM";
     case ROM_KANJI:       return "KANJI";
     case ROM_HOLYQURAN:   return "HOLYQURAN";
-    case SRAM_MATSUCHITA: return "MATSUSHITA";
-    case ROM_PANASONICWX16: return "PANASON 16";
+    case SRAM_MATSUCHITA:     return "MATSUSHITA";
+    case SRAM_MATSUCHITA_INV: return "MATSUS INV";
+    case ROM_PANASONICWX16:   return "PANASON 16";
     case ROM_PANASONIC16: return "PANASON 16";
     case ROM_PANASONIC32: return "PANASON 32";
     case ROM_BUNSETU:     return "BUNSETSU";
@@ -780,6 +831,7 @@ extern "C" const char* romTypeToShortString(RomType romType)
     case ROM_F4DEVICE:    return "F4NORMAL";
     case ROM_F4INVERTED:  return "F4INV";
     case ROM_MSXMIDI:     return "MSX-MIDI";
+    case ROM_MSXMIDI_EXTERNAL: return "MSX-MIDIEX";
     case ROM_TURBORTIMER: return "TURBORTMR";
     case ROM_KOEI:        return "KOEI";
     case ROM_BASIC:       return "BASIC";
@@ -810,17 +862,20 @@ extern "C" const char* romTypeToShortString(RomType romType)
     case ROM_MSXMUSIC:    return "MSXMUSIC";
     case ROM_MSXAUDIO:    return "MSXAUDIO";
     case ROM_MOONSOUND:   return "MOONSOUND";
-    case ROM_SVI328:      return "SVI328";
+    case ROM_SVI328CART:  return "SVI328CART";
     case ROM_SVI328FDC:   return "SVI328FDC";
     case ROM_SVI328PRN:   return "SVI328PRN";
     case ROM_SVI328RS232: return "SVI328RS232";
-    case ROM_SVI80COL:    return "SVI80COL";
-    case ROM_SVI727:      return "SVI727";
+    case ROM_SVI328COL80: return "SVI328COL80";
+    case ROM_SVI328RSIDE: return "SVI328RSIDE";
+    case ROM_SVI727COL80: return "SVI727COL80";
     case ROM_COLECO:      return "COLECO";
     case ROM_SG1000:      return "SG-1000";
     case ROM_SC3000:      return "SC-3000";
     case ROM_SG1000CASTLE:return "THECASTLE";
     case ROM_SEGABASIC:   return "SEGABASIC";
+    case ROM_SG1000_RAMEXPANDER_A: return "SEGARAM A";
+    case ROM_SG1000_RAMEXPANDER_B: return "SEGARAM B";
     case ROM_SONYHBI55:   return "HBI-55";
     case ROM_MSXAUDIODEV: return "MSXAUDIO";
     case ROM_MSXPRN:      return "MSXPRN";
@@ -840,12 +895,17 @@ extern "C" const char* romTypeToShortString(RomType romType)
     case ROM_NMS8280DIGI: return "8280 DIGI";
     case ROM_SONYHBIV1:   return "SONY HBI-V1";
     case ROM_PLAYBALL:    return "PLAYBALL";
+    case ROM_DOOLY:       return "DOOLY";
     case ROM_FMDAS:       return "FM-DAS";
     case ROM_YAMAHASFG01: return "SFG-01";
     case ROM_YAMAHASFG05: return "SFG-05";
     case ROM_YAMAHANET:   return "YAMAHA NET";
     case ROM_SF7000IPL:   return "SF-7000 IPL";
     case ROM_CVMEGACART:  return "MEGACART";
+    case ROM_ACTIVISIONPCB:     return "ACTIVISION";
+    case ROM_ACTIVISIONPCB_2K:  return "ACTIVISN2";
+    case ROM_ACTIVISIONPCB_16K: return "ACTIVISI16";
+    case ROM_ACTIVISIONPCB_256K:return "ACTIVISI256";
     case SRAM_MEGASCSI:   return "MEGASCSI";
     case SRAM_MEGASCSI128:return "MEGASCSI128";
     case SRAM_MEGASCSI256:return "MEGASCSI256";
@@ -895,9 +955,11 @@ int romTypeIsRom(RomType romType) {
     case ROM_ARC:         return 1;
     case ROM_NATIONALFDC: return 1;
     case ROM_PHILIPSFDC:  return 1;
+    case ROM_SVI707FDC:   return 1;
     case ROM_SVI738FDC:   return 1;
     case ROM_HOLYQURAN:   return 1;
     case SRAM_MATSUCHITA: return 1;
+    case SRAM_MATSUCHITA_INV: return 1;
     case ROM_BASIC:       return 1;
     case ROM_0x4000:      return 1;
     case ROM_0xC000:      return 1;
@@ -907,6 +969,7 @@ int romTypeIsRom(RomType romType) {
     case ROM_MICROSOL80:  return 1;
     case ROM_SONYHBIV1:   return 1;
     case ROM_PLAYBALL:    return 1;
+    case ROM_DOOLY:       return 1;
     case ROM_FMDAS:       return 1;
     case ROM_YAMAHASFG01: return 1;
     case ROM_YAMAHASFG05: return 1;
@@ -925,8 +988,12 @@ int romTypeIsMegaRom(RomType romType) {
     case ROM_STANDARD:    return 1;
     case ROM_MSXDOS2:     return 1;
     case ROM_KONAMI5:     return 1;
+    case ROM_MUPACK:      return 1;
     case ROM_MANBOW2:     return 1;
+    case ROM_HAMARAJANIGHT: return 1;
+    case ROM_MANBOW2_V2:  return 1;
     case ROM_MEGAFLSHSCC: return 1;
+    case ROM_MEGAFLSHSCCPLUS: return 1;
     case ROM_OBSONET:     return 1;
     case ROM_DUMAS:       return 1;
     case ROM_NOWIND:      return 1;
@@ -1110,11 +1177,11 @@ extern "C" MediaType* mediaDbLookupRomByPath(const char *path)
     return type;
 }
 
-extern "C" MediaType* mediaDbLookupRom(const void *buffer, int size)
+extern "C" MediaType* mediaDbLookupRom(const void *buffer, int size) 
 {
     const char* romData = (const char*)buffer;
     static MediaType defaultColeco(ROM_COLECO, "Unknown Coleco rom");
-    static MediaType defaultSvi(ROM_SVI328, "Unknown SVI rom");
+    static MediaType defaultSvi(ROM_SVI328CART, "Unknown SVI rom");
     static MediaType defaultSg1000(ROM_SG1000, "Unknown SG-1000 rom");
     static MediaType defaultSc3000(ROM_SC3000, "Unknown SC-3000 rom");
 
@@ -1130,13 +1197,13 @@ extern "C" MediaType* mediaDbLookupRom(const void *buffer, int size)
     }
 
     if (mediaType == NULL &&
-        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA)
+        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA) 
     {
         mediaType = &defaultColeco;
     }
 #if 0
     if (mediaType == NULL &&
-        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA)
+        size <= 0x8000 && (unsigned char)romData[0] == 0x55 && (unsigned char)romData[1] == 0xAA) 
     {
         mediaType = &defaultSg1000;
     }
@@ -1255,7 +1322,7 @@ extern "C" MediaType* mediaDbGuessRomByPath(const char *path)
     return type;
 }
 
-extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size)
+extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size) 
 {
     static MediaType staticMediaType(ROM_UNKNOWN, "Unknown MSX rom");
 
@@ -1284,7 +1351,7 @@ extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size)
 
     switch (boardType) {
     case BOARD_SVI:
-        staticMediaType.romType = ROM_SVI328;
+        staticMediaType.romType = ROM_SVI328CART;
         return &staticMediaType;
     case BOARD_COLECO:
     case BOARD_COLECOADAM:
@@ -1301,8 +1368,6 @@ extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size)
         break;
     case BOARD_MSX:
         break;
-    default:
-        break;
     }
 
 
@@ -1314,7 +1379,7 @@ extern "C" MediaType* mediaDbGuessRom(const void *buffer, int size)
 		} 
         
         if (size <= 0x4000 && romData[0] == 'A' && romData[1] == 'B') {
-//			UInt16 init = romData[2] + 256 * romData[3];
+			UInt16 init = romData[2] + 256 * romData[3];
 			UInt16 text = romData[8] + 256 * romData[9];
 //			if (init == 0 && (text & 0xc000) == 0x8000) {
 			if ((text & 0xc000) == 0x8000) {

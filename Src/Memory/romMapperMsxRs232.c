@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMsxRs232.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.11 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-12-21 08:40:24 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -327,15 +327,10 @@ static void getDebugInfo(MSXRs232* msxRs232, DbgDevice* dbgDevice)
 ** MSX RS-232 Create Method
 ******************************************
 */
-int romMapperMsxRs232Create(char* filename, UInt8* romData, int size, int slot, int sslot, int startPage)
+int romMapperMsxRs232Create(const char* filename, UInt8* romData, int size, int slot, int sslot, int startPage)
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = {destroy, reset, saveState, loadState};
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     int pages = 4;
     int i;
 
@@ -348,7 +343,7 @@ int romMapperMsxRs232Create(char* filename, UInt8* romData, int size, int slot, 
     msxRs232->deviceHandle = deviceManagerRegister(ROM_MSXRS232, &callbacks, msxRs232);
     msxRs232->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevRs232(), &dbgCallbacks, msxRs232);
 
-    slotRegister(slot, sslot, startPage, pages, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, (SlotEject)destroy, msxRs232);
+    slotRegister(slot, sslot, startPage, pages, read, peek, write, destroy, msxRs232);
 
     msxRs232->romData = malloc(size);
     memcpy(msxRs232->romData, romData, size);
@@ -361,20 +356,20 @@ int romMapperMsxRs232Create(char* filename, UInt8* romData, int size, int slot, 
         slotMapPage(slot, sslot, i + startPage, NULL, 0, 0);
     }
 
-    msxRs232->i8251 = i8251Create((I8251Transmit)rs232transmit, (I8251Signal)rs232signal, (I8251Set)setDataBits, (I8251Set)setStopBits, (I8251Set)setParity,
-                                 (I8251Set)setRxReady, (I8251Set)setDtr, (I8251Set)setRts, (I8251Get)getDtr, (I8251Get)getRts, msxRs232);
+    msxRs232->i8251 = i8251Create(rs232transmit, rs232signal, setDataBits, setStopBits, setParity, 
+                                 setRxReady, setDtr, setRts, getDtr, getRts, msxRs232);
 
-    msxRs232->i8254 = i8254Create(1843200, (I8254Out)pitOut0, (I8254Out)pitOut1, (I8254Out)pitOut2, msxRs232);
+    msxRs232->i8254 = i8254Create(1843200, pitOut0, pitOut1, pitOut2, msxRs232);
 
     msxRs232->serialLink = archUartCreate(romMapperMsxRs232ReceiveCallback);
 
-    ioPortRegister(0x80, (IoPortRead)readIo, (IoPortWrite)writeIo, msxRs232);
-    ioPortRegister(0x81, (IoPortRead)readIo, (IoPortWrite)writeIo, msxRs232);
-    ioPortRegister(0x82, (IoPortRead)readIo, (IoPortWrite)writeIo, msxRs232);
-    ioPortRegister(0x84, (IoPortRead)readIo, (IoPortWrite)writeIo, msxRs232);
-    ioPortRegister(0x85, (IoPortRead)readIo, (IoPortWrite)writeIo, msxRs232);
-    ioPortRegister(0x86, (IoPortRead)readIo, (IoPortWrite)writeIo, msxRs232);
-    ioPortRegister(0x87, NULL, (IoPortWrite)writeIo, msxRs232);
+    ioPortRegister(0x80, readIo, writeIo, msxRs232);
+    ioPortRegister(0x81, readIo, writeIo, msxRs232);
+    ioPortRegister(0x82, readIo, writeIo, msxRs232);
+    ioPortRegister(0x84, readIo, writeIo, msxRs232);
+    ioPortRegister(0x85, readIo, writeIo, msxRs232);
+    ioPortRegister(0x86, readIo, writeIo, msxRs232);
+    ioPortRegister(0x87, NULL, writeIo, msxRs232);
 
     reset(msxRs232);
 

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/sl811hs.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.2 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:41 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct SL811HS
+typedef struct SL811HS
 {
     int dummy;
 };

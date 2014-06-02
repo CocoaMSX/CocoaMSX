@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/sramLoader.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.7 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -33,12 +33,12 @@
 
 
 
-char* sramCreateFilenameWithSuffix(char* romFilename, char* suffix, char* ext)
+const char* sramCreateFilenameWithSuffix(const char* romFilename, char* suffix, char* ext)
 {
     static char SRAMfileName[512];
     char fileName[512];
     char* dst = fileName + 512;
-    char* src;
+    const char* src;
 
     *--dst = '\0';
     if (ext == NULL) {
@@ -75,10 +75,10 @@ char* sramCreateFilenameWithSuffix(char* romFilename, char* suffix, char* ext)
 }
 
 
-char* sramCreateFilename(char* romFilename) {
+const char* sramCreateFilename(const char* romFilename) {
     return sramCreateFilenameWithSuffix(romFilename, "", NULL);
 }
-void sramLoad(char* filename, UInt8* sram, int length, void* header, int headerLength) {
+void sramLoad(const char* filename, UInt8* sram, int length, void* header, int headerLength) {
     FILE* file;
 
     file = fopen(filename, "rb");
@@ -97,7 +97,7 @@ void sramLoad(char* filename, UInt8* sram, int length, void* header, int headerL
     }
 }
 
-void sramSave(char* filename, UInt8* sram, int length, void* header, int headerLength) {
+void sramSave(const char* filename, UInt8* sram, int length, void* header, int headerLength) {
     FILE* file;
 
     file = fopen(filename, "wb");

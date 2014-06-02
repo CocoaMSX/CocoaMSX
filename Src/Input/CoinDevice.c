@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/CoinDevice.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.2 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -59,7 +59,7 @@ UInt8 coinDeviceRead(CoinDevice* coinDev)
 
 CoinDevice* coinDeviceCreate()
 {
-    DeviceCallbacks callbacks = { (DeviceCallback)destroy, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
     CoinDevice* coinDev = (CoinDevice*)calloc(1, sizeof(CoinDevice));
     coinDev->time = 0;
 

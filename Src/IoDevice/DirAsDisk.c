@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/DirAsDisk.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.15 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-06-24 20:10:38 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -37,7 +37,6 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
@@ -501,15 +500,14 @@ static int get_free(void) {
 static int get_next_free(void) {
   int i,status=0;
 
-  for (i=2; i<2+fatelements; i++)
-    if (!next_link (i))
-    {
-      if (status)
+  for (i=2; i<2+fatelements; i++) {
+    if (!next_link (i)) {
+      if (status) 
         return i;
       else
         status=1;
     }
-    
+  }
   //printf ("Internal error\n");
   //exit (5);
   return 0;
@@ -531,7 +529,7 @@ static void store_fat(int link, int next) {
   }
 }
 
-static int add_single_file(char *name, char *pathname) {
+static int add_single_file(char *name, const char *pathname) {
   int i,total;
   fileinfo *file;
   int fileid;
@@ -567,13 +565,19 @@ static int add_single_file(char *name, char *pathname) {
   }
 
   if ((size=getfilelength(fileid))>bytes_free())
+  {
+    close (fileid);
     return 1;
+  }
 
   for (i=0; i<direlements; i++)
     if (direc[i*32]<0x20 || direc[i*32]>=0x80)
       break;
   if (i==direlements)
+  {
+    close (fileid);
     return 2;
+  }
 
   pos=i;
 
@@ -641,7 +645,7 @@ static char* my_strupr(char* s)
     return s;
 }
 
-static int add_single_file_svi(int diskType, char *name, char *pathname)
+static int add_single_file_svi(int diskType, char *name, const char *pathname)
 {
     typedef struct
     {
@@ -792,7 +796,7 @@ static int add_single_file_svi(int diskType, char *name, char *pathname)
     return 0;
 }
 
-static int add_single_file_cpm(int diskType, char *name, char *pathname)
+static int add_single_file_cpm(int diskType, char *name, const char *pathname)
 {
     typedef struct
     {
@@ -949,7 +953,7 @@ static int add_single_file_cpm(int diskType, char *name, char *pathname)
 }
 
 #ifdef USE_ARCH_GLOB
-void* dirLoadFile(DirDiskType diskType, char* directory, int* size)
+void* dirLoadFile(DirDiskType diskType, const char* directory, int* size)
 {
     ArchGlob* glob;
     static char filename[512];
@@ -1002,7 +1006,7 @@ void* dirLoadFile(DirDiskType diskType, char* directory, int* size)
     return dskimage;
 }
 #else
-void* dirLoadFile(DirDiskType diskType, char* directory, int* size)
+void* dirLoadFile(DirDiskType diskType, const char* directory, int* size)
 {
 	WIN32_FIND_DATA fileData;
     HANDLE hFile;

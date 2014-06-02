@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/I8254.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.13 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-05-19 19:56:58 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -433,7 +433,7 @@ static Counter* counterCreate(I8254Out out, void* ref, UInt32 frequency)
     counter->out = out;
     counter->ref = ref;
 
-    counter->timer = boardTimerCreate((BoardTimerCb)counterOnTimer, counter);
+    counter->timer = boardTimerCreate(counterOnTimer, counter);
 
     counterReset(counter);
 

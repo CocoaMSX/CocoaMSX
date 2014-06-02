@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Debugger/DebugDeviceManager.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.11 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -37,6 +37,9 @@ typedef struct {
     int (*writeRegister)(void* ref, char* name, int reg, UInt32 value);
     int (*writeIoPort)(void* ref, char* name, UInt16 port, UInt32 value);
 } DebugCallbacks;
+
+typedef UInt8 (*WatchpointReadMemCallback)(void*, int);
+
 
 void debugDeviceManagerReset();
 
@@ -85,5 +88,9 @@ void debugDeviceGetSnapshot(DbgDevice** dbgDeviceList, int* count);
 int debugDeviceWriteMemory(DbgMemoryBlock* memoryBlock, void* data, int startAddr, int size);
 int debugDeviceWriteRegister(DbgRegisterBank* regBank, int regIndex, UInt32 value);
 int debugDeviceWriteIoPort(DbgIoPorts* ioPorts, int portIndex, UInt32 value);
+
+void debugDeviceSetMemoryWatchpoint(DbgDeviceType devType, int address, DbgWatchpointCondition condition, UInt32 refValue, int size);
+void debugDeviceClearMemoryWatchpoint(DbgDeviceType devType, int address);
+void tryWatchpoint(DbgDeviceType devType, int address, UInt8 value, void* ref, WatchpointReadMemCallback callback);
 
 #endif /*DEBUG_DEVICE_MANAGER_H*/

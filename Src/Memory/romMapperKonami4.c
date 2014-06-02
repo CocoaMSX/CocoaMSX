@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKonami4.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -109,15 +109,10 @@ static void write(RomMapperKonami4* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperKonami4Create(char* filename, UInt8* romData, 
+int romMapperKonami4Create(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperKonami4* rm;
     int romSize;
     int i;
@@ -129,7 +124,7 @@ int romMapperKonami4Create(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperKonami4));
 
     rm->deviceHandle = deviceManagerRegister(ROM_KONAMI4, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, write, destroy, rm);
 
     romSize = size > 0x40000 ? size : 0x40000;
     rm->romData = malloc(romSize);

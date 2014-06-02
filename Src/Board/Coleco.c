@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Board/Coleco.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.50 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -83,6 +83,7 @@ static UInt8 colecoJoyIoRead(void* dummy, UInt16 ioPort)
     int devNo = (ioPort >> 1) & 1;
     ColecoJoystickDevice* device = joyDevice[devNo];
     UInt16 joyState = 0xffff;
+    static UInt8 oldValue[2] = { 0, 0 };
     UInt8 value;
 
     if (device != NULL && device->read != NULL) {
@@ -339,6 +340,10 @@ static void loadState()
     sn76489LoadState(sn76489);
 }
 
+static UInt32 getTimeTrace(int offset) {
+    return r800GetTimeTrace(r800, offset);
+}
+
 int colecoCreate(Machine* machine, 
                  VdpSyncMode vdpSyncMode,
                  BoardInfo* boardInfo)
@@ -346,7 +351,7 @@ int colecoCreate(Machine* machine,
     int success;
     int i;
 
-    r800 = r800Create(CPU_ENABLE_M1, slotRead, slotWrite, ioPortRead, ioPortWrite, NULL, (R800TimerCb)boardTimerCheckTimeout, NULL, NULL, NULL, NULL);
+    r800 = r800Create(CPU_ENABLE_M1, slotRead, slotWrite, ioPortRead, ioPortWrite, NULL, boardTimerCheckTimeout, NULL, NULL, NULL, NULL, NULL, NULL);
 
     boardInfo->cartridgeCount   = 1;
     boardInfo->diskdriveCount   = 0;
@@ -360,14 +365,16 @@ int colecoCreate(Machine* machine,
     boardInfo->getRefreshRate   = getRefreshRate;
     boardInfo->getRamPage       = NULL;
 
-    boardInfo->run              = (void(*)(void*))r800Execute;
-    boardInfo->stop             = (void(*)(void*))r800StopExecution;
-    boardInfo->setInt           = (void(*)(void*))r800SetNmi;
-    boardInfo->clearInt         = (void(*)(void*))r800ClearNmi;
-    boardInfo->setCpuTimeout    = (void(*)(void*, UInt32))r800SetTimeoutAt;
-    boardInfo->setBreakpoint    = (void(*)(void*, UInt16))r800SetBreakpoint;
-    boardInfo->clearBreakpoint  = (void(*)(void*, UInt16))r800ClearBreakpoint;
-    boardInfo->setDataBus       = (void(*)(void*, UInt8, UInt8, int))r800SetDataBus;
+    boardInfo->run              = r800Execute;
+    boardInfo->stop             = r800StopExecution;
+    boardInfo->setInt           = r800SetNmi;
+    boardInfo->clearInt         = r800ClearNmi;
+    boardInfo->setCpuTimeout    = r800SetTimeoutAt;
+    boardInfo->setBreakpoint    = r800SetBreakpoint;
+    boardInfo->clearBreakpoint  = r800ClearBreakpoint;
+    boardInfo->setDataBus       = r800SetDataBus;
+    
+    boardInfo->getTimeTrace     = getTimeTrace;
 
     deviceManagerCreate();
 

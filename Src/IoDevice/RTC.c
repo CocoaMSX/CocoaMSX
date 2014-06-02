@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/RTC.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -310,7 +310,7 @@ static void getDebugInfo(RTC* rtc, DbgDevice* dbgDevice)
 
 RTC* rtcCreate(int enable, char* cmosName)
 {
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RTC* rtc = (RTC*)calloc(1, sizeof(RTC));
 
     rtc->modeReg = MODE_TIMERENABLE;
@@ -346,8 +346,8 @@ RTC* rtcCreate(int enable, char* cmosName)
     if (enable) {
         rtc->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevRtc(), &dbgCallbacks, rtc);
         
-        ioPortRegister(0xb4, NULL,        (IoPortWrite)rtcWriteLatch, rtc);
-        ioPortRegister(0xb5, (IoPortRead)rtcReadData, (IoPortWrite)rtcWriteData,  rtc);
+        ioPortRegister(0xb4, NULL,        rtcWriteLatch, rtc);
+        ioPortRegister(0xb5, rtcReadData, rtcWriteData,  rtc);
     }
 
     rtcUpdateRegs(rtc);
@@ -365,9 +365,10 @@ void rtcDestroy(RTC* rtc)
     if (rtc->cmosName[0]) {
         FILE* file = fopen(rtc->cmosName, "w");
 
-        fwrite(rtc->registers, 1, sizeof(rtc->registers), file);
-
-        fclose(file);
+        if(file != NULL) {
+            fwrite(rtc->registers, 1, sizeof(rtc->registers), file);
+            fclose(file);
+        }
     }
 
     free(rtc);

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperA1FMModem.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -115,21 +115,16 @@ static void reset(RomMapperA1FMModem* rm)
     slotMapPage(rm->slot, rm->sslot, rm->startPage + 1, NULL, 0, 0);
 }
 
-int romMapperA1FMModemCreate(char* filename, UInt8* romData, 
+int romMapperA1FMModemCreate(const char* filename, UInt8* romData, 
                              int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperA1FMModem* rm;
 
     rm = malloc(sizeof(RomMapperA1FMModem));
 
     rm->deviceHandle = deviceManagerRegister(ROM_FSA1FMMODEM, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 2, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 2, read, read, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

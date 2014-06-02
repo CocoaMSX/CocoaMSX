@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSonyHBIV1.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.13 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -360,15 +360,10 @@ static void reset(RomMapperSonyHbiV1* rm)
     rm->delay       = 0;
 }
 
-int romMapperSonyHbiV1Create(char* filename, UInt8* romData, int size,
+int romMapperSonyHbiV1Create(const char* filename, UInt8* romData, int size,
                              int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperSonyHbiV1* rm;
     int pages = 4;
     int i;
@@ -380,7 +375,7 @@ int romMapperSonyHbiV1Create(char* filename, UInt8* romData, int size,
     rm = malloc(sizeof(RomMapperSonyHbiV1));
 
     rm->deviceHandle = deviceManagerRegister(ROM_SONYHBIV1, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, read, read, write, destroy, rm);
 
     rm->romData = calloc(1, size);
     memcpy(rm->romData, romData, size);
@@ -388,8 +383,8 @@ int romMapperSonyHbiV1Create(char* filename, UInt8* romData, int size,
     rm->sslot = sslot;
     rm->startPage  = startPage;
     
-    rm->timerDigitize = boardTimerCreate((BoardTimerCb)onTimerDigitize, rm);
-    rm->timerBusy     = boardTimerCreate((BoardTimerCb)onTimerBusy,     rm);
+    rm->timerDigitize = boardTimerCreate(onTimerDigitize, rm);
+    rm->timerBusy     = boardTimerCreate(onTimerBusy,     rm);
 
     for (i = 0; i < pages; i++) {
         slotMapPage(slot, sslot, i + startPage, NULL, 0, 0);

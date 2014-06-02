@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source:  $
 **
-** $Revision: 73 $
+** $Revision: 1.12 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -81,14 +81,14 @@ static void loadState(Arc* rm)
 
 static UInt8 readIo(Arc* rm, UInt16 ioPort)
 {	
-    printf("R: %.2x\n", ((rm->offset & 0x03) == 0x03) ? 0xda : 0xff);
+//    printf("R: %.2x\n", ((rm->offset & 0x03) == 0x03) ? 0xda : 0xff);
 
     return ((rm->offset & 0x03) == 0x03) ? 0xda : 0xff;
 }
 
 static void writeIo(Arc* rm, UInt16 ioPort, UInt8 value)
 {
-    printf("W: %.2x\n", value);
+//    printf("W: %.2x\n", value);
     if (value == 0x35) {
         rm->offset++;
     }
@@ -107,16 +107,11 @@ static void getDebugInfo(Arc* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 0, 0x7f, DBG_IO_READWRITE, readIo(rm, 0x7f));
 }
 
-int romMapperArcCreate(char* filename, UInt8* romData, 
+int romMapperArcCreate(const char* filename, UInt8* romData, 
                        int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     Arc* rm;
     int pages = size / 0x2000;
     int i;
@@ -126,7 +121,7 @@ int romMapperArcCreate(char* filename, UInt8* romData,
     rm->deviceHandle = deviceManagerRegister(ROM_ARC, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_CART, "Parallax ARC", &dbgCallbacks, rm);
 
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, destroy, rm);
 
     size = (size + 0x3fff) & ~0x3fff;
 
@@ -140,7 +135,7 @@ int romMapperArcCreate(char* filename, UInt8* romData,
         slotMapPage(slot, sslot, i + startPage, rm->romData + 0x2000 * i, 1, 0);
     }
     
-    ioPortRegister(0x7f, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
+    ioPortRegister(0x7f, readIo, writeIo, rm);
 
     reset(rm);
 

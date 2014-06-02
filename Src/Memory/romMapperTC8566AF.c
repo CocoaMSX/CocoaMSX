@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperTC8566AF.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.11 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -225,22 +225,17 @@ static void write(RomMapperTC8566AF* rm, UInt16 address, UInt8 value)
     }
 }
 
-int romMapperTC8566AFCreate(char* filename, UInt8* romData, 
+int romMapperTC8566AFCreate(const char* filename, UInt8* romData, 
                            int size, int slot, int sslot, int startPage,
                            RomType romType) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperTC8566AF* rm;
 
     rm = malloc(sizeof(RomMapperTC8566AF));
 
     rm->deviceHandle = deviceManagerRegister(romType, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, 4, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, read, peek, write, destroy, rm);
 
     size = (size + 0x3fff) & ~0x3fff;
 

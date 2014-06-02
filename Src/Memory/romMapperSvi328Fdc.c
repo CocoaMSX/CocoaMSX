@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSvi328Fdc.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -177,13 +177,8 @@ static void getDebugInfo(Svi328Fdc* rm, DbgDevice* dbgDevice)
 
 int svi328FdcCreate(void) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     Svi328Fdc* rm;
 
     rm = malloc(sizeof(Svi328Fdc));
@@ -191,12 +186,12 @@ int svi328FdcCreate(void)
     rm->deviceHandle = deviceManagerRegister(ROM_SVI328FDC, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_PORT, langDbgDevSviFdc(), &dbgCallbacks, rm);
 
-    ioPortRegister(0x30, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0x31, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0x32, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0x33, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0x34, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0x38, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
+    ioPortRegister(0x30, readIo, writeIo, rm);
+    ioPortRegister(0x31, readIo, writeIo, rm);
+    ioPortRegister(0x32, readIo, writeIo, rm);
+    ioPortRegister(0x33, readIo, writeIo, rm);
+    ioPortRegister(0x34, readIo, writeIo, rm);
+    ioPortRegister(0x38, readIo, writeIo, rm);
 
     rm->fdc = wd2793Create(FDC_TYPE_WD2793);
 

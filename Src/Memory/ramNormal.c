@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/ramNormal.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.14 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:42 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -101,18 +101,8 @@ static int dbgWriteMemory(RamNormal* rm, char* name, void* data, int start, int 
 
 int ramNormalCreate(int size, int slot, int sslot, int startPage, UInt8** ramPtr, UInt32* ramSize) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = {
-        (void(*)(void*,DbgDevice*))getDebugInfo,
-        (int(*)(void*,char*,void*,int,int))dbgWriteMemory,
-        NULL,
-        NULL
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, dbgWriteMemory, NULL, NULL };
     RamNormal* rm;
     int pages = size / 0x2000;
     int i;
@@ -142,7 +132,7 @@ int ramNormalCreate(int size, int slot, int sslot, int startPage, UInt8** ramPtr
     }
 
     rm->deviceHandle = deviceManagerRegister(RAM_NORMAL, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, NULL, NULL, NULL, destroy, rm);
 
     if (ramPtr != NULL) {
         *ramPtr = rm->ramData;
@@ -154,4 +144,3 @@ int ramNormalCreate(int size, int slot, int sslot, int startPage, UInt8** ramPtr
 
     return 1;
 }
-

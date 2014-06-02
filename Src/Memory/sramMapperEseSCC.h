@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/sramMapperEseSCC.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.2 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2007-02-21 16:25:24 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,6 +30,6 @@
 
 #include "MsxTypes.h"
 
-int sramMapperEseSCCCreate(char* filename, UInt8* buf, int size, int pSlot, int sSlot, int startPage, int hdId, int mode);
+int sramMapperEseSCCCreate(const char* filename, UInt8* buf, int size, int pSlot, int sSlot, int startPage, int hdId, int mode);
 
 #endif

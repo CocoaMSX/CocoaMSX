@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/Common.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.57 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-08 02:52:32 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -26,7 +26,10 @@
 ******************************************************************************
 */
 
+#ifndef BORDER_WIDTH
 #define BORDER_WIDTH   8
+#endif
+
 #define DISPLAY_WIDTH  256
 #define SCREEN_WIDTH   (2 * BORDER_WIDTH + DISPLAY_WIDTH)
 #define SCREEN_HEIGHT  240
@@ -260,7 +263,7 @@ static void RefreshLine0(VDP* vdp, int Y, int X, int X2)
 
         X++;
         linePtr0 = RefreshBorder(vdp, Y, vdp->palette[vdp->BGColor], 0, vdp->hAdjustSc0);
-
+  
         hScroll    = vdpHScroll(vdp) % 6;
 
         y = Y - vdp->firstLine + vdpVScroll(vdp) - vdp->scr0splitLine;
@@ -441,7 +444,7 @@ static void RefreshLine0Plus(VDP* vdp, int Y, int X, int X2)
 static void RefreshLine0Mix(VDP* vdp, int Y, int X, int X2)
 {
     static int     patternBase;
-//    static int     pattern;
+    static int     pattern;
     static int     x;
     static int     y;
     static int     shift;
@@ -642,7 +645,7 @@ static void RefreshLineTx80(VDP* vdp, int Y, int X, int X2)
 
 static void RefreshLineTx80(VDP* vdp, int Y, int X, int X2)
 {
-//    static UInt8*  sprLine;
+    static UInt8*  sprLine;
     static int     patternBase;
     static UInt8   colPattern;
     static int     pattern;

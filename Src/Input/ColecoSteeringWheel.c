@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/ColecoSteeringWheel.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.4 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -79,9 +79,9 @@ static void destroy(ColecoSteeringWheel* joystick) {
 ColecoJoystickDevice* colecoSteeringWheelCreate(int controller)
 {
     ColecoSteeringWheel* joystick = (ColecoSteeringWheel*)calloc(1, sizeof(ColecoSteeringWheel));
-    joystick->joyDevice.read    = (UInt16(*)(void*))read;
-    joystick->joyDevice.reset   = (void(*)(void*))reset;
-    joystick->joyDevice.destroy = (void(*)(void*))destroy;
+    joystick->joyDevice.read    = read;
+    joystick->joyDevice.reset   = reset;
+    joystick->joyDevice.destroy = destroy;
     joystick->controller        = controller;
 
     archMouseSetForceLock(1);

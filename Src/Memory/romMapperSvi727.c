@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSvi727.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -43,21 +43,21 @@ typedef struct {
     int sslot;
     int startPage;
     CRTC6845* crtc6845;
-} RomMapperSvi727;
+} RomMapperSvi727Col80;
 
-static void saveState(RomMapperSvi727* rm)
+static void saveState(RomMapperSvi727Col80* rm)
 {
     SaveState* state = saveStateOpenForWrite("Svi727");
     saveStateClose(state);
 }
 
-static void loadState(RomMapperSvi727* rm)
+static void loadState(RomMapperSvi727Col80* rm)
 {
     SaveState* state = saveStateOpenForRead("Svi727");
     saveStateClose(state);
 }
 
-static void destroy(RomMapperSvi727* rm)
+static void destroy(RomMapperSvi727Col80* rm)
 {
     ioPortUnregister(0x78);
     ioPortUnregister(0x79);
@@ -69,7 +69,7 @@ static void destroy(RomMapperSvi727* rm)
     free(rm);
 }
 
-static UInt8 read(RomMapperSvi727* rm, UInt16 address)
+static UInt8 read(RomMapperSvi727Col80* rm, UInt16 address)
 {
     UInt8 value = 0xff;
     if (address >= 0xb800 && address < 0xc000) {
@@ -79,20 +79,20 @@ static UInt8 read(RomMapperSvi727* rm, UInt16 address)
     return value;
 }
 
-static void write(RomMapperSvi727* rm, UInt16 address, UInt8 value) 
+static void write(RomMapperSvi727Col80* rm, UInt16 address, UInt8 value) 
 {
     if (address >= 0xb800 && address < 0xc000) {
         crtcMemWrite(rm->crtc6845, address & 0x07ff, value);
     }
 }
 
-static UInt8 readIo(RomMapperSvi727* rm, UInt16 ioPort) 
+static UInt8 readIo(RomMapperSvi727Col80* rm, UInt16 ioPort) 
 {
     UInt8 value = crtcRead(rm->crtc6845);
     return value;
 }
 
-static void writeIo(RomMapperSvi727* rm, UInt16 ioPort, UInt8 value) 
+static void writeIo(RomMapperSvi727Col80* rm, UInt16 ioPort, UInt8 value) 
 {
     switch (ioPort) {
     case 0x78:
@@ -104,29 +104,24 @@ static void writeIo(RomMapperSvi727* rm, UInt16 ioPort, UInt8 value)
     }
 }
 
-static void reset(RomMapperSvi727* rm)
+static void reset(RomMapperSvi727Col80* rm)
 {
 }
 
-int romMapperSvi727Create(char* filename, UInt8* charRom, int charSize,
+int romMapperSvi727Col80Create(const char* filename, UInt8* charRom, int charSize,
                                  int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    RomMapperSvi727* rm;
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    RomMapperSvi727Col80* rm;
     int pages = 8;
     int i;
 
     startPage = 0;
 
-    rm = malloc(sizeof(RomMapperSvi727));
+    rm = malloc(sizeof(RomMapperSvi727Col80));
 
-    rm->deviceHandle = deviceManagerRegister(ROM_SVI727, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    rm->deviceHandle = deviceManagerRegister(ROM_SVI727COL80, &callbacks, rm);
+    slotRegister(slot, sslot, startPage, pages, read, read, write, destroy, rm);
 
     rm->charData = calloc(1, 0x2000);
     if (charRom != NULL) {
@@ -148,8 +143,8 @@ int romMapperSvi727Create(char* filename, UInt8* charRom, int charSize,
         slotMapPage(slot, sslot, i + startPage, NULL, 0, 0);
     }
 
-    ioPortRegister(0x78, NULL,   (IoPortWrite)writeIo, rm);
-    ioPortRegister(0x79, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
+    ioPortRegister(0x78, NULL,   writeIo, rm);
+    ioPortRegister(0x79, readIo, writeIo, rm);
 
     reset(rm);
 

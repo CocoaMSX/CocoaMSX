@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperOpcodeMegaRam.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-11-23 20:26:12 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -146,13 +146,8 @@ static void getDebugInfo(RomMapperOpcodeMegaRam* rm, DbgDevice* dbgDevice)
 
 int romMapperOpcodeMegaRamCreate(int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     
     RomMapperOpcodeMegaRam* rm = malloc(sizeof(RomMapperOpcodeMegaRam));
     
@@ -165,10 +160,10 @@ int romMapperOpcodeMegaRamCreate(int slot, int sslot, int startPage)
     rm->deviceHandle = deviceManagerRegister(ROM_OPCODEMEGA, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_RAM, "MEGARAM", &dbgCallbacks, rm);
 
-    ioPortRegister(0x48, (SlotRead)read, (SlotWrite)write, rm);
-    ioPortRegister(0x49, (SlotRead)read, (SlotWrite)write, rm);
-    ioPortRegister(0x4a, (SlotRead)read, (SlotWrite)write, rm);
-    ioPortRegister(0x4b, (SlotRead)read, (SlotWrite)write, rm);
+    ioPortRegister(0x48, read, write, rm);
+    ioPortRegister(0x49, read, write, rm);
+    ioPortRegister(0x4a, read, write, rm);
+    ioPortRegister(0x4b, read, write, rm);
 
     reset(rm);
 

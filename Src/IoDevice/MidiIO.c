@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/MidiIO.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -33,7 +33,7 @@
 #include "Board.h"
 #include "ArchMidi.h"
 
-struct MidiIO {
+typedef struct MidiIO {
     MidiType inType;
     FILE* inFile;
     ArchMidi* inHost;
@@ -64,8 +64,6 @@ static void setOutType(int device, MidiIO* midiIo)
     case MIDI_FILE:
         midiIo->outFile = fopen(theOutFileName, "w+");
         break;
-    default:
-        break;
     }
 }
 
@@ -80,12 +78,10 @@ static void setInType(int device, MidiIO* midiIo)
 {
     switch (midiIo->inType) {
     case MIDI_HOST:
-        midiIo->inHost = archMidiInCreate(device, (ArchMidiInCb)midiInCb, midiIo);
+        midiIo->inHost = archMidiInCreate(device, midiInCb, midiIo);
         break;
     case MIDI_FILE:
         midiIo->inFile = fopen(theInFileName, "w+");
-        break;
-    default:
         break;
     }
 }
@@ -102,8 +98,6 @@ static void removeOutType(MidiIO* midiIo)
     case MIDI_FILE:
         fclose(midiIo->outFile);
         break;
-    default:
-        break;
     }
 }
 
@@ -119,8 +113,6 @@ static void removeInType(MidiIO* midiIo)
     case MIDI_FILE:
         fclose(midiIo->inFile);
         break;
-    default:
-        break;
     }
 }
 
@@ -134,8 +126,6 @@ void midiIoTransmit(MidiIO* midiIo, UInt8 value)
         break;
     case MIDI_FILE:
         fwrite(&value, 1, 1, midiIo->outFile);
-        break;
-    default:
         break;
     }
 }
@@ -243,8 +233,6 @@ int ykIoGetKeyState(MidiIO* midiIo, int key)
         if (midiIo->inHost) {
             return archMidiInGetNoteOn(midiIo->inHost, key);
         }
-        break;
-    default:
         break;
     }
     return 0;

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/FrameBuffer.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.27 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 14:35:59 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -96,10 +96,21 @@ void frameBufferSetBlendFrames(int blendFrames);
 #define videoGetColor(R, G, B) \
           ((((int)(R) >> 3) << 11) | (((int)(G) >> 3) << 6) | ((int)(B) >> 3))
 #else
+#if defined(VIDEO_COLOR_TYPE_RGB565)
+#define BKMODE_TRANSPARENT 0x0000
+#define videoGetColor(R, G, B) \
+		((((int)(R) >> 3) << 11) | (((int)(G) >> 2) << 5) | ((int)(B) >> 3))
+#elif defined(VIDEO_COLOR_TYPE_RGBA5551)
+#define BKMODE_TRANSPARENT 0x0001
+#define videoGetColor(R, G, B) \
+		((((int)(R) >> 3) << 11) | (((int)(G) >> 3) << 6) | (((int)(B) >> 3) << 1))
+#else // default is ARGB1555
 #define BKMODE_TRANSPARENT 0x8000
 #define videoGetColor(R, G, B) \
-          ((((int)(R) >> 3) << 10) | (((int)(G) >> 3) << 5) | ((int)(B) >> 3))
-#endif
+		((((int)(R) >> 3) << 10) | (((int)(G) >> 3) << 5) | ((int)(B) >> 3))
+#endif // VIDEO_COLOR_TYPE
+
+#endif // WII
 #define videoGetTransparentColor() BKMODE_TRANSPARENT
 
 

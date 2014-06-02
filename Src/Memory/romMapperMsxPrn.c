@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMsxPrn.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.10 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -122,13 +122,8 @@ static void getDebugInfo(RomMapperMsxPrn* prn, DbgDevice* dbgDevice)
 
 int romMapperMsxPrnCreate(void) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = {destroy, reset, saveState, loadState};
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperMsxPrn* prn;
 
     prn = malloc(sizeof(RomMapperMsxPrn));
@@ -138,8 +133,8 @@ int romMapperMsxPrnCreate(void)
     prn->deviceHandle = deviceManagerRegister(ROM_MSXPRN, &callbacks, prn);
     prn->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevPrinter(), &dbgCallbacks, prn);
 
-    ioPortRegister(0x90, (IoPortRead)readIo, (IoPortWrite)writeIo, prn);
-    ioPortRegister(0x91, (IoPortRead)readIo, (IoPortWrite)writeIo, prn);
+    ioPortRegister(0x90, readIo, writeIo, prn);
+    ioPortRegister(0x91, readIo, writeIo, prn);
 
     reset(prn);
 

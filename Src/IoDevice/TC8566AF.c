@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/TC8566AF.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.16 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-18 15:08:04 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -357,6 +357,7 @@ static void tc8566afCommandPhaseWrite(TC8566AF* tc, UInt8 value)
                 }
                 if (rv == DSKE_CRC_ERROR) {
                     tc->status0 |= ST0_IC0;
+                    tc->status1 |= ST1_DE; 
                     tc->status2 |= ST2_DD;
                 }
                 tc->mainStatus |= STM_DIO;

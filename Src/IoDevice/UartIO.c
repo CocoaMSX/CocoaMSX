@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/UartIO.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.5 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:20 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -32,7 +32,7 @@
 #include "DAC.h"
 #include "Board.h"
 
-struct UartIO {
+typedef struct UartIO {
     UartType type;
     FILE* file;
     int  uartReady;
@@ -56,8 +56,6 @@ static void setType(UartIO* uartIO)
     case UART_FILE:
         uartIO->file = fopen(theFileName, "w+");
         break;
-    default:
-        break;
     }
 }
 
@@ -71,8 +69,6 @@ static void removeType(UartIO* uartIO)
     case UART_FILE:
         fclose(uartIO->file);
         break;
-    default:
-        break;
     }
 }
 
@@ -85,8 +81,6 @@ void uartIOTransmit(UartIO* uartIO, UInt8 value)
     case UART_FILE:
         fwrite(&value, 1, 1, uartIO->file);
         break;
-    default:
-        break;
     }
 }
 
@@ -97,8 +91,6 @@ int uartIOGetStatus(UartIO* uartIO)
         return uartIO->uartReady;
     case UART_FILE:
         return uartIO->file != NULL;
-    default:
-        break;
     }
     return 0;
 }

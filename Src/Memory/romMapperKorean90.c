@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKorean90.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.9 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-06-08 13:02:48 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -125,16 +125,11 @@ static void getDebugInfo(RomMapperKorean90* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 0, 0x77, DBG_IO_WRITE, 0);
 }
 
-int romMapperKorean90Create(char* filename, UInt8* romData, 
+int romMapperKorean90Create(const char* filename, UInt8* romData, 
                             int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperKorean90* rm;
     int i;
 
@@ -147,7 +142,7 @@ int romMapperKorean90Create(char* filename, UInt8* romData,
     rm->deviceHandle = deviceManagerRegister(ROM_KOREAN90, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_CART, langDbgDevKorean90(), &dbgCallbacks, rm);
 
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);
@@ -167,7 +162,7 @@ int romMapperKorean90Create(char* filename, UInt8* romData,
     
     // bankswitch I/O at port $77, 1st insertion only
     // it's very likely though that writes to that port get intercepted by every inserted Korean90 cart, and not just 1
-    ioPortRegister(0x77, NULL, (IoPortWrite)write, rm);
+    ioPortRegister(0x77, NULL, write, rm);
 
     return 1;
 }

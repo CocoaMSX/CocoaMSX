@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/Microwire93Cx6.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.4 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -34,7 +34,7 @@
 
 // Emulates the Microchip Technology Inc. 93C76/86 eeprom chips
 
-struct Microwire93Cx6
+typedef struct Microwire93Cx6
 {
     UInt8* romData;
     int    romMask;
@@ -98,7 +98,7 @@ static void onTimer(Microwire93Cx6* rm, UInt32 time)
     }
 }
 
-Microwire93Cx6* microwire93Cx6Create(int size, int mode, void* imgData, int imgSize, char* sramFilename)
+Microwire93Cx6* microwire93Cx6Create(int size, int mode, void* imgData, int imgSize, const char* sramFilename)
 {
     Microwire93Cx6* rm = calloc(1, sizeof(Microwire93Cx6));
 
@@ -122,7 +122,7 @@ Microwire93Cx6* microwire93Cx6Create(int size, int mode, void* imgData, int imgS
     // Set mode (8/16 bit)
     rm->modeX8 = mode == 16 ? 0 : 1;
 
-    rm->timer = boardTimerCreate((BoardTimerCb)onTimer, rm);
+    rm->timer = boardTimerCreate(onTimer, rm);
 
     microwire93Cx6Reset(rm);
 

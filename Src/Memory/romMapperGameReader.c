@@ -2,9 +2,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperGameReader.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -134,7 +134,7 @@ static void write(RomMapperGameReader* rm, UInt16 address, UInt8 value)
     static UInt8 buf1[0x10000];
     static UInt8 buf2[0x10000];
 #endif
-//    int bank = address >> 13;
+    int bank = address >> 13;
     int i;
 
 //    fprintf(f, "W %.4x : 0x%.2x\n", address, value);
@@ -167,12 +167,7 @@ static void write(RomMapperGameReader* rm, UInt16 address, UInt8 value)
 
 int romMapperGameReaderCreate(int cartSlot, int slot, int sslot) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperGameReader* rm;
     int i;
 
@@ -192,8 +187,8 @@ int romMapperGameReaderCreate(int cartSlot, int slot, int sslot)
     }
 
     if (rm->gameReader != NULL) {
-        ioPortRegisterUnused(cartSlot, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-        slotRegister(slot, sslot, 0, 8, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+        ioPortRegisterUnused(cartSlot, readIo, writeIo, rm);
+        slotRegister(slot, sslot, 0, 8, read, read, write, destroy, rm);
         for (i = 0; i < 8; i++) {   
             slotMapPage(rm->slot, rm->sslot, i, NULL, 0, 0);
         }
@@ -207,9 +202,9 @@ int romMapperGameReaderCreate(int cartSlot, int slot, int sslot)
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperGameReader.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **

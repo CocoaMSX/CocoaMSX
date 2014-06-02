@@ -29,6 +29,7 @@
 #include "Board.h"
 #include "AY8910.h"
 #include "JoystickPort.h"
+#include "SaveState.h"
 #include "DeviceManager.h"
 #include "Led.h"
 #include "Switches.h"
@@ -191,6 +192,13 @@ static void write(MsxPsg* msxPsg, UInt16 address, UInt8 value)
 
 static void saveState(MsxPsg* msxPsg)
 {
+    // dink: fix for certain games where buttons are stuck after reload of state
+    SaveState* state = saveStateOpenForWrite("MsxPsg");
+    saveStateSet(state, "currentport", msxPsg->currentPort);
+    saveStateSet(state, "registers0", msxPsg->registers[0]);
+    saveStateSet(state, "registers1", msxPsg->registers[1]);
+    saveStateClose(state);
+
     if (msxPsg->devFun[0] != NULL && msxPsg->devFun[0]->saveState != NULL) {
 	    msxPsg->devFun[0]->saveState(msxPsg->devFun[0]);
     }
@@ -203,13 +211,20 @@ static void saveState(MsxPsg* msxPsg)
 
 static void loadState(MsxPsg* msxPsg)
 {
+    // dink: fix for certain games where buttons are stuck after reload of state
+    SaveState* state = saveStateOpenForRead("MsxPsg");
+    msxPsg->currentPort =          saveStateGet(state, "currentport", 0);
+    msxPsg->registers[0] = (UInt8) saveStateGet(state, "registers0", 0);
+    msxPsg->registers[1] = (UInt8) saveStateGet(state, "registers1", 0);
+    saveStateClose(state);
+
     if (msxPsg->devFun[0] != NULL && msxPsg->devFun[0]->loadState != NULL) {
 	    msxPsg->devFun[0]->loadState(msxPsg->devFun[0]);
     }
     if (msxPsg->devFun[1] != NULL && msxPsg->devFun[1]->loadState != NULL) {
 	    msxPsg->devFun[1]->loadState(msxPsg->devFun[1]);
     }
-    
+
     ay8910LoadState(msxPsg->ay8910);
 }
 

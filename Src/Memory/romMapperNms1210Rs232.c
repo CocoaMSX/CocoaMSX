@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNms1210Rs232.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.2 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-30 03:53:28 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -319,13 +319,8 @@ static void getDebugInfo(NMS1210Rs232* nms1210Rs232, DbgDevice* dbgDevice)
 */
 int romMapperNms1210Rs232Create(int slot, int sslot, int startPage)
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = {destroy, reset, saveState, loadState};
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     int pages = 4;
     int i;
 
@@ -338,7 +333,7 @@ int romMapperNms1210Rs232Create(int slot, int sslot, int startPage)
     nms1210Rs232->deviceHandle = deviceManagerRegister(ROM_MSXRS232, &callbacks, nms1210Rs232);
     nms1210Rs232->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevRs232(), &dbgCallbacks, nms1210Rs232);
 
-    slotRegister(slot, sslot, startPage, pages, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, (SlotEject)destroy, nms1210Rs232);
+    slotRegister(slot, sslot, startPage, pages, read, peek, write, destroy, nms1210Rs232);
 
     nms1210Rs232->slot  = slot;
     nms1210Rs232->sslot = sslot;
@@ -352,19 +347,19 @@ int romMapperNms1210Rs232Create(int slot, int sslot, int startPage)
 //                                 setRxReady, setDtr, setRts, getDtr, getRts, nms1210Rs232);
     nms1210Rs232->z8530 = z8530Create(nms1210Rs232);
 
-    nms1210Rs232->i8254 = i8254Create(3686400, (I8254Out)pitOut0, (I8254Out)pitOut1, (I8254Out)pitOut2, nms1210Rs232);
+    nms1210Rs232->i8254 = i8254Create(3686400, pitOut0, pitOut1, pitOut2, nms1210Rs232);
 
     nms1210Rs232->serialLink = archUartCreate(romMapperMsxRs232ReceiveCallback);
 
-    ioPortRegister(0x37, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x38, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x39, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x3a, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x3b, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x3c, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x3d, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x3e, (IoPortRead)readIo, (IoPortWrite)writeIo, nms1210Rs232);
-    ioPortRegister(0x3f, NULL, (IoPortWrite)writeIo, nms1210Rs232);
+    ioPortRegister(0x37, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x38, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x39, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x3a, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x3b, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x3c, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x3d, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x3e, readIo, writeIo, nms1210Rs232);
+    ioPortRegister(0x3f, NULL, writeIo, nms1210Rs232);
 
     reset(nms1210Rs232);
 

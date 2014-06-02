@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/AtmelPerom.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-03-30 14:28:20 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -36,7 +36,7 @@ typedef enum { AMD_TYPE_1, AMD_TYPE_2 } AmdType;
 
 
 AtmelPerom* atmelPeromCreate(AmdType type, int flashSize, int sectorSize, UInt32 writeProtectMask, 
-                         void* romData, int size, char* sramFilename, int loadSram);
+                         void* romData, int size, const char* sramFilename, int loadSram);
 void atmelPeromDestroy(AtmelPerom* rm);
 
 int atmelPeromCmdInProgress(AtmelPerom* rm);

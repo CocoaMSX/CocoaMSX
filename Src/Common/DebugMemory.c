@@ -67,7 +67,8 @@ void dbgPrint() {
     printf("MEMORY DUMP:\n");
     for (i = 0; i < MAX_MEMINFO; i++) {
         if (memInfo[i].ptr != NULL) {
-            printf("%d\t%.8x : %d bytes\n", i, memInfo[i].ptr, memInfo[i].size);
+            printf("%d\t%.8x : %d bytes\n", i,
+                   (int)memInfo[i].ptr, (int)memInfo[i].size);
         }
     }
 }

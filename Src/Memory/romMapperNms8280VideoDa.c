@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNms8280VideoDa.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.4 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -88,12 +88,8 @@ static void destroy(RomMapperNms8280VideoDa* rm)
 
 int romMapperNms8280VideoDaCreate() 
 {
-    DeviceCallbacks callbacks   = { (DeviceCallback)destroy, NULL, NULL, NULL };
-    VdpDaCallbacks  daCallbacks = {
-        (void(*)(void*,int))daStart,
-        NULL,
-        (UInt8(*)(void*,int,int,int,Pixel*,int))daRead
-    };
+    DeviceCallbacks callbacks   = { destroy, NULL, NULL, NULL };
+    VdpDaCallbacks  daCallbacks = { daStart, NULL, daRead };
     RomMapperNms8280VideoDa* rm = malloc(sizeof(RomMapperNms8280VideoDa));
 
     rm->deviceHandle = deviceManagerRegister(ROM_NMS8280DIGI, &callbacks, rm);

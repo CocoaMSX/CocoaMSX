@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/I8250.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.10 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -287,7 +287,7 @@ static void i8250CounterCreate(I8250* i8250, UInt32 frequency)
     divisor = i8250->reg[I8250REG_DLM]<<8 | i8250->reg[I8250REG_DLL];
     divisor = (divisor != 0) ? divisor : 1;
 
-    i8250->timerBaudRate = boardTimerCreate((BoardTimerCb)i8250CounterOnTimer, i8250);
+    i8250->timerBaudRate = boardTimerCreate(i8250CounterOnTimer, i8250);
     // Fixme: start + stop + parity bit
     i8250->baudRate = (frequency/16/divisor/10);
     if (i8250->baudRate > 0) {

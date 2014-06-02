@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/MsxMouse.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -156,11 +156,11 @@ static void reset(MsxMouse* mouse) {
 MsxJoystickDevice* msxMouseCreate()
 {
     MsxMouse* mouse = (MsxMouse*)calloc(1, sizeof(MsxMouse));
-    mouse->joyDevice.read       = (UInt8(*)(void*))read;
-    mouse->joyDevice.write      = (void(*)(void*, UInt8))write;
-    mouse->joyDevice.reset      = (void(*)(void*))reset;
-    mouse->joyDevice.loadState  = (void(*)(void*))loadState;
-    mouse->joyDevice.saveState  = (void(*)(void*))saveState;
+    mouse->joyDevice.read       = read;
+    mouse->joyDevice.write      = write;
+    mouse->joyDevice.reset      = reset;
+    mouse->joyDevice.loadState  = loadState;
+    mouse->joyDevice.saveState  = saveState;
 
     reset(mouse);
     

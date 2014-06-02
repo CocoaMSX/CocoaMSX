@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSvi328Prn.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.8 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-31 19:42:22 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -132,13 +132,8 @@ static void getDebugInfo(RomMapperSvi328Prn* rm, DbgDevice* dbgDevice)
 
 int romMapperSvi328PrnCreate(void) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = {(void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL};
+    DeviceCallbacks callbacks = {destroy, reset, saveState, loadState};
+    DebugCallbacks dbgCallbacks = {getDebugInfo, NULL, NULL, NULL};
     RomMapperSvi328Prn* prn;
 
     prn = malloc(sizeof(RomMapperSvi328Prn));
@@ -148,9 +143,9 @@ int romMapperSvi328PrnCreate(void)
     prn->deviceHandle = deviceManagerRegister(ROM_SVI328PRN, &callbacks, prn);
     prn->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevSviPrn(), &dbgCallbacks, prn);
 
-    ioPortRegister(0x10, NULL, (IoPortWrite)writeIo, prn);
-    ioPortRegister(0x11, NULL, (IoPortWrite)writeIo, prn);
-    ioPortRegister(0x12, (IoPortRead)readIo, NULL, prn);
+    ioPortRegister(0x10, NULL, writeIo, prn);
+    ioPortRegister(0x11, NULL, writeIo, prn);
+    ioPortRegister(0x12, readIo, NULL, prn);
 
     reset(prn);
 

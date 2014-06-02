@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Utils/VeryTinyXpath.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:47 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -40,13 +40,11 @@ VtXpath* vtXpathOpenForRead(const char* fileName);
 VtXpath* vtXpathOpenForWrite(const char* fileName);
 void vtXpathClose(VtXpath* xpath);
 
-#if 0
 int vtXpathGetInt(VtXpath* xpath, int numLevels, const char* first, ...);
 const char* vtXpathGetString(VtXpath* xpath, int numLevels, const char* first, ...);
 
 void vtXpathSetInt(VtXpath* xpath, int value, int numLevels, const char* first, ...);
 void vtXpathSetString(VtXpath* xpath, const char* value, int numLevels, const char* first, ...);
-#endif
 
 #ifdef __cplusplus
 }

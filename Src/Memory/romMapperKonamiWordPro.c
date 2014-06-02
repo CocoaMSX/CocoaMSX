@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKonamiWordPro.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -87,7 +87,7 @@ static void write(RomMapperKonamiWordPro* rm, UInt16 address, UInt8 value)
 #if 0
     printf("W %.4x : 0x%.2x\n", address, value);
 #endif
-    if (address == 0xbfff) {
+    if (address = 0xbfff) {
         rm->control = value;
     }
 }
@@ -97,15 +97,10 @@ static void reset(RomMapperKonamiWordPro* rm)
     rm->control = 0xff;
 }
 
-int romMapperKonamiWordProCreate(char* filename, UInt8* romData, 
+int romMapperKonamiWordProCreate(const char* filename, UInt8* romData, 
                           int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperKonamiWordPro* rm;
     int pages = 8;
     int i;
@@ -120,7 +115,7 @@ int romMapperKonamiWordProCreate(char* filename, UInt8* romData,
         startPage = 0;
 
     rm->deviceHandle = deviceManagerRegister(ROM_KONWORDPRO, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, read, read, write, destroy, rm);
 
     rm->romData = calloc(1, size);
     memcpy(rm->romData, romData, size);

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/IoDevice/ScsiDevice.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.10 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2007-03-25 17:05:07 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -606,7 +606,7 @@ static int scsiDeviceBlueMSX(SCSIDEVICE* scsi)
         length = strlen(fileName);
         buffer[0] = (UInt8)((length >> 8) & 0xff);
         buffer[1] = (UInt8)(length & 0xff);
-        strcpy((char*)buffer + 2, fileName);
+        strcpy(buffer + 2, fileName);
         SCSILOG1("file info:\n%s\n", buffer + 2);
         return length + 3;  // + \0
     }

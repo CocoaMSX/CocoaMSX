@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNet.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-09-09 04:32:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -175,10 +175,10 @@ static YM2148* ym2148Create()
 {
     YM2148* midi = (YM2148*)calloc(1, sizeof(YM2148));
 
-    midi->midiIo = midiIoCreate((MidiIOCb)midiInCallback, midi);
+    midi->midiIo = midiIoCreate(midiInCallback, midi);
     midi->semaphore = archSemaphoreCreate(1);
-    midi->timerRecv   = boardTimerCreate((BoardTimerCb)onRecv, midi);
-    midi->timerTrans  = boardTimerCreate((BoardTimerCb)onTrans, midi);
+    midi->timerRecv   = boardTimerCreate(onRecv, midi);
+    midi->timerTrans  = boardTimerCreate(onTrans, midi);
 
     midi->timeRecv = boardSystemTime() + midi->charTime;
     boardTimerAdd(midi->timerRecv, midi->timeRecv);
@@ -437,16 +437,11 @@ static void getDebugInfo(RomMapperNet* rm, DbgDevice* dbgDevice)
     ym2151GetDebugInfo(rm->ym2151, dbgDevice);
 }
 
-int romMapperNetCreate(char* filename, UInt8* romData, 
+int romMapperNetCreate(const char* filename, UInt8* romData, 
                        int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperNet* rm;
     int i;
     int pages = size / 0x2000;
@@ -460,7 +455,7 @@ int romMapperNetCreate(char* filename, UInt8* romData,
     rm->deviceHandle = deviceManagerRegister(ROM_YAMAHANET, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, "Yamaha Net", &dbgCallbacks, rm);
 
-    slotRegister(slot, sslot, startPage, pages, (SlotRead)read, (SlotRead)read, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, read, read, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

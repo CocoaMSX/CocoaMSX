@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Debugger/Debugger.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.19 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-07-01 05:00:23 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -353,6 +353,13 @@ void dbgStep()
     }
 }
 
+void dbgStepBack()
+{
+    if (emulatorGetState() == EMU_PAUSED) {
+        actionEmuStepBack();
+    }
+}
+
 void dbgSetBreakpoint(UInt16 address)
 {
     boardSetBreakpoint(address);
@@ -373,3 +380,12 @@ void dbgEnableVramAccessCheck(int enable)
     }
 }    
 
+void dbgSetWatchpoint(DbgDeviceType devType, int address, DbgWatchpointCondition condition, UInt32 referenceValue, int size)
+{
+    debugDeviceSetMemoryWatchpoint(devType, address, condition, referenceValue, size);
+}
+
+void dbgClearWatchpoint(DbgDeviceType devType, int address)
+{
+    debugDeviceClearMemoryWatchpoint(devType, address);
+}

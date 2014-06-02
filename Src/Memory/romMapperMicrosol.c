@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperMicrosol.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.12 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -185,16 +185,11 @@ static void getDebugInfo(Microsol* rm, DbgDevice* dbgDevice)
     }
 }
 
-int romMapperMicrosolCreate(char* filename, UInt8* romData, 
+int romMapperMicrosolCreate(const char* filename, UInt8* romData, 
                             int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     Microsol* rm;
     int pages = size / 0x2000;
     int i;
@@ -204,7 +199,7 @@ int romMapperMicrosolCreate(char* filename, UInt8* romData,
     rm->deviceHandle = deviceManagerRegister(ROM_MICROSOL, &callbacks, rm);
     rm->debugHandle = debugDeviceRegister(DBGTYPE_BIOS, langDbgDevFdcMicrosol(), &dbgCallbacks, rm);
 
-    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, 4, NULL, NULL, NULL, destroy, rm);
 
     size = (size + 0x3fff) & ~0x3fff;
 
@@ -218,11 +213,11 @@ int romMapperMicrosolCreate(char* filename, UInt8* romData,
         slotMapPage(slot, sslot, i + startPage, rm->romData + 0x2000 * i, 1, 0);
     }
     
-    ioPortRegister(0xd0, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0xd1, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0xd2, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0xd3, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
-    ioPortRegister(0xd4, (IoPortRead)readIo, (IoPortWrite)writeIo, rm);
+    ioPortRegister(0xd0, readIo, writeIo, rm);
+    ioPortRegister(0xd1, readIo, writeIo, rm);
+    ioPortRegister(0xd2, readIo, writeIo, rm);
+    ioPortRegister(0xd3, readIo, writeIo, rm);
+    ioPortRegister(0xd4, readIo, writeIo, rm);
 
     rm->fdc = wd2793Create(FDC_TYPE_WD2793);
 

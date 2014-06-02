@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/ColecoJoystick.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.4 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -61,7 +61,7 @@ static UInt16 read(ColecoJoystick* joystick) {
 ColecoJoystickDevice* colecoJoystickCreate(int controller)
 {
     ColecoJoystick* joystick = (ColecoJoystick*)calloc(1, sizeof(ColecoJoystick));
-    joystick->joyDevice.read   = (UInt16(*)(void*))read;
+    joystick->joyDevice.read   = read;
     joystick->controller       = controller;
     
     return (ColecoJoystickDevice*)joystick;

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperSvi738Fdc.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.10 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -93,12 +93,6 @@ static UInt8 read(RomMapperSvi738Fdc* rm, UInt16 address)
             return wd2793GetDataReg(rm->fdc);
         case 0x3fbc:
             return (wd2793GetIrq(rm->fdc)?0x80:0) | (wd2793GetDataRequest(rm->fdc)?0:0x40);
-        case 0x3fbd:
-            return 0xff;
-        case 0x3fbe:
-            return 0xff;
-        case 0x3fbf:
-            return 0xff;
     }
     return address < 0x4000 ? rm->romData[address] : 0xff;
 }
@@ -116,12 +110,6 @@ static UInt8 peek(RomMapperSvi738Fdc* rm, UInt16 address)
             return 0xff; // Get from fdc
         case 0x3fbc:
             return 0xff; // Get from fdc
-        case 0x3fbd:
-            return 0xff;
-        case 0x3fbe:
-            return 0xff;
-        case 0x3fbf:
-            return 0xff;
     }
     return address < 0x4000 ? rm->romData[address] : 0xff;
 }
@@ -158,10 +146,6 @@ static void write(RomMapperSvi738Fdc* rm, UInt16 address, UInt8 value)
                     wd2793SetDrive(rm->fdc, -1);
             }
             break;
-        case 0x3fbe:	// Set CP/M boot
-            break;
-        case 0x3fbf:	// Set DOS boot
-            break;
     }
 }       
 
@@ -172,15 +156,10 @@ static void reset(RomMapperSvi738Fdc* rm)
     write(rm, 0xffd, 0);
 }
 
-int romMapperSvi738FdcCreate(char* filename, UInt8* romData, 
+int romMapperSvi738FdcCreate(const char* filename, UInt8* romData, 
                               int size, int slot, int sslot, int startPage) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        (DeviceCallback)reset,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
+    DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     RomMapperSvi738Fdc* rm;
     int pages = 4;
     int i;
@@ -192,7 +171,7 @@ int romMapperSvi738FdcCreate(char* filename, UInt8* romData,
     rm = malloc(sizeof(RomMapperSvi738Fdc));
 
     rm->deviceHandle = deviceManagerRegister(ROM_SVI738FDC, &callbacks, rm);
-    slotRegister(slot, sslot, startPage, pages, (SlotRead)read, (SlotRead)peek, (SlotWrite)write, (SlotEject)destroy, rm);
+    slotRegister(slot, sslot, startPage, pages, read, peek, write, destroy, rm);
 
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);

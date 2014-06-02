@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperKanji12.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.7 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:44 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -152,13 +152,8 @@ static void getDebugInfo(RomMapperKanji12* rm, DbgDevice* dbgDevice)
 
 int romMapperKanji12Create(UInt8* romData, int size) 
 {
-    DeviceCallbacks callbacks = {
-        (DeviceCallback)destroy,
-        NULL,
-        (DeviceCallback)saveState,
-        (DeviceCallback)loadState
-    };
-    DebugCallbacks dbgCallbacks = { (void(*)(void*,DbgDevice*))getDebugInfo, NULL, NULL, NULL };
+    DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
+    DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
     RomMapperKanji12* rm;
 
 	if (size != 0x20000 && size != 0x40000) {
@@ -176,7 +171,7 @@ int romMapperKanji12Create(UInt8* romData, int size)
     rm->romData = malloc(size);
     memcpy(rm->romData, romData, size);
     
-    ioPortRegisterSub(0xf7, (IoPortRead)read, (IoPortWrite)write, rm);
+    ioPortRegisterSub(0xf7, read, write, rm);
 
     return 1;
 }

@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Language/LanguageStrings.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.91 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-04 20:57:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -153,7 +153,7 @@ typedef struct {
     char* menuPropsVideo;
     char* menuPropsSound;
     char* menuPropsControls;
-    char* menuPropsPerformance;
+    char* menuPropsEffects;
     char* menuPropsSettings;
     char* menuPropsFile;
     char* menuPropsDisk;
@@ -199,6 +199,7 @@ typedef struct {
     char* menuToolsKeyboard;
     char* menuToolsCtrlEditor;
     char* menuToolsMixer;
+    char* menuToolsLoadMemory;
     char* menuToolsDebugger;
     char* menuToolsTrainer;
     char* menuToolsTraceLogger;
@@ -283,10 +284,12 @@ typedef struct {
 
     char* propTitle;
     char* propEmulation;
+    char* propD3D;
     char* propVideo;
     char* propSound;
     char* propControls;
     char* propPerformance;
+    char* propEffects;
     char* propSettings;
     char* propFile;
     char* propDisk;
@@ -302,6 +305,8 @@ typedef struct {
     char* propEmuFrontSwitchGB;
     char* propEmuFrontSwitch;
     char* propEmuFdcTiming;
+    char* propEmuNoSpriteLimits;
+    char* propEnableMsxKeyboardQuirk;
     char* propEmuReversePlay;
     char* propEmuPauseSwitch;
     char* propEmuAudioSwitch;
@@ -389,6 +394,19 @@ typedef struct {
     char* propCdromMethodAspi;
     char* propCdromDrive;
 
+	char* propD3DParametersGB;
+    char* propD3DAspectRatioText;
+    char* propD3DLinearFilteringText;
+    char* propD3DForceHighResText;
+    char* propD3DExtendBorderColorText;
+
+    char* propD3DCroppingGB;
+	char* propD3DCroppingTypeText;
+	char* propD3DCroppingLeftText;
+    char* propD3DCroppingRightText;
+    char* propD3DCroppingTopText;
+    char* propD3DCroppingBottomText;
+
 
     //----------------------
     // Dropdown related lines
@@ -418,6 +436,7 @@ typedef struct {
     char* enumVideoDrvDirectDrawHW;
     char* enumVideoDrvDirectDraw;
     char* enumVideoDrvGDI;
+    char* enumVideoDrvD3D;
 
     char* enumVideoFrameskip0;
     char* enumVideoFrameskip1;
@@ -425,6 +444,19 @@ typedef struct {
     char* enumVideoFrameskip3;
     char* enumVideoFrameskip4;
     char* enumVideoFrameskip5;
+
+	char* enumD3DARAuto;
+	char* enumD3DARStretch;
+	char* enumD3DARPAL;
+	char* enumD3DARNTSC;
+	char* enumD3DAR11;
+
+	char* enumD3DCropNone;
+	char* enumD3DCropMSX1;
+	char* enumD3DCropMSX1Plus8;
+	char* enumD3DCropMSX2;
+	char* enumD3DCropMSX2Plus8;
+	char* enumD3DCropCustom;
 
     char* enumSoundDrvNone;
     char* enumSoundDrvWMM;
@@ -598,7 +630,7 @@ typedef struct {
     char* shortcutShowVideoProp;
     char* shortcutShowAudioProp;
     char* shortcutShowCtrlProp;
-    char* shortcutShowPerfProp;
+    char* shortcutShowEffectsProp;
     char* shortcutShowSettProp;
     char* shortcutShowPorts;
     char* shortcutShowLanguage;
@@ -613,6 +645,8 @@ typedef struct {
     char* shortcutShowFiles;
     char* shortcutToggleSpriteEnable;
     char* shortcutToggleFdcTiming;
+    char* shortcutToggleNoSpriteLimits;
+    char* shortcutEnableMsxKeyboardQuirk;
     char* shortcutToggleCpuTrace;
     char* shortcutVideoLoad;
     char* shortcutVideoPlay;
@@ -654,6 +688,7 @@ typedef struct {
     char* romTypeMicrosolFdc;
     char* romTypeNationalFdc;
     char* romTypePhilipsFdc;
+    char* romTypeSvi707Fdc;
     char* romTypeSvi738Fdc;
     char* romTypeMappedRam;
     char* romTypeMirroredRam1k;
@@ -684,6 +719,7 @@ typedef struct {
     char* romTypeSvi328Prn;
     char* romTypeSvi328Uart;
     char* romTypeSvi328col80;
+    char* romTypeSvi328RsIde;
     char* romTypeSvi727col80;
     char* romTypeColecoCart;
     char* romTypeSg1000Cart;

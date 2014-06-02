@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/MsxTetrisDongle.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -72,11 +72,11 @@ static void reset(MsxTetrisDongle* tetrisDongle) {
 MsxJoystickDevice* msxTetrisDongleCreate()
 {
     MsxTetrisDongle* tetrisDongle = (MsxTetrisDongle*)calloc(1, sizeof(MsxTetrisDongle));
-    tetrisDongle->joyDevice.read      = (UInt8(*)(void*))read;
-    tetrisDongle->joyDevice.write     = (void(*)(void*, UInt8))write;
-    tetrisDongle->joyDevice.reset     = (void(*)(void*))reset;
-    tetrisDongle->joyDevice.loadState = (void(*)(void*))loadState;
-    tetrisDongle->joyDevice.saveState = (void(*)(void*))saveState;
+    tetrisDongle->joyDevice.read      = read;
+    tetrisDongle->joyDevice.write     = write;
+    tetrisDongle->joyDevice.reset     = reset;
+    tetrisDongle->joyDevice.loadState = loadState;
+    tetrisDongle->joyDevice.saveState = saveState;
 
     reset(tetrisDongle);
     

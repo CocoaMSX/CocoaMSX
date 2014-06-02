@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Memory/romMapperNet.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.1 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-09-09 04:32:19 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -30,7 +30,7 @@
  
 #include "MsxTypes.h"
 
-int romMapperNetCreate(char* filename, UInt8* romData, 
+int romMapperNetCreate(const char* filename, UInt8* romData, 
                        int size, int slot, int sslot, int startPage);
 
 #endif

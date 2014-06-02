@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/VideoChips/SpriteLine.h,v $
 **
-** $Revision: 73 $
+** $Revision: 1.36 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2009-04-19 19:53:16 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -65,8 +65,8 @@ UInt8* spritesLine(VDP* vdp, int line) {
     int bufIndex;
     UInt8 collisionBuf[384];
     UInt8* attrib;
-    UInt8* attribTable[4];
-    int spriteLine[5];
+    UInt8* attribTable[32];
+    int spriteLine[33];
     UInt8 patternMask;
     int idx;
     int size;
@@ -140,7 +140,8 @@ UInt8* spritesLine(VDP* vdp, int line) {
 			if ((vdp->vdpStatus[0] & 0xc0) == 0) {
 				vdp->vdpStatus[0] = (vdp->vdpStatus[0] & 0xe0) | 0x40 | idx;
 			}
-            break;
+			if (!noSpriteLimits)
+				break;
         }
 
         attribTable[visibleCnt++] = attrib;
@@ -326,7 +327,7 @@ UInt8* colorSpritesLine(VDP* vdp, int line, int scr6) {
     int solidColor;
     int bufIndex;
     UInt8 collisionBuf[384];
-    SpriteAttribute attribTable[8];
+    SpriteAttribute attribTable[32];
     UInt8 patternMask;
     int   attribOffset;
     int   sprite;
@@ -396,7 +397,8 @@ UInt8* colorSpritesLine(VDP* vdp, int line, int scr6) {
 			if ((vdp->vdpStatus[0] & 0xc0) == 0) {
 				vdp->vdpStatus[0] = (vdp->vdpStatus[0] & 0xe0) | 0x40 | sprite;
 			}
-            break;
+			if (!noSpriteLimits)
+				break;
         }
 
         offset = (vdp->sprGenBase & 0x1f800) + ((int)(*MAP_VRAM(vdp, attribOffset + 2) & patternMask) << 3) + spriteLine;

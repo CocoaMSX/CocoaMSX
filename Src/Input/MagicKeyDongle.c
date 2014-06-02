@@ -1,9 +1,9 @@
 /*****************************************************************************
 ** $Source: /cygdrive/d/Private/_SVNROOT/bluemsx/blueMSX/Src/Input/MagicKeyDongle.c,v $
 **
-** $Revision: 73 $
+** $Revision: 1.3 $
 **
-** $Date: 2012-10-19 17:10:16 -0700 (Fri, 19 Oct 2012) $
+** $Date: 2008-03-30 18:38:40 $
 **
 ** More info: http://www.bluemsx.com
 **
@@ -40,7 +40,7 @@ static UInt8 read(MagicKeyDongle* dongle) {
 MsxJoystickDevice* magicKeyDongleCreate()
 {
     MagicKeyDongle* dongle = (MagicKeyDongle*)calloc(1, sizeof(MagicKeyDongle));
-    dongle->joyDevice.read = (UInt8(*)(void*))read;
+    dongle->joyDevice.read = read;
     
     return (MsxJoystickDevice*)dongle;
 }
