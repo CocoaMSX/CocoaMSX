@@ -2211,22 +2211,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
 }
 
-- (void)editMachineSettings:(id)sender
-{
-    if (![self isInitialized])
-        return;
-    
-    if (!machineEditorController)
-    {
-        machineEditorController = [[CMMachineEditorController alloc] init];
-        NSString *machineName = [NSString stringWithCString:properties->emulation.machineName
-                                                   encoding:NSUTF8StringEncoding];
-        [machineEditorController loadMachineNamed:machineName];
-    }
-    
-    [machineEditorController showWindow:self];
-}
-
 // View menu
 
 - (void)normalSize:(id)sender

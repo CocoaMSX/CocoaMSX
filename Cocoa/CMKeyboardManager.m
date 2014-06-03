@@ -28,7 +28,8 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 
 @interface CMKeyboardManager()
 
-- (int)scanCodeToKeyCode:(NSInteger)usage;
+- (int)scanCodeToKeyCode:(NSInteger)usage
+           modifierFlags:(NSUInteger)modifierFlags;
 - (void)keyStateDidChange:(NSInteger)scanCode
                    isDown:(BOOL)isDown;
 
@@ -98,6 +99,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 
 // Adapted from https://github.com/LaurentGomila/SFML/
 - (int)scanCodeToKeyCode:(NSInteger)usage
+           modifierFlags:(NSUInteger)modifierFlags
 {
     switch (usage)
     {
@@ -141,7 +143,13 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
         
     case kHIDUsage_KeyboardReturnOrEnter:       return 0x24;
     case kHIDUsage_KeyboardEscape:              return 0x35;
-    case kHIDUsage_KeyboardDeleteOrBackspace:   return 0x33;
+    case kHIDUsage_KeyboardDeleteOrBackspace:
+        // When the Function key is held down, simulate Forward Delete
+        if ((modifierFlags & NSFunctionKeyMask) != 0)
+            return 0x75;
+        else
+            return 0x33;
+        break;
     case kHIDUsage_KeyboardTab:                 return 0x30;
     case kHIDUsage_KeyboardSpacebar:            return 0x31;
     case kHIDUsage_KeyboardHyphen:              return 0x1b;
@@ -230,7 +238,8 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
     CMKeyEventData *event = [[[CMKeyEventData alloc] init] autorelease];
     
     [event setScanCode:scanCode];
-    [event setKeyCode:[self scanCodeToKeyCode:scanCode]];
+    [event setKeyCode:[self scanCodeToKeyCode:scanCode
+                                modifierFlags:[NSEvent modifierFlags]]];
 
     @synchronized (observerLock)
     {

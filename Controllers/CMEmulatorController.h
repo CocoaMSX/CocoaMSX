@@ -245,6 +245,4 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)shutDownMsx:(id)sender;
 - (IBAction)pauseMsx:(id)sender;
 
-- (IBAction)editMachineSettings:(id)sender;
-
 @end

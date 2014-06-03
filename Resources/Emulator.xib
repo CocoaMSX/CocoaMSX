@@ -459,12 +459,6 @@
                                     <action selector="pauseMsx:" target="-2" id="1210"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Machine Settings..." id="1101">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="editMachineSettings:" target="-2" id="1214"/>
-                                </connections>
-                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
