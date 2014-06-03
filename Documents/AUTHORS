@@ -28,10 +28,6 @@ CocoaMSX uses SBJson toolkit by Stig Bratauset
   http://github.com/stig/json-framework
   See "SBJson License.txt" for licensing information
 
-CocoaMSX includes code from ShortcutRecorder by various contributors
-  http://wafflesoftware.net/shortcut/
-  Licensed under BSD License
-
 CocoaMSX includes code from the SDL library by Sam Lantinga and
 contributors
   http://www.libsdl.org
