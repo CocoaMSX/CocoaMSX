@@ -61,7 +61,7 @@
 @synthesize scrollingStartTime = _scrollingStartTime;
 @synthesize actualScrollingText = _actualScrollingText;
 
-#define BLANK_LINE_COUNT 14
+#define BLANK_LINE_COUNT 16
 
 #define	PRESCROLL_DELAY_SECONDS	4.00	// time before animation starts
 #define	SCROLL_DELAY_SECONDS    0.05	// time between animation frames

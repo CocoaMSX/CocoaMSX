@@ -542,7 +542,7 @@
                                 <slider verticalHuggingPriority="750" id="Hrw-iF-9Pr">
                                     <rect key="frame" x="83" y="7" width="92" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <sliderCell key="cell" controlSize="mini" state="on" alignment="left" maxValue="11" tickMarkPosition="below" numberOfTickMarks="11" allowsTickMarkValuesOnly="YES" sliderType="linear" id="xhV-H9-XH3"/>
+                                    <sliderCell key="cell" controlSize="mini" refusesFirstResponder="YES" state="on" alignment="left" maxValue="11" tickMarkPosition="below" numberOfTickMarks="11" allowsTickMarkValuesOnly="YES" sliderType="linear" id="xhV-H9-XH3"/>
                                     <connections>
                                         <binding destination="1283" name="value" keyPath="values.joystickRenshaTurbo" id="L9Y-w1-Cbn"/>
                                     </connections>
