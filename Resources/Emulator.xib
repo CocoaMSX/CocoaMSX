@@ -415,6 +415,12 @@
                                     <action selector="toggleStatusBar:" target="-2" id="1286"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Show Frame Rate" id="qRB-JS-u9P">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <binding destination="1283" name="value" keyPath="values.showFps" id="7fa-i7-Vln"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1280"/>
                             <menuItem title="Enter Full Screen" keyEquivalent="f" id="855">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
@@ -580,6 +586,11 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                     <connections>
+                                        <binding destination="1283" name="hidden" keyPath="values.showFps" id="MB6-FD-Zsg">
+                                            <dictionary key="options">
+                                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                            </dictionary>
+                                        </binding>
                                         <binding destination="-2" name="value" keyPath="self.fpsDisplay" id="1224"/>
                                     </connections>
                                 </textField>
