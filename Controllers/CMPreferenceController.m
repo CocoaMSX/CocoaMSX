@@ -562,6 +562,7 @@ static NSArray *keysInOrderOfAppearance;
 {
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
+    NSLog(@"machinesArrayController: synchronizing...");
 #endif
     // Load downloadable machines
     NSMutableSet *all = [NSMutableSet set];
