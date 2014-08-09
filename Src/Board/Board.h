@@ -185,7 +185,7 @@ int boardRemoveExternalDevices();
 
 // The following methods are more generic config than board specific
 // They should be moved from board.
-void boardSetDirectory(char* dir);
+void boardSetDirectory(const char* dir);
 
 void boardSetFdcTimingEnable(int enable);
 int  boardGetFdcTimingEnable();

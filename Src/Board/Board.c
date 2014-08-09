@@ -1163,8 +1163,12 @@ void boardChangeCartridge(int cartNo, RomType romType, char* cart, char* cartZip
         boardDeviceInfo->carts[cartNo].inserted = cart != NULL;
         boardDeviceInfo->carts[cartNo].type = romType;
 
-        strcpy(boardDeviceInfo->carts[cartNo].name, cart ? cart : "");
-        strcpy(boardDeviceInfo->carts[cartNo].inZipName, cartZip ? cartZip : "");
+        if (boardDeviceInfo->carts[cartNo].name != cart) {
+            strcpy(boardDeviceInfo->carts[cartNo].name, cart ? cart : "");
+        }
+        if (boardDeviceInfo->carts[cartNo].inZipName != cartZip) {
+            strcpy(boardDeviceInfo->carts[cartNo].inZipName, cartZip ? cartZip : "");
+        }
     }
 
     useRom     -= romTypeIsRom(currentRomType[cartNo]);
@@ -1232,9 +1236,13 @@ void boardChangeDiskette(int driveId, char* fileName, const char* fileInZipFile)
 
     if (boardDeviceInfo != NULL) {
         boardDeviceInfo->disks[driveId].inserted = fileName != NULL;
-
-        strcpy(boardDeviceInfo->disks[driveId].name, fileName ? fileName : "");
-        strcpy(boardDeviceInfo->disks[driveId].inZipName, fileInZipFile ? fileInZipFile : "");
+        
+        if (boardDeviceInfo->disks[driveId].name != fileName) {
+            strcpy(boardDeviceInfo->disks[driveId].name, fileName ? fileName : "");
+        }
+        if (boardDeviceInfo->disks[driveId].inZipName != fileInZipFile) {
+            strcpy(boardDeviceInfo->disks[driveId].inZipName, fileInZipFile ? fileInZipFile : "");
+        }
     }
 
     diskChange(driveId ,fileName, fileInZipFile);
@@ -1253,8 +1261,12 @@ void boardChangeCassette(int tapeId, char* name, const char* fileInZipFile)
     if (boardDeviceInfo != NULL) {
         boardDeviceInfo->tapes[tapeId].inserted = name != NULL;
 
-        strcpy(boardDeviceInfo->tapes[tapeId].name, name ? name : "");
-        strcpy(boardDeviceInfo->tapes[tapeId].inZipName, fileInZipFile ? fileInZipFile : "");
+        if (boardDeviceInfo->tapes[tapeId].name != name) {
+            strcpy(boardDeviceInfo->tapes[tapeId].name, name ? name : "");
+        }
+        if (boardDeviceInfo->tapes[tapeId].inZipName != fileInZipFile) {
+            strcpy(boardDeviceInfo->tapes[tapeId].inZipName, fileInZipFile ? fileInZipFile : "");
+        }
     }
 
     tapeInsert(name, fileInZipFile);
@@ -1452,7 +1464,7 @@ const char* boardGetBaseDirectory() {
     return baseDirectory;
 }
 
-void boardSetDirectory(char* dir) {
+void boardSetDirectory(const char* dir) {
     strcpy(baseDirectory, dir);
 }
 
