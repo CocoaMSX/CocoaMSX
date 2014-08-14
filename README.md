@@ -3,12 +3,12 @@ CocoaMSX
 
 **CocoaMSX** is an open source [MSX] [1] emulator for OS X. 
 
-![Banner](http://i.imgur.com/eilpYUf.png "Banner")
+![Banner](http://i.imgur.com/6ffuKFI.png "Banner")
 
 Download
 --------
 
-[Version 1.35] [6] is the latest stable release. [View all releases] [5].
+[Version 1.40] [6] is the latest stable release. [View all releases] [5].
 
 Features
 --------
@@ -45,5 +45,5 @@ Get support and follow development news at the [Google+ Community] [3] page.
   [3]: https://plus.google.com/u/0/communities/104314701960403368876
   [4]: https://code.google.com/p/cocoa-msx/downloads/list  
   [5]: https://github.com/melllvar/CocoaMSX/releases
-  [6]: https://github.com/melllvar/CocoaMSX/releases/v1.35
+  [6]: https://github.com/melllvar/CocoaMSX/releases/v1.40
   
