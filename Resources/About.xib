@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1060" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
@@ -16,7 +16,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application"/>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" visibleAtLaunch="NO" animationBehavior="default" id="1">
+        <window title="About CocoaMSX" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" visibleAtLaunch="NO" animationBehavior="default" id="1">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <rect key="contentRect" x="196" y="240" width="550" height="390"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
@@ -103,7 +103,7 @@
                     <button verticalHuggingPriority="750" id="23">
                         <rect key="frame" x="210" y="13" width="163" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Additional Credits" bezelStyle="rounded" image="A23727F1-2CFE-401B-8AFD-36A73D0038F9" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="24">
+                        <buttonCell key="cell" type="push" title="Additional Credits" bezelStyle="rounded" image="68E3C21D-C94D-435D-9E16-8D8AFC3B2A3C" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="24">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -119,7 +119,7 @@
         </window>
     </objects>
     <resources>
-        <image name="A23727F1-2CFE-401B-8AFD-36A73D0038F9" width="1" height="1">
+        <image name="68E3C21D-C94D-435D-9E16-8D8AFC3B2A3C" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPj9YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQsLzI4O1UkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

@@ -532,6 +532,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     [self setIsInitialized:YES];
     
+    NSString *name = [NSString stringWithCString:properties->emulation.machineName
+                                        encoding:NSASCIIStringEncoding];
+    [[self window] setTitle:name];
+    
 #ifdef DEBUG
     NSLog(@"EmulatorController: initialized");
 #endif
@@ -576,11 +580,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         // Pause if not focused
         [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
-
-        // Update the window title with machine's name
-        NSString *name = [NSString stringWithCString:properties->emulation.machineName
-                                            encoding:NSASCIIStringEncoding];
-        [[self window] setTitle:name];
     }
 }
 

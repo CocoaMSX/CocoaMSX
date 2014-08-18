@@ -126,8 +126,7 @@
     versionNumberField.stringValue = [NSString stringWithFormat:CMLoc(@"Version %@", @""),
                                  version];
     
-    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
-    NSString *appName = [[NSFileManager defaultManager] displayNameAtPath:bundlePath];
+    NSString *appName = [[NSProcessInfo processInfo] processName];
     
     appNameField.stringValue = appName;
 }
