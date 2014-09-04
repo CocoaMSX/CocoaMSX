@@ -160,6 +160,7 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)configureJoypad:(NSInteger)joypadId;
 - (void)resetPredicate;
+- (void)clearPredicate;
 
 @end
 
@@ -607,6 +608,13 @@ static NSArray *keysInOrderOfAppearance;
     // Machines in the controller, but no longer existing
     NSMutableSet *expiredInController = [NSMutableSet setWithSet:currentlyListed];
     [expiredInController minusSet:all];
+    
+    if ([missingInController count] > 0 || [expiredInController count] > 0)
+    {
+        // Clear filtering - otherwise [machinesArrayController addObjects:]
+        // will fail
+        [self clearPredicate];
+    }
 
     // Add new machines to controller
     [machinesArrayController addObjects:[missingInController allObjects]];
@@ -1525,6 +1533,13 @@ static NSArray *keysInOrderOfAppearance;
 
         [self resetPredicate];
     }
+}
+
+- (void)clearPredicate
+{
+    [machineScopeBar setSelected:YES forItem:@0 inGroup:SCOPEBAR_GROUP_MACHINE_FAMILY];
+    [machineScopeBar setSelected:YES forItem:@0 inGroup:SCOPEBAR_GROUP_MACHINE_STATUS];
+    [self setMachineNameFilter:@""];
 }
 
 - (void)resetPredicate
