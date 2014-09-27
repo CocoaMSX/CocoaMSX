@@ -49,13 +49,6 @@
 
 @implementation CMMsxDisplayView
 
-static CVReturn renderCallback(CVDisplayLinkRef displayLink,
-                               const CVTimeStamp* now,
-                               const CVTimeStamp* outputTime,
-                               CVOptionFlags flagsIn,
-                               CVOptionFlags* flagsOut,
-                               void* displayLinkContext);
-
 #pragma mark - Initialize, Dealloc
 
 - (void)dealloc
@@ -64,8 +57,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
                                                forKeyPath:@"videoScanlineAmount"];
     
     glDeleteTextures(1, &screenTexId);
-    
-    CVDisplayLinkRelease(displayLink);
     
     for (int i = 0; i < 2; i++)
         [screens[i] release];
@@ -154,20 +145,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
                  screens[0]->pixels);
     
     glDisable(GL_TEXTURE_2D);
-    
-    // Create a display link capable of being used with all active displays
-    CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
-    
-    // Set the renderer output callback function
-    CVDisplayLinkSetOutputCallback(displayLink, &renderCallback, self);
-    
-    // Set the display link for the current renderer
-    CGLContextObj cglContext = [[self openGLContext] CGLContextObj];
-    CGLPixelFormatObj cglPixelFormat = [[self pixelFormat] CGLPixelFormatObj];
-    CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink, cglContext, cglPixelFormat);
-    
-    // Activate the display link
-//    CVDisplayLinkStart(displayLink);
     
 #ifdef DEBUG
     NSLog(@"MsxDisplayView: initialized");
@@ -268,17 +245,6 @@ static CVReturn renderCallback(CVDisplayLinkRef displayLink,
     }
     
     return kCVReturnSuccess;
-}
-
-static CVReturn renderCallback(CVDisplayLinkRef displayLink,
-                               const CVTimeStamp* now,
-                               const CVTimeStamp* outputTime,
-                               CVOptionFlags flagsIn,
-                               CVOptionFlags* flagsOut,
-                               void* displayLinkContext)
-{
-    CVReturn result = [(CMMsxDisplayView*)displayLinkContext getFrameForTime:outputTime];
-    return result;
 }
 
 #pragma mark - Emulator-specific graphics code
