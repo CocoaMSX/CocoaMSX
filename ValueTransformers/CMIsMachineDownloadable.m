@@ -38,7 +38,7 @@
 
 - (id)transformedValue:(id)value
 {
-    return [value integerValue] == CMMachineDownloadable;
+    return @([value integerValue] == CMMachineDownloadable);
 }
 
 @end

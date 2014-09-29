@@ -38,7 +38,7 @@
 
 - (id)transformedValue:(id)value
 {
-    return [value integerValue] == CMMachineInstalled;
+    return @([value integerValue] == CMMachineInstalled);
 }
 
 @end

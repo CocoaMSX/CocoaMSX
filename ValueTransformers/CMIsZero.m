@@ -36,11 +36,7 @@
 
 - (id)transformedValue:(id)value
 {
-    if (!value)
-        return nil;
-    
-    NSNumber *number = (NSNumber *)value;
-    return [NSNumber numberWithBool:([number integerValue] == 0)];
+    return @([value integerValue] == 0);
 }
 
 @end

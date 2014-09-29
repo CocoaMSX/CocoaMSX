@@ -371,7 +371,7 @@
 		FEA6E8A416EB0A2800A580CF /* CMMSXKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */; };
 		FEA6E8A716EB223100A580CF /* CMMSXJoystick.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A616EB223100A580CF /* CMMSXJoystick.m */; };
 		FEA74EFD16FC14B60033E2DE /* Data in Resources */ = {isa = PBXBuildFile; fileRef = FEA74EFC16FC14B60033E2DE /* Data */; };
-		FEA8BF1016A01007006E67D2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; };
+		FEA8BF1016A01007006E67D2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FEA8BF0D16A00EA1006E67D2 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
 		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
@@ -2418,7 +2418,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CM;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Akop Karapetyan";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CocoaMSX" */;
