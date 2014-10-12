@@ -38,6 +38,8 @@ Intel-based Mac running OS X version 10.6 (Snow Leopard) and higher; 10.7 (Lion)
 Support and Updates
 -------------------
 
+CocoaMSX has a [dedicated wiki] [7].
+
 Get support and follow development news at the [Google+ Community] [3] page.
 
   [1]: http://en.wikipedia.org/wiki/MSX
@@ -46,4 +48,5 @@ Get support and follow development news at the [Google+ Community] [3] page.
   [4]: https://code.google.com/p/cocoa-msx/downloads/list  
   [5]: https://github.com/melllvar/CocoaMSX/releases
   [6]: https://github.com/melllvar/CocoaMSX/releases/v1.42
+  [7]: https://github.com/pokebyte/CocoaMSX/wiki
   
