@@ -26,8 +26,6 @@
 
 #import <IOKit/hid/IOHIDLib.h>
 
-#define AXIS_CENTER 127
-
 #pragma mark - CMGamepad
 
 static void gamepadInputValueCallback(void *context, IOReturn result, void *sender, IOHIDValueRef value);
@@ -201,9 +199,12 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
                 CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
                 [eventData setSourceId:IOHIDElementGetCookie(element)];
                 
+                NSInteger min = IOHIDElementGetLogicalMin(element);
+                NSInteger max = IOHIDElementGetLogicalMax(element);
+                
                 [_delegate gamepad:self
                           xChanged:value
-                            center:AXIS_CENTER
+                            center:(max - min) / 2
                          eventData:eventData];
             }
         }
@@ -214,9 +215,12 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
                 CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
                 [eventData setSourceId:IOHIDElementGetCookie(element)];
                 
+                NSInteger min = IOHIDElementGetLogicalMin(element);
+                NSInteger max = IOHIDElementGetLogicalMax(element);
+                
                 [_delegate gamepad:self
                           yChanged:value
-                            center:AXIS_CENTER
+                            center:(max - min) / 2
                          eventData:eventData];
             }
         }

@@ -35,6 +35,7 @@
 #include "InputEvent.h"
 
 //#define DEBUG_KEY_STATE
+//#define DEBUG_JOY_STATE
 
 NSString *const CMKeyPasteStarted = @"com.akop.CocoaMSX.KeyPasteStarted";
 NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
@@ -533,7 +534,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#ifdef DEBUG_KEY_STATE
+#ifdef DEBUG_JOY_STATE
     NSLog(@"Joystick X: %ld (center: %ld) on gamepad %@",
           newValue, center, gamepad);
 #endif
@@ -579,7 +580,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#ifdef DEBUG_KEY_STATE
+#ifdef DEBUG_JOY_STATE
     NSLog(@"Joystick Y: %ld (center: %ld) on gamepad %@",
           newValue, center, gamepad);
 #endif
@@ -622,8 +623,9 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#ifdef DEBUG_KEY_STATE
-    NSLog(@"Pressed button %ld on gamepad %@", index, gamepad);
+#ifdef DEBUG_JOY_STATE
+    NSLog(@"Pressed button %ld on gamepad %@",
+          index, gamepad);
 #endif
     
     if (preferredDevice == CMPreferredMacDeviceJoystick ||
@@ -663,7 +665,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
         preferredDevice = [[NSUserDefaults standardUserDefaults] integerForKey:@"joystickPreferredMacDevicePort2"];
     }
     
-#ifdef DEBUG_KEY_STATE
+#ifdef DEBUG_JOY_STATE
     NSLog(@"Released button %ld on gamepad %@", index, gamepad);
 #endif
     
