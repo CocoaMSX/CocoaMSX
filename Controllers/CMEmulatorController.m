@@ -2020,6 +2020,46 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)saveScreenshot:(id)sender
 {
+    if (![self isInitialized] || ![self isStarted]) {
+        return;
+    }
+
+    NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) firstObject];
+    if (desktopPath != nil) {
+        NSDate *now = [NSDate date];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay
+                                        | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
+                                                   fromDate:now];
+        
+        NSString *prefix = [NSString stringWithFormat:NSLocalizedString(@"ScreenshotFormat", @""),
+                            [components year], [components month], [components day],
+                            [components hour], [components minute], [components second]];
+        
+        NSString *fullPath = [desktopPath stringByAppendingPathComponent:prefix];
+        fullPath = [fullPath stringByAppendingPathExtension:@"png"];
+
+        for (int i = 2; [[NSFileManager defaultManager] fileExistsAtPath:fullPath]; i++) {
+            fullPath = [[desktopPath stringByAppendingPathComponent:prefix] stringByAppendingFormat:@" %zd", i];
+            fullPath = [fullPath stringByAppendingPathExtension:@"png"];
+        }
+
+        emulatorSuspend();
+
+        NSImage *image = [screen captureScreen:YES];
+        if (image && [[image representations] count] > 0) {
+            NSBitmapImageRep *rep = [[image representations] firstObject];
+            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+            
+            [pngData writeToFile:fullPath atomically:NO];
+        }
+        
+        emulatorResume();
+    }
+}
+
+- (void)saveScreenshotAs:(id)sender
+{
     if (![self isInitialized] || ![self isStarted])
         return;
     
@@ -2776,7 +2816,8 @@ void archTrap(UInt8 value)
         
         return isRunning;
     }
-    else if ([item action] == @selector(saveScreenshot:))
+    else if ([item action] == @selector(saveScreenshot:)
+             || [item action] == @selector(saveScreenshotAs:))
     {
         return isRunning;
     }
@@ -2828,7 +2869,7 @@ void archTrap(UInt8 value)
         return isRunning; // && [self lastSavedState] != nil;
     }
     
-    return menuItem.isEnabled;
+    return [menuItem isEnabled];
 }
 
 @end

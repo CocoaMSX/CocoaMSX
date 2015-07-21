@@ -211,6 +211,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)overwriteState:(id)sender;
 
 - (IBAction)saveScreenshot:(id)sender;
+- (IBAction)saveScreenshotAs:(id)sender;
 
 - (IBAction)recordAudio:(id)sender;
 

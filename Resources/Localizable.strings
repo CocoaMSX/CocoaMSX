@@ -28,3 +28,4 @@ KeyCategoryModifierKeys = "Modifier Keys";
 KeyCategoryNumericPad = "Numeric Pad";
 KeyCategorySpecialKeys = "Special Keys";
 KeyCategoryTypewriterKeys = "Typewriter Keys";
+ScreenshotFormat = "CocoaMSX Screenshot %04zd-%02zd-%02zd at %02zd.%02zd.%02zd";
