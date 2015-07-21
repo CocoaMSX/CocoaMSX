@@ -195,6 +195,11 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)ejectDiskSlot1:(id)sender;
 - (IBAction)ejectDiskSlot2:(id)sender;
 
+- (IBAction)insertBlankDiskSlot1:(id)sender;
+- (IBAction)insertBlankDiskAsSlot1:(id)sender;
+- (IBAction)insertBlankDiskSlot2:(id)sender;
+- (IBAction)insertBlankDiskAsSlot2:(id)sender;
+
 - (IBAction)toggleDiskAutoReset:(id)sender;
 
 - (IBAction)insertCassette:(id)sender;

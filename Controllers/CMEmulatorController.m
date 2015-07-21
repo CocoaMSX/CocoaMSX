@@ -108,6 +108,8 @@
 
 - (void)insertCartridgeIntoSlot:(NSInteger)slot;
 - (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot;
+- (void)insertBlankDiskAtPath:(NSString *)path
+                       inSlot:(int)slot;
 - (void)ejectCartridgeFromSlot:(NSInteger)slot;
 - (BOOL)toggleEjectCartridgeMenuItemStatus:(NSMenuItem*)menuItem
                                       slot:(NSInteger)slot;
@@ -1318,6 +1320,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
 }
 
+- (void)insertBlankDiskAtPath:(NSString *)path
+                       inSlot:(int)slot
+{
+    // FIXME
+}
+
 - (void)insertCassetteAtPath:(NSString *)path
 {
     emulatorSuspend();
@@ -1789,6 +1797,36 @@ CMEmulatorController *theEmulator = nil; // FIXME
              [self insertDiskAtPath:file
                                slot:1];
      }];
+}
+
+- (void)insertBlankDiskSlot1:(id)sender
+{
+    if ([self isInitialized]) {
+        [self insertBlankDiskAtPath:nil inSlot:0];
+    }
+}
+
+- (void)insertBlankDiskAsSlot1:(id)sender
+{
+    if ([self isInitialized]) {
+        // FIXME
+//        [self insertBlankDisk:path inSlot:0];
+    }
+}
+
+- (void)insertBlankDiskSlot2:(id)sender
+{
+    if ([self isInitialized]) {
+        [self insertBlankDiskAtPath:nil inSlot:1];
+    }
+}
+
+- (void)insertBlankDiskAsSlot2:(id)sender
+{
+    if ([self isInitialized]) {
+        // FIXME
+//        [self insertBlankDisk:path inSlot:1];
+    }
 }
 
 - (void)ejectDiskSlot1:(id)sender

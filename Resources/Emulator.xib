@@ -170,7 +170,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Reset After Insertion/Ejection" id="862">
+                            <menuItem title="Reset on Cart Insert/Eject" id="862">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleCartAutoReset:" target="-2" id="1218"/>
@@ -181,10 +181,10 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Drive A:" id="1265">
                                     <items>
-                                        <menuItem title="Insert Disk or Folder..." id="984">
+                                        <menuItem title="Insert Disk or Folder..." id="0YF-HP-WhN">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="insertDiskSlot1:" target="-2" id="1194"/>
+                                                <action selector="insertDiskSlot1:" target="-2" id="exp-XS-KtZ"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Insert Recent" id="FrR-yX-mK0">
@@ -200,13 +200,14 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Reset After Insertion" id="995">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleDiskAutoReset:" target="-2" id="1219"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="OF3-q5-CZx"/>
+                                        <menuItem title="Insert New Blank Disk" id="984">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="Insert New Blank Disk..." alternate="YES" id="AgK-R3-Vzk">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="NT8-Rk-9xv"/>
                                         <menuItem title="Eject Disk" id="982">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -240,6 +241,13 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="vVi-9S-cF5"/>
+                                        <menuItem title="Insert New Blank Disk" id="JVD-qA-jh8">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="Insert New Blank Disk..." alternate="YES" id="t1g-1a-eGR">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="N3X-No-I0C"/>
                                         <menuItem title="Eject Disk" id="992">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -248,6 +256,12 @@
                                         </menuItem>
                                     </items>
                                 </menu>
+                            </menuItem>
+                            <menuItem title="Reset on Disk Insert" id="995">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleDiskAutoReset:" target="-2" id="1219"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="74"/>
                             <menuItem title="Cassette" id="1271">
