@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>720</key>
+	<string>720 kB (Double-Sided, 9 Sectors)</string>
+	<key>640</key>
+	<string>640 kB (Double-Sided, 8 Sectors)</string>
+	<key>360</key>
+	<string>360 kB (Single-Sided, 9 Sectors)</string>
+	<key>320</key>
+	<string>320 kB (Single-Sided, 8 Sectors)</string>
+</dict>
+</plist>

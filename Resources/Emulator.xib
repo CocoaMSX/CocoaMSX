@@ -10,6 +10,8 @@
                 <outlet property="capsLed" destination="Q1u-MO-TNv" id="n7L-tJ-XzA"/>
                 <outlet property="casLed" destination="R8p-bM-RvU" id="CKc-cu-t96"/>
                 <outlet property="codeLed" destination="jQv-gf-erv" id="nX2-fr-2ke"/>
+                <outlet property="disketteSizeAccessoryView" destination="9er-1g-BBj" id="10y-Ni-d7O"/>
+                <outlet property="disketteSizeDropdown" destination="PjR-V3-HDo" id="CbX-R0-lnE"/>
                 <outlet property="fdd0Led" destination="2jo-qo-ICJ" id="fAr-ce-6w7"/>
                 <outlet property="fdd1Led" destination="kxZ-IV-lOt" id="s8J-kV-cuT"/>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
@@ -97,7 +99,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Cartridge Slot 1" id="1251">
                                     <items>
-                                        <menuItem title="Insert Cartridge..." keyEquivalent="o" id="874">
+                                        <menuItem title="Insert..." keyEquivalent="o" id="874">
                                             <connections>
                                                 <action selector="insertCartridgeSlot1:" target="-2" id="1188"/>
                                             </connections>
@@ -122,7 +124,7 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="876"/>
-                                        <menuItem title="Eject Cartridge" id="878">
+                                        <menuItem title="Eject" id="878">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="ejectCartridgeSlot1:" target="-2" id="1190"/>
@@ -135,7 +137,7 @@
                                 <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                 <menu key="submenu" title="Cartridge Slot 2" id="1256">
                                     <items>
-                                        <menuItem title="Insert Cartridge..." id="865">
+                                        <menuItem title="Insert..." id="865">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="insertCartridgeSlot2:" target="-2" id="1191"/>
@@ -161,7 +163,7 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="880"/>
-                                        <menuItem title="Eject Cartridge" id="881">
+                                        <menuItem title="Eject" id="881">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="ejectCartridgeSlot2:" target="-2" id="1193"/>
@@ -181,7 +183,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Drive A:" id="1265">
                                     <items>
-                                        <menuItem title="Insert Disk or Folder..." id="0YF-HP-WhN">
+                                        <menuItem title="Insert..." id="0YF-HP-WhN">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="insertDiskSlot1:" target="-2" id="exp-XS-KtZ"/>
@@ -201,14 +203,14 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="OF3-q5-CZx"/>
-                                        <menuItem title="Insert New Blank Disk" id="984">
+                                        <menuItem title="New Blank Disk..." id="AgK-R3-Vzk">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Insert New Blank Disk..." alternate="YES" id="AgK-R3-Vzk">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="insertBlankDiskAsSlot1:" target="-2" id="ydE-Y2-q8e"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="NT8-Rk-9xv"/>
-                                        <menuItem title="Eject Disk" id="982">
+                                        <menuItem title="Eject" id="982">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="ejectDiskSlot1:" target="-2" id="1196"/>
@@ -221,7 +223,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Drive B:" id="1270">
                                     <items>
-                                        <menuItem title="Insert Disk or Folder..." id="990">
+                                        <menuItem title="Insert..." id="990">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="insertDiskSlot2:" target="-2" id="1197"/>
@@ -241,14 +243,14 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="vVi-9S-cF5"/>
-                                        <menuItem title="Insert New Blank Disk" id="JVD-qA-jh8">
+                                        <menuItem title="New Blank Disk..." id="t1g-1a-eGR">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Insert New Blank Disk..." alternate="YES" id="t1g-1a-eGR">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="insertBlankDiskAsSlot2:" target="-2" id="9IM-QS-Cof"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="N3X-No-I0C"/>
-                                        <menuItem title="Eject Disk" id="992">
+                                        <menuItem title="Eject" id="992">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="ejectDiskSlot2:" target="-2" id="1199"/>
@@ -660,15 +662,6 @@
                         <action selector="openAnyFile:" target="-2" id="Apy-qT-q9R"/>
                     </connections>
                 </button>
-                <popUpButton verticalHuggingPriority="750" id="uq1-SV-s8z">
-                    <rect key="frame" x="157" y="38" width="203" height="26"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="OR4-Bz-asV">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="ByH-B6-K7X"/>
-                    </popUpButtonCell>
-                </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="LIM-qj-pca">
                     <rect key="frame" x="18" y="44" width="135" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -678,6 +671,15 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <popUpButton verticalHuggingPriority="750" id="uq1-SV-s8z">
+                    <rect key="frame" x="157" y="37" width="203" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="OR4-Bz-asV">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="ByH-B6-K7X"/>
+                    </popUpButtonCell>
+                </popUpButton>
             </subviews>
         </customView>
         <slider verticalHuggingPriority="750" id="Z8D-vU-4Q4">
@@ -685,6 +687,31 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="kxg-of-XhO"/>
         </slider>
+        <customView id="9er-1g-BBj">
+            <rect key="frame" x="0.0" y="-3" width="503" height="60"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="z63-LR-OHh">
+                    <rect key="frame" x="18" y="23" width="135" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Diskette Size" id="8N7-wZ-8TF">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" id="PjR-V3-HDo">
+                    <rect key="frame" x="157" y="17" width="261" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="oCb-bR-oKj">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="PJ9-rP-X3b"/>
+                    </popUpButtonCell>
+                </popUpButton>
+            </subviews>
+            <point key="canvasLocation" x="211.5" y="601"/>
+        </customView>
     </objects>
     <resources>
         <image name="caps_led_off" width="20.819276809692383" height="14.746988296508789"/>

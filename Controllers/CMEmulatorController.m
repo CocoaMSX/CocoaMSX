@@ -108,8 +108,10 @@
 
 - (void)insertCartridgeIntoSlot:(NSInteger)slot;
 - (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot;
-- (void)insertBlankDiskAtPath:(NSString *)path
-                       inSlot:(int)slot;
+- (BOOL)createBlankDiskAtPath:(NSString *)path
+                       sizekB:(int)size
+                        error:(NSError **)error;
+- (void)createBlankDiskAndInsertIntoSlot:(int)slot;
 - (void)ejectCartridgeFromSlot:(NSInteger)slot;
 - (BOOL)toggleEjectCartridgeMenuItemStatus:(NSMenuItem*)menuItem
                                       slot:(NSInteger)slot;
@@ -151,6 +153,11 @@
                            parent:(NSMenuItem *)parent;
 - (void)clearRecentMediaItemsInMenu:(NSMenuItem *)menuItem;
 - (void)rebuildRecentItemsMenus;
+
+- (BOOL)diskSizeValid:(int)size;
+- (NSString *) generateTimestampedFilenameAtPath:(NSString *)parentPath
+                                        template:(NSString *)template
+                                       extension:(NSString *)ext;
 
 @end
 
@@ -220,6 +227,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
         stateFileTypes = [[NSArray alloc] initWithObjects:@"sta", nil];
         captureAudioTypes = [[NSArray alloc] initWithObjects:@"wav", nil];
         captureGameplayTypes = [[NSArray alloc] initWithObjects:@"cap", nil];
+        romTypes = [[NSMutableDictionary alloc] init];
+        romTypeIndices = [[NSMutableDictionary alloc] init];
+        romTypeNames = [[NSMutableArray alloc] init];
+        disketteSizes = [[NSMutableDictionary alloc] init];
+        disketteSizeDescriptions = [[NSMutableArray alloc] init];
         
         NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"RomTypes"
                                                                  ofType:@"plist"
@@ -241,10 +253,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                          return [titleA caseInsensitiveCompare:titleB];
                                      }];
         
-        romTypes = [[NSMutableDictionary alloc] init];
-        romTypeIndices = [[NSMutableDictionary alloc] init];
-        romTypeNames = [[NSMutableArray alloc] init];
-        
         [sortedRomTypeIds enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
          {
              NSNumber *index = @(idx);
@@ -254,6 +262,24 @@ CMEmulatorController *theEmulator = nil; // FIXME
              [romTypeIndices setObject:index forKey:type];
              [romTypeNames addObject:[romTypeMap valueForKey:obj]];
          }];
+        
+        resourcePath = [[NSBundle mainBundle] pathForResource:@"DiskSizes"
+                                                       ofType:@"plist"
+                                                  inDirectory:@"Data"];
+        
+        NSDictionary *diskSizeMap = [NSDictionary dictionaryWithContentsOfFile:resourcePath];
+        NSArray *sortedDiskSizes = [[diskSizeMap allKeys] sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
+                                     {
+                                         NSInteger sizeA = [a integerValue];
+                                         NSInteger sizeB = [b integerValue];
+                                         
+                                         return sizeB - sizeA;
+                                     }];
+        
+        [sortedDiskSizes enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+            [disketteSizes setObject:@([key integerValue]) forKey:@(idx)];
+            [disketteSizeDescriptions addObject:[diskSizeMap objectForKey:key]];
+        }];
     }
     
     return self;
@@ -285,6 +311,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [romTypes release];
     [romTypeIndices release];
     [romTypeNames release];
+    [disketteSizeDescriptions release];
+    [disketteSizes release];
     
     [openRomFileTypes release];
     [openDiskFileTypes release];
@@ -324,6 +352,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
     
     [romTypeDropdown addItemsWithTitles:romTypeNames];
+    [disketteSizeDropdown addItemsWithTitles:disketteSizeDescriptions];
     
     [inputDeviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
     [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
@@ -1307,6 +1336,57 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
 }
 
+- (void)createBlankDiskAndInsertIntoSlot:(int)slot
+{
+    NSSavePanel* panel = [NSSavePanel savePanel];
+    
+    [panel setTitle:CMLoc(@"Create Blank Disk", @"")];
+    [panel setCanCreateDirectories:YES];
+    [panel setAllowedFileTypes:openDiskFileTypes];
+    [panel setAccessoryView:disketteSizeAccessoryView];
+    [panel setDelegate:self];
+    
+    [disketteSizeDropdown selectItemAtIndex:0];
+    
+    NSString *initialDir = [[CMPreferences preferences] diskDirectory];
+    if (initialDir) {
+        [panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
+    }
+    
+    [panel beginSheetModalForWindow:[self activeWindow]
+                  completionHandler:^(NSInteger result)
+     {
+         if (result == NSFileHandlingPanelOKButton)
+         {
+             [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
+             
+             int disketteSizeIndex = [disketteSizeDropdown indexOfItem:[disketteSizeDropdown selectedItem]];
+             int size = [[disketteSizes objectForKey:@(disketteSizeIndex)] intValue];
+             
+             NSString *path = [[panel URL] path];
+             if ([self createBlankDiskAtPath:path
+                                      sizekB:size
+                                       error:NULL]) {
+                 [self insertDiskAtPath:path slot:slot];
+                 
+                 Class notificationCenterClass = NSClassFromString(@"NSUserNotificationCenter");
+                 if (notificationCenterClass != nil) {
+                     NSString *title = NSLocalizedString(@"Blank Disk Created", "");
+                     NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Successfully created and inserted %@", ""),
+                                           [path lastPathComponent]];
+                     
+                     NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
+                     [notification setTitle:title];
+                     [notification setInformativeText:infoText];
+                     [notification setSoundName:NSUserNotificationDefaultSoundName];
+                     
+                     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+                 }
+             }
+         }
+     }];
+}
+
 - (void)ejectDiskFromSlot:(NSInteger)slot
 {
     actionDiskRemove(slot);
@@ -1320,10 +1400,69 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
 }
 
-- (void)insertBlankDiskAtPath:(NSString *)path
-                       inSlot:(int)slot
+- (BOOL)diskSizeValid:(int)size
 {
-    // FIXME
+    switch (size) {
+        case 720:
+        case 640:
+        case 360:
+        case 320:
+        case 338:
+        case 168:
+        case 160:
+            return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)createBlankDiskAtPath:(NSString *)path
+                       sizekB:(int)size
+                        error:(NSError **)error
+{
+    if (![self diskSizeValid:size]) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:0
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"Disk size is invalid", @"")
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        return NO;
+    }
+
+    const int blockSize = 1024;
+    size *= blockSize;
+    
+    void *image = calloc(1, size);
+    if (image == NULL) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:0
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"Error allocating memory", @"")
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        return NO;
+    }
+    
+    if (size == 338 * blockSize || size == 168 * blockSize) {
+        memset(image, 0xe5, size);
+    }
+
+    NSData *data = [NSData dataWithBytesNoCopy:image length:size];
+    if (data == nil) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:0
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"Error creating NSData object", @"")
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        free(image);
+        return NO;
+    }
+    
+    return [data writeToFile:path
+                     options:0
+                       error:error];
 }
 
 - (void)insertCassetteAtPath:(NSString *)path
@@ -1656,6 +1795,40 @@ CMEmulatorController *theEmulator = nil; // FIXME
     gameplayCaptureTempFilename = nil;
 }
 
+- (NSString *) generateTimestampedFilenameAtPath:(NSString *)parentPath
+                                        template:(NSString *)template
+                                       extension:(NSString *)ext
+{
+    NSString *path = nil;
+
+    if (parentPath == nil) {
+        // Default parent is desktop
+        parentPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) firstObject];
+    }
+
+    if (parentPath != nil) {
+        NSDate *now = [NSDate date];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay
+                                        | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
+                                                   fromDate:now];
+        
+        NSString *prefix = [NSString stringWithFormat:template,
+                            [components year], [components month], [components day],
+                            [components hour], [components minute], [components second]];
+        
+        path = [parentPath stringByAppendingPathComponent:prefix];
+        path = [path stringByAppendingPathExtension:ext];
+        
+        for (int i = 2; [[NSFileManager defaultManager] fileExistsAtPath:path]; i++) {
+            path = [[parentPath stringByAppendingPathComponent:prefix] stringByAppendingFormat:@" %zd", i];
+            path = [path stringByAppendingPathExtension:ext];
+        }
+    }
+    
+    return path;
+}
+
 #pragma mark - IBActions
 
 - (void)clearRecentItems:(id)sender
@@ -1799,33 +1972,17 @@ CMEmulatorController *theEmulator = nil; // FIXME
      }];
 }
 
-- (void)insertBlankDiskSlot1:(id)sender
-{
-    if ([self isInitialized]) {
-        [self insertBlankDiskAtPath:nil inSlot:0];
-    }
-}
-
 - (void)insertBlankDiskAsSlot1:(id)sender
 {
     if ([self isInitialized]) {
-        // FIXME
-//        [self insertBlankDisk:path inSlot:0];
-    }
-}
-
-- (void)insertBlankDiskSlot2:(id)sender
-{
-    if ([self isInitialized]) {
-        [self insertBlankDiskAtPath:nil inSlot:1];
+        [self createBlankDiskAndInsertIntoSlot:0];
     }
 }
 
 - (void)insertBlankDiskAsSlot2:(id)sender
 {
     if ([self isInitialized]) {
-        // FIXME
-//        [self insertBlankDisk:path inSlot:1];
+        [self createBlankDiskAndInsertIntoSlot:1];
     }
 }
 
@@ -1894,7 +2051,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     cassetteRepositioner = [[CMRepositionCassetteController alloc] init];
     cassetteRepositioner.delegate = self;
     
-    [cassetteRepositioner showSheetForWindow:self.window];
+    [cassetteRepositioner showSheetForWindow:[self window]];
 }
 
 - (BOOL)canInsertDiskettes
@@ -2062,26 +2219,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
         return;
     }
 
-    NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) firstObject];
-    if (desktopPath != nil) {
-        NSDate *now = [NSDate date];
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay
-                                        | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond
-                                                   fromDate:now];
-        
-        NSString *prefix = [NSString stringWithFormat:NSLocalizedString(@"ScreenshotFormat", @""),
-                            [components year], [components month], [components day],
-                            [components hour], [components minute], [components second]];
-        
-        NSString *fullPath = [desktopPath stringByAppendingPathComponent:prefix];
-        fullPath = [fullPath stringByAppendingPathExtension:@"png"];
+    NSString *path = [self generateTimestampedFilenameAtPath:nil
+                                                    template:NSLocalizedString(@"ScreenshotFilenameFormat", @"")
+                                                   extension:@"png"];
 
-        for (int i = 2; [[NSFileManager defaultManager] fileExistsAtPath:fullPath]; i++) {
-            fullPath = [[desktopPath stringByAppendingPathComponent:prefix] stringByAppendingFormat:@" %zd", i];
-            fullPath = [fullPath stringByAppendingPathExtension:@"png"];
-        }
-
+    if (path != nil) {
         emulatorSuspend();
 
         NSImage *image = [screen captureScreen:YES];
@@ -2089,7 +2231,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
             NSBitmapImageRep *rep = [[image representations] firstObject];
             NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
             
-            [pngData writeToFile:fullPath atomically:NO];
+            [pngData writeToFile:path atomically:NO];
         }
         
         emulatorResume();
@@ -2755,7 +2897,11 @@ void archTrap(UInt8 value)
     else if ([item action] == @selector(insertDiskSlot1:) ||
              [item action] == @selector(insertDiskSlot2:) ||
              [item action] == @selector(insertRecentDiskA:) ||
-             [item action] == @selector(insertRecentDiskB:))
+             [item action] == @selector(insertRecentDiskB:) ||
+             [item action] == @selector(insertBlankDiskSlot1:) ||
+             [item action] == @selector(insertBlankDiskSlot2:) ||
+             [item action] == @selector(insertBlankDiskAsSlot1:) ||
+             [item action] == @selector(insertBlankDiskAsSlot2:))
     {
         return isRunning && [self canInsertDiskettes];
     }

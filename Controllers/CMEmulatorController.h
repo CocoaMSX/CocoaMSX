@@ -81,12 +81,17 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSMutableDictionary *romTypes;
     NSMutableArray *romTypeNames;
     
+    NSMutableDictionary *disketteSizes;
+    NSMutableArray *disketteSizeDescriptions;
+    
     IBOutlet NSView *unrecognizedFileAccessoryView;
     IBOutlet NSView *romSelectionAccessoryView;
+    IBOutlet NSView *disketteSizeAccessoryView;
     
     IBOutlet NSButton *openAnyFileCheckbox;
     IBOutlet NSButton *openAnyRomFileCheckbox;
     IBOutlet NSPopUpButton *romTypeDropdown;
+    IBOutlet NSPopUpButton *disketteSizeDropdown;
     
     IBOutlet NSBox *statusBar;
     IBOutlet NSTextField *fpsCounter;
@@ -195,9 +200,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)ejectDiskSlot1:(id)sender;
 - (IBAction)ejectDiskSlot2:(id)sender;
 
-- (IBAction)insertBlankDiskSlot1:(id)sender;
 - (IBAction)insertBlankDiskAsSlot1:(id)sender;
-- (IBAction)insertBlankDiskSlot2:(id)sender;
 - (IBAction)insertBlankDiskAsSlot2:(id)sender;
 
 - (IBAction)toggleDiskAutoReset:(id)sender;
