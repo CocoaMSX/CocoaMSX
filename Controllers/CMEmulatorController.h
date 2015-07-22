@@ -84,13 +84,17 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSMutableDictionary *disketteSizes;
     NSMutableArray *disketteSizeDescriptions;
     
-    IBOutlet NSView *unrecognizedFileAccessoryView;
     IBOutlet NSView *romSelectionAccessoryView;
+    IBOutlet NSView *unrecognizedFileAccessoryView;
+    IBOutlet NSView *cassetteSelectionAccessoryView;
     IBOutlet NSView *disketteSizeAccessoryView;
     
-    IBOutlet NSButton *openAnyFileCheckbox;
-    IBOutlet NSButton *openAnyRomFileCheckbox;
     IBOutlet NSPopUpButton *romTypeDropdown;
+    IBOutlet NSButton *openAnyRomFileCheckbox;
+    IBOutlet NSButton *openAnyFileCheckbox;
+    IBOutlet NSButton *mountFolderCopyCheckbox;
+    IBOutlet NSTextField *mountFolderCopyInfo;
+    IBOutlet NSButton *openAnyCassetteFileCheckbox;
     IBOutlet NSPopUpButton *disketteSizeDropdown;
     
     IBOutlet NSBox *statusBar;

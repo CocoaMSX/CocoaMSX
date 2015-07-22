@@ -107,6 +107,7 @@
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
 - (void)insertCartridgeIntoSlot:(NSInteger)slot;
+- (void)insertDiskIntoSlot:(int)slot;
 - (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot;
 - (BOOL)createBlankDiskAtPath:(NSString *)path
                        sizekB:(int)size
@@ -1154,51 +1155,50 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)insertCartridgeIntoSlot:(NSInteger)slot
 {
-    if (![self isInitialized])
-        return;
-    
-    NSOpenPanel* panel = [NSOpenPanel openPanel];
-    
-    [panel setTitle:CMLoc(@"Insert Cartridge", @"")];
-    [panel setCanChooseFiles:YES];
-    [panel setCanChooseDirectories:NO];
-    [panel setCanCreateDirectories:YES];
-    [panel setAccessoryView:romSelectionAccessoryView];
-    [panel setDelegate:self];
-    
-    BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
-    
-    [openAnyRomFileCheckbox setState:canOpenAnyFile];
-    [romTypeDropdown selectItemAtIndex:0];
-    
-    if (!canOpenAnyFile)
-        [panel setAllowedFileTypes:openRomFileTypes];
-    
-    currentlyActiveOpenPanel = panel;
-    currentlySupportedFileTypes = openRomFileTypes;
-    
-    NSString *initialDir = [[CMPreferences preferences] cartridgeDirectory];
-    if (initialDir)
-        [panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
-    
-    [panel beginSheetModalForWindow:[self activeWindow]
-                  completionHandler:^(NSInteger result)
-     {
-         if (result == NSFileHandlingPanelOKButton)
+    if ([self isInitialized]) {
+        NSOpenPanel* panel = [NSOpenPanel openPanel];
+        
+        [panel setTitle:CMLoc(@"Insert Cartridge", @"")];
+        [panel setCanChooseFiles:YES];
+        [panel setCanChooseDirectories:NO];
+        [panel setCanCreateDirectories:YES];
+        [panel setAccessoryView:romSelectionAccessoryView];
+        [panel setDelegate:self];
+        
+        BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
+        
+        [openAnyRomFileCheckbox setState:canOpenAnyFile];
+        [romTypeDropdown selectItemAtIndex:0];
+        
+        if (!canOpenAnyFile)
+            [panel setAllowedFileTypes:openRomFileTypes];
+        
+        currentlyActiveOpenPanel = panel;
+        currentlySupportedFileTypes = openRomFileTypes;
+        
+        NSString *initialDir = [[CMPreferences preferences] cartridgeDirectory];
+        if (initialDir)
+            [panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
+        
+        [panel beginSheetModalForWindow:[self activeWindow]
+                      completionHandler:^(NSInteger result)
          {
-             [[CMPreferences preferences] setCartridgeDirectory:[[panel directoryURL] path]];
-             
-             RomType type = ROM_UNKNOWN;
-             
-             if ([romTypeDropdown isEnabled])
+             if (result == NSFileHandlingPanelOKButton)
              {
-                 int romTypeIndex = [romTypeDropdown indexOfItem:[romTypeDropdown selectedItem]];
-                 type = [[romTypes objectForKey:@(romTypeIndex)] intValue];
+                 [[CMPreferences preferences] setCartridgeDirectory:[[panel directoryURL] path]];
+                 
+                 RomType type = ROM_UNKNOWN;
+                 
+                 if ([romTypeDropdown isEnabled])
+                 {
+                     int romTypeIndex = [romTypeDropdown indexOfItem:[romTypeDropdown selectedItem]];
+                     type = [[romTypes objectForKey:@(romTypeIndex)] intValue];
+                 }
+                 
+                 [self insertCartridge:[[panel URL] path] slot:slot type:type];
              }
-             
-             [self insertCartridge:[[panel URL] path] slot:slot type:type];
-         }
-     }];
+         }];
+    }
 }
 
 - (BOOL)insertCartridge:(NSString *)cartridge
@@ -1223,6 +1223,49 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self setLastSavedState:nil];
 
     return YES;
+}
+
+- (void)insertDiskIntoSlot:(int)slot
+{
+    if ([self isInitialized]) {
+        [mountFolderCopyCheckbox setEnabled:NO];
+        [mountFolderCopyInfo setTextColor:[NSColor disabledControlTextColor]];
+        [mountFolderCopyCheckbox setState:NSOffState];
+        
+        NSOpenPanel* panel = [NSOpenPanel openPanel];
+        
+        [panel setTitle:CMLoc(@"Insert Disk", @"Dialog title")];
+        [panel setCanChooseFiles:YES];
+        [panel setCanChooseDirectories:YES];
+        [panel setCanCreateDirectories:YES];
+        [panel setAccessoryView:unrecognizedFileAccessoryView];
+        [panel setDelegate:self];
+        
+        BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
+        [openAnyFileCheckbox setState:canOpenAnyFile];
+        if (!canOpenAnyFile) {
+            [panel setAllowedFileTypes:openDiskFileTypes];
+        }
+        
+        currentlyActiveOpenPanel = panel;
+        currentlySupportedFileTypes = openDiskFileTypes;
+        
+        NSString *initialDir = [[CMPreferences preferences] diskDirectory];
+        if (initialDir) {
+            [panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
+        }
+        
+        [panel beginSheetModalForWindow:[self activeWindow]
+                      completionHandler:^(NSInteger result)
+         {
+             if (result == NSFileHandlingPanelOKButton)
+             {
+                 [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
+                 [self insertDiskAtPath:[[panel URL] path]
+                                   slot:slot];
+             }
+         }];
+    }
 }
 
 - (BOOL)insertUnknownMedia:(NSString *)media
@@ -1338,53 +1381,54 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)createBlankDiskAndInsertIntoSlot:(int)slot
 {
-    NSSavePanel* panel = [NSSavePanel savePanel];
-    
-    [panel setTitle:CMLoc(@"Create Blank Disk", @"")];
-    [panel setCanCreateDirectories:YES];
-    [panel setAllowedFileTypes:openDiskFileTypes];
-    [panel setAccessoryView:disketteSizeAccessoryView];
-    [panel setDelegate:self];
-    
-    [disketteSizeDropdown selectItemAtIndex:0];
-    
-    NSString *initialDir = [[CMPreferences preferences] diskDirectory];
-    if (initialDir) {
-        [panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
-    }
-    
-    [panel beginSheetModalForWindow:[self activeWindow]
-                  completionHandler:^(NSInteger result)
-     {
-         if (result == NSFileHandlingPanelOKButton)
+    if ([self isInitialized]) {
+        NSSavePanel* panel = [NSSavePanel savePanel];
+        
+        [panel setTitle:CMLoc(@"Create Blank Disk", @"")];
+        [panel setCanCreateDirectories:YES];
+        [panel setAllowedFileTypes:openDiskFileTypes];
+        [panel setAccessoryView:disketteSizeAccessoryView];
+        
+        [disketteSizeDropdown selectItemAtIndex:0];
+        
+        NSString *initialDir = [[CMPreferences preferences] diskDirectory];
+        if (initialDir) {
+            [panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
+        }
+        
+        [panel beginSheetModalForWindow:[self activeWindow]
+                      completionHandler:^(NSInteger result)
          {
-             [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
-             
-             int disketteSizeIndex = [disketteSizeDropdown indexOfItem:[disketteSizeDropdown selectedItem]];
-             int size = [[disketteSizes objectForKey:@(disketteSizeIndex)] intValue];
-             
-             NSString *path = [[panel URL] path];
-             if ([self createBlankDiskAtPath:path
-                                      sizekB:size
-                                       error:NULL]) {
-                 [self insertDiskAtPath:path slot:slot];
+             if (result == NSFileHandlingPanelOKButton)
+             {
+                 [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
                  
-                 Class notificationCenterClass = NSClassFromString(@"NSUserNotificationCenter");
-                 if (notificationCenterClass != nil) {
-                     NSString *title = NSLocalizedString(@"Blank Disk Created", "");
-                     NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Successfully created and inserted %@", ""),
-                                           [path lastPathComponent]];
+                 int disketteSizeIndex = [disketteSizeDropdown indexOfItem:[disketteSizeDropdown selectedItem]];
+                 int size = [[disketteSizes objectForKey:@(disketteSizeIndex)] intValue];
+                 
+                 NSString *path = [[panel URL] path];
+                 if ([self createBlankDiskAtPath:path
+                                          sizekB:size
+                                           error:NULL]) {
+                     [self insertDiskAtPath:path slot:slot];
                      
-                     NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
-                     [notification setTitle:title];
-                     [notification setInformativeText:infoText];
-                     [notification setSoundName:NSUserNotificationDefaultSoundName];
-                     
-                     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+                     Class notificationCenterClass = NSClassFromString(@"NSUserNotificationCenter");
+                     if (notificationCenterClass != nil) {
+                         NSString *title = NSLocalizedString(@"Blank Disk Created", "");
+                         NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Successfully created and inserted %@", ""),
+                                               [path lastPathComponent]];
+                         
+                         NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
+                         [notification setTitle:title];
+                         [notification setInformativeText:infoText];
+                         [notification setSoundName:NSUserNotificationDefaultSoundName];
+                         
+                         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+                     }
                  }
              }
-         }
-     }];
+         }];
+    }
 }
 
 - (void)ejectDiskFromSlot:(NSInteger)slot
@@ -1469,8 +1513,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     emulatorSuspend();
     
-    if (properties->cassette.rewindAfterInsert)
+    if (properties->cassette.rewindAfterInsert) {
         tapeRewindNextInsert();
+    }
     
     if (insertCassette(properties, 0, [path UTF8String], NULL, 0))
     {
@@ -1936,54 +1981,22 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)insertDiskSlot1:(id)sender
 {
-    if (![self isInitialized])
-        return;
-    
-    [self showOpenFileDialogWithTitle:CMLoc(@"Insert Disk", @"Dialog title")
-                     allowedFileTypes:openDiskFileTypes
-                      openInDirectory:[[CMPreferences preferences] diskDirectory]
-                 canChooseDirectories:YES
-                     useAccessoryView:unrecognizedFileAccessoryView
-                    completionHandler:^(NSString *file, NSString *path)
-     
-     {
-         if (file)
-             [self insertDiskAtPath:file
-                               slot:0];
-     }];
+    [self insertDiskIntoSlot:0];
 }
 
 - (void)insertDiskSlot2:(id)sender
 {
-    if (![self isInitialized])
-        return;
-    
-    [self showOpenFileDialogWithTitle:CMLoc(@"Insert Disk", @"Dialog title")
-                     allowedFileTypes:openDiskFileTypes
-                      openInDirectory:[[CMPreferences preferences] diskDirectory]
-                 canChooseDirectories:YES
-                     useAccessoryView:unrecognizedFileAccessoryView
-                    completionHandler:^(NSString *file, NSString *path)
-     
-     {
-         if (file)
-             [self insertDiskAtPath:file
-                               slot:1];
-     }];
+    [self insertDiskIntoSlot:1];
 }
 
 - (void)insertBlankDiskAsSlot1:(id)sender
 {
-    if ([self isInitialized]) {
-        [self createBlankDiskAndInsertIntoSlot:0];
-    }
+    [self createBlankDiskAndInsertIntoSlot:0];
 }
 
 - (void)insertBlankDiskAsSlot2:(id)sender
 {
-    if ([self isInitialized]) {
-        [self createBlankDiskAndInsertIntoSlot:1];
-    }
+    [self createBlankDiskAndInsertIntoSlot:1];
 }
 
 - (void)ejectDiskSlot1:(id)sender
@@ -2011,11 +2024,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      allowedFileTypes:openCassetteFileTypes
                       openInDirectory:[[CMPreferences preferences] cassetteDirectory]
                  canChooseDirectories:NO
-                     useAccessoryView:unrecognizedFileAccessoryView
+                     useAccessoryView:cassetteSelectionAccessoryView
                     completionHandler:^(NSString *file, NSString *path)
     {
-        if (file)
+        if (file) {
             [self insertCassetteAtPath:file];
+        }
     }];
 }
 
@@ -2746,31 +2760,46 @@ void archTrap(UInt8 value)
 
 - (void)panelSelectionDidChange:(id)sender
 {
-    NSString *path = [[sender URL] path];
-    if (!path)
-    {
-        [romTypeDropdown selectItemAtIndex:0];
-        [romTypeDropdown setEnabled:NO];
-    }
-    else
-    {
-        const char *cpath = [path cStringUsingEncoding:NSUTF8StringEncoding];
-        MediaType *mediaType = mediaDbLookupRomByPath(cpath);
-        if (!mediaType)
-            mediaType = mediaDbGuessRomByPath(cpath);
-        
-        if (!mediaType)
-        {
-            [romTypeDropdown setEnabled:NO];
+    if ([sender accessoryView] == romSelectionAccessoryView) {
+        NSString *path = [[sender URL] path];
+        if (!path) {
             [romTypeDropdown selectItemAtIndex:0];
-        }
-        else
-        {
-            RomType romType = mediaDbGetRomType(mediaType);
-            NSNumber *index = [romTypeIndices objectForKey:@(romType)];
+            [romTypeDropdown setEnabled:NO];
+        } else {
+            const char *cpath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+            MediaType *mediaType = mediaDbLookupRomByPath(cpath);
+            if (!mediaType) {
+                mediaType = mediaDbGuessRomByPath(cpath);
+            }
             
-            [romTypeDropdown setEnabled:YES];
-            [romTypeDropdown selectItemAtIndex:[index intValue]];
+            if (!mediaType) {
+                [romTypeDropdown setEnabled:NO];
+                [romTypeDropdown selectItemAtIndex:0];
+            } else {
+                RomType romType = mediaDbGetRomType(mediaType);
+                NSNumber *index = [romTypeIndices objectForKey:@(romType)];
+                
+                [romTypeDropdown setEnabled:YES];
+                [romTypeDropdown selectItemAtIndex:[index intValue]];
+            }
+        }
+    } else if ([sender accessoryView] == unrecognizedFileAccessoryView) {
+        NSString *path = [[sender URL] path];
+        if (!path) {
+            [mountFolderCopyCheckbox setState:NSOffState];
+            [mountFolderCopyCheckbox setEnabled:NO];
+            [mountFolderCopyInfo setTextColor:[NSColor disabledControlTextColor]];
+        } else {
+            BOOL isDirectory;
+            BOOL enableCheckbox = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory] && isDirectory;
+            
+            [mountFolderCopyCheckbox setEnabled:enableCheckbox];
+            if (enableCheckbox) {
+                [mountFolderCopyInfo setTextColor:[NSColor controlTextColor]];
+            } else {
+                [mountFolderCopyCheckbox setState:NSOffState];
+                [mountFolderCopyInfo setTextColor:[NSColor disabledControlTextColor]];
+            }
         }
     }
 }

@@ -9,12 +9,16 @@
             <connections>
                 <outlet property="capsLed" destination="Q1u-MO-TNv" id="n7L-tJ-XzA"/>
                 <outlet property="casLed" destination="R8p-bM-RvU" id="CKc-cu-t96"/>
+                <outlet property="cassetteSelectionAccessoryView" destination="C0o-0S-lsa" id="lfa-Dy-1oB"/>
                 <outlet property="codeLed" destination="jQv-gf-erv" id="nX2-fr-2ke"/>
                 <outlet property="disketteSizeAccessoryView" destination="9er-1g-BBj" id="10y-Ni-d7O"/>
                 <outlet property="disketteSizeDropdown" destination="PjR-V3-HDo" id="CbX-R0-lnE"/>
                 <outlet property="fdd0Led" destination="2jo-qo-ICJ" id="fAr-ce-6w7"/>
                 <outlet property="fdd1Led" destination="kxZ-IV-lOt" id="s8J-kV-cuT"/>
                 <outlet property="fpsCounter" destination="1076" id="1215"/>
+                <outlet property="mountFolderCopyCheckbox" destination="TBi-ik-4HJ" id="bBf-3I-v0Z"/>
+                <outlet property="mountFolderCopyInfo" destination="Nic-Ur-ExX" id="Fdi-ot-394"/>
+                <outlet property="openAnyCassetteFileCheckbox" destination="XK6-bQ-3aM" id="U6J-Q9-rnh"/>
                 <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
                 <outlet property="pauseLed" destination="czc-jq-QxQ" id="Nvs-Y1-RcX"/>
@@ -631,11 +635,11 @@
         <customObject id="1273" customClass="SUUpdater"/>
         <userDefaultsController representsSharedInstance="YES" id="1283"/>
         <customView id="Fx0-7u-Jdr">
-            <rect key="frame" x="0.0" y="0.0" width="444" height="54"/>
+            <rect key="frame" x="0.0" y="-3" width="444" height="111"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button id="4TM-8o-xw7">
-                    <rect key="frame" x="18" y="18" width="408" height="18"/>
+                    <rect key="frame" x="18" y="75" width="408" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Open unsupported or unrecognized files" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cmA-Ol-yS2">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -645,7 +649,25 @@
                         <action selector="openAnyFile:" target="-2" id="wGT-p8-T9f"/>
                     </connections>
                 </button>
+                <button id="TBi-ik-4HJ">
+                    <rect key="frame" x="18" y="54" width="408" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Mount copy of folder in read/write mode" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="K5L-cx-3J9">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="Nic-Ur-ExX">
+                    <rect key="frame" x="37" y="20" width="389" height="28"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Creates a new disk image with the contents of the folder and mounts it instead. The image will be saved to the Desktop." id="dY6-At-HVa">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
+            <point key="canvasLocation" x="165" y="-69.5"/>
         </customView>
         <customView id="hW8-CE-guM">
             <rect key="frame" x="0.0" y="0.0" width="503" height="82"/>
@@ -682,11 +704,6 @@
                 </popUpButton>
             </subviews>
         </customView>
-        <slider verticalHuggingPriority="750" id="Z8D-vU-4Q4">
-            <rect key="frame" x="0.0" y="0.0" width="96" height="21"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="kxg-of-XhO"/>
-        </slider>
         <customView id="9er-1g-BBj">
             <rect key="frame" x="0.0" y="-3" width="503" height="60"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -710,7 +727,25 @@
                     </popUpButtonCell>
                 </popUpButton>
             </subviews>
-            <point key="canvasLocation" x="211.5" y="601"/>
+            <point key="canvasLocation" x="211.5" y="731"/>
+        </customView>
+        <customView id="C0o-0S-lsa">
+            <rect key="frame" x="0.0" y="5" width="444" height="54"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button id="XK6-bQ-3aM">
+                    <rect key="frame" x="18" y="18" width="408" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Open unsupported or unrecognized files" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="1Ip-aZ-1mH">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="openAnyFile:" target="-2" id="xnn-U9-76g"/>
+                    </connections>
+                </button>
+            </subviews>
+            <point key="canvasLocation" x="165" y="-258"/>
         </customView>
     </objects>
     <resources>
