@@ -29,4 +29,4 @@ KeyCategoryNumericPad = "Numeric Pad";
 KeyCategorySpecialKeys = "Special Keys";
 KeyCategoryTypewriterKeys = "Typewriter Keys";
 ScreenshotFilenameFormat = "CocoaMSX Screenshot %04zd-%02zd-%02zd at %02zd.%02zd.%02zd";
-BlankDiskFilenameFormat = "MSX Disk Created %04zd-%02zd-%02zd at %02zd.%02zd.%02zd";
+FolderImageFilenameFormat = "Contents of %@";

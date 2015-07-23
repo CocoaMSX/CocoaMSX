@@ -85,13 +85,13 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSMutableArray *disketteSizeDescriptions;
     
     IBOutlet NSView *romSelectionAccessoryView;
-    IBOutlet NSView *unrecognizedFileAccessoryView;
+    IBOutlet NSView *diskSelectionAccessoryView;
     IBOutlet NSView *cassetteSelectionAccessoryView;
     IBOutlet NSView *disketteSizeAccessoryView;
     
     IBOutlet NSPopUpButton *romTypeDropdown;
     IBOutlet NSButton *openAnyRomFileCheckbox;
-    IBOutlet NSButton *openAnyFileCheckbox;
+    IBOutlet NSButton *openAnyDiskFileCheckbox;
     IBOutlet NSButton *mountFolderCopyCheckbox;
     IBOutlet NSTextField *mountFolderCopyInfo;
     IBOutlet NSButton *openAnyCassetteFileCheckbox;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
     </dependencies>
     <objects>
@@ -11,6 +10,7 @@
                 <outlet property="casLed" destination="R8p-bM-RvU" id="CKc-cu-t96"/>
                 <outlet property="cassetteSelectionAccessoryView" destination="C0o-0S-lsa" id="lfa-Dy-1oB"/>
                 <outlet property="codeLed" destination="jQv-gf-erv" id="nX2-fr-2ke"/>
+                <outlet property="diskSelectionAccessoryView" destination="Fx0-7u-Jdr" id="PnX-A0-lzZ"/>
                 <outlet property="disketteSizeAccessoryView" destination="9er-1g-BBj" id="10y-Ni-d7O"/>
                 <outlet property="disketteSizeDropdown" destination="PjR-V3-HDo" id="CbX-R0-lnE"/>
                 <outlet property="fdd0Led" destination="2jo-qo-ICJ" id="fAr-ce-6w7"/>
@@ -19,7 +19,7 @@
                 <outlet property="mountFolderCopyCheckbox" destination="TBi-ik-4HJ" id="bBf-3I-v0Z"/>
                 <outlet property="mountFolderCopyInfo" destination="Nic-Ur-ExX" id="Fdi-ot-394"/>
                 <outlet property="openAnyCassetteFileCheckbox" destination="XK6-bQ-3aM" id="U6J-Q9-rnh"/>
-                <outlet property="openAnyFileCheckbox" destination="4TM-8o-xw7" id="NHc-gy-NKr"/>
+                <outlet property="openAnyDiskFileCheckbox" destination="4TM-8o-xw7" id="KGV-um-Irh"/>
                 <outlet property="openAnyRomFileCheckbox" destination="BSh-vI-6Xe" id="ZYc-Jn-aCk"/>
                 <outlet property="pauseLed" destination="czc-jq-QxQ" id="Nvs-Y1-RcX"/>
                 <outlet property="powerLed" destination="4b3-Fk-EKg" id="8d5-at-JtW"/>
@@ -33,7 +33,6 @@
                 <outlet property="romTypeDropdown" destination="uq1-SV-s8z" id="5pP-zH-Q9U"/>
                 <outlet property="screen" destination="812" id="1223"/>
                 <outlet property="statusBar" destination="1277" id="1278"/>
-                <outlet property="unrecognizedFileAccessoryView" destination="Fx0-7u-Jdr" id="zUh-Xk-9bz"/>
                 <outlet property="window" destination="796" id="1216"/>
             </connections>
         </customObject>

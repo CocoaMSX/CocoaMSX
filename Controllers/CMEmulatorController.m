@@ -53,6 +53,7 @@
 #include "Led.h"
 #include "Debugger.h"
 #include "Switches.h"
+#include "DirAsDisk.h"
 
 #include "ArchFile.h"
 #include "ArchEvent.h"
@@ -113,12 +114,16 @@
                        sizekB:(int)size
                         error:(NSError **)error;
 - (void)createBlankDiskAndInsertIntoSlot:(int)slot;
+- (BOOL)createDiskImageFromDirectory:(NSString *)directory
+                             writeTo:(NSString *)dskPath
+                               error:(NSError **)error;
 - (void)ejectCartridgeFromSlot:(NSInteger)slot;
 - (BOOL)toggleEjectCartridgeMenuItemStatus:(NSMenuItem*)menuItem
                                       slot:(NSInteger)slot;
 
 - (void)insertDiskAtPath:(NSString *)path
-                    slot:(NSInteger)slot;
+                    slot:(NSInteger)slot
+          mountFoldersRw:(BOOL)mountFoldersRw;
 - (void)ejectDiskFromSlot:(NSInteger)slot;
 - (BOOL)toggleEjectDiskMenuItemStatus:(NSMenuItem*)menuItem
                                  slot:(NSInteger)slot;
@@ -1078,14 +1083,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [panel setTitle:title];
     [panel setCanChooseFiles:YES];
     [panel setCanChooseDirectories:canChooseDirectories];
-    [panel setCanCreateDirectories:YES];
     
     BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
     
     if (accessoryView)
     {
         [panel setAccessoryView:accessoryView];
-        [openAnyFileCheckbox setState:canOpenAnyFile];
+        [openAnyDiskFileCheckbox setState:canOpenAnyFile];
     }
     
     if (!accessoryView || !canOpenAnyFile)
@@ -1161,7 +1165,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
         [panel setTitle:CMLoc(@"Insert Cartridge", @"")];
         [panel setCanChooseFiles:YES];
         [panel setCanChooseDirectories:NO];
-        [panel setCanCreateDirectories:YES];
         [panel setAccessoryView:romSelectionAccessoryView];
         [panel setDelegate:self];
         
@@ -1230,7 +1233,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if ([self isInitialized]) {
         [mountFolderCopyCheckbox setEnabled:NO];
         [mountFolderCopyInfo setTextColor:[NSColor disabledControlTextColor]];
-        [mountFolderCopyCheckbox setState:NSOffState];
+        [mountFolderCopyCheckbox setState:NSOnState];
         
         NSOpenPanel* panel = [NSOpenPanel openPanel];
         
@@ -1238,11 +1241,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
         [panel setCanChooseFiles:YES];
         [panel setCanChooseDirectories:YES];
         [panel setCanCreateDirectories:YES];
-        [panel setAccessoryView:unrecognizedFileAccessoryView];
+        [panel setAccessoryView:diskSelectionAccessoryView];
         [panel setDelegate:self];
         
         BOOL canOpenAnyFile = CMGetBoolPref(@"openAnyFile");
-        [openAnyFileCheckbox setState:canOpenAnyFile];
+        [openAnyDiskFileCheckbox setState:canOpenAnyFile];
         if (!canOpenAnyFile) {
             [panel setAllowedFileTypes:openDiskFileTypes];
         }
@@ -1262,7 +1265,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
              {
                  [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
                  [self insertDiskAtPath:[[panel URL] path]
-                                   slot:slot];
+                                   slot:slot
+                         mountFoldersRw:[mountFolderCopyCheckbox isEnabled] && [mountFolderCopyCheckbox state] == NSOnState];
              }
          }];
     }
@@ -1339,8 +1343,45 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return NO;
 }
 
+- (BOOL)createDiskImageFromDirectory:(NSString *)directory
+                             writeTo:(NSString *)dskPath
+                               error:(NSError **)error
+{
+    int imageSize;
+    void *image = dirLoadFile(DDT_MSX, [directory cStringUsingEncoding:NSUTF8StringEncoding], &imageSize);
+    if (image == NULL) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:0
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"Error reading directory contents", @"")
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+        return NO;
+    }
+
+    NSData *data = [NSData dataWithBytesNoCopy:image
+                                        length:imageSize
+                                  freeWhenDone:YES];
+    if (data == nil) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+                                         code:0
+                                     userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"Error creating NSData object", @"")
+                                                                                 forKey:NSLocalizedDescriptionKey]];
+        }
+
+        free(image);
+        return NO;
+    }
+
+    return [data writeToFile:dskPath
+                     options:0
+                       error:error];
+}
+
 - (void)insertDiskAtPath:(NSString *)path
                     slot:(NSInteger)slot
+          mountFoldersRw:(BOOL)mountFoldersRw
 {
     emulatorSuspend();
     
@@ -1350,15 +1391,56 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [[NSFileManager defaultManager] fileExistsAtPath:path
                                          isDirectory:&isDirectory];
     
-    if (isDirectory)
-    {
+    if (isDirectory && mountFoldersRw) {
+        // Create a disk image
+        NSString *template = [NSString stringWithFormat:NSLocalizedString(@"FolderImageFilenameFormat", @""),
+                              [path lastPathComponent]];
+        NSString *generatedPath = [self generateTimestampedFilenameAtPath:nil
+                                                                 template:template
+                                                                extension:@"dsk"];
+        NSError *error;
+        if ([self createDiskImageFromDirectory:path
+                                       writeTo:generatedPath
+                                         error:&error]) {
+            if (NSClassFromString(@"NSUserNotificationCenter") != nil) {
+                NSString *title = NSLocalizedString(@"Disk Image Created", "");
+                NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Wrote contents of %@ to %@ on the desktop.", ""),
+                                      [path lastPathComponent],
+                                      [generatedPath lastPathComponent]];
+                
+                NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
+                [notification setTitle:title];
+                [notification setInformativeText:infoText];
+                [notification setSoundName:NSUserNotificationDefaultSoundName];
+                
+                [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+            }
+            
+            path = generatedPath;
+            fileCstr = [generatedPath UTF8String];
+            isDirectory = NO;
+        } else {
+            NSString *infoText = [[error userInfo] objectForKey:NSLocalizedDescriptionKey];
+            NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Error creating disk image", @"Dialog title")
+                                             defaultButton:CMLoc(@"OK", @"")
+                                           alternateButton:nil
+                                               otherButton:nil
+                                 informativeTextWithFormat:@"%@", infoText];
+            
+            [alert beginSheetModalForWindow:[self window]
+                              modalDelegate:self
+                             didEndSelector:nil
+                                contextInfo:nil];
+            emulatorResume();
+            return;
+        }
+    }
+    
+    if (isDirectory) {
         // Insert directory
-        
         strcpy(properties->media.disks[slot].directory, fileCstr);
         insertDiskette(properties, slot, fileCstr, NULL, 0);
-    }
-    else
-    {
+    } else {
         // Insert disk file
          
         insertDiskette(properties, slot, fileCstr, NULL, 0);
@@ -1372,8 +1454,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     // If the user is inserting a disk into the first slot, reset last used
     // state names
-    if (slot == 0)
-    {
+    if (slot == 0) {
         [self setLastLoadedState:nil];
         [self setLastSavedState:nil];
     }
@@ -1410,12 +1491,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
                  if ([self createBlankDiskAtPath:path
                                           sizekB:size
                                            error:NULL]) {
-                     [self insertDiskAtPath:path slot:slot];
+                     [self insertDiskAtPath:path
+                                       slot:slot
+                             mountFoldersRw:NO];
                      
                      Class notificationCenterClass = NSClassFromString(@"NSUserNotificationCenter");
                      if (notificationCenterClass != nil) {
-                         NSString *title = NSLocalizedString(@"Blank Disk Created", "");
-                         NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Successfully created and inserted %@", ""),
+                         NSString *title = NSLocalizedString(@"Disk Image Created", "");
+                         NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Created a new blank disk %@.", ""),
                                                [path lastPathComponent]];
                          
                          NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
@@ -1749,16 +1832,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 - (void)toggleFullScreen
 {
-    if ([self isLionFullscreenAvailable])
-    {
+    if ([self isLionFullscreenAvailable]) {
         [self.window toggleFullScreen:nil];
-    }
-    else
-    {
-        if (![self isInFullScreenMode])
+    } else {
+        if (![self isInFullScreenMode]) {
             [self enterLegacyFullscreen];
-        else
+        } else {
             [self exitLegacyFullscreen];
+        }
     }
 }
 
@@ -1899,13 +1980,15 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)insertRecentDiskA:(id)sender
 {
     [self insertDiskAtPath:[[sender representedObject] path]
-                      slot:0];
+                      slot:0
+            mountFoldersRw:NO];
 }
 
 - (void)insertRecentDiskB:(id)sender
 {
     [self insertDiskAtPath:[[sender representedObject] path]
-                      slot:1];
+                      slot:1
+            mountFoldersRw:NO];
 }
 
 - (void)insertRecentCassette:(id)sender
@@ -2783,10 +2866,9 @@ void archTrap(UInt8 value)
                 [romTypeDropdown selectItemAtIndex:[index intValue]];
             }
         }
-    } else if ([sender accessoryView] == unrecognizedFileAccessoryView) {
+    } else if ([sender accessoryView] == diskSelectionAccessoryView) {
         NSString *path = [[sender URL] path];
         if (!path) {
-            [mountFolderCopyCheckbox setState:NSOffState];
             [mountFolderCopyCheckbox setEnabled:NO];
             [mountFolderCopyInfo setTextColor:[NSColor disabledControlTextColor]];
         } else {
@@ -2797,7 +2879,6 @@ void archTrap(UInt8 value)
             if (enableCheckbox) {
                 [mountFolderCopyInfo setTextColor:[NSColor controlTextColor]];
             } else {
-                [mountFolderCopyCheckbox setState:NSOffState];
                 [mountFolderCopyInfo setTextColor:[NSColor disabledControlTextColor]];
             }
         }
