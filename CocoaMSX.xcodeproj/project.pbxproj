@@ -350,6 +350,8 @@
 		FE88FF59169B9AC5004B483B /* CMKeyCaptureFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF57169B9AC5004B483B /* CMKeyCaptureFieldCell.m */; };
 		FE88FF5D169BAB8B004B483B /* CMHeaderRowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FF5C169BAB8B004B483B /* CMHeaderRowCell.m */; };
 		FE89754D1614038D00F07D76 /* CMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FE89754C1614038D00F07D76 /* CMAppDelegate.m */; };
+		FE90EAE31BA78FD800D44C90 /* CocoaSema.c in Sources */ = {isa = PBXBuildFile; fileRef = FE90EAE21BA78FD800D44C90 /* CocoaSema.c */; };
+		FE90EAE51BA7921600D44C90 /* CocoaEvent.c in Sources */ = {isa = PBXBuildFile; fileRef = FE90EAE41BA7921600D44C90 /* CocoaEvent.c */; };
 		FE99C53A160E58FE00843DC8 /* CMFrameCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE99C539160E58FD00843DC8 /* CMFrameCounter.m */; };
 		FE99C53D160E634200843DC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE99C53C160E634100843DC8 /* QuartzCore.framework */; };
 		FE9B86B616D458CC00623DBD /* NSData+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86B516D458CC00623DBD /* NSData+MD5.m */; };
@@ -362,8 +364,6 @@
 		FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B361620C7720066FDD8 /* Localizable.strings */; };
 		FEA01B3A1620FE360066FDD8 /* SpecialCartChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */; };
 		FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */; };
-		FEA01BF31656F1C2002794C6 /* CMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BEE1656F1C2002794C6 /* CMEvent.m */; };
-		FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF01656F1C2002794C6 /* CMSemaphore.m */; };
 		FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF21656F1C2002794C6 /* CMThread.m */; };
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
@@ -1128,6 +1128,8 @@
 		FE88FF5C169BAB8B004B483B /* CMHeaderRowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMHeaderRowCell.m; sourceTree = "<group>"; };
 		FE89754B1614038D00F07D76 /* CMAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMAppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FE89754C1614038D00F07D76 /* CMAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		FE90EAE21BA78FD800D44C90 /* CocoaSema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CocoaSema.c; sourceTree = "<group>"; };
+		FE90EAE41BA7921600D44C90 /* CocoaEvent.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CocoaEvent.c; sourceTree = "<group>"; };
 		FE99C538160E58FD00843DC8 /* CMFrameCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMFrameCounter.h; sourceTree = "<group>"; };
 		FE99C539160E58FD00843DC8 /* CMFrameCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMFrameCounter.m; sourceTree = "<group>"; };
 		FE99C53C160E634100843DC8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
@@ -1148,10 +1150,6 @@
 		FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpecialCartChooser.xib; sourceTree = "<group>"; };
 		FEA01B3F162100050066FDD8 /* CMSpecialCartChooserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSpecialCartChooserController.h; sourceTree = "<group>"; };
 		FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSpecialCartChooserController.m; sourceTree = "<group>"; };
-		FEA01BED1656F1C2002794C6 /* CMEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMEvent.h; sourceTree = "<group>"; };
-		FEA01BEE1656F1C2002794C6 /* CMEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMEvent.m; sourceTree = "<group>"; };
-		FEA01BEF1656F1C2002794C6 /* CMSemaphore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSemaphore.h; sourceTree = "<group>"; };
-		FEA01BF01656F1C2002794C6 /* CMSemaphore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSemaphore.m; sourceTree = "<group>"; };
 		FEA01BF11656F1C2002794C6 /* CMThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMThread.h; sourceTree = "<group>"; };
 		FEA01BF21656F1C2002794C6 /* CMThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMThread.m; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMCocoaTimer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2358,31 +2356,29 @@
 		FEF40EC2160DB83B009170A9 /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
-				FEA01BED1656F1C2002794C6 /* CMEvent.h */,
-				FEA01BEE1656F1C2002794C6 /* CMEvent.m */,
-				FEA01BEF1656F1C2002794C6 /* CMSemaphore.h */,
-				FEA01BF01656F1C2002794C6 /* CMSemaphore.m */,
 				FEA01BF11656F1C2002794C6 /* CMThread.h */,
 				FEA01BF21656F1C2002794C6 /* CMThread.m */,
 				FEF40EC5160DB83B009170A9 /* CMCocoaBuffer.h */,
 				FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */,
-				FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */,
-				FEF40EC8160DB83B009170A9 /* CocoaDialog.c */,
-				FEF40EC9160DB83B009170A9 /* CocoaEth.c */,
-				FEF40ECA160DB83B009170A9 /* CocoaFile.c */,
-				FEF40ECB160DB83B009170A9 /* CocoaGlob.c */,
 				6B5D2861161F44CC0081F586 /* CMCocoaInput.h */,
 				6B5D2862161F44CC0081F586 /* CMCocoaInput.m */,
-				FEF40ECC160DB83B009170A9 /* CocoaMenu.c */,
-				FEF40ECD160DB83B009170A9 /* CocoaMidi.c */,
 				FE9C6A2A161AAD3B00513A6D /* CMCocoaMouse.h */,
 				FE9C6A2B161AAD3B00513A6D /* CMCocoaMouse.m */,
-				FEF40ECE160DB83B009170A9 /* CocoaNotifications.c */,
-				FEF40ECF160DB83B009170A9 /* CocoaPrinter.c */,
 				FE1D58D5161D744800E70CF8 /* CMCocoaSound.h */,
 				FE1D58D6161D744800E70CF8 /* CMCocoaSound.m */,
 				FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */,
 				FE42CF7F160EBF9B00D06E1D /* CMCocoaTimer.m */,
+				FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */,
+				FEF40EC8160DB83B009170A9 /* CocoaDialog.c */,
+				FEF40EC9160DB83B009170A9 /* CocoaEth.c */,
+				FE90EAE41BA7921600D44C90 /* CocoaEvent.c */,
+				FEF40ECA160DB83B009170A9 /* CocoaFile.c */,
+				FEF40ECB160DB83B009170A9 /* CocoaGlob.c */,
+				FEF40ECC160DB83B009170A9 /* CocoaMenu.c */,
+				FEF40ECD160DB83B009170A9 /* CocoaMidi.c */,
+				FEF40ECE160DB83B009170A9 /* CocoaNotifications.c */,
+				FEF40ECF160DB83B009170A9 /* CocoaPrinter.c */,
+				FE90EAE21BA78FD800D44C90 /* CocoaSema.c */,
 				FEF40ED0160DB83B009170A9 /* CocoaUart.c */,
 				FEF40ED1160DB83B009170A9 /* CocoaVideoIn.c */,
 			);
@@ -2599,6 +2595,7 @@
 				E997338A1298B4B500766C90 /* SviJoyIo.c in Sources */,
 				E997338C1298B4B500766C90 /* Casette.c in Sources */,
 				E997338D1298B4B500766C90 /* DirAsDisk.c in Sources */,
+				FE90EAE31BA78FD800D44C90 /* CocoaSema.c in Sources */,
 				E997338E1298B4B500766C90 /* Disk.c in Sources */,
 				E997338F1298B4B500766C90 /* FdcAudio.c in Sources */,
 				E99733901298B4B500766C90 /* ft245.c in Sources */,
@@ -2755,6 +2752,7 @@
 				E99734381298B4B500766C90 /* AudioMixer.c in Sources */,
 				E99734391298B4B500766C90 /* AY8910.c in Sources */,
 				E997343A1298B4B500766C90 /* DAC.c in Sources */,
+				FE90EAE51BA7921600D44C90 /* CocoaEvent.c in Sources */,
 				E997343B1298B4B500766C90 /* Fmopl.c in Sources */,
 				E997343C1298B4B500766C90 /* KeyClick.c in Sources */,
 				E997343D1298B4B500766C90 /* MameVLM5030.c in Sources */,
@@ -2855,8 +2853,6 @@
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
 				FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */,
-				FEA01BF31656F1C2002794C6 /* CMEvent.m in Sources */,
-				FEA01BF41656F1C2002794C6 /* CMSemaphore.m in Sources */,
 				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
 				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,
 				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,

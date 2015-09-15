@@ -20,17 +20,51 @@
  **
  ******************************************************************************
  */
-#import <Foundation/Foundation.h>
 
-@interface CMSemaphore : NSObject
+#include <stdlib.h>
+
+#include "ArchEvent.h"
+
+typedef struct {
+    void *eventSem;
+    void *lockSem;
+    int   state;
+} Event;
+
+void * archEventCreate(int initState)
 {
-    NSCondition *cond;
-    NSInteger   count;
+    Event *e = calloc(1, sizeof(Event));
+    if (e != NULL) {
+        e->state = initState ? 1 : 0;
+        e->lockSem  = archSemaphoreCreate(1);
+        e->eventSem  = archSemaphoreCreate(e->state);
+    }
+    
+    return e;
 }
 
-- (id)initWithCount:(NSInteger)initialCount;
-- (void)signal;
-- (void)wait;
+void archEventDestroy(void *event)
+{
+    Event *e = (Event *) event;
+    
+    archSemaphoreDestroy(e->lockSem);
+    archSemaphoreDestroy(e->eventSem);
+    
+    free(e);
+}
 
-@end
+void archEventSet(void *event)
+{
+    Event *e = (Event *) event;
+    if (e->state == 0) {
+        e->state = 1;
+        archSemaphoreSignal(e->eventSem);
+    }
+}
 
+void archEventWait(void *event, int timeout)
+{
+    Event *e = (Event *) event;
+    archSemaphoreWait(e->eventSem, timeout);
+    e->state = 0;
+}

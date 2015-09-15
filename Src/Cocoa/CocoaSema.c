@@ -20,72 +20,39 @@
  **
  ******************************************************************************
  */
-#import "CMSemaphore.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <mach/mach_error.h>
+#include <mach/mach_init.h>
+#include <mach/semaphore.h>
+#include <mach/task.h>
 
-#pragma mark - CMSemaphore
-
-@implementation CMSemaphore
-
-- (id)initWithCount:(NSInteger)initialCount
+void * archSemaphoreCreate(int initCount)
 {
-    if ((self = [super init]))
-    {
-        cond = [[NSCondition alloc] init];
-        count = initialCount;
+    semaphore_t *sem = (semaphore_t *) malloc(sizeof(semaphore_t));
+    if (sem != NULL) {
+        kern_return_t ret = semaphore_create(mach_task_self(),
+                                             sem, SYNC_POLICY_FIFO, initCount);
+        if (ret != KERN_SUCCESS) {
+            fprintf(stderr, "semaphore_create failed: (%s - %d)",
+                    mach_error_string(ret), ret);
+        }
     }
     
-    return self;
-}
-
-- (void)dealloc
-{
-    [cond release];
-    
-    [super dealloc];
-}
-
-- (void)signal
-{
-    [cond lock];
-    
-    if (++count > 0)
-        [cond signal];
-    
-    [cond unlock];
-}
-
-- (void)wait
-{
-    [cond lock];
-    
-    while (count <= 0)
-        [cond wait];
-    
-    --count;
-    
-    [cond unlock];
-}
-
-@end
-
-#pragma mark - blueMSX Semaphore Callbacks
-
-void* archSemaphoreCreate(int initCount)
-{
-    return [[CMSemaphore alloc] initWithCount:initCount];
+    return sem;
 }
 
 void archSemaphoreDestroy(void *semaphore)
 {
-    [(CMSemaphore *)semaphore release];
+    semaphore_destroy(mach_task_self(), *(semaphore_t *) semaphore);
 }
 
 void archSemaphoreSignal(void *semaphore)
 {
-    [(CMSemaphore *)semaphore signal];
+    semaphore_signal(*(semaphore_t *) semaphore);
 }
 
 void archSemaphoreWait(void *semaphore, int timeout)
 {
-    [(CMSemaphore *)semaphore wait];
+    semaphore_wait(*(semaphore_t *) semaphore);
 }
