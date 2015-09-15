@@ -22,38 +22,55 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <mach/mach_error.h>
-#include <mach/mach_init.h>
-#include <mach/semaphore.h>
-#include <mach/task.h>
+#include <pthread.h>
+#include <assert.h>
 
-void * archSemaphoreCreate(int initCount)
+struct CocoaThread {
+    pthread_attr_t attr;
+    pthread_t      pthreadId;
+};
+
+static void *pThreadCallback(void *data);
+
+void * archThreadCreate(void (* entryPoint)(), int priority)
 {
-    semaphore_t *sem = (semaphore_t *) malloc(sizeof(semaphore_t));
-    if (sem != NULL) {
-        kern_return_t ret = semaphore_create(mach_task_self(),
-                                             sem, SYNC_POLICY_FIFO, initCount);
-        if (ret != KERN_SUCCESS) {
-            fprintf(stderr, "semaphore_create failed: (%s - %d)",
-                    mach_error_string(ret), ret);
-        }
+    struct CocoaThread *ct = calloc(1, sizeof(struct CocoaThread));
+    if (ct != NULL) {
+        int status;
+        status = pthread_attr_init(&ct->attr);
+        assert(status == 0);
+        status = pthread_create(&ct->pthreadId, &ct->attr, &pThreadCallback, entryPoint);
+        assert(status == 0);
     }
     
-    return sem;
+    return ct;
 }
 
-void archSemaphoreDestroy(void *semaphore)
+void archThreadJoin(void *thread, int timeout)
 {
-    semaphore_destroy(mach_task_self(), *(semaphore_t *) semaphore);
-    free(semaphore);
+    pthread_join(((struct CocoaThread *) thread)->pthreadId, NULL);
 }
 
-void archSemaphoreSignal(void *semaphore)
+void archThreadDestroy(void *thread)
 {
-    semaphore_signal(*(semaphore_t *) semaphore);
+    pthread_attr_destroy(&((struct CocoaThread *) thread)->attr);
+    free(thread);
 }
 
-void archSemaphoreWait(void *semaphore, int timeout)
+void archThreadSleep(int milliseconds)
 {
-    semaphore_wait(*(semaphore_t *) semaphore);
+    usleep(milliseconds * 1000);
+}
+
+static void* pThreadCallback(void *data)
+{
+    void (* entryPoint)() = data;
+    
+    @autoreleasepool
+    {
+        entryPoint();
+    }
+    
+    return NULL;
+    
 }

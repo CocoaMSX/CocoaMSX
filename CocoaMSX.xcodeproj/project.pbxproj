@@ -330,6 +330,7 @@
 		FE5B566C1929D331001C4E85 /* fdd1_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5B56681929D331001C4E85 /* fdd1_led_on@2x.png */; };
 		FE5B566D1929D331001C4E85 /* fdd1_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5B56691929D331001C4E85 /* fdd1_led_on.png */; };
 		FE5B566E1929D331001C4E85 /* fdd1_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5B566A1929D331001C4E85 /* fdd1_led_off.png */; };
+		FE5C8DE91BA7DC7500FC5228 /* CocoaThread.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5C8DE81BA7DC7500FC5228 /* CocoaThread.m */; };
 		FE5CDEB9192C871F00312BB4 /* code_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5CDEB5192C871F00312BB4 /* code_led_off.png */; };
 		FE5CDEBA192C871F00312BB4 /* code_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5CDEB6192C871F00312BB4 /* code_led_on.png */; };
 		FE5CDEBB192C871F00312BB4 /* code_led_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5CDEB7192C871F00312BB4 /* code_led_on@2x.png */; };
@@ -364,7 +365,6 @@
 		FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B361620C7720066FDD8 /* Localizable.strings */; };
 		FEA01B3A1620FE360066FDD8 /* SpecialCartChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */; };
 		FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */; };
-		FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01BF21656F1C2002794C6 /* CMThread.m */; };
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
@@ -1097,6 +1097,7 @@
 		FE5B56681929D331001C4E85 /* fdd1_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd1_led_on@2x.png"; sourceTree = "<group>"; };
 		FE5B56691929D331001C4E85 /* fdd1_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd1_led_on.png; sourceTree = "<group>"; };
 		FE5B566A1929D331001C4E85 /* fdd1_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd1_led_off.png; sourceTree = "<group>"; };
+		FE5C8DE81BA7DC7500FC5228 /* CocoaThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaThread.m; sourceTree = "<group>"; };
 		FE5CDEB5192C871F00312BB4 /* code_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = code_led_off.png; sourceTree = "<group>"; };
 		FE5CDEB6192C871F00312BB4 /* code_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = code_led_on.png; sourceTree = "<group>"; };
 		FE5CDEB7192C871F00312BB4 /* code_led_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "code_led_on@2x.png"; sourceTree = "<group>"; };
@@ -1150,8 +1151,6 @@
 		FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpecialCartChooser.xib; sourceTree = "<group>"; };
 		FEA01B3F162100050066FDD8 /* CMSpecialCartChooserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSpecialCartChooserController.h; sourceTree = "<group>"; };
 		FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSpecialCartChooserController.m; sourceTree = "<group>"; };
-		FEA01BF11656F1C2002794C6 /* CMThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMThread.h; sourceTree = "<group>"; };
-		FEA01BF21656F1C2002794C6 /* CMThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMThread.m; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMCocoaTimer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SnapshotDocument.icns; sourceTree = "<group>"; };
 		FEA4548C1679B65300AAECB7 /* DiskDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DiskDocument.icns; sourceTree = "<group>"; };
@@ -2356,8 +2355,6 @@
 		FEF40EC2160DB83B009170A9 /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
-				FEA01BF11656F1C2002794C6 /* CMThread.h */,
-				FEA01BF21656F1C2002794C6 /* CMThread.m */,
 				FEF40EC5160DB83B009170A9 /* CMCocoaBuffer.h */,
 				FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */,
 				6B5D2861161F44CC0081F586 /* CMCocoaInput.h */,
@@ -2379,6 +2376,7 @@
 				FEF40ECE160DB83B009170A9 /* CocoaNotifications.c */,
 				FEF40ECF160DB83B009170A9 /* CocoaPrinter.c */,
 				FE90EAE21BA78FD800D44C90 /* CocoaSema.c */,
+				FE5C8DE81BA7DC7500FC5228 /* CocoaThread.m */,
 				FEF40ED0160DB83B009170A9 /* CocoaUart.c */,
 				FEF40ED1160DB83B009170A9 /* CocoaVideoIn.c */,
 			);
@@ -2631,6 +2629,7 @@
 				E99733AD1298B4B500766C90 /* wd33c93.c in Sources */,
 				E99733AE1298B4B500766C90 /* WDCRC.c in Sources */,
 				E99733AF1298B4B500766C90 /* Z8530.c in Sources */,
+				FE5C8DE91BA7DC7500FC5228 /* CocoaThread.m in Sources */,
 				E99733B11298B4B500766C90 /* Crc32Calc.c in Sources */,
 				E99733B21298B4B500766C90 /* MediaDb.cpp in Sources */,
 				E99733B31298B4B500766C90 /* Sha1.cpp in Sources */,
@@ -2853,7 +2852,6 @@
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
 				FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */,
-				FEA01BF51656F1C2002794C6 /* CMThread.m in Sources */,
 				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,
 				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,
 				6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */,
