@@ -2412,7 +2412,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CM;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Akop Karapetyan";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CocoaMSX" */;
@@ -2933,6 +2933,7 @@
 					"-DLSB_FIRST",
 					"-DCOCOAMSX",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.akop.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = CocoaMSX;
 			};
 			name = Debug;
@@ -2962,6 +2963,7 @@
 					"-DLSB_FIRST",
 					"-DCOCOAMSX",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.akop.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = CocoaMSX;
 			};
 			name = Release;
@@ -2969,6 +2971,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
