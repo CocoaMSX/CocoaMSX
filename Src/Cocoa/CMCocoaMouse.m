@@ -244,7 +244,7 @@
             deltaY = theEvent.deltaY;
             
             if (CMGetBoolPref(@"unlockMouseCursorOnShake") &&
-                (abs(deltaX) > escapeThresholdX || abs(deltaY) > escapeThresholdY))
+                (fabs(deltaX) > escapeThresholdX || fabs(deltaY) > escapeThresholdY))
             {
                 [self unlockCursor];
             }

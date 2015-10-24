@@ -80,6 +80,7 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSMutableDictionary *romTypeIndices;
     NSMutableDictionary *romTypes;
     NSMutableArray *romTypeNames;
+    NSMutableArray *recentDocuments;
     
     NSMutableDictionary *disketteSizes;
     NSMutableArray *disketteSizeDescriptions;

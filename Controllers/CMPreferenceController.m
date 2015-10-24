@@ -135,7 +135,7 @@ static NSArray *keysInOrderOfAppearance;
 
 @interface CMPreferenceController ()
 
-- (void)sliderValueChanged:(id)sender;
+- (void) sliderValueChanged:(NSSlider *) sender;
 
 - (NSInteger)virtualPositionOfSlider:(NSSlider *)slider
                           usingTable:(NSArray *)table;
@@ -909,7 +909,7 @@ static NSArray *keysInOrderOfAppearance;
     CMSetObjPref(@"selectedPreferencesTab", tabIdentifier);
 }
 
-- (void)sliderValueChanged:(id)sender
+- (void) sliderValueChanged:(NSSlider *) sender
 {
     double range = [sender maxValue] - [sender minValue];
     double tickInterval = range / ([sender numberOfTickMarks] - 1);

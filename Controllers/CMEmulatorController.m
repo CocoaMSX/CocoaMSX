@@ -158,7 +158,8 @@
                            action:(SEL)action
                            parent:(NSMenuItem *)parent;
 - (void)clearRecentMediaItemsInMenu:(NSMenuItem *)menuItem;
-- (void)rebuildRecentItemsMenus;
+- (void) rebuildRecentItemsMenus;
+- (void) syncRecentDocuments;
 
 - (BOOL)diskSizeValid:(int)size;
 - (NSString *) generateTimestampedFilenameAtPath:(NSString *)parentPath
@@ -238,6 +239,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         romTypeNames = [[NSMutableArray alloc] init];
         disketteSizes = [[NSMutableDictionary alloc] init];
         disketteSizeDescriptions = [[NSMutableArray alloc] init];
+        recentDocuments = [[NSMutableArray alloc] init];
         
         NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"RomTypes"
                                                                  ofType:@"plist"
@@ -319,6 +321,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [romTypeNames release];
     [disketteSizeDescriptions release];
     [disketteSizes release];
+    [recentDocuments release];
     
     [openRomFileTypes release];
     [openDiskFileTypes release];
@@ -401,7 +404,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                  name:CMKeyPasteEnded
                                                object:nil];
     
-    [self rebuildRecentItemsMenus];
+    [self syncRecentDocuments];
     
     [self create];
     [self start];
@@ -881,6 +884,23 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return (error == nil);
 }
 
+- (void) syncRecentDocuments
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray *recentURLs = [[NSDocumentController sharedDocumentController] recentDocumentURLs];
+        @synchronized(self) {
+            [recentDocuments removeAllObjects];
+            [recentDocuments addObjectsFromArray:recentURLs];
+        }
+        
+        NSLog(@"Added %ld recent documents to local copy", [recentURLs count]);
+        
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [self rebuildRecentItemsMenus];
+        });
+    });
+}
+
 - (void)addRecentMediaItemWithURL:(NSURL *)url
                            action:(SEL)action
                            parent:(NSMenuItem *)parent
@@ -904,7 +924,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
      }];
 }
 
-- (void)rebuildRecentItemsMenus
+- (void) rebuildRecentItemsMenus
 {
     // Clear existing menu items
     [self clearRecentMediaItemsInMenu:recentCartridgesA];
@@ -914,8 +934,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self clearRecentMediaItemsInMenu:recentCassettes];
     
     // Add new items
-    NSArray *recentURLs = [[NSDocumentController sharedDocumentController] recentDocumentURLs];
-    [recentURLs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    NSMutableArray *recentCopy;
+    @synchronized(self) {
+        recentCopy = [NSMutableArray arrayWithArray:recentDocuments];
+    }
+    
+    [recentCopy enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
         NSString *extension = [[obj pathExtension] lowercaseString];
         if ([openRomFileTypes containsObject:extension])
@@ -1215,7 +1239,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (insertCartridge(properties, slot, [cartridge UTF8String], NULL, type, 0))
     {
-        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:cartridge]];
+        NSURL *url = [NSURL fileURLWithPath:cartridge];
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+        [recentDocuments insertObject:url atIndex:0];
+        
         [self rebuildRecentItemsMenus];
     }
     
@@ -1446,7 +1473,10 @@ CMEmulatorController *theEmulator = nil; // FIXME
         insertDiskette(properties, slot, fileCstr, NULL, 0);
         [[CMPreferences preferences] setDiskDirectory:path];
         
-        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
+        NSURL *url = [NSURL fileURLWithPath:path];
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+        [recentDocuments insertObject:url atIndex:0];
+        
         [self rebuildRecentItemsMenus];
     }
     
@@ -1602,8 +1632,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (insertCassette(properties, 0, [path UTF8String], NULL, 0))
     {
-        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
+        NSURL *url = [NSURL fileURLWithPath:path];
+        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+        [recentDocuments insertObject:url atIndex:0];
+        
         [self rebuildRecentItemsMenus];
+        
         [[CMPreferences preferences] setCassetteDirectory:path];
     }
     
@@ -1960,6 +1994,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)clearRecentItems:(id)sender
 {
     [[NSDocumentController sharedDocumentController] clearRecentDocuments:sender];
+    [recentDocuments removeAllObjects];
+    
     [self rebuildRecentItemsMenus];
 }
 
@@ -2325,8 +2361,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
         NSImage *image = [screen captureScreen:YES];
         if (image && [[image representations] count] > 0) {
-            NSBitmapImageRep *rep = [[image representations] firstObject];
-            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+            NSBitmapImageRep *rep = (NSBitmapImageRep *)[[image representations] firstObject];
+            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:@{}];
             
             [pngData writeToFile:path atomically:NO];
         }
@@ -2351,8 +2387,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
              NSImage *image = [screen captureScreen:YES];
              if (image && [image representations].count > 0)
              {
-                 NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
-                 NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+                 NSBitmapImageRep *rep = (NSBitmapImageRep *) [[image representations] firstObject];
+                 NSData *pngData = [rep representationUsingType:NSPNGFileType properties:@{}];
                  
                  [pngData writeToFile:file atomically:NO];
              }
@@ -3117,7 +3153,7 @@ void archTrap(UInt8 value)
     }
     else if ([item action] == @selector(clearRecentItems:))
     {
-        return [[[NSDocumentController sharedDocumentController] recentDocumentURLs] count] > 0;
+        return [recentDocuments count] > 0;
     }
     else if ([item action] == @selector(recordAudio:))
     {

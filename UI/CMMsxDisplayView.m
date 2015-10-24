@@ -440,8 +440,8 @@ void *archScreenCapture(ScreenCaptureType type, int *bitmapSize, int onlyBmp)
         NSImage *image = [theEmulator.screen captureScreen:NO];
         if (image && [image representations].count > 0)
         {
-            NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
-            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:nil];
+            NSBitmapImageRep *rep = (NSBitmapImageRep *)[[image representations] firstObject];
+            NSData *pngData = [rep representationUsingType:NSPNGFileType properties:@{}];
             
             *bitmapSize = pngData.length;
             bytes = malloc(*bitmapSize);
