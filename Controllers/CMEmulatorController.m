@@ -1241,6 +1241,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         NSURL *url = [NSURL fileURLWithPath:cartridge];
         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+        [recentDocuments removeObject:url];
         [recentDocuments insertObject:url atIndex:0];
         
         [self rebuildRecentItemsMenus];
@@ -1475,6 +1476,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         
         NSURL *url = [NSURL fileURLWithPath:path];
         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+        [recentDocuments removeObject:url];
         [recentDocuments insertObject:url atIndex:0];
         
         [self rebuildRecentItemsMenus];
@@ -1634,6 +1636,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     {
         NSURL *url = [NSURL fileURLWithPath:path];
         [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+        [recentDocuments removeObject:url];
         [recentDocuments insertObject:url atIndex:0];
         
         [self rebuildRecentItemsMenus];
