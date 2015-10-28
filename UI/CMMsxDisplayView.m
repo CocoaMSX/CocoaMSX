@@ -69,6 +69,7 @@
 - (void)awakeFromNib
 {
     [self.window setAcceptsMouseMovedEvents:YES];
+    [self setWantsBestResolutionOpenGLSurface:YES];
     
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"videoScanlineAmount"
@@ -162,6 +163,7 @@
     [[self openGLContext] update];
     
     NSSize size = [self bounds].size;
+    NSSize backingSize = [self convertRectToBacking:[self bounds]].size;
     
     if ([emulator isStarted])
     {
@@ -192,10 +194,10 @@
     NSLog(@"MsxDisplayView: resized to %.00fx%.00f", size.width, size.height);
 #endif
     
-    glViewport(0, 0, size.width, size.height);
+    glViewport(0, 0, backingSize.width, backingSize.height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, size.width, size.height, 0, -1, 1);
+    glOrtho(0, backingSize.width, backingSize.height, 0, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     
     glClear(GL_COLOR_BUFFER_BIT);
@@ -314,20 +316,20 @@
                         GL_RGBA, GL_UNSIGNED_BYTE,
                         currentScreen->pixels + y * currentScreen->pitch);
     
-    NSSize size = [self bounds].size;
+    NSSize backingSize = [self convertRectToBacking:[self bounds]].size;
     
-    CGFloat widthRatio = size.width / (CGFloat)ACTUAL_WIDTH;
+    CGFloat widthRatio = backingSize.width / (CGFloat)ACTUAL_WIDTH;
     CGFloat offset = ((BUFFER_WIDTH - ACTUAL_WIDTH) / 2.0) * widthRatio;
     
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(-offset, 0.0, 0.0);
     glTexCoord2f(coordX, 0.0);
-    glVertex3f(size.width + offset, 0.0, 0.0);
+    glVertex3f(backingSize.width + offset, 0.0, 0.0);
     glTexCoord2f(coordX, coordY);
-    glVertex3f(size.width + offset, size.height, 0.0);
+    glVertex3f(backingSize.width + offset, backingSize.height, 0.0);
     glTexCoord2f(0.0, coordY);
-    glVertex3f(-offset, size.height, 0.0);
+    glVertex3f(-offset, backingSize.height, 0.0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
     
