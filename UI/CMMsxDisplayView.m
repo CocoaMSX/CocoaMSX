@@ -39,7 +39,7 @@
 #define BUFFER_WIDTH 320
 #define HEIGHT       240
 #define DEPTH        32
-#define ZOOM         2
+#define ZOOM         4
 
 @interface CMMsxDisplayView ()
 
