@@ -41,11 +41,15 @@
     int depth;
     int zoom;
     int pitch;
+    UInt8 *scaledPixels;
+    GLfloat backingScale;
 }
 
-- (id)initWithWidth:(int)screenWidth
-             height:(int)screenHeight
-              depth:(int)imageDepth
-               zoom:(int)zoomFactor;
+- (id) initWithWidth:(int) screenWidth
+              height:(int) screenHeight
+               depth:(int) imageDepth
+                zoom:(int) zoomFactor
+        backingScale:(GLfloat) backingScaleFactor;
+- (void) applyScale;
 
 @end

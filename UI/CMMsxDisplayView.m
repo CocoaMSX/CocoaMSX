@@ -39,7 +39,7 @@
 #define BUFFER_WIDTH 320
 #define HEIGHT       240
 #define DEPTH        32
-#define ZOOM         4
+#define ZOOM         2
 
 @interface CMMsxDisplayView ()
 
@@ -136,14 +136,15 @@
         screens[i] = [[CMCocoaBuffer alloc] initWithWidth:BUFFER_WIDTH
                                                    height:HEIGHT
                                                     depth:DEPTH
-                                                     zoom:ZOOM];
+                                                     zoom:ZOOM
+                                             backingScale:[[self window] backingScaleFactor]];
     }
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
                  screens[0]->textureWidth,
                  screens[0]->textureHeight,
                  0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 screens[0]->pixels);
+                 NULL);
     
     glDisable(GL_TEXTURE_2D);
     
@@ -273,11 +274,11 @@
     
     Properties *properties = emulator.properties;
     Video *video = emulator.video;
-    FrameBuffer* frameBuffer = frameBufferFlipViewFrame(properties->emulation.syncMethod == P_EMU_SYNCTOVBLANKASYNC);
+    FrameBuffer *frameBuffer = frameBufferFlipViewFrame(properties->emulation.syncMethod == P_EMU_SYNCTOVBLANKASYNC);
     
     CMCocoaBuffer *currentScreen = screens[currentScreenIndex];
     
-    char* dpyData = currentScreen->pixels;
+    char *dpyData = currentScreen->pixels;
     int width = currentScreen->actualWidth;
     int height = currentScreen->actualHeight;
     
@@ -285,10 +286,6 @@
         frameBuffer = frameBufferGetWhiteNoiseFrame();
     
     int borderWidth = (BUFFER_WIDTH - frameBuffer->maxWidth) * currentScreen->zoom / 2;
-    const int linesPerBlock = 4;
-    GLfloat coordX = currentScreen->textureCoordX;
-    GLfloat coordY = currentScreen->textureCoordY;
-    int y;
     
     videoRender(video, frameBuffer, currentScreen->depth, currentScreen->zoom,
                 dpyData + borderWidth * currentScreen->bytesPerPixel, 0,
@@ -311,10 +308,18 @@
     glBindTexture(GL_TEXTURE_2D, screenTexId);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     
-    for (y = 0; y < height; y += linesPerBlock)
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, y, width, linesPerBlock,
-                        GL_RGBA, GL_UNSIGNED_BYTE,
-                        currentScreen->pixels + y * currentScreen->pitch);
+    void *texture = currentScreen->pixels;
+    int textureWidth = width;
+    int textureHeight = height;
+    
+    if ([[self window] backingScaleFactor] > 1.0f) {
+        [currentScreen applyScale];
+        texture = currentScreen->scaledPixels;
+        textureWidth = currentScreen->textureWidth;
+        textureHeight = currentScreen->textureHeight;
+    }
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, textureWidth, textureHeight,
+                    GL_RGBA, GL_UNSIGNED_BYTE, texture);
     
     NSSize backingSize = [self convertRectToBacking:[self bounds]].size;
     
@@ -324,11 +329,11 @@
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(-offset, 0.0, 0.0);
-    glTexCoord2f(coordX, 0.0);
+    glTexCoord2f(currentScreen->textureCoordX, 0.0);
     glVertex3f(backingSize.width + offset, 0.0, 0.0);
-    glTexCoord2f(coordX, coordY);
+    glTexCoord2f(currentScreen->textureCoordX, currentScreen->textureCoordY);
     glVertex3f(backingSize.width + offset, backingSize.height, 0.0);
-    glTexCoord2f(0.0, coordY);
+    glTexCoord2f(0.0, currentScreen->textureCoordY);
     glVertex3f(-offset, backingSize.height, 0.0);
     glEnd();
     glDisable(GL_TEXTURE_2D);

@@ -2020,97 +2020,6 @@ void copy_2x2_32_core2(UInt32* rgbTable, UInt16* pSrc, UInt32* pDst1, UInt32* pD
     }
 }
 
-void copy_XxX_32_core1(UInt32 *rgbTable, UInt16 *pSrc, UInt32 *pDst, int bytesPerLine, int width, int zoom)
-{
-    int repeatH = zoom / 2;
-    int repeatV = zoom;
-    int offset = 0;
-    
-    while (width--) {
-        UInt32 col1 = rgbTable[*pSrc++];
-        UInt32 col2 = rgbTable[*pSrc++];
-        UInt32 col3 = rgbTable[*pSrc++];
-        UInt32 col4 = rgbTable[*pSrc++];
-        
-        for (int i = 0; i < repeatV; i++) {
-            UInt32 *line = pDst + (i * bytesPerLine);
-            line += offset;
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col1;
-            }
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col2;
-            }
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col3;
-            }
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col4;
-            }
-        }
-        offset += repeatH * repeatV;
-    }
-}
-
-void copy_XxX_32_core2(UInt32 *rgbTable, UInt16 *pSrc, UInt32 *pDst, int bytesPerLine, int width, int zoom)
-{
-    int repeatH = zoom;
-    int repeatV = zoom;
-    int offset = 0;
-    
-    while (width--) {
-        UInt32 col1 = rgbTable[*pSrc++];
-        UInt32 col2 = rgbTable[*pSrc++];
-        UInt32 col3 = rgbTable[*pSrc++];
-        UInt32 col4 = rgbTable[*pSrc++];
-        
-        for (int i = 0; i < repeatV; i++) {
-            UInt32 *line = pDst + i * bytesPerLine;
-            line += offset;
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col1;
-            }
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col2;
-            }
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col3;
-            }
-            for (int j = 0; j < repeatH; j++) {
-                *line++ = col4;
-            }
-        }
-        offset += repeatH * repeatV;
-    }
-}
-
-static void copy_XxX_32(FrameBuffer *frame, void *pDst, int dstPitch, UInt32 *rgbTable, int zoom)
-{
-    int height          = frame->lines;
-    int srcWidth        = frame->maxWidth;
-    int h;
-
-	/*rdtsc_start_timer(0);*/
-    dstPitch /= (int)sizeof(UInt32);
-
-    // FIXME
-//    if (frame->interlace == INTERLACE_ODD) {
-//        pDst1 += dstPitch;
-//        pDst2 += dstPitch;
-//        height--;
-//    }
-
-    for (h = 0; h < height; h++) {
-        if (frame->line[h].doubleWidth) {
-            copy_XxX_32_core1(rgbTable, frame->line[h].buffer, pDst, dstPitch, srcWidth / 4 * 2, zoom);
-        } else {
-			copy_XxX_32_core2(rgbTable, frame->line[h].buffer, pDst, dstPitch, srcWidth / 4, zoom);
-        }
-        pDst += dstPitch * zoom * 4;
-    }
-	/*rdtsc_end_timer(0);*/
-}
-
 static void copy_2x2_32(FrameBuffer* frame, void* pDestination, int dstPitch, UInt32* rgbTable)
 {
     UInt32* pDst1       = (UInt32*)pDestination;
@@ -2121,54 +2030,54 @@ static void copy_2x2_32(FrameBuffer* frame, void* pDestination, int dstPitch, UI
     void (*core1) (UInt32*, UInt16*, UInt32*, UInt32* , int , int );
     void (*core2) (UInt32*, UInt16*, UInt32*, UInt32* , int , int );
 #ifndef NO_ASM
-    int hasSSE=0;
-    const int SSEbit=1<<25;
-    
+	int hasSSE=0;
+	const int SSEbit=1<<25;
+
 #ifdef __GNUC__
     __asm__ (
-             "movl   $1,%%eax            \n\t"
-             "cpuid                      \n\t"
-             "andl   $0x2000000,%%edx    \n\t"
-             "movl   %%edx,%0            \n\t"
-             : "=r" (hasSSE) : : "%eax", "%ebx", "%ecx", "%edx"
-             );
+        "movl   $1,%%eax            \n\t"
+        "cpuid                      \n\t"
+        "andl   $0x2000000,%%edx    \n\t"
+        "movl   %%edx,%0            \n\t"
+        : "=r" (hasSSE) : : "%eax", "%ebx", "%ecx", "%edx"
+    );
 #else
-    __asm {
-        mov eax,1
-        cpuid
-        and edx,SSEbit
-        mov hasSSE,edx
-    }
+	__asm {
+		mov eax,1
+		cpuid
+		and edx,SSEbit
+		mov hasSSE,edx
+	}
 #endif
     
     hasSSE = 1;
-    core1=hasSSE? copy_2x2_32_core1_SSE: copy_2x2_32_core1;
-    core2=hasSSE? copy_2x2_32_core2_SSE: copy_2x2_32_core2;
+	core1=hasSSE? copy_2x2_32_core1_SSE: copy_2x2_32_core1;
+	core2=hasSSE? copy_2x2_32_core2_SSE: copy_2x2_32_core2;
 #else
-    core1=copy_2x2_32_core1;
-    core2=copy_2x2_32_core2;
+	core1=copy_2x2_32_core1;
+	core2=copy_2x2_32_core2;
 #endif
-    
-    /*rdtsc_start_timer(0);*/
+
+	/*rdtsc_start_timer(0);*/
     dstPitch /= (int)sizeof(UInt32);
-    
+
     if (frame->interlace == INTERLACE_ODD) {
         pDst1 += dstPitch;
         pDst2 += dstPitch;
         height--;
     }
-    
+
     for (h = 0; h < height; h++) {
-        
-        if (frame->line[h].doubleWidth)
-            core1(rgbTable,frame->line[h].buffer,pDst1,pDst2,srcWidth / 4 * 2,dstPitch * 2*4);
-        else
-            core2(rgbTable,frame->line[h].buffer,pDst1,pDst2,srcWidth / 4,dstPitch * 2*4);
-        
+
+        if (frame->line[h].doubleWidth) 
+			core1(rgbTable,frame->line[h].buffer,pDst1,pDst2,srcWidth / 4 * 2,dstPitch * 2*4);
+        else 
+			core2(rgbTable,frame->line[h].buffer,pDst1,pDst2,srcWidth / 4,dstPitch * 2*4);
+
         pDst1 += dstPitch * 2;
         pDst2 += dstPitch * 2;
     }
-    /*rdtsc_end_timer(0);*/
+	/*rdtsc_end_timer(0);*/
 }
 
 static void copy_2x1_16(FrameBuffer* frame, void* pDestination, int dstPitch, UInt16* rgbTable)
@@ -2982,9 +2891,7 @@ static int videoRender240(Video* pVideo, FrameBuffer* frame, int bitDepth, int z
     case 32:
         switch (pVideo->palMode) {
         case VIDEO_PAL_FAST:
-            if (zoom == 1) {
-                copy_1x1_32(frame, pDst, dstPitch, pVideo->pRgbTable32);
-            } else if (zoom == 2) {
+            if (zoom == 2) {
                 if (pVideo->scanLinesEnable || pVideo->colorSaturationEnable || canChangeZoom == 0) {
                     copy_2x2_32(frame, pDst, dstPitch, pVideo->pRgbTable32);
                 }
@@ -2997,20 +2904,8 @@ static int videoRender240(Video* pVideo, FrameBuffer* frame, int bitDepth, int z
                         zoom = 1;
                     }
                 }
-            } else {
-                // FIXME
-//                if (pVideo->scanLinesEnable || pVideo->colorSaturationEnable || canChangeZoom == 0) {
-//                    copy_2x2_32(frame, pDst, dstPitch, pVideo->pRgbTable32);
-//                } else {
-                    int h = frame->lines;
-                    while (--h >= 0 && !frame->line[h].doubleWidth);
-                    if (h) copy_XxX_32(frame, pDst, dstPitch, pVideo->pRgbTable32, zoom);
-                    else {
-                        copy_1x1_32(frame, pDst, dstPitch, pVideo->pRgbTable32);
-                        zoom = 1;
-                    }
-//                }
             }
+            else           copy_1x1_32(frame, pDst, dstPitch, pVideo->pRgbTable32);
             break;
         case VIDEO_PAL_MONITOR:
             if (zoom == 2) copyMonitorPAL_2x2_32(frame, pDst, dstPitch, pVideo->pRgbTable32, 0);
