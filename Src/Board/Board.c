@@ -547,10 +547,11 @@ static void onMixerSync(void* ref, UInt32 time)
 
     boardTimerAdd(mixerTimer, boardSystemTime() + boardFrequency() / 50);
 }
-
+#include <stdio.h>
 static void onStateSync(void* ref, UInt32 time)
 {    
     if (enableSnapshots) {
+        fprintf(stderr, "hi!");
         char memFilename[8];
         ramStateCur = (ramStateCur + 1) % ramMaxStates;
         if (ramStateCount < ramMaxStates) {

@@ -24,13 +24,13 @@
 
 @interface CMCocoaBuffer ()
 
-+ (int)powerOfTwoClosestTo:(int)number;
++ (int) powerOfTwoClosestTo:(int) number;
 
 @end
 
 @implementation CMCocoaBuffer
 
-+ (int)powerOfTwoClosestTo:(int)number
++ (int) powerOfTwoClosestTo:(int) number
 {
     int rv = 1;
     while (rv < number) rv *= 2;
@@ -39,27 +39,39 @@
 
 - (id) initWithWidth:(int) screenWidth
               height:(int) screenHeight
-               depth:(int) imageDepth
                 zoom:(int) zoomFactor
         backingScale:(GLfloat) backingScaleFactor
 {
     if ((self = [super init]))
     {
-        width = screenWidth;
-        height = screenHeight;
-        backingScale = backingScaleFactor;
         actualWidth = screenWidth * zoomFactor;
         actualHeight = screenHeight * zoomFactor;
-        textureWidth = [CMCocoaBuffer powerOfTwoClosestTo:actualWidth * backingScaleFactor];
-        textureHeight = [CMCocoaBuffer powerOfTwoClosestTo:actualHeight * backingScaleFactor];
-        textureCoordX = (GLfloat) (actualWidth * backingScale) / textureWidth;
-        textureCoordY = (GLfloat) (actualHeight * backingScale) / textureHeight;
-        depth = imageDepth;
-        zoom = zoomFactor;
-        bytesPerPixel = imageDepth / 8;
-        pitch = actualWidth * bytesPerPixel;
-        pixels = (char *) calloc(1, bytesPerPixel * actualWidth * actualHeight);
-        scaledPixels = (UInt8 *) calloc(1, bytesPerPixel * textureWidth * textureHeight);
+        
+        NSSize scaledSize = NSMakeSize(actualWidth * backingScaleFactor,
+                                       actualHeight * backingScaleFactor);
+        
+        textureSize = NSMakeSize([CMCocoaBuffer powerOfTwoClosestTo:scaledSize.width],
+                                 [CMCocoaBuffer powerOfTwoClosestTo:scaledSize.height]);
+        textureCoord = NSMakePoint(scaledSize.width / textureSize.width,
+                                   scaledSize.height / textureSize.height);
+        
+        bytesPerPixel = sizeof(UInt32);
+        scaledPixels = (UInt8 *) calloc(1, bytesPerPixel * textureSize.width * textureSize.height);
+        
+        if (actualWidth * backingScaleFactor != actualWidth) {
+            // Use an intermediate area for the initial screen blit
+            pixels = (UInt8 *) calloc(1, bytesPerPixel * actualWidth * actualHeight);
+            pitch = actualWidth * bytesPerPixel;
+            
+            NSLog(@"CocoaBuffer: Using a buffer with %.02f scale factor",
+                  backingScaleFactor);
+        } else {
+            // Just render to the texture
+            pixels = scaledPixels;
+            pitch = textureSize.width * bytesPerPixel;
+            
+            NSLog(@"CocoaBuffer: Rendering directly to texture");
+        }
     }
     
     return self;
@@ -67,30 +79,39 @@
 
 - (void) dealloc
 {
-    free(pixels);
     free(scaledPixels);
+    if (pixels != scaledPixels) {
+        free(pixels);
+    }
+    
+    scaledPixels = NULL;
+    pixels = NULL;
     
     [super dealloc];
 }
 
-- (void) applyScale
+- (void *) applyScale
 {
-    UInt32 *p = (UInt32 *) pixels;
-    UInt32 *sp = (UInt32 *) scaledPixels;
-    
-    for (int ai = 0, ti = 0; ai < actualHeight; ti++) {
-        for (int aj = 0, tj = 0; aj < actualWidth; tj++) {
-            sp[tj] = p[aj];
-            if (tj & 1) {
-                aj++;
+    if (pixels != scaledPixels) {
+        UInt32 *p = (UInt32 *) pixels;
+        UInt32 *sp = (UInt32 *) scaledPixels;
+        
+        for (int ai = 0, ti = 0; ai < actualHeight; ti++) {
+            for (int aj = 0, tj = 0; aj < actualWidth; tj++) {
+                sp[tj] = p[aj];
+                if (tj & 1) {
+                    aj++;
+                }
             }
+            if (ti & 1) {
+                ai++;
+                p += actualWidth;
+            }
+            sp += (int) textureSize.width;
         }
-        if (ti & 1) {
-            ai++;
-            p += actualWidth;
-        }
-        sp += textureWidth;
     }
+    
+    return scaledPixels;
 }
 
 @end

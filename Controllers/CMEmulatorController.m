@@ -107,6 +107,7 @@
                     openInDirectory:(NSString*)initialDirectory
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
+- (void) addToRecentItems:(NSString *) path;
 - (void)insertCartridgeIntoSlot:(NSInteger)slot;
 - (void)insertDiskIntoSlot:(int)slot;
 - (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot;
@@ -171,7 +172,6 @@
 @implementation CMEmulatorController
 
 @synthesize fpsDisplay = _fpsDisplay;
-@synthesize fileToLoadAtStartup = _fileToLoadAtStartup;
 @synthesize isInitialized = _isInitialized;
 @synthesize currentlyLoadedCaptureFilePath = _currentlyLoadedCaptureFilePath;
 @synthesize lastSavedState = _lastSavedState;
@@ -612,7 +612,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
         {
             tryLaunchUnknownFile([self properties], [[self fileToLoadAtStartup] UTF8String], YES);
             
+            [self addToRecentItems:[self fileToLoadAtStartup]];
             [self setFileToLoadAtStartup:nil];
+            
             return;
         }
         
@@ -1239,12 +1241,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (insertCartridge(properties, slot, [cartridge UTF8String], NULL, type, 0))
     {
-        NSURL *url = [NSURL fileURLWithPath:cartridge];
-        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
-        [recentDocuments removeObject:url];
-        [recentDocuments insertObject:url atIndex:0];
-        
-        [self rebuildRecentItemsMenus];
+        [self addToRecentItems:cartridge];
     }
     
     emulatorResume();
@@ -1305,6 +1302,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if ([self isStarted])
         [self stop];
     
+    [self addToRecentItems:media];
     
     // Reset last used state names
     [self setLastLoadedState:nil];
@@ -1474,12 +1472,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         insertDiskette(properties, slot, fileCstr, NULL, 0);
         [[CMPreferences preferences] setDiskDirectory:path];
         
-        NSURL *url = [NSURL fileURLWithPath:path];
-        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
-        [recentDocuments removeObject:url];
-        [recentDocuments insertObject:url atIndex:0];
-        
-        [self rebuildRecentItemsMenus];
+        [self addToRecentItems:path];
     }
     
     emulatorResume();
@@ -1634,13 +1627,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     if (insertCassette(properties, 0, [path UTF8String], NULL, 0))
     {
-        NSURL *url = [NSURL fileURLWithPath:path];
-        [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
-        [recentDocuments removeObject:url];
-        [recentDocuments insertObject:url atIndex:0];
-        
-        [self rebuildRecentItemsMenus];
-        
+        [self addToRecentItems:path];
         [[CMPreferences preferences] setCassetteDirectory:path];
     }
     
@@ -1820,8 +1807,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     // Hide the original window
     [[self window] orderOut:self];
     
-    // Set a black background color to the full screen window
-    [[self activeWindow] setBackgroundColor:[NSColor blackColor]];
+    // Set the border color to the full screen window
+    [[self activeWindow] setBackgroundColor:[self->screen borderColor]];
     
     NSSize screenSize = [[NSScreen mainScreen] frame].size;
     CGFloat fullWidth = screenSize.width;
@@ -1870,7 +1857,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)toggleFullScreen
 {
     if ([self isLionFullscreenAvailable]) {
-        [self.window toggleFullScreen:nil];
+        [[self window] toggleFullScreen:nil];
     } else {
         if (![self isInFullScreenMode]) {
             [self enterLegacyFullscreen];
@@ -3203,6 +3190,37 @@ void archTrap(UInt8 value)
     }
     
     return [menuItem isEnabled];
+}
+
+- (void) addToRecentItems:(NSString *) path
+{
+    NSURL *url = [NSURL fileURLWithPath:path];
+    [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:url];
+    [recentDocuments removeObject:url];
+    [recentDocuments insertObject:url atIndex:0];
+    
+    [self rebuildRecentItemsMenus];
+}
+
+#pragma mark - CMMsxDisplayViewDelegate
+
+- (void) msxDisplay:(CMMsxDisplayView *) display
+ borderColorChanged:(NSColor *) borderColor
+{
+#ifdef DEBUG
+    NSLog(@"EmulatorController: borderColor #%02x%02x%02x",
+          (int) ([borderColor redComponent] * 255.0),
+          (int) ([borderColor greenComponent] * 255.0),
+          (int) ([borderColor blueComponent] * 255.0));
+#endif
+    if ([self isInFullScreenMode]) {
+        if ([self isLionFullscreenAvailable]) {
+            // FIXME
+        } else {
+            // Set the border color to the full screen window
+            [[self activeWindow] setBackgroundColor:borderColor];
+        }
+    }
 }
 
 @end

@@ -27,29 +27,22 @@
 @interface CMCocoaBuffer : NSObject
 {
     @public
-    
-    char *pixels;
+    UInt8 *pixels;
     int bytesPerPixel;
-    int width;
-    int height;
     int actualWidth;
     int actualHeight;
-    int textureWidth;
-    int textureHeight;
-    GLfloat textureCoordX;
-    GLfloat textureCoordY;
-    int depth;
-    int zoom;
+    NSSize textureSize;
+    NSPoint textureCoord;
     int pitch;
+    
+    @private
     UInt8 *scaledPixels;
-    GLfloat backingScale;
 }
 
 - (id) initWithWidth:(int) screenWidth
               height:(int) screenHeight
-               depth:(int) imageDepth
                 zoom:(int) zoomFactor
         backingScale:(GLfloat) backingScaleFactor;
-- (void) applyScale;
+- (void *) applyScale;
 
 @end

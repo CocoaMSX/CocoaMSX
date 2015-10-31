@@ -735,8 +735,6 @@ static int WaitForSync(int maxSpeed, int breakpointHit) {
         return WaitReverse();
     }
 
-    boardEnableSnapshots(1);
-
     emuMaxEmuSpeed = maxSpeed;
 
     syncPeriod = emulatorGetSyncPeriod();

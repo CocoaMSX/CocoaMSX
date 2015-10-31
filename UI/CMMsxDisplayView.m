@@ -69,7 +69,9 @@
 - (void)awakeFromNib
 {
     [self.window setAcceptsMouseMovedEvents:YES];
-    [self setWantsBestResolutionOpenGLSurface:YES];
+    if ([self respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)]) {
+        [self setWantsBestResolutionOpenGLSurface:YES];
+    }
     
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"videoScanlineAmount"
@@ -130,21 +132,25 @@
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    for (int i = 0; i < 2; i++)
-    {
-        [screens[i] release];
-        screens[i] = [[CMCocoaBuffer alloc] initWithWidth:BUFFER_WIDTH
-                                                   height:HEIGHT
-                                                    depth:DEPTH
-                                                     zoom:ZOOM
-                                             backingScale:[[self window] backingScaleFactor]];
+    GLfloat scaleFactor = 1.0f;
+    if ([[self window] respondsToSelector:@selector(backingScaleFactor)]) {
+        scaleFactor = [[self window] backingScaleFactor];
     }
     
+    [screens[0] release];
+    screens[0] = [[CMCocoaBuffer alloc] initWithWidth:BUFFER_WIDTH
+                                               height:HEIGHT
+                                                 zoom:ZOOM
+                                         backingScale:scaleFactor];
+    [screens[1] release];
+    screens[1] = [[CMCocoaBuffer alloc] initWithWidth:BUFFER_WIDTH
+                                               height:HEIGHT
+                                                 zoom:ZOOM
+                                         backingScale:scaleFactor];
+    
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-                 screens[0]->textureWidth,
-                 screens[0]->textureHeight,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 NULL);
+                 screens[0]->textureSize.width, screens[0]->textureSize.height,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     
     glDisable(GL_TEXTURE_2D);
     
@@ -164,8 +170,13 @@
     [[self openGLContext] update];
     
     NSSize size = [self bounds].size;
-    NSSize backingSize = [self convertRectToBacking:[self bounds]].size;
-    
+    NSSize backingSize;
+    if ([self respondsToSelector:@selector(convertRectToBacking)]) {
+        backingSize = [self convertRectToBacking:[self bounds]].size;
+    } else {
+        backingSize = size;
+    }
+
     if ([emulator isStarted])
     {
         if (size.width < ACTUAL_WIDTH * ZOOM)
@@ -278,18 +289,27 @@
     
     CMCocoaBuffer *currentScreen = screens[currentScreenIndex];
     
-    char *dpyData = currentScreen->pixels;
+    UInt8 *dpyData = currentScreen->pixels;
     int width = currentScreen->actualWidth;
     int height = currentScreen->actualHeight;
     
     if (frameBuffer == NULL)
         frameBuffer = frameBufferGetWhiteNoiseFrame();
     
-    int borderWidth = (BUFFER_WIDTH - frameBuffer->maxWidth) * currentScreen->zoom / 2;
+    int borderWidth = (BUFFER_WIDTH - frameBuffer->maxWidth) * ZOOM / 2;
     
-    videoRender(video, frameBuffer, currentScreen->depth, currentScreen->zoom,
+    videoRender(video, frameBuffer, DEPTH, ZOOM,
                 dpyData + borderWidth * currentScreen->bytesPerPixel, 0,
                 currentScreen->pitch, -1);
+    
+    UInt32 bgColor = *((UInt32 *)(dpyData + borderWidth * currentScreen->bytesPerPixel));
+    if (bgColor != borderColor) {
+        borderColor = bgColor;
+        if ([self->_delegate respondsToSelector:@selector(msxDisplay:borderColorChanged:)]) {
+            [self->_delegate msxDisplay:self
+                     borderColorChanged:[self borderColor]];
+        }
+    }
     
     if (borderWidth > 0)
     {
@@ -308,20 +328,17 @@
     glBindTexture(GL_TEXTURE_2D, screenTexId);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     
-    void *texture = currentScreen->pixels;
-    int textureWidth = width;
-    int textureHeight = height;
-    
-    if ([[self window] backingScaleFactor] > 1.0f) {
-        [currentScreen applyScale];
-        texture = currentScreen->scaledPixels;
-        textureWidth = currentScreen->textureWidth;
-        textureHeight = currentScreen->textureHeight;
-    }
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, textureWidth, textureHeight,
+    void *texture = [currentScreen applyScale];
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, currentScreen->textureSize.width,
+                    currentScreen->textureSize.height,
                     GL_RGBA, GL_UNSIGNED_BYTE, texture);
     
-    NSSize backingSize = [self convertRectToBacking:[self bounds]].size;
+    NSSize backingSize;
+    if ([self respondsToSelector:@selector(convertRectToBacking)]) {
+        backingSize = [self convertRectToBacking:[self bounds]].size;
+    } else {
+        backingSize = [self bounds].size;
+    }
     
     CGFloat widthRatio = backingSize.width / (CGFloat)ACTUAL_WIDTH;
     CGFloat offset = ((BUFFER_WIDTH - ACTUAL_WIDTH) / 2.0) * widthRatio;
@@ -329,11 +346,11 @@
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(-offset, 0.0, 0.0);
-    glTexCoord2f(currentScreen->textureCoordX, 0.0);
+    glTexCoord2f(currentScreen->textureCoord.x, 0.0);
     glVertex3f(backingSize.width + offset, 0.0, 0.0);
-    glTexCoord2f(currentScreen->textureCoordX, currentScreen->textureCoordY);
+    glTexCoord2f(currentScreen->textureCoord.x, currentScreen->textureCoord.y);
     glVertex3f(backingSize.width + offset, backingSize.height, 0.0);
-    glTexCoord2f(0.0, currentScreen->textureCoordY);
+    glTexCoord2f(0.0, currentScreen->textureCoord.y);
     glVertex3f(-offset, backingSize.height, 0.0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
@@ -348,6 +365,14 @@
 - (CGFloat)framesPerSecond
 {
     return framesPerSecond;
+}
+
+- (NSColor *) borderColor
+{
+    return [NSColor colorWithCalibratedRed:(borderColor & 0xff) / 255.0
+                                     green:((borderColor >> 8) & 0xff) / 255.0
+                                      blue:((borderColor >> 16) & 0xff) / 255.0
+                                     alpha:1.0];
 }
 
 #pragma mark - blueMSX implementations

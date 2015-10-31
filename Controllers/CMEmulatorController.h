@@ -40,11 +40,10 @@ NSString * const CMKeyboardLayoutPrefKey;
 @class CMAboutController;
 @class CMMachineEditorController;
 
-@interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate>
+@interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate, CMMsxDisplayViewDelegate>
 {
     NSInteger lastLedState;
     NSString *_fpsDisplay;
-    NSString *_fileToLoadAtStartup;
     BOOL _isInitialized;
     NSString *_currentlyLoadedCaptureFilePath;
     NSString *_lastLoadedState;

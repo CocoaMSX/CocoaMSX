@@ -547,6 +547,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <connections>
+                            <outlet property="delegate" destination="-2" id="6aN-P0-Wpl"/>
                             <outlet property="emulator" destination="-2" id="1222"/>
                         </connections>
                     </openGLView>
