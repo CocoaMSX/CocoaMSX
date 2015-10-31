@@ -171,7 +171,7 @@
     
     NSSize size = [self bounds].size;
     NSSize backingSize;
-    if ([self respondsToSelector:@selector(convertRectToBacking)]) {
+    if ([self respondsToSelector:@selector(convertRectToBacking:)]) {
         backingSize = [self convertRectToBacking:[self bounds]].size;
     } else {
         backingSize = size;
@@ -334,7 +334,7 @@
                     GL_RGBA, GL_UNSIGNED_BYTE, texture);
     
     NSSize backingSize;
-    if ([self respondsToSelector:@selector(convertRectToBacking)]) {
+    if ([self respondsToSelector:@selector(convertRectToBacking:)]) {
         backingSize = [self convertRectToBacking:[self bounds]].size;
     } else {
         backingSize = [self bounds].size;
