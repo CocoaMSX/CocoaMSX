@@ -23,35 +23,13 @@
 #import <Foundation/Foundation.h>
 
 @interface CMGamepadConfiguration : NSObject<NSCoding, NSCopying>
-{
-    NSInteger _vendorProductId;
-    
-    NSInteger _minX;
-    NSInteger _centerX;
-    NSInteger _maxX;
-    
-    NSInteger _minY;
-    NSInteger _centerY;
-    NSInteger _maxY;
-    
-    NSInteger _buttonAIndex;
-    NSInteger _buttonBIndex;
-}
 
 @property (nonatomic, assign) NSInteger vendorProductId;
-
-@property (nonatomic, assign) NSInteger minX;
-@property (nonatomic, assign) NSInteger centerX;
-@property (nonatomic, assign) NSInteger maxX;
-
-@property (nonatomic, assign) NSInteger minY;
-@property (nonatomic, assign) NSInteger centerY;
-@property (nonatomic, assign) NSInteger maxY;
 
 @property (nonatomic, assign) NSInteger buttonAIndex;
 @property (nonatomic, assign) NSInteger buttonBIndex;
 
-- (void)clear;
-- (void)dump;
+- (void) clear;
+- (void) dump;
 
 @end

@@ -26,22 +26,9 @@
 
 @synthesize vendorProductId = _vendorProductId;
 
-@synthesize minX = _minX;
-@synthesize centerX = _centerX;
-@synthesize maxX = _maxX;
-@synthesize minY = _minY;
-@synthesize centerY = _centerY;
-@synthesize maxY = _maxY;
-
-@synthesize buttonAIndex = _buttonAIndex;
-@synthesize buttonBIndex = _buttonBIndex;
-
 - (id)init
 {
-    if ((self = [super init]))
-    {
-        [self setCenterX:NSIntegerMin];
-        [self setCenterY:NSIntegerMin];
+    if ((self = [super init])) {
     }
     
     return self;
@@ -54,18 +41,10 @@
 
 #pragma mark - Etc
 
-- (void)clear
+- (void) clear
 {
-    [self setMinX:0];
-    [self setCenterX:NSIntegerMin];
-    [self setMaxX:0];
-    
-    [self setMinY:0];
-    [self setCenterY:NSIntegerMin];
-    [self setMaxY:0];
-    
     [self setButtonAIndex:0];
-    [self setButtonBIndex:0];
+    [self setButtonBIndex:1];
     
     [self setVendorProductId:0];
 }
@@ -73,11 +52,6 @@
 - (void)dump
 {
 #ifdef DEBUG
-    NSLog(@"X: %ld < %ld > %ld",
-          (long)[self minX], (long)[self centerX], (long)[self maxX]);
-    NSLog(@"Y: %ld < %ld > %ld",
-          (long)[self minY], (long)[self centerY], (long)[self maxY]);
-    
     NSLog(@"Buttons: A (%ld) B (%ld)",
           (long)[self buttonAIndex], (long)[self buttonBIndex]);
 #endif
@@ -91,14 +65,6 @@
     {
         [self setVendorProductId:[decoder decodeIntegerForKey:@"vendorProductId"]];
         
-        [self setMinX:[decoder decodeIntegerForKey:@"minX"]];
-        [self setCenterX:[decoder decodeIntegerForKey:@"centerX"]];
-        [self setMaxX:[decoder decodeIntegerForKey:@"maxX"]];
-        
-        [self setMinY:[decoder decodeIntegerForKey:@"minY"]];
-        [self setCenterY:[decoder decodeIntegerForKey:@"centerY"]];
-        [self setMaxY:[decoder decodeIntegerForKey:@"maxY"]];
-        
         [self setButtonAIndex:[decoder decodeIntegerForKey:@"buttonAIndex"]];
         [self setButtonBIndex:[decoder decodeIntegerForKey:@"buttonBIndex"]];
     }
@@ -109,14 +75,6 @@
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
     [encoder encodeInteger:[self vendorProductId] forKey:@"vendorProductId"];
-    
-    [encoder encodeInteger:[self minX] forKey:@"minX"];
-    [encoder encodeInteger:[self centerX] forKey:@"centerX"];
-    [encoder encodeInteger:[self maxX] forKey:@"maxX"];
-    
-    [encoder encodeInteger:[self minY] forKey:@"minY"];
-    [encoder encodeInteger:[self centerY] forKey:@"centerY"];
-    [encoder encodeInteger:[self maxY] forKey:@"maxY"];
     
     [encoder encodeInteger:[self buttonAIndex] forKey:@"buttonAIndex"];
     [encoder encodeInteger:[self buttonBIndex] forKey:@"buttonBIndex"];
@@ -129,14 +87,6 @@
     CMGamepadConfiguration *copy = [[[self class] allocWithZone:zone] init];
     
     [copy setVendorProductId:[self vendorProductId]];
-    
-    [copy setMinX:[self minX]];
-    [copy setCenterX:[self centerX]];
-    [copy setMaxX:[self maxX]];
-    
-    [copy setMinY:[self minY]];
-    [copy setCenterY:[self centerY]];
-    [copy setMaxY:[self maxY]];
     
     [copy setButtonAIndex:[self buttonAIndex]];
     [copy setButtonBIndex:[self buttonBIndex]];

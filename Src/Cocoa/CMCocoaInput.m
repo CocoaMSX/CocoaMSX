@@ -515,10 +515,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     NSInteger leftVirtualCode;
     NSInteger rightVirtualCode;
     
-    CMGamepadConfiguration *config = [joypadConfigurations objectForKey:@([gamepad vendorProductId])];
-    if (config)
-        center = [config centerX];
-    
     if (_joypadOneId == [gamepad gamepadId])
     {
         leftVirtualCode = EC_JOY1_LEFT;
@@ -560,10 +556,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     NSInteger preferredDevice = -1;
     NSInteger upVirtualCode;
     NSInteger downVirtualCode;
-    
-    CMGamepadConfiguration *config = [joypadConfigurations objectForKey:@([gamepad vendorProductId])];
-    if (config)
-        center = [config centerY];
     
     if (_joypadOneId == [gamepad gamepadId])
     {

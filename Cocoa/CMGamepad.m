@@ -104,6 +104,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         
         _vendorId = 0;
         _productId = 0;
+        _axes = NSMakePoint(0, 0);
         
         CFTypeRef tCFTypeRef;
         CFTypeID numericTypeId = CFNumberGetTypeID();
@@ -194,34 +195,52 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     {
         if (usage == kHIDUsage_GD_X)
         {
-            if ([_delegate respondsToSelector:@selector(gamepad:xChanged:center:eventData:)])
-            {
-                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
-                [eventData setSourceId:IOHIDElementGetCookie(element)];
-                
-                NSInteger min = IOHIDElementGetLogicalMin(element);
-                NSInteger max = IOHIDElementGetLogicalMax(element);
-                
-                [_delegate gamepad:self
-                          xChanged:value
-                            center:(max - min) / 2
-                         eventData:eventData];
+            NSInteger min = IOHIDElementGetLogicalMin(element);
+            NSInteger max = IOHIDElementGetLogicalMax(element);
+            NSInteger center = (max + min) / 2;
+            NSInteger range = max - min;
+            
+            if (labs(value) < range * .3) {
+                value = 0;
+            }
+            
+            if (_axes.x != value) {
+                _axes.x = value;
+                if ([_delegate respondsToSelector:@selector(gamepad:xChanged:center:eventData:)])
+                {
+                    CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                    [eventData setSourceId:IOHIDElementGetCookie(element)];
+                    
+                    [_delegate gamepad:self
+                              xChanged:value
+                                center:center
+                             eventData:eventData];
+                }
             }
         }
         else if (usage == kHIDUsage_GD_Y)
         {
-            if ([_delegate respondsToSelector:@selector(gamepad:yChanged:center:eventData:)])
-            {
-                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
-                [eventData setSourceId:IOHIDElementGetCookie(element)];
-                
-                NSInteger min = IOHIDElementGetLogicalMin(element);
-                NSInteger max = IOHIDElementGetLogicalMax(element);
-                
-                [_delegate gamepad:self
-                          yChanged:value
-                            center:(max - min) / 2
-                         eventData:eventData];
+            NSInteger min = IOHIDElementGetLogicalMin(element);
+            NSInteger max = IOHIDElementGetLogicalMax(element);
+            NSInteger center = (max + min) / 2;
+            NSInteger range = max - min;
+            
+            if (labs(value) < range * .3) {
+                value = 0;
+            }
+            
+            if (_axes.y != value) {
+                _axes.y = value;
+                if ([_delegate respondsToSelector:@selector(gamepad:yChanged:center:eventData:)])
+                {
+                    CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                    [eventData setSourceId:IOHIDElementGetCookie(element)];
+                    
+                    [_delegate gamepad:self
+                              yChanged:value
+                                center:center
+                             eventData:eventData];
+                }
             }
         }
     }

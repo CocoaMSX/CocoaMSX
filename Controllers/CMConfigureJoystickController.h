@@ -32,9 +32,6 @@
     NSInteger currentState;
     
     CMGamepadConfiguration *configuration;
-    NSMutableDictionary *allAxisValues;
-    
-    id _delegate;
     
     IBOutlet NSTextField *directionField;
     IBOutlet NSButton *saveButton;
@@ -42,17 +39,17 @@
 
 @property (nonatomic, assign) id delegate;
 
-- (void)restartConfiguration:(NSInteger)joypadId;
+- (void) restartConfiguration:(NSInteger) joypadId;
 
-- (IBAction)onCancelClicked:(id)sender;
-- (IBAction)onSaveClicked:(id)sender;
+- (IBAction) onCancelClicked:(id) sender;
+- (IBAction) onSaveClicked:(id) sender;
 
 @end
 
 @protocol CMGamepadConfigurationDelegate
 
 @required
-- (void)gamepadDidConfigure:(CMGamepad *)gamepad
-              configuration:(CMGamepadConfiguration *)configuration;
+- (void) gamepadDidConfigure:(CMGamepad *) gamepad
+               configuration:(CMGamepadConfiguration *) configuration;
 
 @end

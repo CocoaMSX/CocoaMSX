@@ -35,6 +35,7 @@
     NSInteger _vendorId;
     NSInteger _productId;
     NSString *_name;
+    NSPoint _axes;
 }
 
 @property (nonatomic, assign) id delegate;
