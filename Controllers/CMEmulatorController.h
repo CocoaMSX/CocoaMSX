@@ -45,6 +45,7 @@ NSString * const CMKeyboardLayoutPrefKey;
     NSInteger lastLedState;
     NSString *_fpsDisplay;
     BOOL _isInitialized;
+	BOOL _isEnteringFullScreen;
     NSString *_currentlyLoadedCaptureFilePath;
     NSString *_lastLoadedState;
     NSString *_lastSavedState;

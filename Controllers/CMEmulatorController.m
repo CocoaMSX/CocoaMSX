@@ -240,6 +240,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         disketteSizes = [[NSMutableDictionary alloc] init];
         disketteSizeDescriptions = [[NSMutableArray alloc] init];
         recentDocuments = [[NSMutableArray alloc] init];
+		_isEnteringFullScreen = NO;
         
         NSString *resourcePath = [[NSBundle mainBundle] pathForResource:@"RomTypes"
                                                                  ofType:@"plist"
@@ -2915,6 +2916,10 @@ void archTrap(UInt8 value)
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
 {
+	if (_isEnteringFullScreen) {
+		return frameSize;
+	}
+	
     NSRect windowFrame = [self.window frame];
     NSRect viewRect = [self.screen convertRect:[self.screen bounds] toView: nil];
     NSRect contentRect = [self.window contentRectForFrameRect:windowFrame];
@@ -2928,8 +2933,8 @@ void archTrap(UInt8 value)
     
     // Set the screen width as a percentage of the screen height
     frameSize.width = (frameSize.height - marginY) / (1 / WIDTH_TO_HEIGHT_RATIO) + marginX;
-    
-    return frameSize;
+
+	return frameSize;
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -2939,8 +2944,8 @@ void archTrap(UInt8 value)
     
     if (![self isInFullScreenMode])
     {
-        CMSetIntPref(@"screenWidth", screen.bounds.size.width);
-        CMSetIntPref(@"screenHeight", screen.bounds.size.height);
+        CMSetIntPref(@"screenWidth", [screen bounds].size.width);
+        CMSetIntPref(@"screenHeight", [screen bounds].size.height);
     }
     
     [[NSApplication sharedApplication] terminate:self];
@@ -2965,19 +2970,35 @@ void archTrap(UInt8 value)
     // Save the screen size first
     CMSetIntPref(@"screenWidth", [screen bounds].size.width);
     CMSetIntPref(@"screenHeight", [screen bounds].size.height);
-    
+	
+	_isEnteringFullScreen = YES;
+	NSSize screenSize = [[NSScreen mainScreen] frame].size;
+	NSSize windowSize = [[self window] frame].size;
+	CGFloat ratio = screenSize.width / screenSize.height;
+	NSSize newSize = NSMakeSize(ratio * windowSize.height, windowSize.height);
+	
+	NSLog(@"window size: %.02fx%.02f; actual: %.02fx%.02f; new: %.02fx%.02f",
+		  windowSize.width, windowSize.height,
+		  screenSize.width, screenSize.height,
+		  newSize.width, newSize.height);
+	[[self window] setFrame:NSMakeRect(0, 0,
+									   ratio * windowSize.height,
+									   windowSize.height)
+					display:YES];
+	
     if ([self isStatusBarVisible])
     {
         [self setIsStatusBarVisible:NO];
     }
 }
 
-- (void)windowWillExitFullScreen:(NSNotification *)notification
+- (void) windowWillExitFullScreen:(NSNotification *)notification
 {
 #ifdef DEBUG
     NSLog(@"EmulatorController: willExitFullScreen");
 #endif
-    
+	
+	_isEnteringFullScreen = NO;
     if (CMGetBoolPref(@"isStatusBarVisible"))
     {
         [self setIsStatusBarVisible:YES];
