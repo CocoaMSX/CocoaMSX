@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6245"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CMPreferenceController">
@@ -170,10 +170,10 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" headerView="oMQ-mL-1i6" id="a7i-vw-LLh">
-                                                        <rect key="frame" x="0.0" y="0.0" width="556" height="34"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="556" height="272"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
                                                             <tableColumn width="53" minWidth="40" maxWidth="1000" id="9Ie-wo-N21">
@@ -228,7 +228,7 @@
                                                 <rect key="frame" x="1" y="121" width="556" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="2MH-dp-3Q4">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="2MH-dp-3Q4">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -326,7 +326,7 @@
                                                 <action selector="performColdRebootClicked:" target="-2" id="1797"/>
                                             </connections>
                                         </button>
-                                        <box autoresizesSubviews="NO" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3977">
+                                        <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3977">
                                             <rect key="frame" x="20" y="152" width="558" height="5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -708,7 +708,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="437" height="19"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
                                                             <tableColumn identifier="mixerName" width="434" minWidth="40" maxWidth="1000" id="4129">
@@ -736,7 +736,7 @@
                                                 <rect key="frame" x="1" y="119" width="223" height="15"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="4127">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="4127">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -858,7 +858,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="372" height="19"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <tableViewGridLines key="gridStyleMask" vertical="YES"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
@@ -901,7 +901,7 @@
                                                 <rect key="frame" x="1" y="177" width="358" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="3626">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3626">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -924,7 +924,7 @@
                                     </subviews>
                                 </view>
                             </tabViewItem>
-                            <tabViewItem label="Joystick" identifier="joystick" id="3752">
+                            <tabViewItem label="Peripherals" identifier="joystick" id="3752">
                                 <view key="view" id="3753">
                                     <rect key="frame" x="0.0" y="0.0" width="598" height="558"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -934,7 +934,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
-                                                <tabViewItem label="Port 1" identifier="CMJoystickPort1" id="3757">
+                                                <tabViewItem label="Joystick Port 1" identifier="CMJoystickPort1" id="3757">
                                                     <view key="view" id="3758">
                                                         <rect key="frame" x="10" y="33" width="552" height="496"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -997,7 +997,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box autoresizesSubviews="NO" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3882">
+                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3882">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -1054,7 +1054,7 @@
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <size key="intercellSpacing" width="3" height="2"/>
-                                                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <tableViewGridLines key="gridStyleMask" vertical="YES"/>
                                                                                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <tableColumns>
@@ -1097,7 +1097,7 @@
                                                                                         <rect key="frame" x="1" y="248" width="309" height="16"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="3771">
+                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3771">
                                                                                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
@@ -1136,7 +1136,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box autoresizesSubviews="NO" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3901">
+                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3901">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -1228,7 +1228,7 @@
                                                         </subviews>
                                                     </view>
                                                 </tabViewItem>
-                                                <tabViewItem label="Port 2" identifier="CMJoystickPort2" id="3755">
+                                                <tabViewItem label="Joystick Port 2" identifier="CMJoystickPort2" id="3755">
                                                     <view key="view" id="3794">
                                                         <rect key="frame" x="10" y="33" width="552" height="496"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1291,7 +1291,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box autoresizesSubviews="NO" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3798">
+                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3798">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -1348,7 +1348,7 @@
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <size key="intercellSpacing" width="3" height="2"/>
-                                                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <tableViewGridLines key="gridStyleMask" vertical="YES"/>
                                                                                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <tableColumns>
@@ -1391,7 +1391,7 @@
                                                                                         <rect key="frame" x="1" y="248" width="309" height="16"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="3811">
+                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3811">
                                                                                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
@@ -1430,7 +1430,7 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box autoresizesSubviews="NO" verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3912">
+                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3912">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -1562,7 +1562,7 @@
                             <action selector="tabChanged:" target="-2" id="1272"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="F264D2C5-A7B6-41E3-9904-B465006803F0" explicitItemIdentifier="joystick" label="Joystick" paletteLabel="Joystick" tag="6" image="toolbar-joypad" selectable="YES" id="3750">
+                    <toolbarItem implicitItemIdentifier="F264D2C5-A7B6-41E3-9904-B465006803F0" explicitItemIdentifier="joystick" label="Peripherals" paletteLabel="Peripherals" tag="6" image="toolbar-joypad" selectable="YES" id="3750">
                         <connections>
                             <action selector="tabChanged:" target="-2" id="3751"/>
                         </connections>
@@ -1620,9 +1620,9 @@
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
-        <image name="NSAddTemplate" width="8" height="8"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
-        <image name="NSRemoveTemplate" width="8" height="8"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="toolbar-computer" width="36.571430206298828" height="36.571430206298828"/>
         <image name="toolbar-joypad" width="38.400001525878906" height="38.400001525878906"/>
         <image name="toolbar-keyboard" width="17.587785720825195" height="17.587785720825195"/>

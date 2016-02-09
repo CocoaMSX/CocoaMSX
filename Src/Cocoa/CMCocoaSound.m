@@ -2,7 +2,7 @@
  **
  ** CocoaMSX: MSX Emulator for Mac OS X
  ** http://www.cocoamsx.com
- ** Copyright (C) 2012-2015 Akop Karapetyan
+ ** Copyright (C) 2012-2016 Akop Karapetyan
  **
  ** Sound engine based on SDL_audio:
  **
