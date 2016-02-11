@@ -33,7 +33,6 @@
 				<string>di2</string>
 				<string>360</string>
 				<string>720</string>
-				<string>sf7</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>DiskDocument</string>
@@ -139,9 +138,6 @@
 					<string>ri</string>
 					<string>mx1</string>
 					<string>mx2</string>
-					<string>col</string>
-					<string>sg</string>
-					<string>sc</string>
 				</array>
 			</dict>
 		</dict>
@@ -152,6 +148,8 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>CocoaMSX Disk</string>
+			<key>UTTypeIconFile</key>
+			<string>DiskDocument</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.akop.cocoamsx.filetype.disk</string>
 			<key>UTTypeReferenceURL</key>
@@ -165,7 +163,6 @@
 					<string>di2</string>
 					<string>360</string>
 					<string>720</string>
-					<string>sf7</string>
 				</array>
 			</dict>
 		</dict>
@@ -176,6 +173,8 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>CocoaMSX Cassette</string>
+			<key>UTTypeIconFile</key>
+			<string>CassetteDocument</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.akop.cocoamsx.filetype.cassette</string>
 			<key>UTTypeTagSpecification</key>
@@ -193,6 +192,8 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>CocoaMSX Snapshot</string>
+			<key>UTTypeIconFile</key>
+			<string>SnapshotDocument</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.akop.cocoamsx.filetype.savestate</string>
 			<key>UTTypeTagSpecification</key>
