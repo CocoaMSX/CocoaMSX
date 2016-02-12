@@ -869,10 +869,11 @@ void boardSetMachine(Machine* machine)
     boardVramSize = machine->video.vramSize;
 
     for (i = 0; i < machine->slotInfoCount; i++) {
-		switch (machine->slotInfo[i].romType) {
+        SlotInfo *si = &machine->slotInfo[i];
+		switch (si->romType) {
 			case ROM_NORMAL:
-				if (machine->cas.patchCas) {
-					machine->slotInfo[i].romType = ROM_CASPATCH;
+				if (si->slot == 0 && si->subslot == 0 && machine->cas.patchCas) {
+					si->romType = ROM_CASPATCH;
 				}
 				break;
 			case RAM_1KB_MIRRORED:
