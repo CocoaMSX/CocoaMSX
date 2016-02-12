@@ -227,6 +227,7 @@ typedef struct {
     int  vdpSyncMode;
     int  reverseEnable;
     int  reverseMaxTime;
+	int  enableCasPatch;
 } EmulationProperties;
 
 typedef struct {

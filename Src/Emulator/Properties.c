@@ -253,7 +253,8 @@ void propInitDefaults(Properties* properties, int langType, PropKeyboardLanguage
     properties->emulation.disableWinKeys    = 0;
     properties->emulation.priorityBoost     = 0;
     properties->emulation.reverseEnable     = 1;
-    properties->emulation.reverseMaxTime    = 15;
+	properties->emulation.reverseMaxTime    = 15;
+	properties->emulation.enableCasPatch    = 0;
 
     properties->video.monitorColor          = P_VIDEO_COLOR;
     properties->video.monitorType           = P_VIDEO_PALMON;

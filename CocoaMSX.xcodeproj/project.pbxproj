@@ -1267,6 +1267,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FEA841B0187FCD8000F5CD6D /* Cocoa.framework */,
 				FE81438C16F78AED000FABC7 /* IOKit.framework */,
 				FE23EAAC1636670500AC98BF /* Carbon.framework */,
 				FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */,
@@ -1280,6 +1281,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FE5A42A61C6C71B200432D14 /* Sparkle.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 				FEA841B2187FCD8000F5CD6D /* CoreData.framework */,
@@ -1348,9 +1350,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FE5A42A61C6C71B200432D14 /* Sparkle.framework */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
-				FEA841B0187FCD8000F5CD6D /* Cocoa.framework */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;

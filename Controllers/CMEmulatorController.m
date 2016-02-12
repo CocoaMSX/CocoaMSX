@@ -444,7 +444,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     properties->emulation.syncMethod = P_EMU_SYNCTOVBLANKASYNC;
     properties->emulation.enableFdcTiming = CMGetBoolPref(@"enableFloppyTiming");
     properties->emulation.vdpSyncMode = CMGetIntPref(@"vdpSyncMode");
-    
+	properties->emulation.enableCasPatch = CMGetBoolPref(@"enableCasPatch");
+	
     properties->video.brightness = CMGetIntPref(@"videoBrightness");
     properties->video.contrast = CMGetIntPref(@"videoContrast");
     properties->video.saturation = CMGetIntPref(@"videoSaturation");
@@ -454,7 +455,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     properties->video.deInterlace = CMGetBoolPref(@"videoEnableDeInterlacing");
     properties->video.monitorType = CMGetIntPref(@"videoSignalMode");
     properties->video.monitorColor = CMGetIntPref(@"videoColorMode");
-    
+	
     properties->sound.mixerChannel[MIXER_CHANNEL_PSG].volume = CMGetIntPref(@"audioVolumePsg");
     properties->sound.mixerChannel[MIXER_CHANNEL_PSG].pan = CMGetIntPref(@"audioBalancePsg");
     properties->sound.mixerChannel[MIXER_CHANNEL_PSG].enable = CMGetIntPref(@"audioEnablePsg");
@@ -555,7 +556,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                               properties->media.tapes[i].fileNameInZip);
     }
     
-    Machine* machine = machineCreate(properties->emulation.machineName);
+    Machine* machine = machineCreate(properties->emulation.machineName, properties);
     if (machine != NULL)
     {
         boardSetMachine(machine);

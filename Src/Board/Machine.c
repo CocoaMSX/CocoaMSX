@@ -552,7 +552,7 @@ void machineSave(Machine* machine)
     iniFileClose(configIni);
 }
 
-Machine* machineCreate(const char* machineName)
+Machine* machineCreate(const char* machineName, const Properties *properties)
 {
     char configIni[512];
     Machine* machine;
@@ -565,7 +565,11 @@ Machine* machineCreate(const char* machineName)
     
     machine->zipFile = NULL;
     machine->isZipped = 0;
-    
+	
+	if (properties != NULL) {
+		machine->cas.patchCas = properties->emulation.enableCasPatch;
+	}
+	
     sprintf(configIni, "%s/%s/config.ini", machinesDir, machineName);
     file = fopen(configIni, "rb");
     
@@ -618,7 +622,7 @@ void machineDestroy(Machine* machine)
 
 int machineIsValid(const char* machineName, int checkRoms)
 {
-    Machine* machine = machineCreate(machineName);
+    Machine* machine = machineCreate(machineName, NULL);
     int i;
     int success = 1;
 

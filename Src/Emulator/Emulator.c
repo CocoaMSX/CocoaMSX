@@ -432,7 +432,7 @@ void emulatorStart(const char* stateName) {
     properties->emulation.pauseSwitch = 0;
     switchSetPause(properties->emulation.pauseSwitch);
 
-    machine = machineCreate(properties->emulation.machineName);
+    machine = machineCreate(properties->emulation.machineName, properties);
 
     if (machine == NULL) {
         archShowStartEmuFailDialog();
@@ -583,7 +583,7 @@ int emulatorGetCurrentScreenMode()
 }
 
 void emulatorRestart() {
-    Machine* machine = machineCreate(properties->emulation.machineName);
+    Machine* machine = machineCreate(properties->emulation.machineName, properties);
 
     emulatorStop();
     if (machine != NULL) {

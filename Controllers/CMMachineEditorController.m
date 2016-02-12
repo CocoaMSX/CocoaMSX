@@ -70,7 +70,7 @@
 {
     [self unloadMachine];
     
-    loadedMachine = machineCreate([aMachineName cStringUsingEncoding:NSUTF8StringEncoding]);
+    loadedMachine = machineCreate([aMachineName cStringUsingEncoding:NSUTF8StringEncoding], NULL);
     if (loadedMachine == NULL)
     {
         // FIXME: error

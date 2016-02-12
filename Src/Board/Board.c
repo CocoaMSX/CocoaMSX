@@ -869,12 +869,19 @@ void boardSetMachine(Machine* machine)
     boardVramSize = machine->video.vramSize;
 
     for (i = 0; i < machine->slotInfoCount; i++) {
-        if (machine->slotInfo[i].romType == RAM_1KB_MIRRORED) {
-            boardRamSize = 0x400;
-        }
-        if (machine->slotInfo[i].romType == RAM_2KB_MIRRORED) {
-            boardRamSize = 0x800;
-        }
+		switch (machine->slotInfo[i].romType) {
+			case ROM_NORMAL:
+				if (machine->cas.patchCas) {
+					machine->slotInfo[i].romType = ROM_CASPATCH;
+				}
+				break;
+			case RAM_1KB_MIRRORED:
+				boardRamSize = 0x400;
+				break;
+			case RAM_2KB_MIRRORED:
+				boardRamSize = 0x800;
+				break;
+		}
     }
 
     if (boardRamSize == 0) {

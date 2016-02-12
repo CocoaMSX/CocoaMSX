@@ -101,10 +101,14 @@ typedef struct {
     SlotInfo slotInfo[32];
     int isZipped;
     char *zipFile;
+	struct {
+		int patchCas;
+	} cas;
 } Machine;
 
+struct Properties;
 
-Machine* machineCreate(const char* machineName);
+Machine* machineCreate(const char* machineName, const struct Properties *properties);
 void machineDestroy(Machine* machine);
 
 void machineFillAvailable(ArrayList *list, int checkRoms);
