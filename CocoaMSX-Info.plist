@@ -112,7 +112,7 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
-	<string>http://www.cocoamsx.com/updates.xml</string>
+	<string>https://raw.githubusercontent.com/pokebyte/CocoaMSX-Feeds/master/updates.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>sparkle_dsa_pub.pem</string>
 	<key>UTExportedTypeDeclarations</key>
