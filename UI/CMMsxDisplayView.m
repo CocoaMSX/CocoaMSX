@@ -215,6 +215,11 @@
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+- (void) cancelOperation:(id) sender
+{
+    // Prevent ESC from canceling full screen mode
+}
+
 #pragma mark - Mouse Callbacks
 
 - (void)mouseMoved:(NSEvent *)theEvent
