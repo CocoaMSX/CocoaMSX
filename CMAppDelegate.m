@@ -23,20 +23,27 @@
 #import "CMAppDelegate.h"
 
 #import "CMPreferences.h"
+#import "CMAboutController.h"
 
 #import <IOKit/pwr_mgt/IOPMLib.h>
 
 @interface CMAppDelegate ()
 
-- (void)initializeResources;
-- (void)disableScreenSaver;
-- (void)enableScreenSaver;
+- (void) initializeResources;
+- (void) disableScreenSaver;
+- (void) enableScreenSaver;
 
 @end
 
 @implementation CMAppDelegate
-
-@synthesize emulator = _emulator;
+{
+	BOOL didApplicationLoad;
+	IOPMAssertionID preventSleepAssertionID;
+	
+	CMAboutController *_aboutController;
+	CMEmulatorController *_emulator;
+	CMPreferenceController *_preferenceController;
+}
 
 #pragma mark - Initialization & Deallocation
 
@@ -58,7 +65,9 @@
 - (void)dealloc
 {
     self.emulator = nil;
-    
+	[_aboutController release];
+	[_preferenceController release];
+	
     [super dealloc];
 }
 
@@ -350,6 +359,24 @@
 - (void)applicationDidResignActive:(NSNotification *)notification
 {
     [self enableScreenSaver];
+}
+
+- (void) openAbout:(id) sender
+{
+	if (!_aboutController) {
+		_aboutController = [[CMAboutController alloc] init];
+	}
+	
+	[_aboutController showWindow:self];
+}
+
+- (void) openPreferences:(id) sender
+{
+	if (!_preferenceController) {
+		_preferenceController = [[CMPreferenceController alloc] init];
+	}
+	
+	[_preferenceController showWindow:self];
 }
 
 @end

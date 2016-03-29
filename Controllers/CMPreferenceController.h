@@ -27,16 +27,13 @@
 #import "CMConfigureJoystickController.h"
 #import "CMKeyboardManager.h"
 
-@class CMEmulatorController;
 @class CMMsxKeyLayout;
 @class MGScopeBar;
 @class CMKeyCaptureView;
-@class SBJsonParser;
 @class CMMachine;
 
 @interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
 {
-    CMEmulatorController *_emulator;
     NSMutableArray *_machines;
     NSArray *_channels;
     NSString *_machineNameFilter;
@@ -87,16 +84,12 @@
     NSInteger selectedKeyboardShiftState;
     
     NSOperationQueue *downloadQueue;
-    SBJsonParser *jsonParser;
 }
 
-@property (nonatomic, retain) CMEmulatorController *emulator;
 @property (nonatomic, copy) NSMutableArray *machines;
 @property (nonatomic, copy) NSArray *channels;
 @property (nonatomic, copy) CMMachine *activeMachine;
 @property (nonatomic, copy) NSString *machineNameFilter;
-
-- (id)initWithEmulator:(CMEmulatorController *)emulator;
 
 - (IBAction)tabChanged:(id)sender;
 - (IBAction)revertAudioClicked:(id)sender;

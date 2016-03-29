@@ -132,6 +132,7 @@
 - (BOOL)toggleEjectCassetteMenuItemStatus:(NSMenuItem*)menuItem;
 
 - (void)insertCassetteAtPath:(NSString *)path;
+- (void) createAndInsertBlankCassette;
 
 - (NSString*)fileNameFromCPath:(const char*)filePath;
 - (NSString*)fileNameNoExtensionFromCPath:(const char*)filePath;
@@ -171,12 +172,51 @@
 @end
 
 @implementation CMEmulatorController
-
-@synthesize fpsDisplay = _fpsDisplay;
-@synthesize isInitialized = _isInitialized;
-@synthesize currentlyLoadedCaptureFilePath = _currentlyLoadedCaptureFilePath;
-@synthesize lastSavedState = _lastSavedState;
-@synthesize lastLoadedState = _lastLoadedState;
+{
+	NSInteger lastLedState;
+	NSString *_fpsDisplay;
+	BOOL _isInitialized;
+	NSString *_currentlyLoadedCaptureFilePath;
+	NSString *_lastLoadedState;
+	NSString *_lastSavedState;
+	
+	NSString *gameplayCaptureTempFilename;
+	
+	Mixer *mixer;
+	Properties *properties;
+	Video *video;
+	
+	CMCocoaInput *input;
+	CMCocoaMouse *mouse;
+	CMCocoaSound *sound;
+	
+	CMSpecialCartChooserController *cartChooser;
+	CMRepositionCassetteController *cassetteRepositioner;
+	
+	NSMutableArray *inputDeviceLayouts;
+	
+	NSArray *openRomFileTypes;
+	NSArray *openDiskFileTypes;
+	NSArray *openCassetteFileTypes;
+	NSArray *stateFileTypes;
+	NSArray *captureAudioTypes;
+	NSArray *captureGameplayTypes;
+	
+	NSArray *listOfPreferenceKeysToObserve;
+	
+	NSMutableDictionary *romTypeIndices;
+	NSMutableDictionary *romTypes;
+	NSMutableArray *romTypeNames;
+	NSMutableArray *recentDocuments;
+	
+	NSMutableDictionary *disketteSizes;
+	NSMutableArray *disketteSizeDescriptions;
+	
+	NSOpenPanel *currentlyActiveOpenPanel;
+	NSArray *currentlySupportedFileTypes;
+	
+	BOOL pausedDueToLostFocus;
+}
 
 #define WIDTH_DEFAULT   544.0
 #define HEIGHT_DEFAULT  480.0
@@ -331,12 +371,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [captureAudioTypes release];
     [captureGameplayTypes release];
     
-    [machineEditorController release];
-    [aboutController release];
     [cartChooser release];
     [cassetteRepositioner release];
-    [preferenceController release];
-    
+	
     [self setLastLoadedState:nil];
     [self setLastSavedState:nil];
     [self setFileToLoadAtStartup:nil];
@@ -1541,10 +1578,40 @@ CMEmulatorController *theEmulator = nil; // FIXME
     }
 }
 
+- (void) createAndInsertBlankCassette
+{
+	if ([self isInitialized]) {
+		NSSavePanel* panel = [NSSavePanel savePanel];
+		
+		[panel setTitle:CMLoc(@"Create Blank Cassette", @"")];
+		[panel setCanCreateDirectories:YES];
+		[panel setAllowedFileTypes:@[ @"cas"] ];
+		
+		NSString *initialDir = [[CMPreferences preferences] cassetteDirectory];
+		if (initialDir) {
+			[panel setDirectoryURL:[NSURL fileURLWithPath:initialDir]];
+		}
+		
+		[panel beginSheetModalForWindow:[self activeWindow]
+					  completionHandler:^(NSInteger result)
+		 {
+			 if (result == NSFileHandlingPanelOKButton)
+			 {
+				 NSString *imagePath = [[panel URL] path];
+				 [[NSFileManager defaultManager] createFileAtPath:imagePath
+														 contents:nil
+													   attributes:nil];
+				 
+				 [self insertCassetteAtPath:imagePath];
+			 }
+		 }];
+	}
+}
+
 - (void)ejectDiskFromSlot:(NSInteger)slot
 {
     actionDiskRemove(slot);
-    
+	
     // If the user is ejecting a disk from the first slot, reset last used
     // state names
     if (slot == 0)
@@ -1566,7 +1633,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         case 160:
             return YES;
     }
-    
+	
     return NO;
 }
 
@@ -2036,22 +2103,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
 }
 
-- (void)openAbout:(id)sender
-{
-    if (!aboutController)
-        aboutController = [[CMAboutController alloc] init];
-    
-    [aboutController showWindow:self];
-}
-
-- (void)openPreferences:(id)sender
-{
-    if (!preferenceController)
-        preferenceController = [[CMPreferenceController alloc] initWithEmulator:self];
-    
-    [preferenceController showWindow:self];
-}
-
 // File menu
 
 - (void)insertCartridgeSlot1:(id)sender
@@ -2142,6 +2193,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
             [self insertCassetteAtPath:file];
         }
     }];
+}
+
+- (void) insertBlankCassette:(id) sender
+{
+	if ([self isInitialized]) {
+		[self createAndInsertBlankCassette];
+	}
 }
 
 - (void)ejectCassette:(id)sender
@@ -3001,6 +3059,11 @@ void archTrap(UInt8 value)
     }
 }
 
+- (void) windowDidEnterFullScreen:(NSNotification *) notification
+{
+	[[self window] makeFirstResponder:screen];
+}
+
 - (void)windowWillExitFullScreen:(NSNotification *)notification
 {
 #ifdef DEBUG
@@ -3011,6 +3074,11 @@ void archTrap(UInt8 value)
     {
         [self setIsStatusBarVisible:YES];
     }
+}
+
+- (void) windowDidExitFullScreen:(NSNotification *) notification
+{
+	[[self window] makeFirstResponder:screen];
 }
 
 #pragma mark - SpecialCartSelectedDelegate

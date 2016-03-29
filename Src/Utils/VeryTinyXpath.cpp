@@ -27,18 +27,14 @@
 */
 #include "VeryTinyXpath.h"
 #include "tinyxml.h"
-#ifdef WII
+#if defined(WII) || defined(__APPLE__)
 #include <string>
 #else
 #include <string.h>
 #endif
 #include <stdlib.h>
 #include <stdarg.h>
-#ifdef __APPLE__
-#include <vector.h>
-#else
 #include <vector>
-#endif
 
 struct VtXpath {
     bool openForWrite;

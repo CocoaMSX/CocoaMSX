@@ -34,18 +34,29 @@
 @end
 
 @implementation CMCocoaMouse
-
-@synthesize emulatorHasFocus = _emulatorHasFocus;
-@synthesize mouseMode = _mouseMode;
+{
+	BOOL _emulatorHasFocus;
+	NSUInteger _mouseMode;
+	
+	NSInteger buttonState;
+	CGFloat deltaX;
+	CGFloat deltaY;
+	
+	BOOL isCursorLocked;
+	BOOL wasWithinBounds;
+	BOOL isCursorVisible;
+	BOOL isCursorAssociated;
+	BOOL discardNextDelta;
+}
 
 // In terms of the screen size
-#define ESCAPE_THRESHOLD_RATIO .15
+#define ESCAPE_THRESHOLD_RATIO      0.15
 
 - (id)init
 {
     if ((self = [super init]))
     {
-        self.mouseMode = AM_DISABLE;
+        _mouseMode = AM_DISABLE;
         buttonState = 0;
         deltaX = 0;
         deltaY = 0;
@@ -54,7 +65,7 @@
         isCursorVisible = YES;
         isCursorAssociated = YES;
         
-        self.emulatorHasFocus = NO;
+        _emulatorHasFocus = NO;
         discardNextDelta = NO;
         wasWithinBounds = NO;
     }
@@ -62,10 +73,8 @@
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
-    self.emulatorHasFocus = NO;
-    
     [super dealloc];
 }
 
@@ -152,6 +161,15 @@
 #ifdef DEBUG
     NSLog(@"CocoaMouse: unlockCursor");
 #endif
+}
+
+- (void) showCursor:(BOOL) show
+{
+	if (show) {
+		[NSCursor unhide];
+	} else {
+		[NSCursor hide];
+	}
 }
 
 - (NSInteger)buttonState

@@ -23,16 +23,14 @@
 #import <Cocoa/Cocoa.h>
 
 #import "CMEmulatorController.h"
-#import <IOKit/pwr_mgt/IOPMLib.h>
 
 @interface CMAppDelegate : NSObject <NSApplicationDelegate>
-{
-    CMEmulatorController *_emulator;
-    
-    BOOL didApplicationLoad;
-    IOPMAssertionID preventSleepAssertionID;
-}
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
+
+// Apple menu
+
+- (IBAction) openAbout:(id) sender;
+- (IBAction) openPreferences:(id) sender;
 
 @end

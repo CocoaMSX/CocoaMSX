@@ -35,18 +35,7 @@
 
 @interface CMMsxDisplayView : NSOpenGLView
 {
-    @private
-    UInt32 borderColor;
-    CGFloat framesPerSecond;
-    GLuint screenTexId;
-    
-    int currentScreenIndex;
-    CMCocoaBuffer *screens[2];
-    CMFrameCounter *frameCounter;
-    
     IBOutlet CMEmulatorController *emulator;
-    
-    BOOL cursorVisible;
 }
 
 @property (nonatomic, assign) IBOutlet id<CMMsxDisplayViewDelegate> delegate;

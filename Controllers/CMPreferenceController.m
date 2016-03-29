@@ -31,7 +31,6 @@
 #import "NSString+CMExtensions.h"
 
 #import "MGScopeBar.h"
-#import "SBJson.h"
 
 #import "CMMSXJoystick.h"
 #import "CMKeyboardInput.h"
@@ -67,9 +66,6 @@
 @end
 
 @implementation CMKeyCategory
-
-@synthesize categoryName = _categoryName;
-@synthesize title = _title;
 
 static NSArray *keysInOrderOfAppearance;
 
@@ -166,69 +162,61 @@ static NSArray *keysInOrderOfAppearance;
 
 @implementation CMPreferenceController
 
-@synthesize emulator = _emulator;
-@synthesize machines = _machines;
-@synthesize channels = _channels;
-@synthesize machineNameFilter = _machineNameFilter;
+extern CMEmulatorController *theEmulator;
 
 #pragma mark - Init & Dealloc
 
-- (id)initWithEmulator:(CMEmulatorController*)emulator
+- (instancetype)init
 {
-    if ((self = [super initWithWindowNibName:@"Preferences"]))
-    {
-        [self setEmulator:emulator];
-        
-        joystickConfigurator = nil;
-        
-        keyCategories = [[NSMutableArray alloc] init];
-        joystickOneCategories = [[NSMutableArray alloc] init];
-        joystickTwoCategories = [[NSMutableArray alloc] init];
-        _machines = [[NSMutableArray alloc] init];
-        
-        // Set the virtual emulation speed range
-        virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
+	if (self = [super initWithWindowNibName:@"Preferences"]) {
+		joystickConfigurator = nil;
+		
+		keyCategories = [[NSMutableArray alloc] init];
+		joystickOneCategories = [[NSMutableArray alloc] init];
+		joystickTwoCategories = [[NSMutableArray alloc] init];
+		_machines = [[NSMutableArray alloc] init];
+		
+		// Set the virtual emulation speed range
+		virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
+		
+		// Set up channels
+		_channels = [[NSArray alloc] initWithObjects:
+					 [CMMixerChannel mixerChannelNamed:CMLoc(@"PSG", "Audio Channel")
+								   enabledPropertyName:@"audioEnablePsg"
+									volumePropertyName:@"audioVolumePsg"
+								   balancePropertyName:@"audioBalancePsg"],
+					 [CMMixerChannel mixerChannelNamed:CMLoc(@"SCC", "Audio Channel")
+								   enabledPropertyName:@"audioEnableScc"
+									volumePropertyName:@"audioVolumeScc"
+								   balancePropertyName:@"audioBalanceScc"],
+					 [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Music", "Audio Channel")
+								   enabledPropertyName:@"audioEnableMsxMusic"
+									volumePropertyName:@"audioVolumeMsxMusic"
+								   balancePropertyName:@"audioBalanceMsxMusic"],
+					 [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Audio", "Audio Channel")
+								   enabledPropertyName:@"audioEnableMsxAudio"
+									volumePropertyName:@"audioVolumeMsxAudio"
+								   balancePropertyName:@"audioBalanceMsxAudio"],
+					 [CMMixerChannel mixerChannelNamed:CMLoc(@"Moonsound", "Audio Channel")
+								   enabledPropertyName:@"audioEnableMoonSound"
+									volumePropertyName:@"audioVolumeMoonSound"
+								   balancePropertyName:@"audioBalanceMoonSound"],
+					 [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard", "Audio Channel")
+								   enabledPropertyName:@"audioEnableKeyboard"
+									volumePropertyName:@"audioVolumeKeyboard"
+								   balancePropertyName:@"audioBalanceKeyboard"], nil];
+		
+		downloadQueue = [[NSOperationQueue alloc] init];
+		[downloadQueue setMaxConcurrentOperationCount:1];
+	}
 
-        // Set up channels
-        _channels = [[NSArray alloc] initWithObjects:
-                     [CMMixerChannel mixerChannelNamed:CMLoc(@"PSG", "Audio Channel")
-                                   enabledPropertyName:@"audioEnablePsg"
-                                    volumePropertyName:@"audioVolumePsg"
-                                   balancePropertyName:@"audioBalancePsg"],
-                     [CMMixerChannel mixerChannelNamed:CMLoc(@"SCC", "Audio Channel")
-                                   enabledPropertyName:@"audioEnableScc"
-                                    volumePropertyName:@"audioVolumeScc"
-                                   balancePropertyName:@"audioBalanceScc"],
-                     [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Music", "Audio Channel")
-                                   enabledPropertyName:@"audioEnableMsxMusic"
-                                    volumePropertyName:@"audioVolumeMsxMusic"
-                                   balancePropertyName:@"audioBalanceMsxMusic"],
-                     [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Audio", "Audio Channel")
-                                   enabledPropertyName:@"audioEnableMsxAudio"
-                                    volumePropertyName:@"audioVolumeMsxAudio"
-                                   balancePropertyName:@"audioBalanceMsxAudio"],
-                     [CMMixerChannel mixerChannelNamed:CMLoc(@"Moonsound", "Audio Channel")
-                                   enabledPropertyName:@"audioEnableMoonSound"
-                                    volumePropertyName:@"audioVolumeMoonSound"
-                                   balancePropertyName:@"audioBalanceMoonSound"],
-                     [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard", "Audio Channel")
-                                   enabledPropertyName:@"audioEnableKeyboard"
-                                    volumePropertyName:@"audioVolumeKeyboard"
-                                   balancePropertyName:@"audioBalanceKeyboard"], nil];
-        
-        downloadQueue = [[NSOperationQueue alloc] init];
-        [downloadQueue setMaxConcurrentOperationCount:1];
-        
-        jsonParser = [[SBJsonParser alloc] init];
-    }
-    
-    return self;
+	return self;
 }
 
 - (void)awakeFromNib
 {
     keyCaptureView = nil;
-    
+	
     // Initialize sliders
     NSArray *sliders = [NSArray arrayWithObjects:
                         brightnessSlider,
@@ -252,11 +240,11 @@ static NSArray *keysInOrderOfAppearance;
     
     // Input devices devices
     [self initializeInputDeviceCategories:keyCategories
-                               withLayout:[[self emulator] keyboardLayout]];
+                               withLayout:[theEmulator keyboardLayout]];
     [self initializeInputDeviceCategories:joystickOneCategories
-                               withLayout:[[self emulator] joystickOneLayout]];
+                               withLayout:[theEmulator joystickOneLayout]];
     [self initializeInputDeviceCategories:joystickTwoCategories
-                               withLayout:[[self emulator] joystickTwoLayout]];
+                               withLayout:[theEmulator joystickTwoLayout]];
     
     // Scope Bar
     [keyboardScopeBar setSelected:YES forItem:@(CMMSXKeyStateDefault)  inGroup:SCOPEBAR_GROUP_SHIFTED];
@@ -321,8 +309,7 @@ static NSArray *keysInOrderOfAppearance;
                                                   object:nil];
     
     [downloadQueue release];
-    [jsonParser release];
-    
+	
     [joystickConfigurator release];
     
     [keyCaptureView release];
@@ -496,10 +483,13 @@ static NSArray *keysInOrderOfAppearance;
 #if DEBUG
     NSLog(@"done. Parsing JSON...");
 #endif
-    
-    NSDictionary *dict = [jsonParser objectWithData:data];
-    
-    if (!dict)
+	
+	NSError *parseError = nil;
+	NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
+														 options:0
+														   error:&parseError];
+	
+    if (!dict || parseError)
     {
         if (error)
         {
@@ -770,11 +760,11 @@ static NSArray *keysInOrderOfAppearance;
     CMInputDeviceLayout *layout = nil;
     
     if (outlineView == keyboardLayoutEditor)
-        layout = self.emulator.keyboardLayout;
+        layout = theEmulator.keyboardLayout;
     else if (outlineView == joystickOneLayoutEditor)
-        layout = self.emulator.joystickOneLayout;
+        layout = theEmulator.joystickOneLayout;
     else if (outlineView == joystickTwoLayoutEditor)
-        layout = self.emulator.joystickTwoLayout;
+        layout = theEmulator.joystickTwoLayout;
     
     return layout;
 }
@@ -864,12 +854,12 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)configureJoypadOne:(id)sender
 {
-    [self configureJoypad:[[[self emulator] input] joypadOneId]];
+    [self configureJoypad:[[theEmulator input] joypadOneId]];
 }
 
 - (void)configureJoypadTwo:(id)sender
 {
-    [self configureJoypad:[[[self emulator] input] joypadTwoId]];
+    [self configureJoypad:[[theEmulator input] joypadTwoId]];
 }
 
 - (void)configureJoypad:(NSInteger)joypadId
@@ -966,7 +956,7 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)revertKeyboardClicked:(id)sender
 {
-    CMInputDeviceLayout *layout = self.emulator.keyboardLayout;
+    CMInputDeviceLayout *layout = theEmulator.keyboardLayout;
     
     [layout loadLayout:[[CMPreferences preferences] defaultKeyboardLayout]];
     [[CMPreferences preferences] setKeyboardLayout:layout];
@@ -976,7 +966,7 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)revertJoystickOneClicked:(id)sender
 {
-    CMInputDeviceLayout *layout = self.emulator.joystickOneLayout;
+    CMInputDeviceLayout *layout = theEmulator.joystickOneLayout;
     
     [layout loadLayout:[[CMPreferences preferences] defaultJoystickOneLayout]];
     [[CMPreferences preferences] setJoystickOneLayout:layout];
@@ -986,7 +976,7 @@ static NSArray *keysInOrderOfAppearance;
 
 - (void)revertJoystickTwoClicked:(id)sender
 {
-    CMInputDeviceLayout *layout = self.emulator.joystickTwoLayout;
+    CMInputDeviceLayout *layout = theEmulator.joystickTwoLayout;
     
     [layout loadLayout:[[CMPreferences preferences] defaultJoystickTwoLayout]];
     [[CMPreferences preferences] setJoystickTwoLayout:layout];
@@ -1006,7 +996,7 @@ static NSArray *keysInOrderOfAppearance;
     if ((int)contextInfo == ALERT_RESTART_SYSTEM)
     {
         if (returnCode == NSAlertOtherReturn)
-            [[self emulator] performColdReboot];
+            [theEmulator performColdReboot];
     }
     else if ((int)contextInfo == ALERT_REMOVE_SYSTEM)
     {
@@ -1335,11 +1325,11 @@ static NSArray *keysInOrderOfAppearance;
                 [layout assignInputMethod:newMethod toVirtualCode:virtualCode];
                 
                 CMPreferences *preferences = [CMPreferences preferences];
-                if (layout == self.emulator.keyboardLayout)
+                if (layout == theEmulator.keyboardLayout)
                     [preferences setKeyboardLayout:layout];
-                else if (layout == self.emulator.joystickOneLayout)
+                else if (layout == theEmulator.joystickOneLayout)
                     [preferences setJoystickOneLayout:layout];
-                else if (layout == self.emulator.joystickTwoLayout)
+                else if (layout == theEmulator.joystickTwoLayout)
                     [preferences setJoystickTwoLayout:layout];
             }
         }

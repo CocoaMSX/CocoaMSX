@@ -37,53 +37,8 @@
 
 NSString * const CMKeyboardLayoutPrefKey;
 
-@class CMAboutController;
-@class CMMachineEditorController;
-
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate, CMMsxDisplayViewDelegate>
 {
-    NSInteger lastLedState;
-    NSString *_fpsDisplay;
-    BOOL _isInitialized;
-    NSString *_currentlyLoadedCaptureFilePath;
-    NSString *_lastLoadedState;
-    NSString *_lastSavedState;
-    
-    NSString *gameplayCaptureTempFilename;
-    
-    Mixer *mixer;
-    Properties *properties;
-    Video *video;
-    
-    CMCocoaInput *input;
-    CMCocoaMouse *mouse;
-    CMCocoaSound *sound;
-    
-    CMAboutController *aboutController;
-    CMPreferenceController *preferenceController;
-    CMMachineEditorController *machineEditorController;
-    CMSpecialCartChooserController *cartChooser;
-    CMRepositionCassetteController *cassetteRepositioner;
-    
-    NSMutableArray *inputDeviceLayouts;
-    
-    NSArray *openRomFileTypes;
-    NSArray *openDiskFileTypes;
-    NSArray *openCassetteFileTypes;
-    NSArray *stateFileTypes;
-    NSArray *captureAudioTypes;
-    NSArray *captureGameplayTypes;
-    
-    NSArray *listOfPreferenceKeysToObserve;
-    
-    NSMutableDictionary *romTypeIndices;
-    NSMutableDictionary *romTypes;
-    NSMutableArray *romTypeNames;
-    NSMutableArray *recentDocuments;
-    
-    NSMutableDictionary *disketteSizes;
-    NSMutableArray *disketteSizeDescriptions;
-    
     IBOutlet NSView *romSelectionAccessoryView;
     IBOutlet NSView *diskSelectionAccessoryView;
     IBOutlet NSView *cassetteSelectionAccessoryView;
@@ -115,11 +70,6 @@ NSString * const CMKeyboardLayoutPrefKey;
     IBOutlet NSImageView *pauseLed;
     IBOutlet NSImageView *renshaLed;
     IBOutlet NSImageView *casLed;
-    
-    NSOpenPanel *currentlyActiveOpenPanel;
-    NSArray *currentlySupportedFileTypes;
-    
-    BOOL pausedDueToLostFocus;
 }
 
 @property (nonatomic, copy) NSString *fpsDisplay;
@@ -183,11 +133,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (IBAction)openAnyFile:(id)sender;
 
-// Apple menu
-
-- (IBAction)openAbout:(id)sender;
-- (IBAction)openPreferences:(id)sender;
-
 // File menu
 
 - (IBAction)insertCartridgeSlot1:(id)sender;
@@ -203,13 +148,13 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (IBAction)insertDiskSlot2:(id)sender;
 - (IBAction)ejectDiskSlot1:(id)sender;
 - (IBAction)ejectDiskSlot2:(id)sender;
-
 - (IBAction)insertBlankDiskAsSlot1:(id)sender;
 - (IBAction)insertBlankDiskAsSlot2:(id)sender;
 
 - (IBAction)toggleDiskAutoReset:(id)sender;
 
 - (IBAction)insertCassette:(id)sender;
+- (IBAction)insertBlankCassette:(id)sender;
 - (IBAction)ejectCassette:(id)sender;
 - (IBAction)rewindCassette:(id)sender;
 - (IBAction)repositionCassette:(id)sender;

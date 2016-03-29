@@ -23,26 +23,13 @@
 #import <Foundation/Foundation.h>
 
 @interface CMCocoaMouse : NSObject
-{
-    BOOL _emulatorHasFocus;
-    NSUInteger _mouseMode;
-    
-    NSInteger buttonState;
-    CGFloat deltaX;
-    CGFloat deltaY;
-    
-    BOOL isCursorLocked;
-    BOOL wasWithinBounds;
-    BOOL isCursorVisible;
-    BOOL isCursorAssociated;
-    BOOL discardNextDelta;
-}
 
 @property (assign, nonatomic) BOOL emulatorHasFocus;
 @property (assign, nonatomic) NSUInteger mouseMode;
 
 - (void)lockCursor:(NSView *)screen;
 - (void)unlockCursor;
+- (void) showCursor:(BOOL) show;
 
 - (BOOL)isMouseEnabled;
 - (NSInteger)buttonState;

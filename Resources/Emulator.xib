@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
@@ -49,7 +49,7 @@
                             <menuItem title="About CocoaMSX" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="openAbout:" target="-2" id="1234"/>
+                                    <action selector="openAbout:" target="-1" id="gO6-f9-Cmc"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Check for Updates..." id="1274">
@@ -61,7 +61,7 @@
                             <menuItem isSeparatorItem="YES" id="236"/>
                             <menuItem title="Preferences…" keyEquivalent="," id="129">
                                 <connections>
-                                    <action selector="openPreferences:" target="-2" id="1228"/>
+                                    <action selector="openPreferences:" target="-1" id="9dY-u6-BwH"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="143"/>
@@ -294,19 +294,26 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Rewind After Insertion" id="1035">
+                                        <menuItem isSeparatorItem="YES" id="6vl-Eb-OK8"/>
+                                        <menuItem title="New Blank Cassette..." id="uD1-as-bbP">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="toggleCassetteAutoRewind:" target="-2" id="1220"/>
+                                                <action selector="insertBlankCassette:" target="-2" id="BBW-98-eLy"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Open Write-Protected" id="1031">
+                                        <menuItem isSeparatorItem="YES" id="6t6-cT-bqo"/>
+                                        <menuItem title="Enable Write-Protection" id="1031">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleCassetteWriteProtect:" target="-2" id="1221"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="caK-bq-Wzf"/>
+                                        <menuItem title="Rewind Upon Insertion" id="1035">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="toggleCassetteAutoRewind:" target="-2" id="1220"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Reposition..." id="1039">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -319,6 +326,7 @@
                                                 <action selector="rewindCassette:" target="-2" id="1203"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="caK-bq-Wzf"/>
                                         <menuItem title="Eject Cassette" id="1018">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>

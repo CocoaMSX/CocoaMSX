@@ -41,13 +41,27 @@
 #define DEPTH        32
 #define ZOOM         2
 
+#define HIDE_CURSOR_TIMEOUT_SECONDS 1.0f
+
 @interface CMMsxDisplayView ()
 
 - (void)renderScreen;
+- (void) handleMouseAction:(NSEvent *) theEvent;
 
 @end
 
 @implementation CMMsxDisplayView
+{
+	UInt32 borderColor;
+	CGFloat framesPerSecond;
+	GLuint screenTexId;
+	int currentScreenIndex;
+	CMCocoaBuffer *screens[2];
+	CMFrameCounter *frameCounter;
+	CFAbsoluteTime lastMouseAction;
+	NSPoint lastCursorPosition;
+	BOOL cursorVisible;
+}
 
 #pragma mark - Initialize, Dealloc
 
@@ -79,9 +93,11 @@
                                                context:NULL];
     
     frameCounter = [[CMFrameCounter alloc] init];
+	lastMouseAction = CFAbsoluteTimeGetCurrent();
     
-    cursorVisible = YES;
     currentScreenIndex = 0;
+	cursorVisible = YES;
+	lastCursorPosition = NSMakePoint(-1, -1);
     
     for (int i = 0; i < 2; i++)
         screens[i] = nil;
@@ -224,35 +240,47 @@
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
+	[self handleMouseAction:theEvent];
+	
     [[emulator mouse] mouseMoved:theEvent
                     withinView:self];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
+	[self handleMouseAction:theEvent];
+	
     [[emulator mouse] mouseMoved:theEvent
                     withinView:self];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
+	[self handleMouseAction:theEvent];
+	
     [[emulator mouse] mouseDown:theEvent
                    withinView:self];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
+	[self handleMouseAction:theEvent];
+	
     [[emulator mouse] mouseUp:theEvent
                  withinView:self];
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
+	[self handleMouseAction:theEvent];
+	
     [[emulator mouse] rightMouseDown:theEvent];
 }
 
 - (void)rightMouseUp:(NSEvent *)theEvent
 {
+	[self handleMouseAction:theEvent];
+	
     [[emulator mouse] rightMouseUp:theEvent];
 }
 
@@ -270,6 +298,14 @@
 
 - (void)renderScreen
 {
+	if (NSPointInRect(lastCursorPosition, [self bounds])) {
+		CFAbsoluteTime interval = CFAbsoluteTimeGetCurrent() - lastMouseAction;
+		if (cursorVisible && interval > HIDE_CURSOR_TIMEOUT_SECONDS && CMGetBoolPref(@"autohideCursor")) {
+			[[emulator mouse] showCursor:NO];
+			cursorVisible = NO;
+		}
+	}
+	
     NSOpenGLContext *nsContext = [self openGLContext];
     [nsContext makeCurrentContext];
     
@@ -378,6 +414,18 @@
                                      green:((borderColor >> 8) & 0xff) / 255.0
                                       blue:((borderColor >> 16) & 0xff) / 255.0
                                      alpha:1.0];
+}
+
+- (void) handleMouseAction:(NSEvent *) theEvent
+{
+	lastMouseAction = CFAbsoluteTimeGetCurrent();
+	lastCursorPosition = [self convertPoint:[theEvent locationInWindow]
+								   fromView:nil];
+	
+	if (!cursorVisible) {
+		cursorVisible = YES;
+		[[emulator mouse] showCursor:YES];
+	}
 }
 
 #pragma mark - blueMSX implementations
