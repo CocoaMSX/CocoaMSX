@@ -361,8 +361,6 @@
 		FEA74EFD16FC14B60033E2DE /* Data in Resources */ = {isa = PBXBuildFile; fileRef = FEA74EFC16FC14B60033E2DE /* Data */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
 		FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3F71672942700D371CD /* CMInputMethod.m */; };
-		FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */; };
-		FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */; };
 		FEACF06C16A07B9800EEF84C /* sparkle_dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = FEACF06B16A07B9800EEF84C /* sparkle_dsa_pub.pem */; };
 		FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */; };
 		FEB8DFBF1692402E009BE6E4 /* toolbar-joypad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFB91692402E009BE6E4 /* toolbar-joypad@2x.png */; };
@@ -399,8 +397,6 @@
 		FEE02D95193C3F4C004585C1 /* romMapperSvi707Fdc.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D8C193C3F4C004585C1 /* romMapperSvi707Fdc.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		FEE02D9B193C4063004585C1 /* romMapperMuPack.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D98193C4063004585C1 /* romMapperMuPack.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		FEE02D9C193C4063004585C1 /* romMapperNoWind.c in Sources */ = {isa = PBXBuildFile; fileRef = FEE02D9A193C4063004585C1 /* romMapperNoWind.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */; };
-		FEE4D8B818470E5800C4BAFA /* CMSlotEditorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */; };
 		FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEE801571674ACD000695F38 /* CartridgeDocument.icns */; };
 		FEF40ED5160DB83B009170A9 /* CMCocoaBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */; };
 		FEF40ED6160DB83B009170A9 /* CocoaCdrom.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF40EC7160DB83B009170A9 /* CocoaCdrom.c */; };
@@ -1128,9 +1124,6 @@
 		FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputDeviceLayout.m; sourceTree = "<group>"; };
 		FEAAF3F61672942600D371CD /* CMInputMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputMethod.h; sourceTree = "<group>"; };
 		FEAAF3F71672942700D371CD /* CMInputMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputMethod.m; sourceTree = "<group>"; };
-		FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MachineEditor.xib; sourceTree = "<group>"; };
-		FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMMachineEditorController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMMachineEditorController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FEACF06B16A07B9800EEF84C /* sparkle_dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sparkle_dsa_pub.pem; sourceTree = "<group>"; };
 		FEB8DFB81692402E009BE6E4 /* toolbar-joypad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-joypad.png"; sourceTree = "<group>"; };
 		FEB8DFB91692402E009BE6E4 /* toolbar-joypad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-joypad@2x.png"; sourceTree = "<group>"; };
@@ -1177,9 +1170,6 @@
 		FEE02D98193C4063004585C1 /* romMapperMuPack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperMuPack.c; sourceTree = "<group>"; };
 		FEE02D99193C4063004585C1 /* romMapperMuPack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = romMapperMuPack.h; sourceTree = "<group>"; };
 		FEE02D9A193C4063004585C1 /* romMapperNoWind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = romMapperNoWind.c; sourceTree = "<group>"; };
-		FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SlotEditor.xib; sourceTree = "<group>"; };
-		FEE4D8B618470E5800C4BAFA /* CMSlotEditorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSlotEditorController.h; sourceTree = "<group>"; };
-		FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSlotEditorController.m; sourceTree = "<group>"; };
 		FEE801571674ACD000695F38 /* CartridgeDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CartridgeDocument.icns; sourceTree = "<group>"; };
 		FEF40EC5160DB83B009170A9 /* CMCocoaBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMCocoaBuffer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FEF40EC6160DB83B009170A9 /* CMCocoaBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMCocoaBuffer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1292,11 +1282,9 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				FE1C134E167DCF8900CE2B6B /* About.xib */,
 				FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */,
-				FEAC61B01641B4FA00A7E294 /* MachineEditor.xib */,
 				FE42836215FE857400ED7CB9 /* Emulator.xib */,
 				FEC7232115FF133700CB508C /* Preferences.xib */,
 				FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */,
-				FEE4D8B418446AD500C4BAFA /* SlotEditor.xib */,
 				FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */,
 				6B36CC441644806B00B5FDB7 /* MainMenu.xib */,
 			);
@@ -2238,14 +2226,10 @@
 				FE05CAD3176CD21200D6CAC0 /* CMConfigureJoystickController.m */,
 				FE9C6A25161A446B00513A6D /* CMEmulatorController.h */,
 				FE9C6A26161A446B00513A6D /* CMEmulatorController.m */,
-				FEAC61B91641B5C200A7E294 /* CMMachineEditorController.h */,
-				FEAC61BA1641B5C200A7E294 /* CMMachineEditorController.m */,
 				FEC7231715FF0E3400CB508C /* CMPreferenceController.h */,
 				FEC7231815FF0E3400CB508C /* CMPreferenceController.m */,
 				FE2A2BDB16240DB7000CCAE4 /* CMRepositionCassetteController.h */,
 				FE2A2BDC16240DB7000CCAE4 /* CMRepositionCassetteController.m */,
-				FEE4D8B618470E5800C4BAFA /* CMSlotEditorController.h */,
-				FEE4D8B718470E5800C4BAFA /* CMSlotEditorController.m */,
 				FEA01B3F162100050066FDD8 /* CMSpecialCartChooserController.h */,
 				FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */,
 			);
@@ -2403,7 +2387,6 @@
 				FE2CEB5A1622A50500E58F9A /* Machines in Resources */,
 				FE2A2BD916240966000CCAE4 /* RepositionCassette.xib in Resources */,
 				FED34F3D163F320D002FCC89 /* Defaults.plist in Resources */,
-				FEAC61B11641B4FA00A7E294 /* MachineEditor.xib in Resources */,
 				FE5CDEC3192C8BE600312BB4 /* caps_led_on@2x.png in Resources */,
 				6B36CC451644806B00B5FDB7 /* MainMenu.xib in Resources */,
 				6BCA7568164D7D09002CA211 /* toolbar-video.png in Resources */,
@@ -2429,7 +2412,6 @@
 				FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */,
 				FED154BE168714910043C7E5 /* filmstrip.png in Resources */,
 				FED5C861193860E80045FE8C /* pause_led_off@2x.png in Resources */,
-				FEE4D8B518446AD500C4BAFA /* SlotEditor.xib in Resources */,
 				FE5B566D1929D331001C4E85 /* fdd1_led_on.png in Resources */,
 				FEB8DFBE1692402E009BE6E4 /* toolbar-joypad.png in Resources */,
 				FE5CDEC1192C8BE600312BB4 /* caps_led_off.png in Resources */,
@@ -2772,11 +2754,9 @@
 				FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */,
 				FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */,
 				6B5D2863161F44CC0081F586 /* CMCocoaInput.m in Sources */,
-				FEE4D8B818470E5800C4BAFA /* CMSlotEditorController.m in Sources */,
 				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
-				FEAC61BB1641B5C200A7E294 /* CMMachineEditorController.m in Sources */,
 				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,
 				FEAAF3F81672942700D371CD /* CMInputMethod.m in Sources */,
 				6B1C25AC1672972F004DD618 /* CMKeyboardInput.m in Sources */,

@@ -28,7 +28,6 @@
 #import "CMAboutController.h"
 #import "CMEmulatorController.h"
 #import "CMSpecialCartChooserController.h"
-#import "CMMachineEditorController.h"
 
 #import "CMPreferences.h"
 #import "CMMSXKeyboard.h"
