@@ -28,6 +28,12 @@
 
 @property (nonatomic, retain) CMEmulatorController *emulator;
 
+@property (nonatomic, retain) IBOutlet NSMenuItem *recentCartridgesA;
+@property (nonatomic, retain) IBOutlet NSMenuItem *recentCartridgesB;
+@property (nonatomic, retain) IBOutlet NSMenuItem *recentDisksA;
+@property (nonatomic, retain) IBOutlet NSMenuItem *recentDisksB;
+@property (nonatomic, retain) IBOutlet NSMenuItem *recentCassettes;
+
 // Apple menu
 
 - (IBAction) openAbout:(id) sender;

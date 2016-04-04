@@ -351,8 +351,6 @@
 		FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C6A2B161AAD3B00513A6D /* CMCocoaMouse.m */; };
 		FE9D27AA161EDB2600ADFB0F /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */; };
 		FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B361620C7720066FDD8 /* Localizable.strings */; };
-		FEA01B3A1620FE360066FDD8 /* SpecialCartChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */; };
-		FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */; };
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
@@ -1105,9 +1103,6 @@
 		FE9C6A2B161AAD3B00513A6D /* CMCocoaMouse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMCocoaMouse.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		FEA01B361620C7720066FDD8 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
-		FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpecialCartChooser.xib; sourceTree = "<group>"; };
-		FEA01B3F162100050066FDD8 /* CMSpecialCartChooserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSpecialCartChooserController.h; sourceTree = "<group>"; };
-		FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSpecialCartChooserController.m; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMCocoaTimer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SnapshotDocument.icns; sourceTree = "<group>"; };
 		FEA4548C1679B65300AAECB7 /* DiskDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DiskDocument.icns; sourceTree = "<group>"; };
@@ -1285,7 +1280,6 @@
 				FE42836215FE857400ED7CB9 /* Emulator.xib */,
 				FEC7232115FF133700CB508C /* Preferences.xib */,
 				FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */,
-				FEA01B391620FE360066FDD8 /* SpecialCartChooser.xib */,
 				6B36CC441644806B00B5FDB7 /* MainMenu.xib */,
 			);
 			path = Resources;
@@ -2230,8 +2224,6 @@
 				FEC7231815FF0E3400CB508C /* CMPreferenceController.m */,
 				FE2A2BDB16240DB7000CCAE4 /* CMRepositionCassetteController.h */,
 				FE2A2BDC16240DB7000CCAE4 /* CMRepositionCassetteController.m */,
-				FEA01B3F162100050066FDD8 /* CMSpecialCartChooserController.h */,
-				FEA01B40162100050066FDD8 /* CMSpecialCartChooserController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2380,7 +2372,6 @@
 				FEC7232215FF133700CB508C /* Preferences.xib in Resources */,
 				FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */,
 				FE5CDEC4192C8BE600312BB4 /* caps_led_off@2x.png in Resources */,
-				FEA01B3A1620FE360066FDD8 /* SpecialCartChooser.xib in Resources */,
 				FE2CEB581622A50500E58F9A /* Databases in Resources */,
 				FEC9AE20193A947300E4725D /* rensha_led_off@2x.png in Resources */,
 				FEC9AE28193AE0DF00E4725D /* cas_led_off@2x.png in Resources */,
@@ -2754,7 +2745,6 @@
 				FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */,
 				FE1D58D7161D744800E70CF8 /* CMCocoaSound.m in Sources */,
 				6B5D2863161F44CC0081F586 /* CMCocoaInput.m in Sources */,
-				FEA01B41162100050066FDD8 /* CMSpecialCartChooserController.m in Sources */,
 				FE2A2BDD16240DB7000CCAE4 /* CMRepositionCassetteController.m in Sources */,
 				FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */,
 				FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */,

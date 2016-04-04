@@ -22,7 +22,6 @@
  */
 #import <Foundation/Foundation.h>
 
-#import "CMSpecialCartChooserController.h"
 #import "CMRepositionCassetteController.h"
 #import "CMPreferenceController.h"
 #import "CMMsxDisplayView.h"
@@ -37,7 +36,7 @@
 
 NSString * const CMKeyboardLayoutPrefKey;
 
-@interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMSpecialCartSelectedDelegate, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate, CMMsxDisplayViewDelegate>
+@interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate, CMMsxDisplayViewDelegate>
 {
     IBOutlet NSView *romSelectionAccessoryView;
     IBOutlet NSView *diskSelectionAccessoryView;
@@ -55,12 +54,6 @@ NSString * const CMKeyboardLayoutPrefKey;
     IBOutlet NSBox *statusBar;
     IBOutlet NSTextField *fpsCounter;
     IBOutlet CMMsxDisplayView *screen;
-    
-    IBOutlet NSMenuItem *recentCartridgesA;
-    IBOutlet NSMenuItem *recentCartridgesB;
-    IBOutlet NSMenuItem *recentDisksA;
-    IBOutlet NSMenuItem *recentDisksB;
-    IBOutlet NSMenuItem *recentCassettes;
     
     IBOutlet NSImageView *fdd0Led;
     IBOutlet NSImageView *fdd1Led;
@@ -137,8 +130,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (IBAction)insertCartridgeSlot1:(id)sender;
 - (IBAction)insertCartridgeSlot2:(id)sender;
-- (IBAction)insertSpecialCartridgeSlot1:(id)sender;
-- (IBAction)insertSpecialCartridgeSlot2:(id)sender;
 - (IBAction)ejectCartridgeSlot1:(id)sender;
 - (IBAction)ejectCartridgeSlot2:(id)sender;
 

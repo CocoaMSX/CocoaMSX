@@ -27,7 +27,6 @@
 
 #import "CMAboutController.h"
 #import "CMEmulatorController.h"
-#import "CMSpecialCartChooserController.h"
 
 #import "CMPreferences.h"
 #import "CMMSXKeyboard.h"
@@ -109,7 +108,6 @@
 - (void) addToRecentItems:(NSString *) path;
 - (void)insertCartridgeIntoSlot:(NSInteger)slot;
 - (void)insertDiskIntoSlot:(int)slot;
-- (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot;
 - (BOOL)createBlankDiskAtPath:(NSString *)path
                        sizekB:(int)size
                         error:(NSError **)error;
@@ -189,7 +187,6 @@
 	CMCocoaMouse *mouse;
 	CMCocoaSound *sound;
 	
-	CMSpecialCartChooserController *cartChooser;
 	CMRepositionCassetteController *cassetteRepositioner;
 	
 	NSMutableArray *inputDeviceLayouts;
@@ -370,7 +367,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [captureAudioTypes release];
     [captureGameplayTypes release];
     
-    [cartChooser release];
     [cassetteRepositioner release];
 	
     [self setLastLoadedState:nil];
@@ -967,6 +963,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void) rebuildRecentItemsMenus
 {
     // Clear existing menu items
+	CMAppDelegate *appDelegate = (CMAppDelegate *)[NSApp delegate];
+	NSMenuItem *recentCartridgesA = [appDelegate recentCartridgesA];
+	NSMenuItem *recentCartridgesB = [appDelegate recentCartridgesB];
+	NSMenuItem *recentDisksA = [appDelegate recentDisksA];
+	NSMenuItem *recentDisksB = [appDelegate recentDisksB];
+	NSMenuItem *recentCassettes = [appDelegate recentCassettes];
+	
     [self clearRecentMediaItemsInMenu:recentCartridgesA];
     [self clearRecentMediaItemsInMenu:recentCartridgesB];
     [self clearRecentMediaItemsInMenu:recentDisksA];
@@ -1347,18 +1350,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self setLastSavedState:nil];
 
     return tryLaunchUnknownFile(self.properties, [media UTF8String], YES) != 0;
-}
-
-- (void)insertSpecialCartridgeIntoSlot:(NSInteger)slot
-{
-    if (![self isInitialized])
-        return;
-    
-    [cartChooser release];
-    cartChooser = [[CMSpecialCartChooserController alloc] init];
-    [cartChooser setDelegate:self];
-    
-    [cartChooser showSheetForWindow:self.window cartridgeSlot:slot];
 }
 
 - (void)ejectCartridgeFromSlot:(NSInteger)slot
@@ -2112,16 +2103,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)insertCartridgeSlot2:(id)sender
 {
     [self insertCartridgeIntoSlot:1];
-}
-
-- (void)insertSpecialCartridgeSlot1:(id)sender
-{
-    [self insertSpecialCartridgeIntoSlot:0];
-}
-
-- (void)insertSpecialCartridgeSlot2:(id)sender
-{
-    [self insertSpecialCartridgeIntoSlot:1];
 }
 
 - (void)ejectCartridgeSlot1:(id)sender
@@ -3078,20 +3059,6 @@ void archTrap(UInt8 value)
 - (void) windowDidExitFullScreen:(NSNotification *) notification
 {
 	[[self window] makeFirstResponder:screen];
-}
-
-#pragma mark - SpecialCartSelectedDelegate
-
-- (void)cartSelectedOfType:(NSInteger)romType romName:(const char*)romName slot:(NSInteger)slot;
-{
-#ifdef DEBUG
-    NSLog(@"EmulatorController:cartSelectedOfType %d '%s'",
-          (int)romType, romName);
-#endif
-    
-    emulatorSuspend();
-    insertCartridge([self properties], slot, romName, NULL, romType, 0);
-    emulatorResume();
 }
 
 #pragma mark - CassetteRepositionDelegate
