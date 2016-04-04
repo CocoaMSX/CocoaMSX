@@ -24,21 +24,8 @@
 #import <IOKit/hid/IOHIDLib.h>
 
 @interface CMGamepad : NSObject
-{
-    id _delegate;
-    NSInteger _gamepadId;
-    
-    BOOL registeredForEvents;
-    IOHIDDeviceRef hidDevice;
-    
-    NSInteger _locationId;
-    NSInteger _vendorId;
-    NSInteger _productId;
-    NSString *_name;
-    NSPoint _axes;
-}
 
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, weak) id delegate;
 @property (nonatomic, assign) NSInteger gamepadId;
 
 @property (nonatomic, readonly) NSInteger locationId;

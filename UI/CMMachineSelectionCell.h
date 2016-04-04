@@ -23,9 +23,6 @@
 #import <Cocoa/Cocoa.h>
 
 @interface CMMachineSelectionCell : NSButtonCell
-{
-    BOOL _downloadingIconVisible;
-}
 
 @property (nonatomic, assign) BOOL downloadingIconVisible;
 

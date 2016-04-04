@@ -24,14 +24,12 @@
 
 @implementation CMKeyboardInput
 
-@synthesize keyCode = _keyCode;
-
 + (CMKeyboardInput *)keyboardInputWithKeyCode:(NSInteger)keyCode
 {
     CMKeyboardInput *key = [[CMKeyboardInput alloc] init];
     [key setKeyCode:keyCode];
     
-    return [key autorelease];
+    return key;
 }
 
 #pragma mark - init & dealloc
@@ -44,11 +42,6 @@
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [super dealloc];
 }
 
 #pragma mark - NSCoding

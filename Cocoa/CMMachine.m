@@ -38,18 +38,9 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 
 @implementation CMMachine
 
-@synthesize path = _path;
-@synthesize name = _name;
-@synthesize machineId = _machineId;
-@synthesize machineUrl = _machineUrl;
-@synthesize checksum = _checksum;
-@synthesize system = _system;
-@synthesize status = _status;
-@synthesize active = _active;
-
 + (CMMachine *)machineWithPath:(NSString *)path
 {
-    return [[[CMMachine alloc] initWithPath:path] autorelease];
+    return [[CMMachine alloc] initWithPath:path];
 }
 
 - (id)init
@@ -107,17 +98,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [self setPath:nil];
-    [self setName:nil];
-    [self setMachineId:nil];
-    [self setMachineUrl:nil];
-    [self setChecksum:nil];
-    
-    [super dealloc];
 }
 
 + (NSInteger)systemNamed:(NSString *)systemName
@@ -187,11 +167,11 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 {
     if ((self = [self init]))
     {
-        _name = [[aDecoder decodeObjectForKey:@"name"] retain];
-        _path = [[aDecoder decodeObjectForKey:@"path"] retain];
-        _machineId = [[aDecoder decodeObjectForKey:@"machineId"] retain];
-        _machineUrl = [[aDecoder decodeObjectForKey:@"machineUrl"] retain];
-        _checksum = [[aDecoder decodeObjectForKey:@"checksum"] retain];
+        _name = [aDecoder decodeObjectForKey:@"name"];
+        _path = [aDecoder decodeObjectForKey:@"path"];
+        _machineId = [aDecoder decodeObjectForKey:@"machineId"];
+        _machineUrl = [aDecoder decodeObjectForKey:@"machineUrl"];
+        _checksum = [aDecoder decodeObjectForKey:@"checksum"];
         _system = [aDecoder decodeIntegerForKey:@"system"];
         _status = [aDecoder decodeIntegerForKey:@"status"];
         _active = [aDecoder decodeBoolForKey:@"active"];

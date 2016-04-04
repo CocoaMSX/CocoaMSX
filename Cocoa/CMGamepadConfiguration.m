@@ -34,11 +34,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-}
-
 #pragma mark - Etc
 
 - (void) clear

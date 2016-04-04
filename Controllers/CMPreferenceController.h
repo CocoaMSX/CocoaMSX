@@ -34,15 +34,6 @@
 
 @interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
 {
-    NSMutableArray *_machines;
-    NSArray *_channels;
-    NSString *_machineNameFilter;
-    NSInteger machineFamilyFilter;
-    NSInteger machineStatusFilter;
-    CMMachine *_activeMachine;
-    
-    CMConfigureJoystickController *joystickConfigurator;
-    
     IBOutlet NSButton *configureJoypadOneButton;
     IBOutlet NSButton *configureJoypadTwoButton;
     
@@ -50,8 +41,6 @@
     
     IBOutlet MGScopeBar *keyboardScopeBar;
     IBOutlet MGScopeBar *machineScopeBar;
-    
-    CMKeyCaptureView *keyCaptureView;
     
     IBOutlet NSTabView *contentTabView;
     
@@ -73,17 +62,6 @@
 
     IBOutlet NSSlider *emulationSpeedSlider;
     IBOutlet NSSearchField *machineSearchField;
-    
-    NSMutableArray *keyCategories;
-    NSMutableArray *joystickOneCategories;
-    NSMutableArray *joystickTwoCategories;
-    
-    NSArray *virtualEmulationSpeedRange;
-    
-    NSString *selectedKeyboardRegion;
-    NSInteger selectedKeyboardShiftState;
-    
-    NSOperationQueue *downloadQueue;
 }
 
 @property (nonatomic, copy) NSMutableArray *machines;

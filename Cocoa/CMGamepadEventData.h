@@ -23,9 +23,6 @@
 #import <Foundation/Foundation.h>
 
 @interface CMGamepadEventData : NSObject
-{
-    NSInteger _sourceId;
-}
 
 @property (nonatomic, assign) NSInteger sourceId;
 

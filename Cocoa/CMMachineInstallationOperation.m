@@ -41,11 +41,9 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
 
 @implementation CMMachineInstallationOperation
 
-@synthesize machine = _machine;
-
 + (CMMachineInstallationOperation *)installationOperationWithMachine:(CMMachine *)machine
 {
-    return [[[CMMachineInstallationOperation alloc] initWithMachine:machine] autorelease];
+    return [[CMMachineInstallationOperation alloc] initWithMachine:machine];
 }
 
 #pragma mark - NSObject
@@ -54,17 +52,10 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
 {
     if ((self = [super init]))
     {
-        _machine = [machine retain];
+        _machine = machine;
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [self setMachine:nil];
-    
-    [super dealloc];
 }
 
 #pragma mark - NSOperation

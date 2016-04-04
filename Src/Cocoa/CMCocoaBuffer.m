@@ -86,8 +86,6 @@
     
     scaledPixels = NULL;
     pixels = NULL;
-    
-    [super dealloc];
 }
 
 - (void *) applyScale

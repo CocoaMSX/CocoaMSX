@@ -58,10 +58,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 #pragma mark - CMMsxKeyInfo
 
 @interface CMMsxKeyInfo : NSObject
-{
-    NSString *_defaultStateLabel;
-    NSString *_shiftedStateLabel;
-}
 
 @property (nonatomic, copy) NSString *defaultStateLabel;
 @property (nonatomic, copy) NSString *shiftedStateLabel;
@@ -69,9 +65,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 @end
 
 @implementation CMMsxKeyInfo
-
-@synthesize defaultStateLabel = _defaultStateLabel;
-@synthesize shiftedStateLabel = _shiftedStateLabel;
 
 + (CMMsxKeyInfo *)keyInfoWithDefaultStateLabel:(NSString *)defaultStateLabel
                              shiftedStateLabel:(NSString *)shiftedStateLabel
@@ -81,7 +74,7 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     [info setDefaultStateLabel:defaultStateLabel];
     [info setShiftedStateLabel:shiftedStateLabel];
     
-    return [info autorelease];
+    return info;
 }
 
 - (BOOL)isEqual:(id)object
@@ -95,14 +88,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
     }
     
     return [super isEqual:object];
-}
-
-- (void)dealloc
-{
-    [self setDefaultStateLabel:nil];
-    [self setShiftedStateLabel:nil];
-    
-    [super dealloc];
 }
 
 @end
@@ -120,10 +105,19 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 @end
 
 @implementation CMCocoaInput
+{
+	int virtualCodeMap[256];
+	NSUInteger pollCounter;
 
-@synthesize keyCombinationToAutoPress = _keyCombinationToAutoPress;
-@synthesize joypadOneId = _joypadOneId;
-@synthesize joypadTwoId = _joypadTwoId;
+	NSObject *keysToPasteLock;
+	
+	NSMutableArray *keysToPaste;
+	
+	NSTimeInterval timeOfAutoPress;
+	BOOL autoKeyPressPasted;
+	
+	NSMutableDictionary *joypadConfigurations;
+}
 
 #define virtualCodeSet(eventCode) self->virtualCodeMap[eventCode] = 1
 #define virtualCodeUnset(eventCode) self->virtualCodeMap[eventCode] = 0
@@ -164,15 +158,6 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
                                                forKeyPath:@"joypadConfigurations"];
     
     [[CMGamepadManager sharedInstance] removeObserver:self];
-    
-    [joypadConfigurations release];
-    [keysToPaste release];
-    
-    [keysToPasteLock release];
-    
-    [self setKeyCombinationToAutoPress:nil];
-    
-    [super dealloc];
 }
 
 #pragma mark - KVO

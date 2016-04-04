@@ -72,12 +72,9 @@
     
     glDeleteTextures(1, &screenTexId);
     
-    for (int i = 0; i < 2; i++)
-        [screens[i] release];
-    
-    [frameCounter release];
-    
-    [super dealloc];
+	for (int i = 0; i < 2; i++) {
+		screens[i] = nil;
+	}
 }
 
 - (void)awakeFromNib
@@ -153,12 +150,10 @@
         scaleFactor = [[self window] backingScaleFactor];
     }
     
-    [screens[0] release];
     screens[0] = [[CMCocoaBuffer alloc] initWithWidth:BUFFER_WIDTH
                                                height:HEIGHT
                                                  zoom:ZOOM
                                          backingScale:scaleFactor];
-    [screens[1] release];
     screens[1] = [[CMCocoaBuffer alloc] initWithWidth:BUFFER_WIDTH
                                                height:HEIGHT
                                                  zoom:ZOOM
@@ -298,7 +293,7 @@
 
 - (void)renderScreen
 {
-	if (NSPointInRect(lastCursorPosition, [self bounds])) {
+	if ([[self window] isKeyWindow] && NSPointInRect(lastCursorPosition, [self bounds])) {
 		CFAbsoluteTime interval = CFAbsoluteTimeGetCurrent() - lastMouseAction;
 		if (cursorVisible && interval > HIDE_CURSOR_TIMEOUT_SECONDS && CMGetBoolPref(@"autohideCursor")) {
 			[[emulator mouse] showCursor:NO];
@@ -490,7 +485,7 @@ void archUpdateWindow()
     }
     
     // Create a bitmap representation
-    NSBitmapImageRep *rep = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+    NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
                                                                      pixelsWide:frameBuffer->maxWidth * zoom
                                                                      pixelsHigh:height
                                                                   bitsPerSample:8
@@ -500,7 +495,7 @@ void archUpdateWindow()
                                                                  colorSpaceName:NSCalibratedRGBColorSpace
                                                                    bitmapFormat:NSAlphaNonpremultipliedBitmapFormat
                                                                     bytesPerRow:pitch
-                                                                   bitsPerPixel:0] autorelease];
+                                                                   bitsPerPixel:0];
     
     // Copy contents of bitmap to NSBitmapImageRep
     memcpy([rep bitmapData], rawBitmapBuffer, pitch * height);
@@ -512,7 +507,7 @@ void archUpdateWindow()
     // Finally, free the buffer
     free(rawBitmapBuffer);
     
-    return [image autorelease];
+    return image;
 }
 
 void *archScreenCapture(ScreenCaptureType type, int *bitmapSize, int onlyBmp)

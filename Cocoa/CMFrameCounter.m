@@ -24,11 +24,17 @@
 
 @interface CMFrameCounter ()
 
-- (CGFloat)average:(NSInteger)newTick;
+- (CGFloat)average:(NSInteger) newTick;
 
 @end
 
 @implementation CMFrameCounter
+{
+	NSInteger tickIndex;
+	NSInteger tickSum;
+	NSInteger *tickList;
+	NSDate *lastTick;
+}
 
 #define MAX_SAMPLES 100
 
@@ -39,7 +45,7 @@
         tickList = calloc(MAX_SAMPLES, sizeof(NSInteger));
         tickIndex = 0;
         tickSum = 0;
-        lastTick = [[NSDate date] retain];
+        lastTick = [NSDate date];
     }
     
     return self;
@@ -49,8 +55,7 @@
 {
     NSDate *now = [NSDate date];
     CGFloat freq = 1.0 / [now timeIntervalSinceDate:lastTick];
-    [lastTick release];
-    lastTick = [now retain];
+    lastTick = now;
     
     return [self average:(NSInteger)freq];
 }
@@ -70,9 +75,6 @@
 - (void)dealloc
 {
     free(tickList);
-    [lastTick release];
-    
-    [super dealloc];
 }
 
 @end

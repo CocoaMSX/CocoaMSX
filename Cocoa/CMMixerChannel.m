@@ -23,11 +23,11 @@
 #import "CMMixerChannel.h"
 
 @implementation CMMixerChannel
-
-@synthesize name = _name;
-@synthesize enabled = _enabled;
-@synthesize volume = _volume;
-@synthesize balance = _balance;
+{
+	NSString *_enabledPropertyName;
+	NSString *_volumePropertyName;
+	NSString *_balancePropertyName;
+}
 
 + (CMMixerChannel *)mixerChannelNamed:(NSString *)name
                   enabledPropertyName:(NSString *)enabledPropertyName
@@ -39,7 +39,7 @@
                                                   volumePropertyName:volumePropertyName
                                                  balancePropertyName:balancePropertyName];
     
-    return [mc autorelease];
+    return mc;
 }
 
 - (id)initWithChannelName:(NSString *)name
@@ -85,13 +85,6 @@
                                                forKeyPath:_volumePropertyName];
     [[NSUserDefaults standardUserDefaults] removeObserver:self
                                                forKeyPath:_balancePropertyName];
-    
-    [_name release];
-    [_enabledPropertyName release];
-    [_volumePropertyName release];
-    [_balancePropertyName release];
-    
-    [super dealloc];
 }
 
 - (void)setEnabled:(BOOL)enabled

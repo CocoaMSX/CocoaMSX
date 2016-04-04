@@ -51,11 +51,6 @@
 @end
 
 @interface CMGamepadManager : NSObject<CMGamepadEventDelegate>
-{
-    IOHIDManagerRef hidManager;
-    NSMutableDictionary *gamepads;
-    NSMutableArray *observers;
-}
 
 + (CMGamepadManager *)sharedInstance;
 

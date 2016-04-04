@@ -38,6 +38,11 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 @end
 
 @implementation CMGamepadManager
+{
+	IOHIDManagerRef hidManager;
+	NSMutableDictionary *gamepads;
+	NSMutableArray *observers;
+}
 
 + (CMGamepadManager *)sharedInstance
 {
@@ -65,9 +70,9 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
                                          @(kHIDUsage_GD_Joystick), (NSString *)CFSTR(kIOHIDDeviceUsageKey),
                                          nil];
         
-        IOHIDManagerSetDeviceMatchingMultiple(hidManager, (CFArrayRef)[NSArray arrayWithObjects:gamepadCriterion, joystickCriterion, nil]);
-        IOHIDManagerRegisterDeviceMatchingCallback(hidManager, gamepadWasAdded, (void *)self);
-        IOHIDManagerRegisterDeviceRemovalCallback(hidManager, gamepadWasRemoved, (void *)self);
+        IOHIDManagerSetDeviceMatchingMultiple(hidManager, (__bridge CFArrayRef)[NSArray arrayWithObjects:gamepadCriterion, joystickCriterion, nil]);
+        IOHIDManagerRegisterDeviceMatchingCallback(hidManager, gamepadWasAdded, (__bridge void *)self);
+        IOHIDManagerRegisterDeviceRemovalCallback(hidManager, gamepadWasRemoved, (__bridge void *)self);
         
         IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     }
@@ -77,18 +82,13 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 
 - (void)dealloc
 {
-    [gamepads release];
-    [observers release];
-    
     IOHIDManagerUnscheduleFromRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     CFRelease(hidManager);
-    
-    [super dealloc];
 }
 
 - (void)deviceDidConnect:(IOHIDDeviceRef)device
 {
-    CMGamepad *gamepad = [[[CMGamepad alloc] initWithHidDevice:device] autorelease];
+    CMGamepad *gamepad = [[CMGamepad alloc] initWithHidDevice:device];
     
     [gamepad setDelegate:self];
     [gamepad setGamepadId:(NSInteger)device];

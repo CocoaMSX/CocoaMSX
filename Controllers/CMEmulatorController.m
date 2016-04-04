@@ -348,41 +348,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                                   object:nil];
     
     [self destroy];
-    
     [self cleanupTemporaryCaptureFile];
-    
-    [listOfPreferenceKeysToObserve release];
-    
-    [romTypes release];
-    [romTypeIndices release];
-    [romTypeNames release];
-    [disketteSizeDescriptions release];
-    [disketteSizes release];
-    [recentDocuments release];
-    
-    [openRomFileTypes release];
-    [openDiskFileTypes release];
-    [openCassetteFileTypes release];
-    [stateFileTypes release];
-    [captureAudioTypes release];
-    [captureGameplayTypes release];
-    
-    [cassetteRepositioner release];
 	
-    [self setLastLoadedState:nil];
-    [self setLastSavedState:nil];
-    [self setFileToLoadAtStartup:nil];
-    [self setCurrentlyLoadedCaptureFilePath:nil];
-    
-    [input release];
-    [mouse release];
-    [sound release];
-    
-    [inputDeviceLayouts release];
-    
     theEmulator = nil;
-    
-    [super dealloc];
 }
 
 - (void)awakeFromNib
@@ -941,9 +909,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
                            action:(SEL)action
                            parent:(NSMenuItem *)parent
 {
-    NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:[url lastPathComponent]
+    NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[url lastPathComponent]
                                                        action:action
-                                                keyEquivalent:@""] autorelease];
+                                                keyEquivalent:@""];
     
     [menuItem setRepresentedObject:url];
     [[parent submenu] insertItem:menuItem
@@ -1463,7 +1431,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                       [path lastPathComponent],
                                       [generatedPath lastPathComponent]];
                 
-                NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
+                NSUserNotification *notification = [[NSUserNotification alloc] init];
                 [notification setTitle:title];
                 [notification setInformativeText:infoText];
                 [notification setSoundName:NSUserNotificationDefaultSoundName];
@@ -1555,7 +1523,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                          NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Created a new blank disk %@.", ""),
                                                [path lastPathComponent]];
                          
-                         NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
+                         NSUserNotification *notification = [[NSUserNotification alloc] init];
                          [notification setTitle:title];
                          [notification setInformativeText:infoText];
                          [notification setSoundName:NSUserNotificationDefaultSoundName];
@@ -1735,7 +1703,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
             {
                 CGFloat iconDim = MIN(screenshot.size.width, screenshot.size.height);
                 
-                icon = [[[NSImage alloc] initWithSize:NSMakeSize(iconDim, iconDim)] autorelease];
+                icon = [[NSImage alloc] initWithSize:NSMakeSize(iconDim, iconDim)];
                 
                 [icon lockFocus];
                 
@@ -2000,7 +1968,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
         [[NSFileManager defaultManager] removeItemAtPath:gameplayCaptureTempFilename
                                                    error:&error];
     
-    [gameplayCaptureTempFilename release];
     gameplayCaptureTempFilename = nil;
 }
 
@@ -2210,7 +2177,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if (![self isInitialized] || !(*properties->media.tapes[0].fileName))
         return;
     
-    [cassetteRepositioner release];
     cassetteRepositioner = [[CMRepositionCassetteController alloc] init];
     cassetteRepositioner.delegate = self;
     

@@ -62,15 +62,6 @@
     self->preventSleepAssertionID = kIOPMNullAssertionID;
 }
 
-- (void)dealloc
-{
-    self.emulator = nil;
-	[_aboutController release];
-	[_preferenceController release];
-	
-    [super dealloc];
-}
-
 #pragma mark - NSManagedObjectContext
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -324,7 +315,7 @@
 {
     [self initializeResources];
     
-    [self setEmulator:[[[CMEmulatorController alloc] init] autorelease]];
+    [self setEmulator:[[CMEmulatorController alloc] init]];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification

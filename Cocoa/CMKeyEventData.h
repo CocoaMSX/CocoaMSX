@@ -23,10 +23,6 @@
 #import <Foundation/Foundation.h>
 
 @interface CMKeyEventData : NSObject
-{
-    NSInteger _scanCode;
-    NSInteger _keyCode;
-}
 
 @property (nonatomic, assign) NSInteger scanCode;
 @property (nonatomic, assign) NSInteger keyCode;

@@ -70,8 +70,6 @@ static OSStatus audioCallback(void *inRefCon,
 - (void)dealloc
 {
     [self destroy];
-    
-    [super dealloc];
 }
 
 #pragma mark - Private Methods
@@ -132,7 +130,7 @@ static OSStatus audioCallback(void *inRefCon,
     
     // Set the audio callback
     callback.inputProc = audioCallback;
-    callback.inputProcRefCon = self;
+    callback.inputProcRefCon = (__bridge void * _Nullable)(self);
     result = AudioUnitSetProperty(outputAudioUnit,
                                   kAudioUnitProperty_SetRenderCallback,
                                   kAudioUnitScope_Input, 0, &callback,
@@ -164,7 +162,7 @@ static OSStatus audioCallback(void *inRefCon,
     bytesPerSample = bitsPerChannel / 8;
     
     mixerSetStereo(mixer, channels == 2);
-    mixerSetWriteCallback(mixer, mixSound, self, __bufferSize / bytesPerSample);
+    mixerSetWriteCallback(mixer, mixSound, (__bridge void *)(self), __bufferSize / bytesPerSample);
     
     isReady = YES;
     

@@ -38,7 +38,7 @@
     IBOutlet CMEmulatorController *emulator;
 }
 
-@property (nonatomic, assign) IBOutlet id<CMMsxDisplayViewDelegate> delegate;
+@property (nonatomic, weak) IBOutlet id<CMMsxDisplayViewDelegate> delegate;
 
 - (CGFloat) framesPerSecond;
 - (NSImage *) captureScreen:(BOOL) large;

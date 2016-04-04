@@ -37,7 +37,7 @@
     IBOutlet NSButton *saveButton;
 }
 
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, unsafe_unretained) id delegate;
 
 - (void) restartConfiguration:(NSInteger) joypadId;
 

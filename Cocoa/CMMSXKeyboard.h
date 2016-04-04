@@ -34,10 +34,6 @@ enum
 typedef NSUInteger CMMSXKeyState;
 
 @interface CMMSXKeyCombination : NSObject
-{
-    NSInteger _virtualCode;
-    CMMSXKeyState _stateFlags;
-}
 
 @property (nonatomic, assign) NSInteger virtualCode;
 @property (nonatomic, assign) CMMSXKeyState stateFlags;
@@ -50,16 +46,9 @@ typedef NSUInteger CMMSXKeyState;
 @end
 
 @interface CMMSXKeyboard : NSObject
-{
-    NSString *_name;
-    NSString *_label;
-    
-    NSMutableDictionary *virtualCodeToKeyInfoMap;
-    NSMutableDictionary *characterToVirtualCodeMap;
-}
 
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *label;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *label;
 
 + (NSArray *)availableLayoutNames;
 + (NSString *)defaultLayoutName;

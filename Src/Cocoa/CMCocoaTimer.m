@@ -74,27 +74,24 @@ void* archCreateTimer(int period, int (*timerCallback)(void*))
         arg->lastTimeout = archGetSystemUpTime(arg->timerFreq);
         arg->timerCb = timerCallback;
         
-        timer = [[NSTimer timerWithTimeInterval:period / 1000.0
+        timer = [NSTimer timerWithTimeInterval:period / 1000.0
                                          target:[CMCocoaTimer class]
                                        selector:@selector(callbackCalledByTimer:)
                                        userInfo:arg
-                                        repeats:YES] retain];
+                                        repeats:YES];
         
-        [arg release];
         
         [[NSRunLoop currentRunLoop] addTimer:timer
                                      forMode:NSRunLoopCommonModes];
     }
     
-    return (__bridge void *)(timer);
+    return (__bridge void *) (timer);
 }
 
 void archTimerDestroy(void* timer) 
 {
     NSTimer *nsTimer = (__bridge NSTimer *) timer;
     [nsTimer invalidate];
-    
-    [nsTimer release];
 }
 
 UInt32 archGetSystemUpTime(UInt32 frequency) 

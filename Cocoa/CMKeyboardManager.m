@@ -64,7 +64,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
                                                 @(kHIDUsage_GD_Keypad), (NSString *)CFSTR(kIOHIDDeviceUsageKey),
                                                 nil];
         
-        IOHIDManagerSetDeviceMatchingMultiple(keyboardHidManager, (CFArrayRef)[NSArray arrayWithObjects:keyboardCriterion,
+        IOHIDManagerSetDeviceMatchingMultiple(keyboardHidManager, (__bridge CFArrayRef)[NSArray arrayWithObjects:keyboardCriterion,
                                                                               keypadCriterion, nil]);
         
 //        NSMutableDictionary *inputValueFilter = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -72,7 +72,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 //                                                  @(231), (NSString *)CFSTR(kIOHIDElementUsageMaxKey),
 //                                                  nil];
 //        IOHIDManagerSetInputValueMatching(keyboardHidManager, (CFDictionaryRef)inputValueFilter);
-        IOHIDManagerRegisterInputValueCallback(keyboardHidManager, keyWasToggled, (void *)self);
+        IOHIDManagerRegisterInputValueCallback(keyboardHidManager, keyWasToggled, (__bridge void *)self);
 
         IOHIDManagerScheduleWithRunLoop(keyboardHidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
         IOHIDManagerOpen(keyboardHidManager, kIOHIDOptionsTypeNone);
@@ -83,18 +83,9 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 
 - (void)dealloc
 {
-    @synchronized (observerLock)
-    {
-        [observers release];
-    }
-    
-    [observerLock release];
-    
     IOHIDManagerClose(keyboardHidManager, kIOHIDOptionsTypeNone);
     IOHIDManagerUnscheduleFromRunLoop(keyboardHidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     CFRelease(keyboardHidManager);
-
-    [super dealloc];
 }
 
 // Adapted from https://github.com/LaurentGomila/SFML/
@@ -235,7 +226,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 - (void)keyStateDidChange:(NSInteger)scanCode
                    isDown:(BOOL)isDown
 {
-    CMKeyEventData *event = [[[CMKeyEventData alloc] init] autorelease];
+    CMKeyEventData *event = [[CMKeyEventData alloc] init];
     
     [event setScanCode:scanCode];
     [event setKeyCode:[self scanCodeToKeyCode:scanCode

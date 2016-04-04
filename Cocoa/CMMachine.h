@@ -38,22 +38,12 @@ extern NSString * const CMMsxTurboRMachine;
 #define CMMachineInstalled    3
 
 @interface CMMachine : NSObject<NSCopying, NSCoding>
-{
-    NSString *_machineId;
-    NSString *_name;
-    NSString *_path;
-    NSString *_checksum;
-    NSInteger _system;
-    NSURL *_machineUrl;
-    NSInteger _status;
-    BOOL _active;
-}
 
 @property (nonatomic, copy) NSString *machineId;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *path;
 @property (nonatomic, copy) NSString *checksum;
-@property (nonatomic, retain) NSURL *machineUrl;
+@property (nonatomic, strong) NSURL *machineUrl;
 @property (nonatomic, assign) NSInteger system;
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, assign) BOOL active;

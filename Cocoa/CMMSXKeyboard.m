@@ -27,21 +27,15 @@
 #pragma mark - CMMSXKey
 
 @interface CMMSXKey : NSObject
-{
-    NSInteger _virtualCode;
-    NSString *_label;
-    NSString *_defaultChar;
-    NSString *_shiftChar;
-}
 
 - (id)initWithVirtualCode:(NSInteger)virtualCode
                dictionary:(NSDictionary *)dictionary;
 - (NSDictionary *)asDictionary;
 
 @property (nonatomic, assign) NSInteger virtualCode;
-@property (nonatomic, retain) NSString *label;
-@property (nonatomic, retain) NSString *defaultChar;
-@property (nonatomic, retain) NSString *shiftChar;
+@property (nonatomic, strong) NSString *label;
+@property (nonatomic, strong) NSString *defaultChar;
+@property (nonatomic, strong) NSString *shiftChar;
 
 - (NSString *)presentationLabelForState:(CMMSXKeyState)keyState;
 - (NSString *)charForState:(CMMSXKeyState)keyState;
@@ -50,11 +44,6 @@
 @end
 
 @implementation CMMSXKey
-
-@synthesize virtualCode = _virtualCode;
-@synthesize label = _label;
-@synthesize defaultChar = _defaultChar;
-@synthesize shiftChar = _shiftChar;
 
 - (id)initWithVirtualCode:(NSInteger)virtualCode
                dictionary:(NSDictionary *)dictionary
@@ -69,15 +58,6 @@
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [self setDefaultChar:nil];
-    [self setShiftChar:nil];
-    [self setLabel:nil];
-    
-    [super dealloc];
 }
 
 - (NSString *)presentationLabelForState:(CMMSXKeyState)keyState
@@ -127,9 +107,6 @@
 
 @implementation CMMSXKeyCombination
 
-@synthesize virtualCode = _virtualCode;
-@synthesize stateFlags = _stateFlags;
-
 - (id)initWithVirtualCode:(NSInteger)virtualCode
                stateFlags:(CMMSXKeyState)stateFlags
 {
@@ -148,7 +125,7 @@
     CMMSXKeyCombination *keyCombination = [[CMMSXKeyCombination alloc] initWithVirtualCode:virtualCode
                                                                                 stateFlags:stateFlags];
     
-    return [keyCombination autorelease];
+    return keyCombination;
 }
 
 @end
@@ -156,9 +133,10 @@
 #pragma mark - CMMSXKeyboard
 
 @implementation CMMSXKeyboard
-
-@synthesize name = _name;
-@synthesize label = _label;
+{
+	NSMutableDictionary *virtualCodeToKeyInfoMap;
+	NSMutableDictionary *characterToVirtualCodeMap;
+}
 
 static NSArray *layoutNames;
 static NSMutableDictionary *machineToLayoutMap;
@@ -215,7 +193,7 @@ static NSMutableDictionary *virtualCodeToCategoryMap;
         NSDictionary *layoutDictionary = [NSDictionary dictionaryWithContentsOfFile:layoutResourcePath];
         
         // For each layout, initialize MSXKeyboard object with contents of dictionary
-        CMMSXKeyboard *keyboard = [[[CMMSXKeyboard alloc] initWithDictionary:layoutDictionary] autorelease];
+        CMMSXKeyboard *keyboard = [[CMMSXKeyboard alloc] initWithDictionary:layoutDictionary];
         [keyboard setName:obj];
         [keyboard setLabel:[layoutLabels objectForKey:obj]];
         
@@ -259,8 +237,8 @@ static NSMutableDictionary *virtualCodeToCategoryMap;
         [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
         {
             NSNumber *virtualCode = @([key integerValue]);
-            CMMSXKey *msxKey = [[[CMMSXKey alloc] initWithVirtualCode:[virtualCode integerValue]
-                                                           dictionary:obj] autorelease];
+            CMMSXKey *msxKey = [[CMMSXKey alloc] initWithVirtualCode:[virtualCode integerValue]
+                                                           dictionary:obj];
             
             NSString *defaultChar = [msxKey charForState:CMMSXKeyStateDefault];
             NSString *shiftChar = [msxKey charForState:CMMSXKeyStateShift];
@@ -275,17 +253,6 @@ static NSMutableDictionary *virtualCodeToCategoryMap;
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    [_name release];
-    [_label release];
-    
-    [virtualCodeToKeyInfoMap release];
-    [characterToVirtualCodeMap release];
-    
-    [super dealloc];
 }
 
 - (NSDictionary *)asDictionary

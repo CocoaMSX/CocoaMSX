@@ -23,12 +23,6 @@
 #import <Foundation/Foundation.h>
 
 @interface CMFrameCounter : NSObject
-{
-    NSInteger tickIndex;
-    NSInteger tickSum;
-    NSInteger *tickList;
-    NSDate *lastTick;
-}
 
 - (CGFloat)update;
 

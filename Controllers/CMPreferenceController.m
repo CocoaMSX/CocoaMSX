@@ -93,16 +93,6 @@ static NSArray *keysInOrderOfAppearance;
     return items;
 }
 
-- (void)dealloc
-{
-    [self setTitle:nil];
-    [self setCategoryName:nil];
-    
-    [items release];
-    
-    [super dealloc];
-}
-
 - (void)sortItems
 {
     NSArray *sortedItems = [items sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
@@ -161,6 +151,28 @@ static NSArray *keysInOrderOfAppearance;
 @end
 
 @implementation CMPreferenceController
+{
+	NSMutableArray *_machines;
+	NSArray *_channels;
+	NSString *_machineNameFilter;
+	NSInteger machineFamilyFilter;
+	NSInteger machineStatusFilter;
+	CMMachine *_activeMachine;
+	
+	CMConfigureJoystickController *joystickConfigurator;
+	
+	NSMutableArray *keyCategories;
+	NSMutableArray *joystickOneCategories;
+	NSMutableArray *joystickTwoCategories;
+	
+	NSArray *virtualEmulationSpeedRange;
+	
+	NSString *selectedKeyboardRegion;
+	NSInteger selectedKeyboardShiftState;
+	
+	NSOperationQueue *downloadQueue;
+	CMKeyCaptureView *keyCaptureView;
+}
 
 extern CMEmulatorController *theEmulator;
 
@@ -307,24 +319,6 @@ extern CMEmulatorController *theEmulator;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:CMInstallErrorNotification
                                                   object:nil];
-    
-    [downloadQueue release];
-	
-    [joystickConfigurator release];
-    
-    [keyCaptureView release];
-    
-    [_activeMachine release];
-    [_machineNameFilter release];
-    [_machines release];
-    [_channels release];
-    [keyCategories release];
-    [joystickOneCategories release];
-    [joystickTwoCategories release];
-    
-    [virtualEmulationSpeedRange release];
-    
-    [super dealloc];
 }
 
 #pragma mark - Private Methods
@@ -358,7 +352,7 @@ extern CMEmulatorController *theEmulator;
     if (!feedLastDownloaded)
         feedLastDownloaded = [NSDate distantPast];
     
-    NSDateComponents *components = [[[NSDateComponents alloc] init] autorelease];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setMinute:-CMGetIntPref(@"machineFeedExpirationInMinutes")];
     
     NSCalendar *cal = [NSCalendar currentCalendar];
@@ -516,10 +510,10 @@ extern CMEmulatorController *theEmulator;
     {
         [machinesJson enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
          {
-             CMMachine *machine = [[[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
+             CMMachine *machine = [[CMMachine alloc] initWithPath:[obj objectForKey:@"id"]
                                                          machineId:[obj objectForKey:@"id"]
                                                               name:[obj objectForKey:@"name"]
-                                                        systemName:[obj objectForKey:@"system"]] autorelease];
+                                                        systemName:[obj objectForKey:@"system"]];
              
              [machine setStatus:CMMachineDownloadable];
              [machine setChecksum:[obj objectForKey:@"md5"]];
@@ -671,7 +665,7 @@ extern CMEmulatorController *theEmulator;
         
         if (!kc)
         {
-            kc = [[[CMKeyCategory alloc] init] autorelease];
+            kc = [[CMKeyCategory alloc] init];
             [categoryToKeyMap setObject:kc forKey:categoryName];
             
             [kc setCategoryName:categoryName];
@@ -805,7 +799,7 @@ extern CMEmulatorController *theEmulator;
     else if ([tabId isEqual:@"keyboard"])
         newHeight = 500;
     else if ([tabId isEqual:@"joystick"])
-        newHeight = 460;
+        newHeight = 480;
     
     NSRect newContentFrame = NSMakeRect(contentFrame.origin.x,
                                         contentFrame.origin.y,
@@ -1350,7 +1344,7 @@ extern CMEmulatorController *theEmulator;
         if (!tableColumn)
         {
             CMKeyCategory *category = (CMKeyCategory *)item;
-            return [[[CMHeaderRowCell alloc] initWithHeaderText:[category title]] autorelease];
+            return [[CMHeaderRowCell alloc] initWithHeaderText:[category title]];
         }
     }
     

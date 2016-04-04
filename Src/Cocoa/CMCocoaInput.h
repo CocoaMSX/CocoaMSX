@@ -33,28 +33,11 @@ extern NSString * const CMKeyPasteStarted;
 extern NSString * const CMKeyPasteEnded;
 
 @interface CMCocoaInput : NSObject<CMGamepadEventDelegate, CMKeyboardEventDelegate>
-{
-    int virtualCodeMap[256];
-    NSUInteger pollCounter;
-    
-    NSObject *keysToPasteLock;
-    
-    NSMutableArray *keysToPaste;
-    
-    NSInteger _joypadOneId;
-    NSInteger _joypadTwoId;
-    
-    CMMSXKeyCombination *_keyCombinationToAutoPress;
-    NSTimeInterval timeOfAutoPress;
-    BOOL autoKeyPressPasted;
-    
-    NSMutableDictionary *joypadConfigurations;
-}
 
 @property (nonatomic, assign, readonly) NSInteger joypadOneId;
 @property (nonatomic, assign, readonly) NSInteger joypadTwoId;
 
-@property (nonatomic, retain) CMMSXKeyCombination *keyCombinationToAutoPress;
+@property (nonatomic, strong) CMMSXKeyCombination *keyCombinationToAutoPress;
 
 - (void)setEmulatorHasFocus:(BOOL)focus;
 

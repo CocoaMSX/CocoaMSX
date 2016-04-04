@@ -53,10 +53,10 @@
         filename = [[NSString alloc] initWithCString:tapeContent->fileName
                                             encoding:NSASCIIStringEncoding];
         posTime = tapeContent->pos;
-        posTimeReadable = [[NSString stringWithFormat:CMLoc(@"%dh %02dm %02ds", @"Time format (h:mm:ss)"),
+        posTimeReadable = [NSString stringWithFormat:CMLoc(@"%dh %02dm %02ds", @"Time format (h:mm:ss)"),
                     posTime / 3600,
                     (posTime / 60) % 60,
-                    posTime % 60] retain];
+                    posTime % 60];
     }
     
     return self;
@@ -64,16 +64,7 @@
 
 + (id)entryWithContent:(const TapeContent*)tapeContent
 {
-    return [[[CMCassetteEntry alloc] initWithContent:tapeContent] autorelease];
-}
-
-- (void)dealloc
-{
-    [posTimeReadable release];
-    [typeName release];
-    [filename release];
-    
-    [super dealloc];
+    return [[CMCassetteEntry alloc] initWithContent:tapeContent];
 }
 
 @end
@@ -87,9 +78,9 @@
 @end
 
 @implementation CMRepositionCassetteController
-
-@synthesize delegate = _delegate;
-@synthesize isSelectable = _isSelectable;
+{
+	NSMutableArray *casEntries;
+}
 
 #pragma mark - Initialization, Destruction
 
@@ -97,7 +88,7 @@
 {
     if ((self = [super initWithWindowNibName:@"RepositionCassette"]))
     {
-        casEntries = [[NSMutableArray array] retain];
+        casEntries = [NSMutableArray array];
     }
     
     return self;
@@ -109,13 +100,6 @@
     [self loadContents];
     
     [tableView setDoubleAction:@selector(confirm:)];
-}
-
-- (void)dealloc
-{
-    [casEntries dealloc];
-    
-    [super dealloc];
 }
 
 #pragma mark - NSTableViewDataSourceDelegate

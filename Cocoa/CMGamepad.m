@@ -39,13 +39,12 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 @end
 
 @implementation CMGamepad
-
-@synthesize delegate = _delegate;
-@synthesize gamepadId = _gamepadId;
-@synthesize vendorId = _vendorId;
-@synthesize productId = _productId;
-@synthesize locationId = _locationId;
-@synthesize name = _name;
+{
+	BOOL registeredForEvents;
+	IOHIDDeviceRef hidDevice;
+	
+	NSPoint _axes;
+}
 
 + (NSArray *)allGamepads
 {
@@ -76,7 +75,6 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         while ((hidDevice = IOIteratorNext(hidObjectIterator)))
         {
             CMGamepad *gamepad = [[CMGamepad alloc] initWithHidDevice:hidDevice];
-            [gamepad autorelease];
             
             if ([gamepad locationId] == 0)
                 continue;
@@ -104,7 +102,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         
         _vendorId = 0;
         _productId = 0;
-        _axes = NSMakePoint(0, 0);
+        _axes = NSMakePoint(CGFLOAT_MIN, CGFLOAT_MIN);
         
         CFTypeRef tCFTypeRef;
         CFTypeID numericTypeId = CFNumberGetTypeID();
@@ -121,7 +119,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 		if (tCFTypeRef && CFGetTypeID(tCFTypeRef) == numericTypeId)
             CFNumberGetValue((CFNumberRef)tCFTypeRef, kCFNumberSInt32Type, &_locationId);
         
-        _name = [(NSString *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDProductKey)) retain];
+        _name = (__bridge NSString *)IOHIDDeviceGetProperty(hidDevice, CFSTR(kIOHIDProductKey));
     }
     
     return self;
@@ -132,10 +130,6 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     [self unregisterFromEvents];
     
     IOObjectRelease(hidDevice);
-    
-    [_name release];
-    
-    [super dealloc];
 }
 
 - (void)registerForEvents
@@ -143,7 +137,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     if (!registeredForEvents)
     {
         IOHIDDeviceOpen(hidDevice, kIOHIDOptionsTypeNone);
-        IOHIDDeviceRegisterInputValueCallback(hidDevice, gamepadInputValueCallback, self);
+        IOHIDDeviceRegisterInputValueCallback(hidDevice, gamepadInputValueCallback, (__bridge void *)(self));
         
         registeredForEvents = YES;
         
@@ -208,7 +202,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
                 _axes.x = value;
                 if ([_delegate respondsToSelector:@selector(gamepad:xChanged:center:eventData:)])
                 {
-                    CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                    CMGamepadEventData *eventData = [[CMGamepadEventData alloc] init];
                     [eventData setSourceId:IOHIDElementGetCookie(element)];
                     
                     [_delegate gamepad:self
@@ -233,7 +227,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
                 _axes.y = value;
                 if ([_delegate respondsToSelector:@selector(gamepad:yChanged:center:eventData:)])
                 {
-                    CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                    CMGamepadEventData *eventData = [[CMGamepadEventData alloc] init];
                     [eventData setSourceId:IOHIDElementGetCookie(element)];
                     
                     [_delegate gamepad:self
@@ -250,7 +244,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         {
             if ([_delegate respondsToSelector:@selector(gamepad:buttonUp:eventData:)])
             {
-                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                CMGamepadEventData *eventData = [[CMGamepadEventData alloc] init];
                 [eventData setSourceId:IOHIDElementGetCookie(element)];
                 
                 [_delegate gamepad:self
@@ -262,7 +256,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         {
             if ([_delegate respondsToSelector:@selector(gamepad:buttonDown:eventData:)])
             {
-                CMGamepadEventData *eventData = [[[CMGamepadEventData alloc] init] autorelease];
+                CMGamepadEventData *eventData = [[CMGamepadEventData alloc] init];
                 [eventData setSourceId:IOHIDElementGetCookie(element)];
                 
                 [_delegate gamepad:self
@@ -278,7 +272,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     CFArrayRef elements = IOHIDDeviceCopyMatchingElements(hidDevice, NULL, kIOHIDOptionsTypeNone);
     NSArray *elementArray = (__bridge NSArray *) elements;
     
-    NSMutableDictionary *axesAndValues = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary *axesAndValues = [[NSMutableDictionary alloc] init];
     
     [elementArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {

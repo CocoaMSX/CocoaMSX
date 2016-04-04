@@ -24,8 +24,6 @@
 
 @implementation CMMachineSelectionCell
 
-@synthesize downloadingIconVisible = _downloadingIconVisible;
-
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     [super drawInteriorWithFrame:cellFrame inView:controlView];

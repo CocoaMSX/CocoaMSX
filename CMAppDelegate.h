@@ -26,13 +26,13 @@
 
 @interface CMAppDelegate : NSObject <NSApplicationDelegate>
 
-@property (nonatomic, retain) CMEmulatorController *emulator;
+@property (nonatomic, strong) CMEmulatorController *emulator;
 
-@property (nonatomic, retain) IBOutlet NSMenuItem *recentCartridgesA;
-@property (nonatomic, retain) IBOutlet NSMenuItem *recentCartridgesB;
-@property (nonatomic, retain) IBOutlet NSMenuItem *recentDisksA;
-@property (nonatomic, retain) IBOutlet NSMenuItem *recentDisksB;
-@property (nonatomic, retain) IBOutlet NSMenuItem *recentCassettes;
+@property (nonatomic, strong) IBOutlet NSMenuItem *recentCartridgesA;
+@property (nonatomic, strong) IBOutlet NSMenuItem *recentCartridgesB;
+@property (nonatomic, strong) IBOutlet NSMenuItem *recentDisksA;
+@property (nonatomic, strong) IBOutlet NSMenuItem *recentDisksB;
+@property (nonatomic, strong) IBOutlet NSMenuItem *recentCassettes;
 
 // Apple menu
 

@@ -360,7 +360,7 @@ static NSArray *keyCodesToIgnore;
         [[NSColor controlBackgroundColor] set];
         [bgRect fill];
         
-        NSMutableParagraphStyle *mpstyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+        NSMutableParagraphStyle *mpstyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         [mpstyle setAlignment:[self alignment]];
         
         NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:

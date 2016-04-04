@@ -24,6 +24,4 @@
 
 @implementation CMGamepadEventData
 
-@synthesize sourceId = _sourceId;
-
 @end

@@ -49,12 +49,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [configuration release];
-    
-    [super dealloc];
-}
 
 - (void)windowDidLoad
 {
@@ -163,7 +157,7 @@
         CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:selectedJoypadId];
         if (gamepad)
             [_delegate gamepadDidConfigure:gamepad
-                             configuration:[[configuration copy] autorelease]];
+                             configuration:[configuration copy]];
     }
     
     [[self window] close];

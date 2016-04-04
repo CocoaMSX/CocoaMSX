@@ -57,9 +57,13 @@
 @end
 
 @implementation CMAboutController
-
-@synthesize scrollingStartTime = _scrollingStartTime;
-@synthesize actualScrollingText = _actualScrollingText;
+{
+	BOOL isAutoScrolling;
+	NSTimer *scrollingTimer;
+	
+	NSAttributedString *scrollingTextTemplate;
+	NSMutableAttributedString *scrollingTextLeadIn;
+}
 
 #define BLANK_LINE_COUNT 16
 
@@ -71,7 +75,6 @@
 {
     if ((self = [super initWithWindowNibName:@"About"]))
     {
-        // Initialization code here.
     }
     
     return self;
@@ -82,15 +85,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NSViewBoundsDidChangeNotification
                                                   object:[textScrollView contentView]];
-    
-    [self setScrollingStartTime:nil];
-    [self setActualScrollingText:nil];
-    
-    [scrollingTimer release];
-    [scrollingTextTemplate release];
-    [scrollingTextLeadIn release];
-    
-    [super dealloc];
 }
 
 - (void)awakeFromNib
@@ -103,7 +97,7 @@
     
     scrollingTextLeadIn = [[NSMutableAttributedString alloc] init];
     
-    NSAttributedString *newline = [[[NSAttributedString alloc] initWithString:@"\n"] autorelease];
+    NSAttributedString *newline = [[NSAttributedString alloc] initWithString:@"\n"];
     for (NSInteger i = 0; i < BLANK_LINE_COUNT; i++)
         [scrollingTextLeadIn appendAttributedString:newline];
     
@@ -169,24 +163,22 @@
     if (scrollingTimer)
         return;
     
-    scrollingTimer = [[NSTimer scheduledTimerWithTimeInterval:SCROLL_DELAY_SECONDS
+    scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:SCROLL_DELAY_SECONDS
                                                        target:self
                                                      selector:@selector(scrollOneUnit)
                                                      userInfo:nil
-                                                      repeats:YES] retain];
+                                                      repeats:YES];
 }
 
 - (void)stopScrollingAnimation
 {
     [scrollingTimer invalidate];
-    [scrollingTimer release];
-    
     scrollingTimer = nil;
 }
 
 - (void)restartScrolling
 {
-    [self setActualScrollingText:[[scrollingTextTemplate mutableCopy] autorelease]];
+    [self setActualScrollingText:[scrollingTextTemplate mutableCopy]];
     [[self actualScrollingText] appendAttributedString:scrollingTextLeadIn];
     
     [[scrollingTextView textStorage] setAttributedString:[self actualScrollingText]];
@@ -198,7 +190,7 @@
 
 - (void)continueScrolling
 {
-    [self setActualScrollingText:[[scrollingTextLeadIn mutableCopy] autorelease]];
+    [self setActualScrollingText:[scrollingTextLeadIn mutableCopy]];
     [[self actualScrollingText] appendAttributedString:scrollingTextTemplate];
     [[self actualScrollingText] appendAttributedString:scrollingTextLeadIn];
     

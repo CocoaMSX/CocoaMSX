@@ -41,14 +41,11 @@ extern NSString * const CMInstallErrorNotification;
 @class CMMachine;
 
 @interface CMMachineInstallationOperation : NSOperation
-{
-    CMMachine *_machine;
-}
 
 + (CMMachineInstallationOperation *)installationOperationWithMachine:(CMMachine *)machine;
 
 - (id)initWithMachine:(CMMachine *)machine;
 
-@property (nonatomic, retain) CMMachine *machine;
+@property (nonatomic, strong) CMMachine *machine;
 
 @end

@@ -23,15 +23,6 @@
 #import <Foundation/Foundation.h>
 
 @interface CMMixerChannel : NSObject
-{
-    NSString *_name;
-    BOOL _enabled;
-    NSInteger _volume;
-    NSInteger _balance;
-    NSString *_enabledPropertyName;
-    NSString *_volumePropertyName;
-    NSString *_balancePropertyName;
-}
 
 + (CMMixerChannel *)mixerChannelNamed:(NSString *)name
                   enabledPropertyName:(NSString *)enabledPropertyName

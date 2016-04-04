@@ -27,15 +27,10 @@
 #pragma mark - CMJoystickButton
 
 @interface CMJoystickButton : NSObject
-{
-    NSInteger _portOneVirtualCode;
-    NSInteger _portTwoVirtualCode;
-    NSString *_label;
-}
 
 @property (nonatomic, assign) NSInteger portOneVirtualCode;
 @property (nonatomic, assign) NSInteger portTwoVirtualCode;
-@property (nonatomic, retain) NSString *label;
+@property (nonatomic, strong) NSString *label;
 
 - (NSString *)presentationLabel;
 
@@ -43,20 +38,9 @@
 
 @implementation CMJoystickButton
 
-@synthesize portOneVirtualCode = _portOneVirtualCode;
-@synthesize portTwoVirtualCode = _portTwoVirtualCode;
-@synthesize label = _label;
-
 - (NSString *)presentationLabel
 {
     return [self label];
-}
-
-- (void)dealloc
-{
-    [self setLabel:nil];
-    
-    [super dealloc];
 }
 
 @end
@@ -95,18 +79,11 @@ static NSDictionary *layoutToJoystickMap;
     return self;
 }
 
-- (void)dealloc
-{
-    [virtualCodeToButtonInfoMap release];
-    
-    [super dealloc];
-}
-
 - (CMJoystickButton *)mapButtonWithPortOneVirtualCode:(NSInteger)portOneVirtualCode
                                    portTwoVirtualCode:(NSInteger)portTwoVirtualCode
                                                 label:(NSString *)label
 {
-    CMJoystickButton *button = [[[CMJoystickButton alloc] init] autorelease];
+    CMJoystickButton *button = [[CMJoystickButton alloc] init];
     
     [button setPortOneVirtualCode:portOneVirtualCode];
     [button setPortTwoVirtualCode:portTwoVirtualCode];
@@ -152,7 +129,7 @@ static NSDictionary *layoutToJoystickMap;
                            portTwoVirtualCode:EC_JOY2_RIGHT
                                         label:CMLoc(@"Right", @"Joystick button")];
     
-    return [joystick autorelease];
+    return joystick;
 }
 
 @end

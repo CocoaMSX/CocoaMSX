@@ -34,20 +34,13 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [headerText release];
-    
-    [super dealloc];
-}
-
 #pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     if ((self = [super initWithCoder:aDecoder]))
     {
-        headerText = [[aDecoder decodeObjectForKey:@"headerText"] retain];
+        headerText = [aDecoder decodeObjectForKey:@"headerText"];
     }
     
     return self;
@@ -82,8 +75,8 @@
     
     NSColor *gradientStartColor = [[NSColor alternateSelectedControlColor] highlightWithLevel:0.90f];
     NSColor *gradientEndColor = [[NSColor alternateSelectedControlColor] highlightWithLevel:0.6f];
-    NSGradient *gradient = [[[NSGradient alloc] initWithStartingColor:gradientStartColor
-                                                          endingColor:gradientEndColor] autorelease];
+    NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:gradientStartColor
+                                                          endingColor:gradientEndColor];
     
     NSFont *headerFont = [NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]];
     NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:

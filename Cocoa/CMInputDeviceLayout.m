@@ -36,13 +36,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [inputs release];
-    
-    [super dealloc];
-}
-
 #pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)decoder
@@ -70,8 +63,6 @@
     {
         CMInputMethod *copy = [((CMInputMethod *)obj) copy];
         [inputs setObject:copy forKey:key];
-        
-        [copy release];
     }];
 }
 

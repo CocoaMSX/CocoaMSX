@@ -131,9 +131,6 @@
 #define CMCapsLockKeyMask     NSAlphaShiftKeyMask
 
 @interface CMKeyboardInput : CMInputMethod
-{
-    NSInteger _keyCode;
-}
 
 + (CMKeyboardInput *)keyboardInputWithKeyCode:(NSInteger)keyCode;
 

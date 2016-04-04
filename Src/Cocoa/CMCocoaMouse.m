@@ -73,11 +73,6 @@
     return self;
 }
 
-- (void) dealloc
-{
-    [super dealloc];
-}
-
 - (BOOL)isMouseEnabled
 {
     return [self mouseMode] != AM_DISABLE;
