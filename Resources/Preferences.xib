@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CMPreferenceController">
@@ -23,6 +23,8 @@
                 <outlet property="machineScopeBar" destination="PgO-iz-9VP" id="pGR-Jh-oj5"/>
                 <outlet property="machineSearchField" destination="H9z-H5-1n2" id="59G-Dt-rZE"/>
                 <outlet property="machinesArrayController" destination="mqW-Wf-8nz" id="LlH-C4-Lvl"/>
+                <outlet property="peripheralOneTabView" destination="3877" id="5bc-rA-jGU"/>
+                <outlet property="peripheralTwoTabView" destination="3883" id="1Q4-74-ALG"/>
                 <outlet property="saturationSlider" destination="217" id="318"/>
                 <outlet property="scanlineSlider" destination="817" id="884"/>
                 <outlet property="toolbar" destination="34" id="108"/>
@@ -986,12 +988,6 @@
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                                                 <font key="font" metaFont="system"/>
                                                                 <tabViewItems>
-                                                                    <tabViewItem identifier="0" id="3891">
-                                                                        <view key="view" id="3892">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </tabViewItem>
                                                                     <tabViewItem label="Joystick" identifier="1" id="3878">
                                                                         <view key="view" id="3881">
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
@@ -1044,14 +1040,14 @@
                                                                                     </connections>
                                                                                 </matrix>
                                                                                 <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="3762">
-                                                                                    <rect key="frame" x="20" y="35" width="518" height="284"/>
-                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                                    <rect key="frame" x="20" y="149" width="518" height="170"/>
+                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                     <clipView key="contentView" id="uFB-Xo-ynV">
-                                                                                        <rect key="frame" x="1" y="17" width="516" height="266"/>
+                                                                                        <rect key="frame" x="1" y="0.0" width="516" height="169"/>
                                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                         <subviews>
                                                                                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3772" indentationPerLevel="16" outlineTableColumn="3776" id="3774">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="152"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1186,44 +1182,7 @@
                                                                             </subviews>
                                                                         </view>
                                                                     </tabViewItem>
-                                                                    <tabViewItem identifier="3" id="4108">
-                                                                        <view key="view" id="4109">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="4" id="4110">
-                                                                        <view key="view" id="4111">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="6" id="4112">
-                                                                        <view key="view" id="4113">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="7" id="4114">
-                                                                        <view key="view" id="4115">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="8" id="4116">
-                                                                        <view key="view" id="4117">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
                                                                 </tabViewItems>
-                                                                <connections>
-                                                                    <binding destination="804" name="selectedIdentifier" keyPath="values.joystickDevicePort1" id="4095">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">CMAsString</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
                                                             </tabView>
                                                         </subviews>
                                                     </view>
@@ -1280,12 +1239,6 @@
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                                                 <font key="font" metaFont="system"/>
                                                                 <tabViewItems>
-                                                                    <tabViewItem identifier="0" id="3889">
-                                                                        <view key="view" id="3890">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </tabViewItem>
                                                                     <tabViewItem label="Joystick" identifier="1" id="3884">
                                                                         <view key="view" id="3887">
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
@@ -1338,14 +1291,14 @@
                                                                                     </connections>
                                                                                 </matrix>
                                                                                 <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="3796">
-                                                                                    <rect key="frame" x="20" y="35" width="518" height="284"/>
-                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                                    <rect key="frame" x="20" y="149" width="518" height="170"/>
+                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                     <clipView key="contentView" id="vqN-Om-Dq5">
-                                                                                        <rect key="frame" x="1" y="17" width="516" height="266"/>
+                                                                                        <rect key="frame" x="1" y="0.0" width="516" height="169"/>
                                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                         <subviews>
                                                                                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3810" indentationPerLevel="16" outlineTableColumn="3812" id="3808">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="152"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1480,44 +1433,7 @@
                                                                             </subviews>
                                                                         </view>
                                                                     </tabViewItem>
-                                                                    <tabViewItem identifier="3" id="4096">
-                                                                        <view key="view" id="4097">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="4" id="4098">
-                                                                        <view key="view" id="4099">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="6" id="4100">
-                                                                        <view key="view" id="4101">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="7" id="4102">
-                                                                        <view key="view" id="4103">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
-                                                                    <tabViewItem identifier="8" id="4104">
-                                                                        <view key="view" id="4105">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
-                                                                            <autoresizingMask key="autoresizingMask"/>
-                                                                        </view>
-                                                                    </tabViewItem>
                                                                 </tabViewItems>
-                                                                <connections>
-                                                                    <binding destination="804" name="selectedIdentifier" keyPath="values.joystickDevicePort2" id="4093">
-                                                                        <dictionary key="options">
-                                                                            <string key="NSValueTransformerName">CMAsString</string>
-                                                                        </dictionary>
-                                                                    </binding>
-                                                                </connections>
                                                             </tabView>
                                                         </subviews>
                                                     </view>

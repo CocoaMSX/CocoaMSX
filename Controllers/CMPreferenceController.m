@@ -147,8 +147,12 @@ static NSArray *keysInOrderOfAppearance;
 - (void)configureJoypad:(NSInteger)joypadId;
 - (void)resetPredicate;
 - (void)clearPredicate;
+- (void) togglePeripheralTabView:(NSTabView *) tabView
+				  withIdentifier:(NSNumber *) ident;
 
 @end
+
+static NSArray<NSString *> *sharedUserDefaultsToObserve;
 
 @implementation CMPreferenceController
 {
@@ -178,6 +182,13 @@ extern CMEmulatorController *theEmulator;
 
 #pragma mark - Init & Dealloc
 
++ (void) initialize
+{
+	sharedUserDefaultsToObserve = @[ @"machineConfiguration",
+									 @"joystickDevicePort1",
+									 @"joystickDevicePort2" ];
+}
+
 - (instancetype)init
 {
 	if (self = [super initWithWindowNibName:@"Preferences"]) {
@@ -189,7 +200,7 @@ extern CMEmulatorController *theEmulator;
 		_machines = [[NSMutableArray alloc] init];
 		
 		// Set the virtual emulation speed range
-		virtualEmulationSpeedRange = [[NSArray alloc] initWithObjects:@10, @100, @250, @500, @1000, nil];
+		virtualEmulationSpeedRange = @[ @10, @100, @250, @500, @1000 ];
 		
 		// Set up channels
 		_channels = [[NSArray alloc] initWithObjects:
@@ -283,12 +294,13 @@ extern CMEmulatorController *theEmulator;
               options:0
               context:NULL];
     
-    // Observe the active machine
-    [[NSUserDefaults standardUserDefaults] addObserver:self
-                                            forKeyPath:@"machineConfiguration"
-                                               options:0
-                                               context:NULL];
-    
+	[sharedUserDefaultsToObserve enumerateObjectsUsingBlock:^(NSString *keyPath, NSUInteger idx, BOOL * _Nonnull stop) {
+		[[NSUserDefaults standardUserDefaults] addObserver:self
+												forKeyPath:keyPath
+												   options:0
+												   context:NULL];
+	}];
+	
     [machineScopeBar setSelected:YES forItem:@(machineFamilyFilter) inGroup:SCOPEBAR_GROUP_MACHINE_FAMILY];
     [machineScopeBar setSelected:YES forItem:@(machineStatusFilter) inGroup:SCOPEBAR_GROUP_MACHINE_STATUS];
     
@@ -301,15 +313,22 @@ extern CMEmulatorController *theEmulator;
     [keyboardLayoutEditor expandItem:nil expandChildren:YES];
     [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
     [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
+	
+	[self togglePeripheralTabView:peripheralOneTabView
+				   withIdentifier:CMGetObjPref(@"joystickDevicePort1")];
+	[self togglePeripheralTabView:peripheralTwoTabView
+				   withIdentifier:CMGetObjPref(@"joystickDevicePort2")];
 }
 
 - (void)dealloc
 {
     [self removeObserver:self
               forKeyPath:@"machineNameFilter"];
-    [[NSUserDefaults standardUserDefaults] removeObserver:self
-                                               forKeyPath:@"machineConfiguration"];
-    
+	[sharedUserDefaultsToObserve enumerateObjectsUsingBlock:^(NSString *keyPath, NSUInteger idx, BOOL * _Nonnull stop) {
+		[[NSUserDefaults standardUserDefaults] removeObserver:self
+												   forKeyPath:keyPath];
+	}];
+	
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:CMInstallStartedNotification
                                                   object:nil];
@@ -322,6 +341,18 @@ extern CMEmulatorController *theEmulator;
 }
 
 #pragma mark - Private Methods
+
+- (void) togglePeripheralTabView:(NSTabView *) tabView
+				  withIdentifier:(NSNumber *) ident
+{
+	NSInteger index = [tabView indexOfTabViewItemWithIdentifier:[ident stringValue]];
+	if (index == NSNotFound) {
+		[tabView setHidden:YES];
+	} else {
+		[tabView setHidden:NO];
+		[tabView selectTabViewItemAtIndex:index];
+	}
+}
 
 - (void)updateCurrentConfigurationInformation
 {
@@ -1062,10 +1093,9 @@ extern CMEmulatorController *theEmulator;
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-    if ([keyPath isEqualToString:@"machineNameFilter"])
+	if ([keyPath isEqualToString:@"machineNameFilter"]) {
         [self resetPredicate];
-    else if ([keyPath isEqualToString:@"machineConfiguration"])
-    {
+	} else if ([keyPath isEqualToString:@"machineConfiguration"]) {
         // Active machine has changed. Go through the list of machines and
         // deactivate all except the one active
         
@@ -1082,6 +1112,12 @@ extern CMEmulatorController *theEmulator;
                     [obj setActive:YES];
             }
         }];
+	} else if ([keyPath isEqualToString:@"joystickDevicePort1"]) {
+		[self togglePeripheralTabView:peripheralOneTabView
+					   withIdentifier:CMGetObjPref(keyPath)];
+	} else if ([keyPath isEqualToString:@"joystickDevicePort2"]) {
+		[self togglePeripheralTabView:peripheralTwoTabView
+					   withIdentifier:CMGetObjPref(keyPath)];
     }
 }
 

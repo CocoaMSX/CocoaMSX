@@ -42,8 +42,10 @@
     IBOutlet MGScopeBar *keyboardScopeBar;
     IBOutlet MGScopeBar *machineScopeBar;
     
-    IBOutlet NSTabView *contentTabView;
-    
+	IBOutlet NSTabView *contentTabView;
+	IBOutlet NSTabView *peripheralOneTabView;
+	IBOutlet NSTabView *peripheralTwoTabView;
+	
     IBOutlet NSOutlineView *keyboardLayoutEditor;
     IBOutlet NSOutlineView *joystickOneLayoutEditor;
     IBOutlet NSOutlineView *joystickTwoLayoutEditor;
