@@ -1093,6 +1093,50 @@ extern CMEmulatorController *theEmulator;
     [toolbar setSelectedItemIdentifier:CMGetObjPref(@"selectedPreferencesTab")];
 }
 
+- (void) keyDown:(NSEvent *) theEvent
+{
+	NSString *chars = [theEvent charactersIgnoringModifiers];
+	if (([theEvent modifierFlags] & NSCommandKeyMask) && [chars isEqualToString:@"{"]) {
+		NSArray<NSToolbarItem *> *items = [toolbar visibleItems];
+		__block int selected = -1;
+		[items enumerateObjectsUsingBlock:^(NSToolbarItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
+			if ([[item itemIdentifier] isEqualToString:[toolbar selectedItemIdentifier]]) {
+				selected = idx;
+				*stop = YES;
+			}
+		}];
+		
+		if (selected >= 0) {
+			if (--selected < 0) {
+				selected = [items count] - 1;
+			}
+			
+			NSString *nextId = [[items objectAtIndex:selected] itemIdentifier];
+			[toolbar setSelectedItemIdentifier:nextId];
+			CMSetObjPref(@"selectedPreferencesTab", nextId);
+		}
+	} else if (([theEvent modifierFlags] & NSCommandKeyMask) && [chars isEqualToString:@"}"]) {
+		NSArray<NSToolbarItem *> *items = [toolbar visibleItems];
+		__block int selected = -1;
+		[items enumerateObjectsUsingBlock:^(NSToolbarItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
+			if ([[item itemIdentifier] isEqualToString:[toolbar selectedItemIdentifier]]) {
+				selected = idx;
+				*stop = YES;
+			}
+		}];
+		
+		if (selected >= 0) {
+			if (++selected >= [items count]) {
+				selected = 0;
+			}
+			
+			NSString *nextId = [[items objectAtIndex:selected] itemIdentifier];
+			[toolbar setSelectedItemIdentifier:nextId];
+			CMSetObjPref(@"selectedPreferencesTab", nextId);
+		}
+	}
+}
+
 #pragma mark - NSWindowDelegate
 
 - (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject
