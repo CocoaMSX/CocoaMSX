@@ -53,7 +53,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     NSUInteger usageId = kHIDUsage_GD_GamePad;
     
     CFMutableDictionaryRef hidMatchDictionary = IOServiceMatching(kIOHIDDeviceKey);
-    NSMutableDictionary *objcMatchDictionary = (NSMutableDictionary *)hidMatchDictionary;
+    NSMutableDictionary *objcMatchDictionary = (__bridge NSMutableDictionary *) hidMatchDictionary;
     
     [objcMatchDictionary setObject:@(usagePage)
                             forKey:[NSString stringWithUTF8String:kIOHIDDeviceUsagePageKey]];
@@ -276,13 +276,13 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 - (NSMutableDictionary *)currentAxisValues
 {
     CFArrayRef elements = IOHIDDeviceCopyMatchingElements(hidDevice, NULL, kIOHIDOptionsTypeNone);
-    NSArray *elementArray = (NSArray *)elements;
+    NSArray *elementArray = (__bridge NSArray *) elements;
     
     NSMutableDictionary *axesAndValues = [[[NSMutableDictionary alloc] init] autorelease];
     
     [elementArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
-         IOHIDElementRef element = (IOHIDElementRef)obj;
+         IOHIDElementRef element = (__bridge IOHIDElementRef) obj;
          
          NSInteger usagePage = IOHIDElementGetUsagePage(element);
          if (usagePage == kHIDPage_GenericDesktop)
@@ -319,6 +319,6 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 {
     @autoreleasepool
     {
-        [(CMGamepad *)context didReceiveInputValue:value];
+        [(__bridge CMGamepad *) context didReceiveInputValue:value];
     }
 }

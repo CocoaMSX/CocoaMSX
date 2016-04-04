@@ -279,7 +279,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender,
     
     if (scanCode >= 4 && scanCode <= 231)
     {
-        CMKeyboardManager *mgr = (CMKeyboardManager *)context;
+        CMKeyboardManager *mgr = (__bridge CMKeyboardManager *)context;
         
         @autoreleasepool
         {

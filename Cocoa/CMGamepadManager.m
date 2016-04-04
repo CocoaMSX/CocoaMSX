@@ -202,7 +202,7 @@ void gamepadWasAdded(void* inContext, IOReturn inResult, void* inSender, IOHIDDe
 {
     @autoreleasepool
     {
-        [((CMGamepadManager *) inContext) deviceDidConnect:device];
+        [((__bridge CMGamepadManager *) inContext) deviceDidConnect:device];
     }
 }
 
@@ -210,6 +210,6 @@ void gamepadWasRemoved(void* inContext, IOReturn inResult, void* inSender, IOHID
 {
     @autoreleasepool
     {
-        [((CMGamepadManager *) inContext) deviceDidDisconnect:device];
+        [((__bridge CMGamepadManager *) inContext) deviceDidDisconnect:device];
     }
 }

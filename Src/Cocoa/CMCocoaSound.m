@@ -362,7 +362,7 @@ static OSStatus audioCallback(void *inRefCon,
 {
     @autoreleasepool
     {
-        CMCocoaSound *sound = (CMCocoaSound*)inRefCon;
+        CMCocoaSound *sound = (__bridge CMCocoaSound *) inRefCon;
         [sound renderSoundToStream:ioData];
     }
     
@@ -373,7 +373,7 @@ static Int32 mixSound(void *dummy, Int16 *buffer, UInt32 count)
 {
     @autoreleasepool
     {
-        CMCocoaSound *sound = (CMCocoaSound*)dummy;
+        CMCocoaSound *sound = (__bridge CMCocoaSound *) dummy;
         [sound mixSoundFromBuffer:buffer bytes:count];
     }
     

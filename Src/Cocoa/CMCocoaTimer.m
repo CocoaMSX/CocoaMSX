@@ -86,12 +86,12 @@ void* archCreateTimer(int period, int (*timerCallback)(void*))
                                      forMode:NSRunLoopCommonModes];
     }
     
-    return timer;
+    return (__bridge void *)(timer);
 }
 
 void archTimerDestroy(void* timer) 
 {
-    NSTimer *nsTimer = (NSTimer*)timer;
+    NSTimer *nsTimer = (__bridge NSTimer *) timer;
     [nsTimer invalidate];
     
     [nsTimer release];
