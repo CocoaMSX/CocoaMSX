@@ -24,68 +24,77 @@
 
 @implementation CMGamepadConfiguration
 
-@synthesize vendorProductId = _vendorProductId;
-
 - (id)init
 {
     if ((self = [super init])) {
+		[self clear];
     }
     
     return self;
 }
 
-#pragma mark - Etc
+#pragma mark - Public
 
 - (void) clear
 {
-    [self setButtonAIndex:0];
-    [self setButtonBIndex:1];
-    
-    [self setVendorProductId:0];
-}
-
-- (void)dump
-{
-#ifdef DEBUG
-    NSLog(@"Buttons: A (%ld) B (%ld)",
-          (long)[self buttonAIndex], (long)[self buttonBIndex]);
-#endif
+	_up = CMMakeAnalog(CM_DIR_UP);
+	_down = CMMakeAnalog(CM_DIR_DOWN);
+	_left = CMMakeAnalog(CM_DIR_LEFT);
+	_right = CMMakeAnalog(CM_DIR_RIGHT);
+	_buttonA = CMMakeButton(1);
+	_buttonB = CMMakeButton(2);
 }
 
 #pragma mark - NSCoding
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (id) initWithCoder:(NSCoder *) decoder
 {
     if ((self = [self init]))
     {
-        [self setVendorProductId:[decoder decodeIntegerForKey:@"vendorProductId"]];
-        
-        [self setButtonAIndex:[decoder decodeIntegerForKey:@"buttonAIndex"]];
-        [self setButtonBIndex:[decoder decodeIntegerForKey:@"buttonBIndex"]];
+		_vendorProductId = [decoder decodeIntegerForKey:@"vendorProductId"];
+		_up = [decoder decodeIntegerForKey:@"up"];
+		_down = [decoder decodeIntegerForKey:@"down"];
+		_left = [decoder decodeIntegerForKey:@"left"];
+		_right = [decoder decodeIntegerForKey:@"right"];
+		_buttonA = [decoder decodeIntegerForKey:@"buttonA"];
+		_buttonB = [decoder decodeIntegerForKey:@"buttonB"];
     }
     
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)encoder
+- (void) encodeWithCoder:(NSCoder *) encoder
 {
-    [encoder encodeInteger:[self vendorProductId] forKey:@"vendorProductId"];
-    
-    [encoder encodeInteger:[self buttonAIndex] forKey:@"buttonAIndex"];
-    [encoder encodeInteger:[self buttonBIndex] forKey:@"buttonBIndex"];
+    [encoder encodeInteger:_vendorProductId
+					forKey:@"vendorProductId"];
+	[encoder encodeInteger:_up
+					forKey:@"up"];
+	[encoder encodeInteger:_down
+					forKey:@"down"];
+	[encoder encodeInteger:_left
+					forKey:@"left"];
+	[encoder encodeInteger:_right
+					forKey:@"right"];
+	[encoder encodeInteger:_buttonA
+					forKey:@"buttonA"];
+	[encoder encodeInteger:_buttonB
+					forKey:@"buttonB"];
 }
 
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone
+- (id) copyWithZone:(NSZone *) zone
 {
     CMGamepadConfiguration *copy = [[[self class] allocWithZone:zone] init];
     
-    [copy setVendorProductId:[self vendorProductId]];
-    
-    [copy setButtonAIndex:[self buttonAIndex]];
-    [copy setButtonBIndex:[self buttonBIndex]];
-    
+	copy->_vendorProductId = _vendorProductId;
+	copy->_up = _up;
+	copy->_down = _down;
+	copy->_left = _left;
+	copy->_right = _right;
+	copy->_buttonA = _buttonA;
+	copy->_buttonB = _buttonB;
+
     return copy;
 }
 

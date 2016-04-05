@@ -22,31 +22,11 @@
  */
 #import <Cocoa/Cocoa.h>
 
-#import "CMGamepadManager.h"
+@interface CMJoyCaptureView : NSTextView
 
-@class CMGamepadConfiguration;
++ (NSString *) descriptionForCode:(NSInteger) keyCode;
++ (NSNumber *) codeForDescription:(NSString *) description;
 
-@protocol CMGamepadConfigurationDelegate
-
-@required
-- (void) gamepadDidConfigure:(CMGamepad *) gamepad
-			   configuration:(CMGamepadConfiguration *) configuration;
-
-@end
-
-@interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, NSTableViewDataSource, CMGamepadEventDelegate>
-{
-    IBOutlet NSButton *saveButton;
-	IBOutlet NSTableView *tableView;
-}
-
-@property (nonatomic, weak) id delegate;
-
-- (void) configureGamepadId:(NSInteger) gamepadId
-	  existingConfiguration:(CMGamepadConfiguration *) existing;
-
-- (IBAction) resetToDefault:(id) sender;
-- (IBAction) cancelChanges:(id) sender;
-- (IBAction) saveChanges:(id) sender;
+- (BOOL) captureCode:(NSInteger) code;
 
 @end

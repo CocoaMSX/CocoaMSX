@@ -203,31 +203,30 @@ extern CMEmulatorController *theEmulator;
 		virtualEmulationSpeedRange = @[ @10, @100, @250, @500, @1000 ];
 		
 		// Set up channels
-		_channels = [[NSArray alloc] initWithObjects:
-					 [CMMixerChannel mixerChannelNamed:CMLoc(@"PSG", "Audio Channel")
-								   enabledPropertyName:@"audioEnablePsg"
-									volumePropertyName:@"audioVolumePsg"
-								   balancePropertyName:@"audioBalancePsg"],
-					 [CMMixerChannel mixerChannelNamed:CMLoc(@"SCC", "Audio Channel")
-								   enabledPropertyName:@"audioEnableScc"
-									volumePropertyName:@"audioVolumeScc"
-								   balancePropertyName:@"audioBalanceScc"],
-					 [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Music", "Audio Channel")
-								   enabledPropertyName:@"audioEnableMsxMusic"
-									volumePropertyName:@"audioVolumeMsxMusic"
-								   balancePropertyName:@"audioBalanceMsxMusic"],
-					 [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Audio", "Audio Channel")
-								   enabledPropertyName:@"audioEnableMsxAudio"
-									volumePropertyName:@"audioVolumeMsxAudio"
-								   balancePropertyName:@"audioBalanceMsxAudio"],
-					 [CMMixerChannel mixerChannelNamed:CMLoc(@"Moonsound", "Audio Channel")
-								   enabledPropertyName:@"audioEnableMoonSound"
-									volumePropertyName:@"audioVolumeMoonSound"
-								   balancePropertyName:@"audioBalanceMoonSound"],
-					 [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard", "Audio Channel")
-								   enabledPropertyName:@"audioEnableKeyboard"
-									volumePropertyName:@"audioVolumeKeyboard"
-								   balancePropertyName:@"audioBalanceKeyboard"], nil];
+		_channels = @[ [CMMixerChannel mixerChannelNamed:CMLoc(@"PSG", "Audio Channel")
+									 enabledPropertyName:@"audioEnablePsg"
+									  volumePropertyName:@"audioVolumePsg"
+									 balancePropertyName:@"audioBalancePsg"],
+					   [CMMixerChannel mixerChannelNamed:CMLoc(@"SCC", "Audio Channel")
+									 enabledPropertyName:@"audioEnableScc"
+									  volumePropertyName:@"audioVolumeScc"
+									 balancePropertyName:@"audioBalanceScc"],
+					   [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Music", "Audio Channel")
+									 enabledPropertyName:@"audioEnableMsxMusic"
+									  volumePropertyName:@"audioVolumeMsxMusic"
+									 balancePropertyName:@"audioBalanceMsxMusic"],
+					   [CMMixerChannel mixerChannelNamed:CMLoc(@"MSX Audio", "Audio Channel")
+									 enabledPropertyName:@"audioEnableMsxAudio"
+									  volumePropertyName:@"audioVolumeMsxAudio"
+									 balancePropertyName:@"audioBalanceMsxAudio"],
+					   [CMMixerChannel mixerChannelNamed:CMLoc(@"Moonsound", "Audio Channel")
+									 enabledPropertyName:@"audioEnableMoonSound"
+									  volumePropertyName:@"audioVolumeMoonSound"
+									 balancePropertyName:@"audioBalanceMoonSound"],
+					   [CMMixerChannel mixerChannelNamed:CMLoc(@"Keyboard", "Audio Channel")
+									 enabledPropertyName:@"audioEnableKeyboard"
+									  volumePropertyName:@"audioVolumeKeyboard"
+									 balancePropertyName:@"audioBalanceKeyboard"] ];
 		
 		downloadQueue = [[NSOperationQueue alloc] init];
 		[downloadQueue setMaxConcurrentOperationCount:1];
@@ -241,14 +240,13 @@ extern CMEmulatorController *theEmulator;
     keyCaptureView = nil;
 	
     // Initialize sliders
-    NSArray *sliders = [NSArray arrayWithObjects:
-                        brightnessSlider,
-                        contrastSlider,
-                        saturationSlider,
-                        gammaSlider,
-                        scanlineSlider,
-                        balanceSlider,
-                        volumeSlider, nil];
+    NSArray *sliders = @[ brightnessSlider,
+						  contrastSlider,
+						  saturationSlider,
+						  gammaSlider,
+						  scanlineSlider,
+						  balanceSlider,
+						  volumeSlider ];
     
     [sliders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
     {
@@ -324,6 +322,7 @@ extern CMEmulatorController *theEmulator;
 {
     [self removeObserver:self
               forKeyPath:@"machineNameFilter"];
+	
 	[sharedUserDefaultsToObserve enumerateObjectsUsingBlock:^(NSString *keyPath, NSUInteger idx, BOOL * _Nonnull stop) {
 		[[NSUserDefaults standardUserDefaults] removeObserver:self
 												   forKeyPath:keyPath];
@@ -887,18 +886,29 @@ extern CMEmulatorController *theEmulator;
     [self configureJoypad:[[theEmulator input] joypadTwoId]];
 }
 
-- (void)configureJoypad:(NSInteger)joypadId
+- (void) configureJoypad:(NSInteger) joypadId
 {
-    if (!joystickConfigurator)
-    {
-        joystickConfigurator = [[CMConfigureJoystickController alloc] init];
-        [joystickConfigurator setDelegate:self];
-    }
-    
     if (joypadId != 0)
     {
+		if (!joystickConfigurator)
+		{
+			joystickConfigurator = [[CMConfigureJoystickController alloc] init];
+			[joystickConfigurator setDelegate:self];
+		}
+		
+		NSDictionary *configurations = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"joypadConfigurations"];
+		CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:joypadId];
+		
+		NSData *confData = [configurations objectForKey:[gamepad vendorProductString]];
+		CMGamepadConfiguration *conf = nil;
+		
+		if (confData) {
+			conf = [NSKeyedUnarchiver unarchiveObjectWithData:confData];
+		}
+		
         [joystickConfigurator showWindow:self];
-        [joystickConfigurator restartConfiguration:joypadId];
+        [joystickConfigurator configureGamepadId:joypadId
+						   existingConfiguration:conf];
     }
     else
     {
@@ -1625,14 +1635,16 @@ extern CMEmulatorController *theEmulator;
 
 #pragma mark - CMGamepadConfigurationDelegate
 
-- (void)gamepadDidConfigure:(CMGamepad *)gamepad configuration:(CMGamepadConfiguration *)configuration
+- (void) gamepadDidConfigure:(CMGamepad *) gamepad
+			   configuration:(CMGamepadConfiguration *) configuration
 {
     NSDictionary *currentConfigurations = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"joypadConfigurations"];
     NSMutableDictionary *newConfigurations = [NSMutableDictionary dictionary];
     
-    if (currentConfigurations)
+	if (currentConfigurations) {
         [newConfigurations addEntriesFromDictionary:currentConfigurations];
-    
+	}
+	
     [newConfigurations setObject:[NSKeyedArchiver archivedDataWithRootObject:configuration]
                           forKey:[gamepad vendorProductString]];
     

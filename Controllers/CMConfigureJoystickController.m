@@ -23,144 +23,228 @@
 #import "CMConfigureJoystickController.h"
 
 #import "CMGamepadConfiguration.h"
+#import "CMJoyCaptureView.h"
 
-#define STATE_PRESS_BUTTON_A 0
-#define STATE_PRESS_BUTTON_B 1
-#define STATE_DONE           2
-
-#define STATE_INVALID        -1
-
-@interface CMConfigureJoystickController ()
-
-- (void)updateStateVisuals;
-- (void)proceedToNextState;
-
-@end
+static NSArray<NSString *> *_labels;
 
 @implementation CMConfigureJoystickController
+{
+	NSInteger _gamepadId;
+	
+	CMGamepadConfiguration *_configuration;
+	CMJoyCaptureView *_captureView;
+}
 
-- (id)init
++ (void) initialize
+{
+	_labels = @[ NSLocalizedString(@"Up", @"Joystick direction"),
+				 NSLocalizedString(@"Down", @"Joystick direction"),
+				 NSLocalizedString(@"Left", @"Joystick direction"),
+				 NSLocalizedString(@"Right", @"Joystick direction"),
+				 NSLocalizedString(@"Button 1", @"Joystick button"),
+				 NSLocalizedString(@"Button 2", @"Joystick button") ];
+}
+
+- (instancetype) init
 {
     if ((self = [super initWithWindowNibName:@"ConfigureJoystick"]))
     {
-        configuration = [[CMGamepadConfiguration alloc] init];
     }
     
     return self;
 }
 
+#pragma mark - NSWindowDelegate
 
-- (void)windowDidLoad
+- (void) windowDidLoad
 {
-    [super windowDidLoad];
-    
-    [self updateStateVisuals];
 }
 
-- (void)windowDidBecomeKey:(NSNotification *)notification
+- (void) windowDidBecomeKey:(NSNotification *) notification
 {
     NSLog(@"CMConfigureJoystick: Starting gamepad observation ...");
     [[CMGamepadManager sharedInstance] addObserver:self];
 }
 
-- (void)windowDidResignKey:(NSNotification *)notification
+- (void) windowDidResignKey:(NSNotification *) notification
 {
     NSLog(@"CMConfigureJoystick: Stopping gamepad observation ...");
     [[CMGamepadManager sharedInstance] removeObserver:self];
 }
 
+- (id) windowWillReturnFieldEditor:(NSWindow *) sender
+						  toObject:(id) anObject
+{
+	if (!_captureView) {
+		_captureView = [[CMJoyCaptureView alloc] init];
+	}
+	
+	return _captureView;
+}
+
+#pragma mark - NSTableViewDataSource
+
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) tableView
+{
+	return [_labels count];
+}
+
+- (id) tableView:(NSTableView *) tableView
+objectValueForTableColumn:(NSTableColumn *) tableColumn
+			 row:(NSInteger) row
+{
+	if ([[tableColumn identifier] isEqualToString:@"virtual"]) {
+		return [_labels objectAtIndex:row];
+	} else if ([[tableColumn identifier] isEqualToString:@"physical"]) {
+		switch (row) {
+			case 0:
+				return [CMJoyCaptureView descriptionForCode:[_configuration up]];
+			case 1:
+				return [CMJoyCaptureView descriptionForCode:[_configuration down]];
+			case 2:
+				return [CMJoyCaptureView descriptionForCode:[_configuration left]];
+			case 3:
+				return [CMJoyCaptureView descriptionForCode:[_configuration right]];
+			case 4:
+				return [CMJoyCaptureView descriptionForCode:[_configuration buttonA]];
+			case 5:
+				return [CMJoyCaptureView descriptionForCode:[_configuration buttonB]];
+		}
+	}
+	
+	return nil;
+}
+
+- (void) tableView:(NSTableView *) tableView
+	setObjectValue:(id) object
+	forTableColumn:(NSTableColumn *) tableColumn
+			   row:(NSInteger) row
+{
+	if ([[tableColumn identifier] isEqualToString:@"physical"]) {
+		NSNumber *code = [CMJoyCaptureView codeForDescription:(NSString *) object];
+		switch (row) {
+			case 0:
+				[_configuration setUp:[code integerValue]];
+				break;
+			case 1:
+				[_configuration setDown:[code integerValue]];
+				break;
+			case 2:
+				[_configuration setLeft:[code integerValue]];
+				break;
+			case 3:
+				[_configuration setRight:[code integerValue]];
+				break;
+			case 4:
+				[_configuration setButtonA:[code integerValue]];
+				break;
+			case 5:
+				[_configuration setButtonB:[code integerValue]];
+				break;
+		}
+	}
+}
+
 #pragma mark - CMGamepadDelegate
 
-- (void)gamepadDidDisconnect:(CMGamepad *)gamepad
+- (void)gamepadDidDisconnect:(CMGamepad *) gamepad
 {
-    if ([gamepad gamepadId] == selectedJoypadId)
+    if ([gamepad gamepadId] == _gamepadId)
     {
-        currentState = STATE_INVALID;
-        [self updateStateVisuals];
     }
 }
 
-- (void)gamepad:(CMGamepad *)gamepad
-     buttonDown:(NSInteger)index
-      eventData:(CMGamepadEventData *)eventData
+- (void) gamepad:(CMGamepad *) gamepad
+		xChanged:(NSInteger) newValue
+		  center:(NSInteger) center
+	   eventData:(CMGamepadEventData *) eventData
 {
-    if ([gamepad gamepadId] == selectedJoypadId)
+	if ([gamepad gamepadId] == _gamepadId) {
+		if ([[self window] firstResponder] == _captureView) {
+			if (newValue < center) {
+				[_captureView captureCode:CMMakeAnalog(CM_DIR_LEFT)];
+			} else if (newValue > center) {
+				[_captureView captureCode:CMMakeAnalog(CM_DIR_RIGHT)];
+			}
+		}
+	}
+}
+
+- (void) gamepad:(CMGamepad *) gamepad
+		yChanged:(NSInteger) newValue
+		  center:(NSInteger) center
+	   eventData:(CMGamepadEventData *) eventData
+{
+	if ([gamepad gamepadId] == _gamepadId) {
+		if ([[self window] firstResponder] == _captureView) {
+			if (newValue < center) {
+				[_captureView captureCode:CMMakeAnalog(CM_DIR_UP)];
+			} else if (newValue > center) {
+				[_captureView captureCode:CMMakeAnalog(CM_DIR_DOWN)];
+			}
+		}
+	}
+}
+
+- (void)gamepad:(CMGamepad *) gamepad
+     buttonDown:(NSInteger) index
+      eventData:(CMGamepadEventData *) eventData
+{
+    if ([gamepad gamepadId] == _gamepadId)
     {
-        if (currentState == STATE_PRESS_BUTTON_A)
-        {
-            [configuration setButtonAIndex:index];
-            [self proceedToNextState];
-        }
-        else if (currentState == STATE_PRESS_BUTTON_B)
-        {
-            [configuration setButtonBIndex:index];
-            [self proceedToNextState];
-        }
+		if ([[self window] firstResponder] == _captureView) {
+			[_captureView captureCode:CMMakeButton(index)];
+		}
     }
 }
 
-#pragma mark - Private methods
+#pragma mark - Public
 
-- (void) restartConfiguration:(NSInteger) joypadId
+- (void) configureGamepadId:(NSInteger) gamepadId
+	  existingConfiguration:(CMGamepadConfiguration *) existing
 {
-    currentState = 0;
-    selectedJoypadId = joypadId;
-    
-    [configuration clear];
-    
-    [self updateStateVisuals];
-    
-    CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:selectedJoypadId];
-    [configuration setVendorProductId:[gamepad vendorProductId]];
-    
-    [[self window] setTitle:[gamepad name]];
-}
-
-- (void)proceedToNextState
-{
-    currentState++;
-    [self updateStateVisuals];
-}
-
-- (void)updateStateVisuals
-{
-    switch(currentState)
-    {
-        case STATE_PRESS_BUTTON_A:
-            [directionField setStringValue:CMLoc(@"Press Button A", @"")];
-            break;
-        case STATE_PRESS_BUTTON_B:
-            [directionField setStringValue:CMLoc(@"Press Button B", @"")];
-            break;
-        case STATE_INVALID:
-            [directionField setStringValue:CMLoc(@"Configuration canceled.", @"")];
-            break;
-        case STATE_DONE:
-            [directionField setStringValue:CMLoc(@"Configuration complete.", @"")];
-            break;
-    }
-    
-    [saveButton setEnabled:(currentState == STATE_DONE)];
+	_gamepadId = gamepadId;
+	
+	if (existing) {
+		_configuration = [existing copy];
+	} else {
+		_configuration = [[CMGamepadConfiguration alloc] init];
+	}
+	
+	CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:_gamepadId];
+	[_configuration setVendorProductId:[gamepad vendorProductId]];
+	
+	NSString *title = [gamepad name];
+	if (!title) {
+		title = NSLocalizedString(@"Generic Controller", @"Default joystick name");
+	}
+	
+	[[self window] setTitle:title];
+	[tableView reloadData];
 }
 
 #pragma mark - Actions
 
-- (void)onCancelClicked:(id)sender
+- (void) cancelChanges:(id) sender
 {
     [[self window] close];
 }
 
-- (void)onSaveClicked:(id)sender
+- (void) saveChanges:(id) sender
 {
-    if (_delegate)
-    {
-        CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:selectedJoypadId];
-        if (gamepad)
-            [_delegate gamepadDidConfigure:gamepad
-                             configuration:[configuration copy]];
-    }
-    
+	CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:_gamepadId];
+	if (gamepad) {
+		[_delegate gamepadDidConfigure:gamepad
+						 configuration:_configuration];
+	}
+	
     [[self window] close];
+}
+
+- (void) resetToDefault:(id) sender
+{
+	[_configuration clear];
+	[tableView reloadData];
 }
 
 @end

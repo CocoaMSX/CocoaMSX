@@ -1043,11 +1043,11 @@
                                                                                     <rect key="frame" x="20" y="149" width="518" height="170"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                     <clipView key="contentView" id="uFB-Xo-ynV">
-                                                                                        <rect key="frame" x="1" y="0.0" width="516" height="169"/>
+                                                                                        <rect key="frame" x="1.5" y="-0.5" width="516" height="154"/>
                                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                         <subviews>
                                                                                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3772" indentationPerLevel="16" outlineTableColumn="3776" id="3774">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="152"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="517" height="152"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1089,16 +1089,16 @@
                                                                                         </subviews>
                                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                     </clipView>
-                                                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="3773">
-                                                                                        <rect key="frame" x="1" y="248" width="309" height="16"/>
+                                                                                    <scroller key="horizontalScroller" verticalHuggingPriority="750" doubleValue="0.5" horizontal="YES" id="3773">
+                                                                                        <rect key="frame" x="1" y="154" width="516" height="15"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3771">
+                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.033333333333333333" horizontal="NO" id="3771">
                                                                                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
                                                                                     <tableHeaderView key="headerView" id="3772">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="516" height="17"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="517" height="17"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </tableHeaderView>
                                                                                 </scrollView>
@@ -1298,7 +1298,7 @@
                                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                         <subviews>
                                                                                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3810" indentationPerLevel="16" outlineTableColumn="3812" id="3808">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="152"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
