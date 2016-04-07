@@ -50,5 +50,6 @@
 @property (nonatomic, assign) NSInteger buttonB;
 
 - (void) clear;
++ (CMGamepadConfiguration *) defaultConfiguration;
 
 @end

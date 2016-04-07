@@ -102,6 +102,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         
         _vendorId = 0;
         _productId = 0;
+		_gamepadId = (NSInteger) device;
         _axes = NSMakePoint(CGFLOAT_MIN, CGFLOAT_MIN);
         
         CFTypeRef tCFTypeRef;

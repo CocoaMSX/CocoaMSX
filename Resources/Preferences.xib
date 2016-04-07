@@ -1047,7 +1047,7 @@
                                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                         <subviews>
                                                                                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3772" indentationPerLevel="16" outlineTableColumn="3776" id="3774">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="517" height="152"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1089,11 +1089,11 @@
                                                                                         </subviews>
                                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                     </clipView>
-                                                                                    <scroller key="horizontalScroller" verticalHuggingPriority="750" doubleValue="0.5" horizontal="YES" id="3773">
+                                                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.5" horizontal="YES" id="3773">
                                                                                         <rect key="frame" x="1" y="154" width="516" height="15"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.033333333333333333" horizontal="NO" id="3771">
+                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3771">
                                                                                         <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                                     </scroller>
@@ -1520,7 +1520,7 @@
             </connections>
         </arrayController>
         <userDefaultsController representsSharedInstance="YES" id="804"/>
-        <searchField verticalHuggingPriority="750" id="H9z-H5-1n2">
+        <searchField wantsLayer="YES" verticalHuggingPriority="750" id="H9z-H5-1n2">
             <rect key="frame" x="0.0" y="0.0" width="133" height="22"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="IXk-xw-obU">

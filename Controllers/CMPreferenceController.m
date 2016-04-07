@@ -878,12 +878,18 @@ extern CMEmulatorController *theEmulator;
 
 - (void)configureJoypadOne:(id)sender
 {
-    [self configureJoypad:[[theEmulator input] joypadOneId]];
+	CMGamepad *gp = [[CMGamepadManager sharedInstance] gamepadAtIndex:0];
+	if (gp) {
+		[self configureJoypad:[gp gamepadId]];
+	}
 }
 
 - (void)configureJoypadTwo:(id)sender
 {
-    [self configureJoypad:[[theEmulator input] joypadTwoId]];
+	CMGamepad *gp = [[CMGamepadManager sharedInstance] gamepadAtIndex:1];
+	if (gp) {
+		[self configureJoypad:[gp gamepadId]];
+	}
 }
 
 - (void) configureJoypad:(NSInteger) joypadId

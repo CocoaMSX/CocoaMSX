@@ -27,6 +27,7 @@
 
 @property (nonatomic, weak) id delegate;
 @property (nonatomic, assign) NSInteger gamepadId;
+@property (nonatomic, assign) NSUInteger index;
 
 @property (nonatomic, readonly) NSInteger locationId;
 @property (nonatomic, readonly) NSInteger vendorId;

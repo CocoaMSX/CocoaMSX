@@ -24,6 +24,13 @@
 
 @implementation CMGamepadConfiguration
 
+static CMGamepadConfiguration *_defaultConfig;
+
++ (void) initialize
+{
+	_defaultConfig = [[CMGamepadConfiguration alloc] init];
+}
+
 - (id)init
 {
     if ((self = [super init])) {
@@ -43,6 +50,11 @@
 	_right = CMMakeAnalog(CM_DIR_RIGHT);
 	_buttonA = CMMakeButton(1);
 	_buttonB = CMMakeButton(2);
+}
+
++ (CMGamepadConfiguration *) defaultConfiguration
+{
+	return _defaultConfig;
 }
 
 #pragma mark - NSCoding

@@ -52,9 +52,10 @@
 
 @interface CMGamepadManager : NSObject<CMGamepadEventDelegate>
 
-+ (CMGamepadManager *)sharedInstance;
++ (instancetype) sharedInstance;
 
-- (CMGamepad *)gamepadWithId:(NSInteger)gamepadId;
+- (CMGamepad *) gamepadWithId:(NSInteger) gamepadId;
+- (CMGamepad *) gamepadAtIndex:(NSUInteger) index;
 
 - (void)addObserver:(id<CMGamepadEventDelegate>)observer;
 - (void)removeObserver:(id<CMGamepadEventDelegate>)observer;

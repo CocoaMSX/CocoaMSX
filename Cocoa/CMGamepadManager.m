@@ -25,106 +25,129 @@
 
 #pragma mark - CMGamepadManager
 
-static CMGamepadManager *singletonManager = nil;
-
 void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
 void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
 
 @interface CMGamepadManager ()
 
-- (void)deviceDidConnect:(IOHIDDeviceRef)device;
-- (void)deviceDidDisconnect:(IOHIDDeviceRef)device;
+- (void) deviceDidConnect:(IOHIDDeviceRef) device;
+- (void) deviceDidDisconnect:(IOHIDDeviceRef) device;
+- (void) renumber:(BOOL) sort;
 
 @end
 
 @implementation CMGamepadManager
 {
-	IOHIDManagerRef hidManager;
-	NSMutableDictionary *gamepads;
-	NSMutableArray *observers;
+	IOHIDManagerRef _hidManager;
+	NSMutableDictionary<NSNumber *, CMGamepad *> *_gamepadsByDeviceId;
+	NSMutableArray<CMGamepad *> *_allGamepads;
+	NSMutableArray *_observers;
 }
 
-+ (CMGamepadManager *)sharedInstance
++ (instancetype) sharedInstance
 {
-    if (!singletonManager)
-        singletonManager = [[CMGamepadManager alloc] init];
-    
-    return singletonManager;
+	static dispatch_once_t once;
+	static id sharedInstance;
+	dispatch_once(&once, ^{
+		sharedInstance = [[self alloc] init];
+	});
+	
+	return sharedInstance;
 }
 
 - (id)init
 {
     if ((self = [super init]))
     {
-        gamepads = [[NSMutableDictionary alloc] init];
-        observers = [[NSMutableArray alloc] init];
+		_gamepadsByDeviceId = [NSMutableDictionary dictionary];
+		_allGamepads = [NSMutableArray array];
+        _observers = [NSMutableArray array];
+        _hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
         
-        hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+		NSMutableDictionary *gamepadCriterion = [@{ (NSString *) CFSTR(kIOHIDDeviceUsagePageKey): @(kHIDPage_GenericDesktop),
+													(NSString *) CFSTR(kIOHIDDeviceUsageKey):  @(kHIDUsage_GD_GamePad) } mutableCopy];
+		NSMutableDictionary *joystickCriterion = [@{ (NSString *) CFSTR(kIOHIDDeviceUsagePageKey): @(kHIDPage_GenericDesktop),
+													(NSString *) CFSTR(kIOHIDDeviceUsageKey):  @(kHIDUsage_GD_Joystick) } mutableCopy];
+		
+        IOHIDManagerSetDeviceMatchingMultiple(_hidManager, (__bridge CFArrayRef) @[ gamepadCriterion, joystickCriterion ]);
+        IOHIDManagerRegisterDeviceMatchingCallback(_hidManager, gamepadWasAdded, (__bridge void *) self);
+        IOHIDManagerRegisterDeviceRemovalCallback(_hidManager, gamepadWasRemoved, (__bridge void *) self);
         
-        NSMutableDictionary *gamepadCriterion = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                          @(kHIDPage_GenericDesktop), (NSString *)CFSTR(kIOHIDDeviceUsagePageKey),
-                                          @(kHIDUsage_GD_GamePad), (NSString *)CFSTR(kIOHIDDeviceUsageKey),
-                                          nil];
-        NSMutableDictionary *joystickCriterion = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                         @(kHIDPage_GenericDesktop), (NSString *)CFSTR(kIOHIDDeviceUsagePageKey),
-                                         @(kHIDUsage_GD_Joystick), (NSString *)CFSTR(kIOHIDDeviceUsageKey),
-                                         nil];
-        
-        IOHIDManagerSetDeviceMatchingMultiple(hidManager, (__bridge CFArrayRef)[NSArray arrayWithObjects:gamepadCriterion, joystickCriterion, nil]);
-        IOHIDManagerRegisterDeviceMatchingCallback(hidManager, gamepadWasAdded, (__bridge void *)self);
-        IOHIDManagerRegisterDeviceRemovalCallback(hidManager, gamepadWasRemoved, (__bridge void *)self);
-        
-        IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+        IOHIDManagerScheduleWithRunLoop(_hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     }
     
     return self;
 }
 
-- (void)dealloc
+- (void) dealloc
 {
-    IOHIDManagerUnscheduleFromRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    CFRelease(hidManager);
+    IOHIDManagerUnscheduleFromRunLoop(_hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    CFRelease(_hidManager);
 }
 
-- (void)deviceDidConnect:(IOHIDDeviceRef)device
+- (void) deviceDidConnect:(IOHIDDeviceRef) device
 {
-    CMGamepad *gamepad = [[CMGamepad alloc] initWithHidDevice:device];
-    
-    [gamepad setDelegate:self];
-    [gamepad setGamepadId:(NSInteger)device];
-    [gamepad registerForEvents];
-    
-    [gamepads setObject:gamepad
-                 forKey:@([gamepad gamepadId])];
+	CMGamepad *gamepad;
+	@synchronized (_gamepadsByDeviceId) {
+		gamepad = [[CMGamepad alloc] initWithHidDevice:device];
+		[_gamepadsByDeviceId setObject:gamepad
+								forKey:@([gamepad gamepadId])];
+		
+		[_allGamepads addObject:gamepad];
+		[self renumber:YES];
+		
+		[gamepad setDelegate:self];
+	}
+	
+	[gamepad registerForEvents];
 }
 
-- (void)deviceDidDisconnect:(IOHIDDeviceRef)device
+- (void) deviceDidDisconnect:(IOHIDDeviceRef) device
 {
-    [gamepads removeObjectForKey:@((NSInteger)device)];
+	@synchronized (_gamepadsByDeviceId) {
+		CMGamepad *gamepad = [_gamepadsByDeviceId objectForKey:@((NSInteger) device)];
+		if (gamepad) {
+			[_gamepadsByDeviceId removeObjectForKey:@([gamepad gamepadId])];
+			[_allGamepads removeObjectAtIndex:[gamepad index]];
+			[self renumber:NO];
+		}
+	}
 }
 
-- (CMGamepad *)gamepadWithId:(NSInteger)gamepadId
+- (CMGamepad *) gamepadWithId:(NSInteger) gamepadId
 {
-    return [gamepads objectForKey:@(gamepadId)];
+    return [_gamepadsByDeviceId objectForKey:@(gamepadId)];
+}
+
+- (CMGamepad *) gamepadAtIndex:(NSUInteger) index
+{
+	CMGamepad *gp = nil;
+	if (index < [_allGamepads count]) {
+		gp = [_allGamepads objectAtIndex:index];
+	}
+	
+	return gp;
 }
 
 #pragma mark - CMGamepadDelegate
 
 - (void)gamepadDidConnect:(CMGamepad *)gamepad
 {
-    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [_observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
-         if ([obj respondsToSelector:_cmd])
+		 if ([obj respondsToSelector:_cmd]) {
              [obj gamepadDidConnect:gamepad];
+		 }
      }];
 }
 
 - (void)gamepadDidDisconnect:(CMGamepad *)gamepad
 {
-    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [_observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
-         if ([obj respondsToSelector:_cmd])
+		 if ([obj respondsToSelector:_cmd]) {
              [obj gamepadDidDisconnect:gamepad];
+		 }
      }];
 }
 
@@ -133,13 +156,14 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
          center:(NSInteger)center
       eventData:(CMGamepadEventData *)eventData
 {
-    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [_observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
-         if ([obj respondsToSelector:_cmd])
+		 if ([obj respondsToSelector:_cmd]) {
              [obj gamepad:gamepad
                  xChanged:newValue
                    center:center
                 eventData:eventData];
+		 }
      }];
 }
 
@@ -148,13 +172,14 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
          center:(NSInteger)center
       eventData:(CMGamepadEventData *)eventData
 {
-    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [_observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
-         if ([obj respondsToSelector:_cmd])
+		 if ([obj respondsToSelector:_cmd]) {
              [obj gamepad:gamepad
                  yChanged:newValue
                    center:center
                 eventData:eventData];
+		 }
      }];
 }
 
@@ -162,12 +187,13 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
      buttonDown:(NSInteger)index
       eventData:(CMGamepadEventData *)eventData
 {
-    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [_observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
-         if ([obj respondsToSelector:_cmd])
+		 if ([obj respondsToSelector:_cmd]) {
              [obj gamepad:gamepad
                buttonDown:index
                 eventData:eventData];
+		 }
      }];
 }
 
@@ -175,41 +201,56 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
        buttonUp:(NSInteger)index
       eventData:(CMGamepadEventData *)eventData
 {
-    [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [_observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
      {
-         if ([obj respondsToSelector:_cmd])
+		 if ([obj respondsToSelector:_cmd]) {
              [obj gamepad:gamepad
                  buttonUp:index
                 eventData:eventData];
+		 }
      }];
 }
 
-- (void)addObserver:(id<CMGamepadEventDelegate>)observer
+- (void) addObserver:(id<CMGamepadEventDelegate>) observer
 {
-    [observers addObject:observer];
+    [_observers addObject:observer];
 }
 
-- (void)removeObserver:(id<CMGamepadEventDelegate>)observer
+- (void) removeObserver:(id<CMGamepadEventDelegate>) observer
 {
-    [observers removeObject:observer];
+    [_observers removeObject:observer];
+}
+
+#pragma mark - Private
+
+- (void) renumber:(BOOL) sort
+{
+	@synchronized (_allGamepads) {
+		if (sort) {
+			[_allGamepads sortUsingComparator:^NSComparisonResult(CMGamepad *gp1, CMGamepad *gp2) {
+				return [gp1 locationId] - [gp2 locationId];
+			}];
+		}
+		[_allGamepads enumerateObjectsUsingBlock:^(CMGamepad *gp, NSUInteger idx, BOOL * _Nonnull stop) {
+			[gp setIndex:idx];
+		}];
+	}
 }
 
 @end
 
 #pragma mark - IOHID C Callbacks
 
-void gamepadWasAdded(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef device)
+void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device)
 {
-    @autoreleasepool
-    {
+    @autoreleasepool {
         [((__bridge CMGamepadManager *) inContext) deviceDidConnect:device];
     }
 }
 
-void gamepadWasRemoved(void* inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef device)
+void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device)
 {
-    @autoreleasepool
-    {
+    @autoreleasepool {
         [((__bridge CMGamepadManager *) inContext) deviceDidDisconnect:device];
     }
 }
