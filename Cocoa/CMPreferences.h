@@ -34,10 +34,6 @@
 
 - (CMInputDeviceLayout *)keyboardLayout;
 - (void)setKeyboardLayout:(CMInputDeviceLayout *)keyboardLayout;
-- (CMInputDeviceLayout *)joystickOneLayout;
-- (void)setJoystickOneLayout:(CMInputDeviceLayout *)joystickOneLayout;
-- (CMInputDeviceLayout *)joystickTwoLayout;
-- (void)setJoystickTwoLayout:(CMInputDeviceLayout *)joystickTwoLayout;
 
 - (CMInputDeviceLayout *)defaultKeyboardLayout;
 - (CMInputDeviceLayout *)defaultJoystickOneLayout;

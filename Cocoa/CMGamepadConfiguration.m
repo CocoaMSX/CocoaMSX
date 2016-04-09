@@ -22,19 +22,33 @@
  */
 #import "CMGamepadConfiguration.h"
 
+#import "CMKeyboardManager.h"
+#import "CMKeyboardInput.h"
+
 @implementation CMGamepadConfiguration
 
-static CMGamepadConfiguration *_defaultConfig;
+static CMGamepadConfiguration *_defaultKeyboardPlayerOneConfig;
+static CMGamepadConfiguration *_defaultKeyboardPlayerTwoConfig;
+static CMGamepadConfiguration *_defaultGamepadConfig;
 
 + (void) initialize
 {
-	_defaultConfig = [[CMGamepadConfiguration alloc] init];
+	_defaultKeyboardPlayerOneConfig = [[CMGamepadConfiguration alloc] init];
+	_defaultKeyboardPlayerOneConfig->_vendorProductId = CM_VENDOR_PRODUCT_KEYBOARD_PLAYER_1;
+	[_defaultKeyboardPlayerOneConfig reset];
+	
+	_defaultKeyboardPlayerTwoConfig = [[CMGamepadConfiguration alloc] init];
+	_defaultKeyboardPlayerTwoConfig->_vendorProductId = CM_VENDOR_PRODUCT_KEYBOARD_PLAYER_2;
+	[_defaultKeyboardPlayerTwoConfig reset];
+	
+	_defaultGamepadConfig = [[CMGamepadConfiguration alloc] init];
+	_defaultGamepadConfig->_vendorProductId = -1;
+	[_defaultGamepadConfig reset];
 }
 
 - (id)init
 {
     if ((self = [super init])) {
-		[self clear];
     }
     
     return self;
@@ -42,19 +56,54 @@ static CMGamepadConfiguration *_defaultConfig;
 
 #pragma mark - Public
 
-- (void) clear
+- (void) reset
 {
-	_up = CMMakeAnalog(CM_DIR_UP);
-	_down = CMMakeAnalog(CM_DIR_DOWN);
-	_left = CMMakeAnalog(CM_DIR_LEFT);
-	_right = CMMakeAnalog(CM_DIR_RIGHT);
-	_buttonA = CMMakeButton(1);
-	_buttonB = CMMakeButton(2);
+	switch (_vendorProductId) {
+		case CM_VENDOR_PRODUCT_KEYBOARD_PLAYER_1:
+			_up = CMMakeKey(CMKeyUp);
+			_down = CMMakeKey(CMKeyDown);
+			_left = CMMakeKey(CMKeyLeft);
+			_right = CMMakeKey(CMKeyRight);
+			_buttonA = CMMakeKey(CMKeySpacebar);
+			_buttonB = CMMakeKey(CMKeyLeftAlt);
+			break;
+		case CM_VENDOR_PRODUCT_KEYBOARD_PLAYER_2:
+			_up = CMMakeKey(CMKeyW);
+			_down = CMMakeKey(CMKeyS);
+			_left = CMMakeKey(CMKeyA);
+			_right = CMMakeKey(CMKeyD);
+			_buttonA = CMMakeKey(CMKeyLeftBracket);
+			_buttonB = CMMakeKey(CMKeyRightBracket);
+			break;
+		default:
+			_up = CMMakeAnalog(CM_DIR_UP);
+			_down = CMMakeAnalog(CM_DIR_DOWN);
+			_left = CMMakeAnalog(CM_DIR_LEFT);
+			_right = CMMakeAnalog(CM_DIR_RIGHT);
+			_buttonA = CMMakeButton(1);
+			_buttonB = CMMakeButton(2);
+			break;
+	}
 }
 
-+ (CMGamepadConfiguration *) defaultConfiguration
++ (CMGamepadConfiguration *) defaultKeyboardPlayerOneConfiguration
 {
-	return _defaultConfig;
+	return _defaultKeyboardPlayerOneConfig;
+}
+
++ (CMGamepadConfiguration *) defaultKeyboardPlayerTwoConfiguration
+{
+	return _defaultKeyboardPlayerTwoConfig;
+}
+
++ (CMGamepadConfiguration *) defaultGamepadConfiguration
+{
+	return _defaultGamepadConfig;
+}
+
+- (NSString *) vendorProductString
+{
+	return [NSString stringWithFormat:@"%08lx", _vendorProductId];
 }
 
 #pragma mark - NSCoding

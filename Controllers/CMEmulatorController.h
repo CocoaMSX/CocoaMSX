@@ -71,6 +71,8 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property (nonatomic, copy) NSString *lastSavedState;
 @property (nonatomic, copy) NSString *lastLoadedState;
 
+@property (nonatomic, strong) CMInputDeviceLayout *keyboardLayout;
+
 @property (nonatomic, assign) NSInteger scanlines;
 
 @property (nonatomic, assign) BOOL isInitialized;
@@ -82,12 +84,6 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (CMCocoaMouse *)mouse;
 - (CMCocoaSound *)sound;
 - (CMMsxDisplayView *)screen;
-
-- (CMInputDeviceLayout *)keyboardLayout;
-- (CMInputDeviceLayout *)joystickOneLayout;
-- (CMInputDeviceLayout *)joystickTwoLayout;
-
-- (NSArray *)inputDeviceLayouts;
 
 - (void)start;
 - (void)stop;

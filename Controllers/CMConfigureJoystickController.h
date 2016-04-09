@@ -23,21 +23,22 @@
 #import <Cocoa/Cocoa.h>
 
 #import "CMGamepadManager.h"
+#import "CMKeyboardManager.h"
 
 @class CMGamepadConfiguration;
 
 @protocol CMGamepadConfigurationDelegate
 
 @required
-- (void) gamepadDidConfigure:(CMGamepad *) gamepad
-			   configuration:(CMGamepadConfiguration *) configuration;
+- (void) gamepadConfigurationDidComplete:(CMGamepadConfiguration *) configuration;
 
 @end
 
-@interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, NSTableViewDataSource, CMGamepadEventDelegate>
+@interface CMConfigureJoystickController : NSWindowController<NSWindowDelegate, NSTableViewDataSource, CMGamepadEventDelegate, CMKeyboardEventDelegate>
 {
     IBOutlet NSButton *saveButton;
 	IBOutlet NSTableView *tableView;
+	IBOutlet NSTextField *infoLabel;
 }
 
 @property (nonatomic, weak) id delegate;

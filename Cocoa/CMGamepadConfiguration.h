@@ -22,9 +22,10 @@
  */
 #import <Foundation/Foundation.h>
 
-@interface CMGamepadConfiguration : NSObject<NSCoding, NSCopying>
-
 #define CM_NO_INPUT 0
+
+#define CM_VENDOR_PRODUCT_KEYBOARD_PLAYER_1 (0)
+#define CM_VENDOR_PRODUCT_KEYBOARD_PLAYER_2 (1)
 
 #define CM_KIND_MASK   0xf000000
 #define CM_VALUE_MASK  0x0ffffff
@@ -36,9 +37,15 @@
 
 #define CM_KIND_BUTTON 0x1000000
 #define CM_KIND_ANALOG 0x2000000
+#define CM_KIND_KEY    0x4000000
 
 #define CMMakeButton(index) (CM_KIND_BUTTON|((index)&0x1f))
 #define CMMakeAnalog(dir)   (CM_KIND_ANALOG|((dir)&0x3))
+#define CMMakeKey(key)      (CM_KIND_KEY|((key)&0xff))
+
+#define CMKeyCode(code)     ((code)&0xff)
+
+@interface CMGamepadConfiguration : NSObject<NSCoding, NSCopying>
 
 @property (nonatomic, assign) NSInteger vendorProductId;
 
@@ -49,7 +56,11 @@
 @property (nonatomic, assign) NSInteger buttonA;
 @property (nonatomic, assign) NSInteger buttonB;
 
-- (void) clear;
-+ (CMGamepadConfiguration *) defaultConfiguration;
+- (void) reset;
+- (NSString *) vendorProductString;
+
++ (CMGamepadConfiguration *) defaultKeyboardPlayerOneConfiguration;
++ (CMGamepadConfiguration *) defaultKeyboardPlayerTwoConfiguration;
++ (CMGamepadConfiguration *) defaultGamepadConfiguration;
 
 @end

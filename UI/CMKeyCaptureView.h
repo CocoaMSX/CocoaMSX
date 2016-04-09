@@ -28,8 +28,8 @@
 
 #define CMKeyNone (-1)
 
-+ (NSString *)descriptionForKeyCode:(NSNumber *)keyCode;
-+ (NSNumber *)keyCodeForDescription:(NSString *)description;
++ (NSString *) descriptionForKeyCode:(NSInteger) keyCode;
++ (NSInteger) keyCodeForDescription:(NSString *) description;
 
 - (BOOL)captureKeyCode:(NSInteger)keyCode;
 

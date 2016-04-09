@@ -47,9 +47,7 @@
 	IBOutlet NSTabView *peripheralTwoTabView;
 	
     IBOutlet NSOutlineView *keyboardLayoutEditor;
-    IBOutlet NSOutlineView *joystickOneLayoutEditor;
-    IBOutlet NSOutlineView *joystickTwoLayoutEditor;
-    
+	
     IBOutlet NSSlider *volumeSlider;
     IBOutlet NSSlider *balanceSlider;
     
@@ -75,16 +73,16 @@
 - (IBAction)revertAudioClicked:(id)sender;
 - (IBAction)revertVideoClicked:(id)sender;
 - (IBAction)revertKeyboardClicked:(id)sender;
-- (IBAction)revertJoystickOneClicked:(id)sender;
-- (IBAction)revertJoystickTwoClicked:(id)sender;
 
 - (IBAction)showMachinesInFinder:(id)sender;
 - (IBAction)refreshMachineList:(id)sender;
 - (IBAction)installMachineConfiguration:(id)sender;
 - (IBAction)removeMachineConfiguration:(id)sender;
 
-- (IBAction)configureJoypadOne:(id)sender;
-- (IBAction)configureJoypadTwo:(id)sender;
+- (IBAction) configureKeyboardJoypadOne:(id) sender;
+- (IBAction) configureKeyboardJoypadTwo:(id) sender;
+- (IBAction) configureGamepadJoypadOne:(id) sender;
+- (IBAction) configureGamepadJoypadTwo:(id) sender;
 
 - (IBAction)performColdRebootClicked:(id)sender;
 

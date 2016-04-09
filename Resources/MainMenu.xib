@@ -21,6 +21,7 @@
                 <outlet property="recentDisksB" destination="LBN-MK-euB" id="nyL-VS-h9w"/>
             </connections>
         </customObject>
+        <customObject id="797" customClass="SUUpdater"/>
         <menu title="Main Menu" systemMenu="main" id="29">
             <items>
                 <menuItem title="CocoaMSX" id="56">
@@ -508,6 +509,5 @@
                 </menuItem>
             </items>
         </menu>
-        <customObject id="797" customClass="SUUpdater"/>
     </objects>
 </document>

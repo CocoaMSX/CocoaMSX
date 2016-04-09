@@ -114,34 +114,10 @@ static CMPreferences *preferences = nil;
     return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
 }
 
-- (void)setKeyboardLayout:(CMInputDeviceLayout *)keyboardLayout;
+- (void)setKeyboardLayout:(CMInputDeviceLayout *) keyboardLayout;
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:keyboardLayout];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMKeyboardLayoutPrefKey];
-}
-
-- (CMInputDeviceLayout *)joystickOneLayout;
-{
-    NSData *layoutData = [[NSUserDefaults standardUserDefaults] objectForKey:CMJoystickOneLayoutPrefKey];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
-}
-
-- (void)setJoystickOneLayout:(CMInputDeviceLayout *)joystickOneLayout;
-{
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:joystickOneLayout];
-    [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMJoystickOneLayoutPrefKey];
-}
-
-- (CMInputDeviceLayout *)joystickTwoLayout;
-{
-    NSData *layoutData = [[NSUserDefaults standardUserDefaults] objectForKey:CMJoystickTwoLayoutPrefKey];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:layoutData];
-}
-
-- (void)setJoystickTwoLayout:(CMInputDeviceLayout *)joystickTwoLayout;
-{
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:joystickTwoLayout];
-    [[NSUserDefaults standardUserDefaults] setObject:data forKey:CMJoystickTwoLayoutPrefKey];
 }
 
 - (CMInputDeviceLayout *)defaultKeyboardLayout;

@@ -57,6 +57,8 @@
 - (CMGamepad *) gamepadWithId:(NSInteger) gamepadId;
 - (CMGamepad *) gamepadAtIndex:(NSUInteger) index;
 
+- (NSUInteger) gamepadCount;
+
 - (void)addObserver:(id<CMGamepadEventDelegate>)observer;
 - (void)removeObserver:(id<CMGamepadEventDelegate>)observer;
 

@@ -41,6 +41,7 @@
 #import "CMKeyCaptureView.h"
 #import "CMHeaderRowCell.h"
 #import "CMMachineSelectionCell.h"
+#import "CMGamepadConfiguration.h"
 
 #import "CMMachineInstallationOperation.h"
 
@@ -128,7 +129,6 @@ static NSArray *keysInOrderOfAppearance;
 - (double)physicalPositionOfSlider:(NSSlider *)slider
                        fromVirtual:(NSInteger)virtualPosition
                         usingTable:(NSArray *)table;
-- (CMInputDeviceLayout *)inputDeviceLayoutFromOutlineView:(NSOutlineView *)outlineView;
 - (void)initializeInputDeviceCategories:(NSMutableArray *)categoryArray
                              withLayout:(CMInputDeviceLayout *)layout;
 
@@ -262,11 +262,7 @@ extern CMEmulatorController *theEmulator;
     // Input devices devices
     [self initializeInputDeviceCategories:keyCategories
                                withLayout:[theEmulator keyboardLayout]];
-    [self initializeInputDeviceCategories:joystickOneCategories
-                               withLayout:[theEmulator joystickOneLayout]];
-    [self initializeInputDeviceCategories:joystickTwoCategories
-                               withLayout:[theEmulator joystickTwoLayout]];
-    
+	
     // Scope Bar
     [keyboardScopeBar setSelected:YES forItem:@(CMMSXKeyStateDefault)  inGroup:SCOPEBAR_GROUP_SHIFTED];
     [keyboardScopeBar setSelected:YES forItem:[CMMSXKeyboard defaultLayoutName] inGroup:SCOPEBAR_GROUP_REGIONS];
@@ -305,12 +301,7 @@ extern CMEmulatorController *theEmulator;
     [self sizeWindowToTabContent:[[contentTabView selectedTabViewItem] identifier]];
     
     [keyboardLayoutEditor reloadData];
-    [joystickOneLayoutEditor reloadData];
-    [joystickTwoLayoutEditor reloadData];
-    
     [keyboardLayoutEditor expandItem:nil expandChildren:YES];
-    [joystickOneLayoutEditor expandItem:nil expandChildren:YES];
-    [joystickTwoLayoutEditor expandItem:nil expandChildren:YES];
 	
 	[self togglePeripheralTabView:peripheralOneTabView
 				   withIdentifier:CMGetObjPref(@"joystickDevicePort1")];
@@ -779,20 +770,6 @@ extern CMEmulatorController *theEmulator;
     return physicalValue;
 }
 
-- (CMInputDeviceLayout *)inputDeviceLayoutFromOutlineView:(NSOutlineView *)outlineView
-{
-    CMInputDeviceLayout *layout = nil;
-    
-    if (outlineView == keyboardLayoutEditor)
-        layout = theEmulator.keyboardLayout;
-    else if (outlineView == joystickOneLayoutEditor)
-        layout = theEmulator.joystickOneLayout;
-    else if (outlineView == joystickTwoLayoutEditor)
-        layout = theEmulator.joystickTwoLayout;
-    
-    return layout;
-}
-
 - (BOOL)isDownloadQueuedForMachine:(CMMachine *)machine
 {
     __block BOOL machineFound = NO;
@@ -829,7 +806,7 @@ extern CMEmulatorController *theEmulator;
     else if ([tabId isEqual:@"keyboard"])
         newHeight = 500;
     else if ([tabId isEqual:@"joystick"])
-        newHeight = 480;
+        newHeight = 300;
     
     NSRect newContentFrame = NSMakeRect(contentFrame.origin.x,
                                         contentFrame.origin.y,
@@ -876,59 +853,79 @@ extern CMEmulatorController *theEmulator;
     }
 }
 
-- (void)configureJoypadOne:(id)sender
+- (void) configureGamepadJoypadOne:(id) sender
 {
 	CMGamepad *gp = [[CMGamepadManager sharedInstance] gamepadAtIndex:0];
 	if (gp) {
 		[self configureJoypad:[gp gamepadId]];
+	} else {
+		NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port", @"")
+										 defaultButton:CMLoc(@"OK", @"")
+									   alternateButton:nil
+										   otherButton:nil
+							 informativeTextWithFormat:@""];
+		
+		[alert beginSheetModalForWindow:[self window]
+						  modalDelegate:self
+						 didEndSelector:nil
+							contextInfo:nil];
 	}
 }
 
-- (void)configureJoypadTwo:(id)sender
+- (void) configureGamepadJoypadTwo:(id) sender
 {
 	CMGamepad *gp = [[CMGamepadManager sharedInstance] gamepadAtIndex:1];
 	if (gp) {
 		[self configureJoypad:[gp gamepadId]];
+	} else {
+		NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port", @"")
+										 defaultButton:CMLoc(@"OK", @"")
+									   alternateButton:nil
+										   otherButton:nil
+							 informativeTextWithFormat:@""];
+		
+		[alert beginSheetModalForWindow:[self window]
+						  modalDelegate:self
+						 didEndSelector:nil
+							contextInfo:nil];
 	}
+}
+
+- (void) configureKeyboardJoypadOne:(id) sender
+{
+	[self configureJoypad:0];
+}
+
+- (void) configureKeyboardJoypadTwo:(id) sender
+{
+	[self configureJoypad:1];
 }
 
 - (void) configureJoypad:(NSInteger) joypadId
 {
-    if (joypadId != 0)
-    {
-		if (!joystickConfigurator)
-		{
-			joystickConfigurator = [[CMConfigureJoystickController alloc] init];
-			[joystickConfigurator setDelegate:self];
-		}
-		
-		NSDictionary *configurations = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"joypadConfigurations"];
+	if (!joystickConfigurator) {
+		joystickConfigurator = [[CMConfigureJoystickController alloc] init];
+		[joystickConfigurator setDelegate:self];
+	}
+	
+	NSDictionary *configurations = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"joypadConfigurations"];
+	NSNumber *vendorProductId;
+	if (joypadId == 0 || joypadId == 1) {
+		vendorProductId = @(joypadId);
+	} else {
 		CMGamepad *gamepad = [[CMGamepadManager sharedInstance] gamepadWithId:joypadId];
-		
-		NSData *confData = [configurations objectForKey:[gamepad vendorProductString]];
-		CMGamepadConfiguration *conf = nil;
-		
-		if (confData) {
-			conf = [NSKeyedUnarchiver unarchiveObjectWithData:confData];
-		}
-		
-        [joystickConfigurator showWindow:self];
-        [joystickConfigurator configureGamepadId:joypadId
-						   existingConfiguration:conf];
-    }
-    else
-    {
-        NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port", @"")
-                                         defaultButton:CMLoc(@"OK", @"")
-                                       alternateButton:nil
-                                           otherButton:nil
-                             informativeTextWithFormat:@""];
-        
-        [alert beginSheetModalForWindow:[self window]
-                          modalDelegate:self
-                         didEndSelector:nil
-                            contextInfo:nil];
-    }
+		vendorProductId = @([gamepad vendorProductId]);
+	}
+	
+	NSData *confData = [configurations objectForKey:[vendorProductId stringValue]];
+	CMGamepadConfiguration *conf = nil;
+	if (confData) {
+		conf = [NSKeyedUnarchiver unarchiveObjectWithData:confData];
+	}
+	
+	[joystickConfigurator showWindow:self];
+	[joystickConfigurator configureGamepadId:joypadId
+					   existingConfiguration:conf];
 }
 
 - (void)tabChanged:(id)sender
@@ -1003,26 +1000,6 @@ extern CMEmulatorController *theEmulator;
     [[CMPreferences preferences] setKeyboardLayout:layout];
     
     [keyboardLayoutEditor reloadData];
-}
-
-- (void)revertJoystickOneClicked:(id)sender
-{
-    CMInputDeviceLayout *layout = theEmulator.joystickOneLayout;
-    
-    [layout loadLayout:[[CMPreferences preferences] defaultJoystickOneLayout]];
-    [[CMPreferences preferences] setJoystickOneLayout:layout];
-    
-    [joystickOneLayoutEditor reloadData];
-}
-
-- (void)revertJoystickTwoClicked:(id)sender
-{
-    CMInputDeviceLayout *layout = theEmulator.joystickTwoLayout;
-    
-    [layout loadLayout:[[CMPreferences preferences] defaultJoystickTwoLayout]];
-    [[CMPreferences preferences] setJoystickTwoLayout:layout];
-    
-    [joystickTwoLayoutEditor reloadData];
 }
 
 - (void)refreshMachineList:(id)sender
@@ -1191,22 +1168,21 @@ extern CMEmulatorController *theEmulator;
 
 #pragma mark - NSWindowDelegate
 
-- (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)anObject
+- (id) windowWillReturnFieldEditor:(NSWindow *) sender
+						  toObject:(id) anObject
 {
-    if (anObject == keyboardLayoutEditor
-        || anObject == joystickOneLayoutEditor
-        || anObject == joystickTwoLayoutEditor)
-    {
-        if (!keyCaptureView)
+	if (anObject == keyboardLayoutEditor) {
+		if (!keyCaptureView) {
             keyCaptureView = [[CMKeyCaptureView alloc] init];
-        
+		}
+		
         return keyCaptureView;
     }
     
     return nil;
 }
 
-- (void)windowDidBecomeKey:(NSNotification *)notification
+- (void) windowDidBecomeKey:(NSNotification *) notification
 {
     [self synchronizeSettings];
 
@@ -1214,7 +1190,7 @@ extern CMEmulatorController *theEmulator;
     [[CMKeyboardManager sharedInstance] addObserver:self];
 }
 
-- (void)windowDidResignKey:(NSNotification *)notification
+- (void) windowDidResignKey:(NSNotification *) notification
 {
     // Stop listening for key events
     [[CMKeyboardManager sharedInstance] removeObserver:self];
@@ -1227,12 +1203,10 @@ extern CMEmulatorController *theEmulator;
     if ([event hasKeyCodeEquivalent])
     {
         // Key with a valid keyCode
-        if ([[self window] firstResponder] == keyCaptureView)
-        {
+        if ([[self window] firstResponder] == keyCaptureView) {
             // keyCaptureView is in focus
             BOOL isReturn = [event keyCode] == 0x24 || [event keyCode] == 0x4c;
-            if (isReturn || !isDown)
-            {
+            if (isReturn || !isDown) {
                 // A key was released while the keyCaptureView has focus
                 [keyCaptureView captureKeyCode:[event keyCode]];
             }
@@ -1295,99 +1269,58 @@ extern CMEmulatorController *theEmulator;
 
 #pragma mark - NSOutlineViewDataSourceDelegate
 
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (NSInteger) outlineView:(NSOutlineView *) outlineView
+   numberOfChildrenOfItem:(id) item
 {
-    if ([item isKindOfClass:CMKeyCategory.class])
-        return ((CMKeyCategory *)item).items.count;
-    
-    if (outlineView == keyboardLayoutEditor)
-    {
-        if (!item)
-            return keyCategories.count;
+	if ([item isKindOfClass:CMKeyCategory.class]) {
+        return [[((CMKeyCategory *)item) items] count];
+	} else if (outlineView == keyboardLayoutEditor && !item) {
+		return [keyCategories count];
     }
-    else if (outlineView == joystickOneLayoutEditor)
-    {
-        if (!item)
-            return joystickOneCategories.count;
-    }
-    else if (outlineView == joystickTwoLayoutEditor)
-    {
-        if (!item)
-            return joystickTwoCategories.count;
-    }
-    
+	
     return 0;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
+- (id) outlineView:(NSOutlineView *) outlineView
+			 child:(NSInteger) index
+			ofItem:(id) item
 {
-    if ([item isKindOfClass:CMKeyCategory.class])
-        return [((CMKeyCategory *)item).items objectAtIndex:index];
-    
-    if (outlineView == keyboardLayoutEditor)
-    {
-        if (!item)
-            return [keyCategories objectAtIndex:index];
+	if ([item isKindOfClass:CMKeyCategory.class]) {
+        return [[((CMKeyCategory *) item) items] objectAtIndex:index];
+	} else if (outlineView == keyboardLayoutEditor && !item) {
+		return [keyCategories objectAtIndex:index];
     }
-    else if (outlineView == joystickOneLayoutEditor)
-    {
-        if (!item)
-            return [joystickOneCategories objectAtIndex:index];
-    }
-    else if (outlineView == joystickTwoLayoutEditor)
-    {
-        if (!item)
-            return [joystickTwoCategories objectAtIndex:index];
-    }
-    
+	
     return nil;
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+- (BOOL) outlineView:(NSOutlineView *) outlineView
+	isItemExpandable:(id) item
 {
     return [item isKindOfClass:[CMKeyCategory class]];
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+- (id) outlineView:(NSOutlineView *) outlineView
+objectValueForTableColumn:(NSTableColumn *) tableColumn
+			byItem:(id) item
 {
-    if ([item isKindOfClass:[CMKeyCategory class]])
-    {
-        if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"])
+    if ([item isKindOfClass:[CMKeyCategory class]]) {
+		if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"]) {
             return [((CMKeyCategory *)item) title];
-    }
-    else if ([item isKindOfClass:[NSNumber class]])
-    {
-        CMInputDeviceLayout *layout = [self inputDeviceLayoutFromOutlineView:outlineView];
-        NSUInteger virtualCode = [(NSNumber *)item integerValue];
-        
-        if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"])
-        {
-            if (outlineView != keyboardLayoutEditor)
-            {
-                CMMSXJoystick *joystick = [CMMSXJoystick joystickWithLayout:CMMSXJoystickTwoButton];
-                if (joystick)
-                {
-                    NSString *label = [joystick presentationLabelForVirtualCode:virtualCode];
-                    return label ? label : CMLoc(@"Unavailable", @"");
-                }
-            }
-            else
-            {
-                CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayoutName:selectedKeyboardRegion];
-                if (keyboard)
-                {
-                    NSString *label = [keyboard presentationLabelForVirtualCode:virtualCode
-                                                                       keyState:selectedKeyboardShiftState];
-                    return label ? label : CMLoc(@"Unavailable", @"");
-                }
-            }
-            
+		}
+	} else if ([item isKindOfClass:[NSNumber class]]) {
+        NSUInteger virtualCode = [(NSNumber *) item integerValue];
+        if ([[tableColumn identifier] isEqualToString:@"CMKeyLabelColumn"]) {
+			CMMSXKeyboard *keyboard = [CMMSXKeyboard keyboardWithLayoutName:selectedKeyboardRegion];
+			if (keyboard) {
+				NSString *label = [keyboard presentationLabelForVirtualCode:virtualCode
+																   keyState:selectedKeyboardShiftState];
+				return label ? label : CMLoc(@"Unavailable", @"");
+			}
+			
             return nil;
-        }
-        else if ([[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"])
-        {
-            CMKeyboardInput *keyInput = (CMKeyboardInput *)[layout inputMethodForVirtualCode:virtualCode];
-            
+        } else if ([[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"]) {
+            CMKeyboardInput *keyInput = (CMKeyboardInput *)[[theEmulator keyboardLayout] inputMethodForVirtualCode:virtualCode];
             return [CMKeyCaptureView descriptionForKeyCode:@([keyInput keyCode])];
         }
     }
@@ -1395,34 +1328,25 @@ extern CMEmulatorController *theEmulator;
     return nil;
 }
 
-- (void)outlineView:(NSOutlineView *)outlineView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+- (void) outlineView:(NSOutlineView *) outlineView
+	  setObjectValue:(id) object
+	  forTableColumn:(NSTableColumn *) tableColumn
+			  byItem:(id) item
 {
     if ([item isKindOfClass:[NSNumber class]]
         && [[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"])
     {
-        NSNumber *keyCode = [CMKeyCaptureView keyCodeForDescription:(NSString *)object];
-        
-        CMInputDeviceLayout *layout = [self inputDeviceLayoutFromOutlineView:outlineView];
-        
-        if (layout)
-        {
-            NSUInteger virtualCode = [(NSNumber *)item integerValue];
-            CMInputMethod *currentMethod = [layout inputMethodForVirtualCode:virtualCode];
-            CMKeyboardInput *newMethod = [CMKeyboardInput keyboardInputWithKeyCode:[keyCode integerValue]];
-            
-            if (![newMethod isEqualToInputMethod:currentMethod])
-            {
-                [layout assignInputMethod:newMethod toVirtualCode:virtualCode];
-                
-                CMPreferences *preferences = [CMPreferences preferences];
-                if (layout == theEmulator.keyboardLayout)
-                    [preferences setKeyboardLayout:layout];
-                else if (layout == theEmulator.joystickOneLayout)
-                    [preferences setJoystickOneLayout:layout];
-                else if (layout == theEmulator.joystickTwoLayout)
-                    [preferences setJoystickTwoLayout:layout];
-            }
-        }
+        NSInteger keyCode = [CMKeyCaptureView keyCodeForDescription:(NSString *) object];
+		CMInputDeviceLayout *layout = [theEmulator keyboardLayout];
+		NSUInteger virtualCode = [(NSNumber *) item integerValue];
+		CMInputMethod *currentMethod = [layout inputMethodForVirtualCode:virtualCode];
+		CMKeyboardInput *newMethod = [CMKeyboardInput keyboardInputWithKeyCode:keyCode];
+		
+		if (![newMethod isEqualToInputMethod:currentMethod]) {
+			[layout assignInputMethod:newMethod
+						toVirtualCode:virtualCode];
+			[[CMPreferences preferences] setKeyboardLayout:layout];
+		}
     }
 }
 
@@ -1641,8 +1565,7 @@ extern CMEmulatorController *theEmulator;
 
 #pragma mark - CMGamepadConfigurationDelegate
 
-- (void) gamepadDidConfigure:(CMGamepad *) gamepad
-			   configuration:(CMGamepadConfiguration *) configuration
+- (void) gamepadConfigurationDidComplete:(CMGamepadConfiguration *) configuration
 {
     NSDictionary *currentConfigurations = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"joypadConfigurations"];
     NSMutableDictionary *newConfigurations = [NSMutableDictionary dictionary];
@@ -1652,7 +1575,7 @@ extern CMEmulatorController *theEmulator;
 	}
 	
     [newConfigurations setObject:[NSKeyedArchiver archivedDataWithRootObject:configuration]
-                          forKey:[gamepad vendorProductString]];
+                          forKey:[@([configuration vendorProductId]) stringValue]];
     
     [[NSUserDefaults standardUserDefaults] setObject:newConfigurations
                                               forKey:@"joypadConfigurations"];

@@ -129,6 +129,11 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 	return gp;
 }
 
+- (NSUInteger) gamepadCount
+{
+	return [_allGamepads count];
+}
+
 #pragma mark - CMGamepadDelegate
 
 - (void)gamepadDidConnect:(CMGamepad *)gamepad

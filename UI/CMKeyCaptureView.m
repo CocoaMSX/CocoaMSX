@@ -271,7 +271,7 @@ static NSArray *keyCodesToIgnore;
     if ([keyCodesToIgnore containsObject:@(keyCode)])
         return NO;
 
-    NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:@(keyCode)];
+    NSString *keyName = [CMKeyCaptureView descriptionForKeyCode:keyCode];
     if (!keyName)
         keyName = @"";
     
@@ -285,28 +285,28 @@ static NSArray *keyCodesToIgnore;
     return YES;
 }
 
-+ (NSString *)descriptionForKeyCode:(NSNumber *)keyCode
++ (NSString *) descriptionForKeyCode:(NSInteger) keyCode
 {
-	if ([keyCode integerValue] != CMKeyNone)
-    {
+	if (keyCode != CMKeyNone) {
         NSString *string = nil;
-        if ((string = [keyCodeLookupTable objectForKey:keyCode]))
+		if ((string = [keyCodeLookupTable objectForKey:@(keyCode)])) {
             return string;
+		}
     }
 	
     return @"";
 }
 
-+ (NSNumber *)keyCodeForDescription:(NSString *)description
++ (NSInteger) keyCodeForDescription:(NSString *) description
 {
-    if (description && [description length] > 0)
-    {
+    if (description && [description length] > 0) {
         NSNumber *keyCode = [reverseKeyCodeLookupTable objectForKey:description];
-        if (keyCode)
-            return keyCode;
+		if (keyCode) {
+            return [keyCode integerValue];
+		}
     }
     
-    return @CMKeyNone;
+    return CMKeyNone;
 }
 
 - (BOOL)canUnmap

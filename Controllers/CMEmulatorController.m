@@ -189,8 +189,6 @@
 	
 	CMRepositionCassetteController *cassetteRepositioner;
 	
-	NSMutableArray *inputDeviceLayouts;
-	
 	NSArray *openRomFileTypes;
 	NSArray *openDiskFileTypes;
 	NSArray *openCassetteFileTypes;
@@ -228,8 +226,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
 {
     if ((self = [super initWithWindowNibName:@"Emulator"]))
     {
-        inputDeviceLayouts = [[NSMutableArray alloc] init];
-        
         listOfPreferenceKeysToObserve = [[NSArray alloc] initWithObjects:
                                          @"pauseWhenUnfocused",
                                          @"emulationSpeedPercentage",
@@ -363,11 +359,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     [romTypeDropdown addItemsWithTitles:romTypeNames];
     [disketteSizeDropdown addItemsWithTitles:disketteSizeDescriptions];
-    
-    [inputDeviceLayouts addObject:[[CMPreferences preferences] keyboardLayout]];
-    [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickOneLayout]];
-    [inputDeviceLayouts addObject:[[CMPreferences preferences] joystickTwoLayout]];
-    
+	
+	_keyboardLayout = [[CMPreferences preferences] keyboardLayout];
+	
     input = [[CMCocoaInput alloc] init];
     mouse = [[CMCocoaMouse alloc] init];
     sound = [[CMCocoaSound alloc] init];
@@ -666,26 +660,6 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self destroy];
     [self create];
     [self start];
-}
-
-- (CMInputDeviceLayout *)keyboardLayout
-{
-    return [inputDeviceLayouts objectAtIndex:0];
-}
-
-- (CMInputDeviceLayout *)joystickOneLayout
-{
-    return [inputDeviceLayouts objectAtIndex:1];
-}
-
-- (CMInputDeviceLayout *)joystickTwoLayout
-{
-    return [inputDeviceLayouts objectAtIndex:2];
-}
-
-- (NSArray *)inputDeviceLayouts
-{
-    return inputDeviceLayouts;
 }
 
 - (int)ledState

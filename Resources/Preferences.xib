@@ -16,8 +16,6 @@
                 <outlet property="contrastSlider" destination="203" id="316"/>
                 <outlet property="emulationSpeedSlider" destination="1804" id="1807"/>
                 <outlet property="gammaSlider" destination="234" id="317"/>
-                <outlet property="joystickOneLayoutEditor" destination="3774" id="3843"/>
-                <outlet property="joystickTwoLayoutEditor" destination="3808" id="3844"/>
                 <outlet property="keyboardLayoutEditor" destination="3623" id="3845"/>
                 <outlet property="keyboardScopeBar" destination="3739" id="3990"/>
                 <outlet property="machineScopeBar" destination="PgO-iz-9VP" id="pGR-Jh-oj5"/>
@@ -1013,7 +1011,7 @@
                                                                                     <rect key="frame" x="20" y="327" width="518" height="58"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                                    <size key="cellSize" width="337" height="18"/>
+                                                                                    <size key="cellSize" width="518" height="18"/>
                                                                                     <size key="intercellSpacing" width="4" height="2"/>
                                                                                     <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="4468">
                                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1021,11 +1019,11 @@
                                                                                     </buttonCell>
                                                                                     <cells>
                                                                                         <column>
-                                                                                            <buttonCell type="radio" title="First available joystick or joypad" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="4467">
+                                                                                            <buttonCell type="radio" title="First available joystick or gamepad" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="4467">
                                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                                 <font key="font" metaFont="system"/>
                                                                                             </buttonCell>
-                                                                                            <buttonCell type="radio" title="Joystick or joypad if available; keyboard otherwise" imagePosition="left" alignment="left" inset="2" id="4466">
+                                                                                            <buttonCell type="radio" title="Joystick or gamepad if available; keyboard otherwise" imagePosition="left" alignment="left" inset="2" id="4466">
                                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                                 <font key="font" metaFont="system"/>
                                                                                             </buttonCell>
@@ -1039,89 +1037,26 @@
                                                                                         <binding destination="804" name="selectedIndex" keyPath="values.joystickPreferredMacDevicePort1" id="4470"/>
                                                                                     </connections>
                                                                                 </matrix>
-                                                                                <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="3762">
-                                                                                    <rect key="frame" x="20" y="149" width="518" height="170"/>
-                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                                    <clipView key="contentView" id="uFB-Xo-ynV">
-                                                                                        <rect key="frame" x="1.5" y="-0.5" width="516" height="154"/>
-                                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                                        <subviews>
-                                                                                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3772" indentationPerLevel="16" outlineTableColumn="3776" id="3774">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
-                                                                                                <autoresizingMask key="autoresizingMask"/>
-                                                                                                <size key="intercellSpacing" width="3" height="2"/>
-                                                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                                <tableViewGridLines key="gridStyleMask" vertical="YES"/>
-                                                                                                <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                                                                                <tableColumns>
-                                                                                                    <tableColumn identifier="CMKeyLabelColumn" editable="NO" width="150" minWidth="40" maxWidth="1000" id="3776">
-                                                                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Joystick Button">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                                        </tableHeaderCell>
-                                                                                                        <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="3777">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                                        </textFieldCell>
-                                                                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                                                                    </tableColumn>
-                                                                                                    <tableColumn identifier="CMKeyAssignmentColumn" width="360" minWidth="40" maxWidth="1000" id="3775">
-                                                                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Mac Key">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                                        </tableHeaderCell>
-                                                                                                        <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="center" title="Text Cell" id="3778" customClass="CMKeyCaptureFieldCell">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                                        </textFieldCell>
-                                                                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                                                                    </tableColumn>
-                                                                                                </tableColumns>
-                                                                                                <connections>
-                                                                                                    <outlet property="dataSource" destination="-2" id="3838"/>
-                                                                                                    <outlet property="delegate" destination="-2" id="3836"/>
-                                                                                                </connections>
-                                                                                            </outlineView>
-                                                                                        </subviews>
-                                                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                    </clipView>
-                                                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.5" horizontal="YES" id="3773">
-                                                                                        <rect key="frame" x="1" y="154" width="516" height="15"/>
-                                                                                        <autoresizingMask key="autoresizingMask"/>
-                                                                                    </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3771">
-                                                                                        <rect key="frame" x="224" y="17" width="15" height="102"/>
-                                                                                        <autoresizingMask key="autoresizingMask"/>
-                                                                                    </scroller>
-                                                                                    <tableHeaderView key="headerView" id="3772">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="517" height="17"/>
-                                                                                        <autoresizingMask key="autoresizingMask"/>
-                                                                                    </tableHeaderView>
-                                                                                </scrollView>
                                                                                 <button verticalHuggingPriority="750" id="4474">
-                                                                                    <rect key="frame" x="304" y="-7" width="122" height="32"/>
+                                                                                    <rect key="frame" x="371" y="13" width="173" height="32"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                                    <buttonCell key="cell" type="push" title="Configure..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4475">
+                                                                                    <buttonCell key="cell" type="push" title="Configure Gamepad..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4475">
                                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
                                                                                     <connections>
-                                                                                        <action selector="configureJoypadOne:" target="-2" id="4483"/>
+                                                                                        <action selector="configureGamepadJoypadOne:" target="-2" id="lD7-hU-31U"/>
                                                                                     </connections>
                                                                                 </button>
-                                                                                <button verticalHuggingPriority="750" id="3759">
-                                                                                    <rect key="frame" x="426" y="-7" width="118" height="32"/>
+                                                                                <button verticalHuggingPriority="750" id="5Lj-sz-HR5">
+                                                                                    <rect key="frame" x="199" y="13" width="172" height="32"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                                    <buttonCell key="cell" type="push" title="Revert" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3780">
+                                                                                    <buttonCell key="cell" type="push" title="Configure Keyboard..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iq3-HR-vBr">
                                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
                                                                                     <connections>
-                                                                                        <action selector="revertJoystickOneClicked:" target="-2" id="3833"/>
+                                                                                        <action selector="configureKeyboardJoypadOne:" target="-2" id="h9u-Am-MT3"/>
                                                                                     </connections>
                                                                                 </button>
                                                                             </subviews>
@@ -1264,7 +1199,7 @@
                                                                                     <rect key="frame" x="20" y="327" width="518" height="58"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                                    <size key="cellSize" width="337" height="18"/>
+                                                                                    <size key="cellSize" width="518" height="18"/>
                                                                                     <size key="intercellSpacing" width="4" height="2"/>
                                                                                     <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="4454">
                                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1272,11 +1207,11 @@
                                                                                     </buttonCell>
                                                                                     <cells>
                                                                                         <column>
-                                                                                            <buttonCell type="radio" title="First available joystick or joypad" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="4455">
+                                                                                            <buttonCell type="radio" title="First available joystick or gamepad" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="4455">
                                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                                 <font key="font" metaFont="system"/>
                                                                                             </buttonCell>
-                                                                                            <buttonCell type="radio" title="Joystick or joypad if available; keyboard otherwise" imagePosition="left" alignment="left" inset="2" id="4456">
+                                                                                            <buttonCell type="radio" title="Joystick or gamepad if available; keyboard otherwise" imagePosition="left" alignment="left" inset="2" id="4456">
                                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                                 <font key="font" metaFont="system"/>
                                                                                             </buttonCell>
@@ -1290,89 +1225,26 @@
                                                                                         <binding destination="804" name="selectedIndex" keyPath="values.joystickPreferredMacDevicePort2" id="4471"/>
                                                                                     </connections>
                                                                                 </matrix>
-                                                                                <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="3796">
-                                                                                    <rect key="frame" x="20" y="149" width="518" height="170"/>
-                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                                    <clipView key="contentView" id="vqN-Om-Dq5">
-                                                                                        <rect key="frame" x="1" y="0.0" width="516" height="169"/>
-                                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                                        <subviews>
-                                                                                            <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3810" indentationPerLevel="16" outlineTableColumn="3812" id="3808">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="516" height="19"/>
-                                                                                                <autoresizingMask key="autoresizingMask"/>
-                                                                                                <size key="intercellSpacing" width="3" height="2"/>
-                                                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                                <tableViewGridLines key="gridStyleMask" vertical="YES"/>
-                                                                                                <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                                                                                <tableColumns>
-                                                                                                    <tableColumn identifier="CMKeyLabelColumn" editable="NO" width="150" minWidth="40" maxWidth="1000" id="3812">
-                                                                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Joystick Button">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                                        </tableHeaderCell>
-                                                                                                        <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="3815">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                                        </textFieldCell>
-                                                                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                                                                    </tableColumn>
-                                                                                                    <tableColumn identifier="CMKeyAssignmentColumn" width="360" minWidth="40" maxWidth="1000" id="3813">
-                                                                                                        <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Mac Key">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                                        </tableHeaderCell>
-                                                                                                        <textFieldCell key="dataCell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="center" title="Text Cell" id="3814" customClass="CMKeyCaptureFieldCell">
-                                                                                                            <font key="font" metaFont="smallSystem"/>
-                                                                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                                        </textFieldCell>
-                                                                                                        <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                                                                    </tableColumn>
-                                                                                                </tableColumns>
-                                                                                                <connections>
-                                                                                                    <outlet property="dataSource" destination="-2" id="3839"/>
-                                                                                                    <outlet property="delegate" destination="-2" id="3834"/>
-                                                                                                </connections>
-                                                                                            </outlineView>
-                                                                                        </subviews>
-                                                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                                    </clipView>
-                                                                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="3809">
-                                                                                        <rect key="frame" x="1" y="248" width="309" height="16"/>
-                                                                                        <autoresizingMask key="autoresizingMask"/>
-                                                                                    </scroller>
-                                                                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3811">
-                                                                                        <rect key="frame" x="224" y="17" width="15" height="102"/>
-                                                                                        <autoresizingMask key="autoresizingMask"/>
-                                                                                    </scroller>
-                                                                                    <tableHeaderView key="headerView" id="3810">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="516" height="17"/>
-                                                                                        <autoresizingMask key="autoresizingMask"/>
-                                                                                    </tableHeaderView>
-                                                                                </scrollView>
                                                                                 <button verticalHuggingPriority="750" id="4478">
-                                                                                    <rect key="frame" x="304" y="-7" width="122" height="32"/>
+                                                                                    <rect key="frame" x="371" y="13" width="173" height="32"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                                    <buttonCell key="cell" type="push" title="Configure..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4479">
+                                                                                    <buttonCell key="cell" type="push" title="Configure Gamepad..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="4479">
                                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
                                                                                     <connections>
-                                                                                        <action selector="configureJoypadTwo:" target="-2" id="4485"/>
+                                                                                        <action selector="configureGamepadJoypadTwo:" target="-2" id="iGV-tW-iha"/>
                                                                                     </connections>
                                                                                 </button>
-                                                                                <button verticalHuggingPriority="750" id="3795">
-                                                                                    <rect key="frame" x="426" y="-7" width="118" height="32"/>
+                                                                                <button verticalHuggingPriority="750" id="HWm-Eo-bXy">
+                                                                                    <rect key="frame" x="199" y="13" width="172" height="32"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                                    <buttonCell key="cell" type="push" title="Revert" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3816">
+                                                                                    <buttonCell key="cell" type="push" title="Configure Keyboard..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vJg-Mt-Py9">
                                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
                                                                                     <connections>
-                                                                                        <action selector="revertJoystickTwoClicked:" target="-2" id="3831"/>
+                                                                                        <action selector="configureKeyboardJoypadTwo:" target="-2" id="rLB-dz-u74"/>
                                                                                     </connections>
                                                                                 </button>
                                                                             </subviews>
