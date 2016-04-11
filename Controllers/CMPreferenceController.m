@@ -32,7 +32,6 @@
 
 #import "MGScopeBar.h"
 
-#import "CMMSXJoystick.h"
 #import "CMKeyboardInput.h"
 #import "CMMachine.h"
 #import "CMMixerChannel.h"
@@ -1321,7 +1320,7 @@ objectValueForTableColumn:(NSTableColumn *) tableColumn
             return nil;
         } else if ([[tableColumn identifier] isEqualToString:@"CMKeyAssignmentColumn"]) {
             CMKeyboardInput *keyInput = (CMKeyboardInput *)[[theEmulator keyboardLayout] inputMethodForVirtualCode:virtualCode];
-            return [CMKeyCaptureView descriptionForKeyCode:@([keyInput keyCode])];
+            return [CMKeyCaptureView descriptionForKeyCode:[keyInput keyCode]];
         }
     }
     

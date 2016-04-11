@@ -36,6 +36,11 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 @end
 
 @implementation CMKeyboardManager
+{
+	IOHIDManagerRef keyboardHidManager;
+	NSMutableArray *observers;
+	NSObject *observerLock;
+}
 
 + (CMKeyboardManager *)sharedInstance
 {

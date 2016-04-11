@@ -34,13 +34,6 @@
 @end
 
 @interface CMKeyboardManager : NSObject
-{
-    IOHIDManagerRef keyboardHidManager;
-    NSMutableArray *observers;
-    
-    @private
-    NSObject *observerLock;
-}
 
 + (CMKeyboardManager *)sharedInstance;
 
