@@ -306,7 +306,7 @@
         [[self emulator] setFileToLoadAtStartup:filename];
         return YES;
     }
-    
+	
     // Load it now
     return [[self emulator] insertUnknownMedia:filename];
 }
@@ -320,7 +320,17 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    [[self emulator] showWindow:self];
+	[_emulator setMachineOverride:CMGetObjPref(@"machineConfiguration")];
+	
+	NSArray<NSString *> *args = [[NSProcessInfo processInfo] arguments];
+	int argc = [args count];
+	[args enumerateObjectsUsingBlock:^(NSString *arg, NSUInteger idx, BOOL * _Nonnull stop) {
+		if ([arg isEqualToString:@"-s"] && idx + 1 < argc) {
+			[_emulator setMachineOverride:[args objectAtIndex:idx + 1]];
+		}
+	}];
+	
+    [_emulator showWindow:self];
     
     didApplicationLoad = YES;
     

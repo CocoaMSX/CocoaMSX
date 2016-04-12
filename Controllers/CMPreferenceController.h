@@ -84,8 +84,10 @@
 - (IBAction) configureGamepadJoypadOne:(id) sender;
 - (IBAction) configureGamepadJoypadTwo:(id) sender;
 
-- (IBAction)performColdRebootClicked:(id)sender;
+- (IBAction) performColdRebootClicked:(id)sender;
 
-- (IBAction)emulationSpeedSliderMoved:(id)sender;
+- (IBAction) emulationSpeedSliderMoved:(id)sender;
+
+- (IBAction) launchInstance:(id) sender;
 
 @end

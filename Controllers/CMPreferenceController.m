@@ -39,7 +39,6 @@
 #import "CMCocoaInput.h"
 #import "CMKeyCaptureView.h"
 #import "CMHeaderRowCell.h"
-#import "CMMachineSelectionCell.h"
 #import "CMGamepadConfiguration.h"
 
 #import "CMMachineInstallationOperation.h"
@@ -577,8 +576,6 @@ extern CMEmulatorController *theEmulator;
         [all addObject:obj];
     }];
     
-    NSString *activeMachine = CMGetObjPref(@"machineConfiguration");
-    
     // Load installed machines
     NSMutableSet *installed = [NSMutableSet set];
     NSArray *foundNames = [CMEmulatorController machineConfigurations];
@@ -587,7 +584,7 @@ extern CMEmulatorController *theEmulator;
          CMMachine *machine = [CMMachine machineWithPath:obj];
          [machine setStatus:CMMachineInstalled];
          
-         if ([[machine machineId] isEqualToString:activeMachine])
+         if ([[machine machineId] isEqualToString:[theEmulator machineOverride]])
          {
              if (![machine active])
                  [machine setActive:YES];
@@ -1004,6 +1001,18 @@ extern CMEmulatorController *theEmulator;
 - (void)refreshMachineList:(id)sender
 {
     [self requestMachineFeedUpdate];
+}
+
+- (void) launchInstance:(id) sender
+{
+	CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
+	if ([selection status] == CMMachineInstalled) {
+		NSError *err = nil;
+		[[NSWorkspace sharedWorkspace] launchApplicationAtURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]
+													  options:NSWorkspaceLaunchNewInstance
+												configuration:@{ NSWorkspaceLaunchConfigurationArguments: @[ @"-s", [selection path] ] }
+														error:&err];
+	}
 }
 
 - (void)alertDidEnd:(NSAlert *)alert

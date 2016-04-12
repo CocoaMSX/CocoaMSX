@@ -71,6 +71,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 @property (nonatomic, copy) NSString *lastSavedState;
 @property (nonatomic, copy) NSString *lastLoadedState;
 
+@property (nonatomic, strong) NSString *machineOverride;
 @property (nonatomic, strong) CMInputDeviceLayout *keyboardLayout;
 
 @property (nonatomic, assign) NSInteger scanlines;

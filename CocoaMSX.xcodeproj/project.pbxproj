@@ -304,6 +304,7 @@
 		FE2D858216E52FEE003EFB3F /* ArrayList.c in Sources */ = {isa = PBXBuildFile; fileRef = FE2D858116E52FED003EFB3F /* ArrayList.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		FE2E1963164085A000BCFD53 /* CMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = FE2E1962164085A000BCFD53 /* CMPreferences.m */; };
 		FE359BBD1CB31D7900391AEC /* CMJoyCaptureView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE359BBC1CB31D7900391AEC /* CMJoyCaptureView.m */; };
+		FE359BC01CBC6F7300391AEC /* CMMachineTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE359BBF1CBC6F7300391AEC /* CMMachineTableCellView.m */; };
 		FE3D5E6616AE6EBA00898DF5 /* toolbar-computer.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */; };
 		FE3D5E6716AE6EBA00898DF5 /* toolbar-computer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */; };
 		FE41ABA11930056100AB89FF /* CMKeyEventData.m in Sources */ = {isa = PBXBuildFile; fileRef = FE41ABA01930056100AB89FF /* CMKeyEventData.m */; };
@@ -1035,6 +1036,8 @@
 		FE2E1962164085A000BCFD53 /* CMPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferences.m; sourceTree = "<group>"; };
 		FE359BBB1CB31D7900391AEC /* CMJoyCaptureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMJoyCaptureView.h; sourceTree = "<group>"; };
 		FE359BBC1CB31D7900391AEC /* CMJoyCaptureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMJoyCaptureView.m; sourceTree = "<group>"; };
+		FE359BBE1CBC6F7300391AEC /* CMMachineTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMachineTableCellView.h; sourceTree = "<group>"; };
+		FE359BBF1CBC6F7300391AEC /* CMMachineTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMachineTableCellView.m; sourceTree = "<group>"; };
 		FE3D5E6416AE6EBA00898DF5 /* toolbar-computer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-computer.png"; sourceTree = "<group>"; };
 		FE3D5E6516AE6EBA00898DF5 /* toolbar-computer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-computer@2x.png"; sourceTree = "<group>"; };
 		FE41ABA01930056100AB89FF /* CMKeyEventData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMKeyEventData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -2203,6 +2206,8 @@
 				FE88FF57169B9AC5004B483B /* CMKeyCaptureFieldCell.m */,
 				FE88FF54169B9AC5004B483B /* CMKeyCaptureView.h */,
 				FE88FF55169B9AC5004B483B /* CMKeyCaptureView.m */,
+				FE359BBE1CBC6F7300391AEC /* CMMachineTableCellView.h */,
+				FE359BBF1CBC6F7300391AEC /* CMMachineTableCellView.m */,
 				FEF40ED2160DB83B009170A9 /* CMMsxDisplayView.h */,
 				FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */,
 				FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */,
@@ -2703,6 +2708,7 @@
 				E997346C1298B4B500766C90 /* ZipFromMem.c in Sources */,
 				E997346D1298B4B500766C90 /* ziphelper.c in Sources */,
 				E997346E1298B4B500766C90 /* CRTC6845.c in Sources */,
+				FE359BC01CBC6F7300391AEC /* CMMachineTableCellView.m in Sources */,
 				E997346F1298B4B500766C90 /* FrameBuffer.c in Sources */,
 				E99734701298B4B500766C90 /* V9938.c in Sources */,
 				E99734711298B4B500766C90 /* VDP.c in Sources */,

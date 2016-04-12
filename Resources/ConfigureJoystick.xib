@@ -128,7 +128,7 @@ Gw
                     <button verticalHuggingPriority="750" id="13">
                         <rect key="frame" x="320" y="13" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="14">
+                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="14">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -144,7 +144,7 @@ DQ
             <connections>
                 <outlet property="delegate" destination="-2" id="11"/>
             </connections>
-            <point key="canvasLocation" x="443" y="559"/>
+            <point key="canvasLocation" x="357" y="388"/>
         </window>
     </objects>
 </document>

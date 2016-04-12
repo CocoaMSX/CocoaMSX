@@ -415,6 +415,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     if ([self isInitialized])
         return;
     
+	NSLog(@"EmulatorController: creating '%@'", _machineOverride);
+	
     CMPreferences *prefs = [CMPreferences preferences];
     
     // Initialize paths
@@ -428,9 +430,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
     machineSetDirectory([prefs.machineDirectory UTF8String]);
     
     properties = propCreate(0, 0, P_KBD_EUROPEAN, 0, "");
-    
+	
     strncpy(properties->emulation.machineName,
-            [CMGetObjPref(@"machineConfiguration") cStringUsingEncoding:NSUTF8StringEncoding],
+            [_machineOverride cStringUsingEncoding:NSUTF8StringEncoding],
             PROP_MAXPATH - 1);
     
     // Initialize the emulator
