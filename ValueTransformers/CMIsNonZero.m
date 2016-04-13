@@ -20,10 +20,23 @@
  **
  ******************************************************************************
  */
-#import <Cocoa/Cocoa.h>
+#import "CMIsNonZero.h"
 
-@interface CMMachineSelectionCell : NSButtonCell
+@implementation CMIsNonZero
 
-@property (nonatomic, assign) BOOL downloadingIconVisible;
++ (Class) transformedValueClass
+{
+    return [NSNumber class];
+}
+
++ (BOOL) allowsReverseTransformation
+{
+    return NO;
+}
+
+- (id) transformedValue:(id) value
+{
+    return @([value integerValue] != 0);
+}
 
 @end

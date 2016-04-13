@@ -46,7 +46,6 @@ extern NSString * const CMMsxTurboRMachine;
 @property (nonatomic, strong) NSURL *machineUrl;
 @property (nonatomic, assign) NSInteger system;
 @property (nonatomic, assign) NSInteger status;
-@property (nonatomic, assign) BOOL active;
 
 + (CMMachine *)machineWithPath:(NSString *)path;
 

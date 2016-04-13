@@ -664,6 +664,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self start];
 }
 
+- (void) restartAs:(NSString *) machine
+{
+	_machineOverride = machine;
+	[self performColdReboot];
+}
+
 - (int)ledState
 {
     int state = 0;

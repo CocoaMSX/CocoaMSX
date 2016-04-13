@@ -24,8 +24,10 @@
 
 @interface CMMachineTableCellView : NSTableCellView
 {
-	IBOutlet NSTextField *machineName;
+	IBOutlet NSTextField *name;
 	IBOutlet NSTextField *system;
+	IBOutlet NSImageView *status;
+	IBOutlet NSImageView *defaultIcon;
 }
 
 @end

@@ -26,8 +26,8 @@
 #import "CMPreferences.h"
 
 NSString *const CMMsxMachine       = @"MSX";
-NSString *const CMMsx2Machine      = @"MSX 2";
-NSString *const CMMsx2PMachine     = @"MSX 2+";
+NSString *const CMMsx2Machine      = @"MSX₂";
+NSString *const CMMsx2PMachine     = @"MSX₂₊";
 NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 
 @interface CMMachine ()
@@ -54,7 +54,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _checksum = nil;
         _system = CMUnknown;
         _status = CMMachineDownloadable;
-        _active = NO;
     }
     
     return self;
@@ -153,15 +152,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     return [[prefs machineDirectory] stringByAppendingPathComponent:[[self machineUrl] lastPathComponent]];
 }
 
-- (void)setActive:(BOOL)active
-{
-    _active = active;
-    
-    // Set this machine as the active machine in preferences
-    if (active)
-        CMSetObjPref(@"machineConfiguration", _machineId);
-}
-
 #pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -175,7 +165,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _checksum = [aDecoder decodeObjectForKey:@"checksum"];
         _system = [aDecoder decodeIntegerForKey:@"system"];
         _status = [aDecoder decodeIntegerForKey:@"status"];
-        _active = [aDecoder decodeBoolForKey:@"active"];
     }
     
     return self;
@@ -190,7 +179,6 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [aCoder encodeObject:_checksum forKey:@"checksum"];
     [aCoder encodeInteger:_system forKey:@"system"];
     [aCoder encodeInteger:_status forKey:@"status"];
-    [aCoder encodeBool:_active forKey:@"active"];
 }
 
 #pragma mark - NSCopying
@@ -207,18 +195,16 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
  
     copy->_status = _status;
     copy->_system = _system;
-    copy->_active = _active;
     
     return copy;
 }
 
-- (NSComparisonResult)compare:(CMMachine *)machine
+- (NSComparisonResult) compare:(CMMachine *)machine
 {
-    if (_system < machine->_system)
-        return NSOrderedAscending;
-    else if (_system > machine->_system)
-        return NSOrderedDescending;
-    
+	if (_system != machine->_system) {
+		return _system - machine->_system;
+	}
+	
     return [_name caseInsensitiveCompare:machine->_name];
 }
 

@@ -20,12 +20,8 @@
  **
  ******************************************************************************
  */
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
-@class CMMachine;
-
-@interface CMMachineCell : NSTextFieldCell
-{
-}
+@interface CMIsNonZero : NSValueTransformer
 
 @end

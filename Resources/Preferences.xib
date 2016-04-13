@@ -148,13 +148,13 @@
                                     <subviews>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="50" horizontalPageScroll="10" verticalLineScroll="50" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="GiQ-wY-CCn">
                                             <rect key="frame" x="19" y="199" width="559" height="315"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="l50-mf-7h1">
                                                 <rect key="frame" x="1" y="1" width="557" height="313"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="a7i-vw-LLh">
-                                                        <rect key="frame" x="0.0" y="0.0" width="557" height="313"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="557" height="0.0"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -177,10 +177,15 @@
                                                                         <rect key="frame" x="1" y="1" width="554" height="48"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
+                                                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="fIN-kc-jqy">
+                                                                                <rect key="frame" x="3" y="28" width="16" height="16"/>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="hxV-zw-yUv"/>
+                                                                            </imageView>
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="p3W-9s-pre">
-                                                                                <rect key="frame" x="1" y="28" width="552" height="17"/>
+                                                                                <rect key="frame" x="25" y="28" width="528" height="17"/>
                                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="cjm-xW-xaC">
+                                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Yamaha YIS-805IIR" id="cjm-xW-xaC">
                                                                                     <font key="font" metaFont="system"/>
                                                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -189,10 +194,15 @@
                                                                                     <binding destination="G4W-Jo-6Zj" name="value" keyPath="objectValue.name" id="qyM-Bs-W13"/>
                                                                                 </connections>
                                                                             </textField>
+                                                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="B2r-Lv-j6P">
+                                                                                <rect key="frame" x="3" y="3" width="16" height="16"/>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon-default" id="mIx-do-jy0"/>
+                                                                            </imageView>
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="TJA-jv-3eK">
-                                                                                <rect key="frame" x="1" y="6" width="552" height="14"/>
+                                                                                <rect key="frame" x="25" y="3" width="528" height="14"/>
                                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="Jnd-HT-noM">
+                                                                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="MSX₂" id="Jnd-HT-noM">
                                                                                     <font key="font" metaFont="smallSystem"/>
                                                                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -202,6 +212,12 @@
                                                                                 </connections>
                                                                             </textField>
                                                                         </subviews>
+                                                                        <connections>
+                                                                            <outlet property="defaultIcon" destination="B2r-Lv-j6P" id="HCE-na-DDa"/>
+                                                                            <outlet property="name" destination="p3W-9s-pre" id="Jih-go-0bG"/>
+                                                                            <outlet property="status" destination="fIN-kc-jqy" id="lNw-g7-jyd"/>
+                                                                            <outlet property="system" destination="TJA-jv-3eK" id="0mX-RH-EMe"/>
+                                                                        </connections>
                                                                     </tableCellView>
                                                                 </prototypeCellViews>
                                                             </tableColumn>
@@ -311,6 +327,11 @@
                                             </buttonCell>
                                             <connections>
                                                 <action selector="performColdRebootClicked:" target="-2" id="1797"/>
+                                                <binding destination="mqW-Wf-8nz" name="enabled" keyPath="selection.status" id="uDA-ag-aqp">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">CMIsMachineInstalled</string>
+                                                    </dictionary>
+                                                </binding>
                                             </connections>
                                         </button>
                                         <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3977">
@@ -360,14 +381,19 @@
                                             </connections>
                                         </matrix>
                                         <button verticalHuggingPriority="750" id="T9V-ZZ-crw">
-                                            <rect key="frame" x="347" y="162" width="81" height="32"/>
+                                            <rect key="frame" x="336" y="162" width="130" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8do-OJ-b2r">
+                                            <buttonCell key="cell" type="push" title="New Window..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8do-OJ-b2r">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
                                                 <action selector="launchInstance:" target="-2" id="qhH-2f-JLc"/>
+                                                <binding destination="mqW-Wf-8nz" name="enabled" keyPath="selection.status" id="YcO-j8-CT7">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">CMIsMachineInstalled</string>
+                                                    </dictionary>
+                                                </binding>
                                             </connections>
                                         </button>
                                         <customView id="PgO-iz-9VP" customClass="MGScopeBar">
@@ -1416,6 +1442,8 @@
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
+        <image name="NSStatusAvailable" width="16" height="16"/>
+        <image name="icon-default" width="19.200000762939453" height="19.200000762939453"/>
         <image name="toolbar-computer" width="36.571430206298828" height="36.571430206298828"/>
         <image name="toolbar-joypad" width="38.400001525878906" height="38.400001525878906"/>
         <image name="toolbar-keyboard" width="17.587785720825195" height="17.587785720825195"/>

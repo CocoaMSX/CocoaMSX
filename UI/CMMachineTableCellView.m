@@ -22,8 +22,37 @@
  */
 #import "CMMachineTableCellView.h"
 
+#import "CMEmulatorController.h"
 #import "CMMachine.h"
 
+extern CMEmulatorController *theEmulator;
+
 @implementation CMMachineTableCellView
+
+- (void) setBackgroundStyle:(NSBackgroundStyle) backgroundStyle
+{
+	[super setBackgroundStyle:backgroundStyle];
+	
+	if ([[self objectValue] status] != CMMachineInstalled) {
+		[name setTextColor:[NSColor disabledControlTextColor]];
+		[system setTextColor:[NSColor disabledControlTextColor]];
+	} else {
+		if (backgroundStyle == NSBackgroundStyleLight) {
+			[name setTextColor:[NSColor controlTextColor]];
+			[system setTextColor:[NSColor secondaryLabelColor]];
+		} else {
+			[name setTextColor:[NSColor selectedTextColor]];
+			[system setTextColor:[NSColor secondarySelectedControlColor]];
+		}
+	}
+}
+
+- (void) setObjectValue:(id) objectValue
+{
+	[super setObjectValue:objectValue];
+	
+	[status setHidden:![[theEmulator machineOverride] isEqualToString:[objectValue path]]];
+	[defaultIcon setHidden:![CMGetObjPref(@"machineConfiguration") isEqualToString:[objectValue path]]];
+}
 
 @end

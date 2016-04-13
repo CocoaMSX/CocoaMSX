@@ -276,7 +276,6 @@
 		FE17A07C1929CC96007FB866 /* fdd0_led_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0781929CC96007FB866 /* fdd0_led_off@2x.png */; };
 		FE17A07D1929CC96007FB866 /* fdd0_led_on.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A0791929CC96007FB866 /* fdd0_led_on.png */; };
 		FE17A07E1929CC96007FB866 /* fdd0_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17A07A1929CC96007FB866 /* fdd0_led_off.png */; };
-		FE17DBF116B3B9A7004ED68D /* CMMachineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */; };
 		FE17DBFB16B3BD1A004ED68D /* logo-msx.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF316B3BD1A004ED68D /* logo-msx.png */; };
 		FE17DBFC16B3BD1A004ED68D /* logo-msx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */; };
 		FE17DBFD16B3BD1A004ED68D /* logo-msx2.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBF516B3BD1A004ED68D /* logo-msx2.png */; };
@@ -347,13 +346,15 @@
 		FE99C53D160E634200843DC8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE99C53C160E634100843DC8 /* QuartzCore.framework */; };
 		FE9B86B616D458CC00623DBD /* NSData+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86B516D458CC00623DBD /* NSData+MD5.m */; };
 		FE9B86B916D45A2E00623DBD /* NSString+CMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86B816D45A2E00623DBD /* NSString+CMExtensions.m */; };
-		FE9B86BC16D4A96300623DBD /* CMMachineSelectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86BB16D4A96300623DBD /* CMMachineSelectionCell.m */; };
 		FE9B86BF16D4AC8100623DBD /* CMMachineInstallationOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */; };
 		FE9C6A27161A446B00513A6D /* CMEmulatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C6A26161A446B00513A6D /* CMEmulatorController.m */; };
 		FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C6A2B161AAD3B00513A6D /* CMCocoaMouse.m */; };
 		FE9D27AA161EDB2600ADFB0F /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */; };
 		FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B361620C7720066FDD8 /* Localizable.strings */; };
 		FEA0B740168587A3006B5244 /* SnapshotDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */; };
+		FEA3C65D1CBD8457003E0BA1 /* CMIsNonZero.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA3C65C1CBD8457003E0BA1 /* CMIsNonZero.m */; };
+		FEA3C6601CBDC2EB003E0BA1 /* icon-default.png in Resources */ = {isa = PBXBuildFile; fileRef = FEA3C65E1CBDC2EB003E0BA1 /* icon-default.png */; };
+		FEA3C6611CBDC2EB003E0BA1 /* icon-default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEA3C65F1CBDC2EB003E0BA1 /* icon-default@2x.png */; };
 		FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548C1679B65300AAECB7 /* DiskDocument.icns */; };
 		FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */; };
 		FEA6E8A416EB0A2800A580CF /* CMMSXKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */; };
@@ -994,8 +995,6 @@
 		FE17A0781929CC96007FB866 /* fdd0_led_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fdd0_led_off@2x.png"; sourceTree = "<group>"; };
 		FE17A0791929CC96007FB866 /* fdd0_led_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd0_led_on.png; sourceTree = "<group>"; };
 		FE17A07A1929CC96007FB866 /* fdd0_led_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fdd0_led_off.png; sourceTree = "<group>"; };
-		FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMMachineCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMMachineCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FE17DBF316B3BD1A004ED68D /* logo-msx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx.png"; sourceTree = "<group>"; };
 		FE17DBF416B3BD1A004ED68D /* logo-msx@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx@2x.png"; sourceTree = "<group>"; };
 		FE17DBF516B3BD1A004ED68D /* logo-msx2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-msx2.png"; sourceTree = "<group>"; };
@@ -1098,8 +1097,6 @@
 		FE9B86B516D458CC00623DBD /* NSData+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MD5.m"; sourceTree = "<group>"; };
 		FE9B86B716D45A2E00623DBD /* NSString+CMExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CMExtensions.h"; sourceTree = "<group>"; };
 		FE9B86B816D45A2E00623DBD /* NSString+CMExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CMExtensions.m"; sourceTree = "<group>"; };
-		FE9B86BA16D4A96300623DBD /* CMMachineSelectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMMachineSelectionCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		FE9B86BB16D4A96300623DBD /* CMMachineSelectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMMachineSelectionCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FE9B86BD16D4AC8100623DBD /* CMMachineInstallationOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMMachineInstallationOperation.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FE9B86BE16D4AC8100623DBD /* CMMachineInstallationOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMMachineInstallationOperation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FE9C6A25161A446B00513A6D /* CMEmulatorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMEmulatorController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1110,6 +1107,10 @@
 		FEA01B361620C7720066FDD8 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMCocoaTimer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = SnapshotDocument.icns; sourceTree = "<group>"; };
+		FEA3C65B1CBD8457003E0BA1 /* CMIsNonZero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMIsNonZero.h; sourceTree = "<group>"; };
+		FEA3C65C1CBD8457003E0BA1 /* CMIsNonZero.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMIsNonZero.m; sourceTree = "<group>"; };
+		FEA3C65E1CBDC2EB003E0BA1 /* icon-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-default.png"; sourceTree = "<group>"; };
+		FEA3C65F1CBDC2EB003E0BA1 /* icon-default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-default@2x.png"; sourceTree = "<group>"; };
 		FEA4548C1679B65300AAECB7 /* DiskDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DiskDocument.icns; sourceTree = "<group>"; };
 		FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = CassetteDocument.icns; sourceTree = "<group>"; };
 		FEA6277A16A0CAD70048C05C /* cbios.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cbios.txt; sourceTree = "<group>"; };
@@ -1347,6 +1348,8 @@
 				FEA4548F1679BAF700AAECB7 /* CassetteDocument.icns */,
 				FEA4548C1679B65300AAECB7 /* DiskDocument.icns */,
 				FEA0B73F168587A3006B5244 /* SnapshotDocument.icns */,
+				FEA3C65E1CBDC2EB003E0BA1 /* icon-default.png */,
+				FEA3C65F1CBDC2EB003E0BA1 /* icon-default@2x.png */,
 				FE46C8EB16CA188E00D25801 /* icon-downloading.png */,
 				FE46C8EC16CA188E00D25801 /* icon-downloading@2x.png */,
 				FE46C8EF16CA1DCA00D25801 /* icon-downloading-inverse.png */,
@@ -2147,6 +2150,8 @@
 				FEFF3F741935AFB500434DED /* CMIsMachineDownloadable.m */,
 				FEFF3F701935AA1C00434DED /* CMIsMachineInstalled.h */,
 				FEFF3F711935AA1C00434DED /* CMIsMachineInstalled.m */,
+				FEA3C65B1CBD8457003E0BA1 /* CMIsNonZero.h */,
+				FEA3C65C1CBD8457003E0BA1 /* CMIsNonZero.m */,
 				FE2D857B16E33140003EFB3F /* CMIsZero.h */,
 				FE2D857C16E33140003EFB3F /* CMIsZero.m */,
 				FE2D857E16E3480C003EFB3F /* CMAsString.h */,
@@ -2210,10 +2215,6 @@
 				FE359BBF1CBC6F7300391AEC /* CMMachineTableCellView.m */,
 				FEF40ED2160DB83B009170A9 /* CMMsxDisplayView.h */,
 				FEF40ED3160DB83B009170A9 /* CMMsxDisplayView.m */,
-				FE17DBEF16B3B9A7004ED68D /* CMMachineCell.h */,
-				FE17DBF016B3B9A7004ED68D /* CMMachineCell.m */,
-				FE9B86BA16D4A96300623DBD /* CMMachineSelectionCell.h */,
-				FE9B86BB16D4A96300623DBD /* CMMachineSelectionCell.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2430,6 +2431,7 @@
 				FE5CDEB9192C871F00312BB4 /* code_led_off.png in Resources */,
 				FE17DBFD16B3BD1A004ED68D /* logo-msx2.png in Resources */,
 				FE17DBFE16B3BD1A004ED68D /* logo-msx2@2x.png in Resources */,
+				FEA3C6601CBDC2EB003E0BA1 /* icon-default.png in Resources */,
 				FE17DBFF16B3BD1A004ED68D /* logo-msx2p.png in Resources */,
 				FE5B566C1929D331001C4E85 /* fdd1_led_on@2x.png in Resources */,
 				FE17DC0016B3BD1A004ED68D /* logo-msx2p@2x.png in Resources */,
@@ -2445,6 +2447,7 @@
 				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
 				FEA74EFD16FC14B60033E2DE /* Data in Resources */,
 				FED5C8681938629B0045FE8C /* power_led_off.png in Resources */,
+				FEA3C6611CBDC2EB003E0BA1 /* icon-default@2x.png in Resources */,
 				FEC9AE29193AE0DF00E4725D /* cas_led_on.png in Resources */,
 				FE05CAD1176CD17C00D6CAC0 /* ConfigureJoystick.xib in Resources */,
 			);
@@ -2620,6 +2623,7 @@
 				E99734031298B4B500766C90 /* romMapperOpcodeSaveRam.c in Sources */,
 				E99734041298B4B500766C90 /* romMapperOpcodeSlotManager.c in Sources */,
 				E99734051298B4B500766C90 /* romMapperPAC.c in Sources */,
+				FEA3C65D1CBD8457003E0BA1 /* CMIsNonZero.m in Sources */,
 				E99734061298B4B500766C90 /* romMapperPanasonic.c in Sources */,
 				E99734071298B4B500766C90 /* romMapperPhilipsFdc.c in Sources */,
 				E99734081298B4B500766C90 /* romMapperPlain.c in Sources */,
@@ -2761,10 +2765,8 @@
 				FE88FF58169B9AC5004B483B /* CMKeyCaptureView.m in Sources */,
 				FE88FF59169B9AC5004B483B /* CMKeyCaptureFieldCell.m in Sources */,
 				FE88FF5D169BAB8B004B483B /* CMHeaderRowCell.m in Sources */,
-				FE17DBF116B3B9A7004ED68D /* CMMachineCell.m in Sources */,
 				FE17DC0516B3CFAF004ED68D /* CMMachine.m in Sources */,
 				FEFF3F721935AA1C00434DED /* CMIsMachineInstalled.m in Sources */,
-				FE9B86BC16D4A96300623DBD /* CMMachineSelectionCell.m in Sources */,
 				FE9B86BF16D4AC8100623DBD /* CMMachineInstallationOperation.m in Sources */,
 				FE2D857D16E33140003EFB3F /* CMIsZero.m in Sources */,
 				FE2D858016E3480C003EFB3F /* CMAsString.m in Sources */,

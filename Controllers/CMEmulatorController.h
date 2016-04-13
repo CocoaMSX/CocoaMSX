@@ -99,6 +99,7 @@ NSString * const CMKeyboardLayoutPrefKey;
 - (BOOL)isStarted;
 - (BOOL)isPaused;
 - (NSInteger)machineState;
+- (void) restartAs:(NSString *) machine;
 
 - (BOOL)isInFullScreenMode;
 

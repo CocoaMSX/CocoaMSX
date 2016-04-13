@@ -584,10 +584,7 @@ extern CMEmulatorController *theEmulator;
          CMMachine *machine = [CMMachine machineWithPath:obj];
          [machine setStatus:CMMachineInstalled];
          
-         if ([[machine machineId] isEqualToString:[theEmulator machineOverride]])
-         {
-             if (![machine active])
-                 [machine setActive:YES];
+         if ([[machine machineId] isEqualToString:[theEmulator machineOverride]]) {
              [self setActiveMachine:machine];
          }
          
@@ -1019,18 +1016,19 @@ extern CMEmulatorController *theEmulator;
          returnCode:(NSInteger)returnCode
         contextInfo:(void *)contextInfo
 {
-    if ((int)contextInfo == ALERT_RESTART_SYSTEM)
-    {
-        if (returnCode == NSAlertOtherReturn)
-            [theEmulator performColdReboot];
-    }
-    else if ((int)contextInfo == ALERT_REMOVE_SYSTEM)
-    {
-        if (returnCode == NSAlertOtherReturn)
-        {
+    if ((int)contextInfo == ALERT_RESTART_SYSTEM) {
+		if (returnCode == NSAlertOtherReturn) {
+			CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
+			if ([selection status] == CMMachineInstalled) {
+				[theEmulator restartAs:[selection path]];
+			}
+		}
+    } else if ((int)contextInfo == ALERT_REMOVE_SYSTEM) {
+        if (returnCode == NSAlertOtherReturn) {
             CMMachine *selectedMachine = [[machinesArrayController selectedObjects] firstObject];
-            if ([selectedMachine status] == CMMachineInstalled)
+			if ([selectedMachine status] == CMMachineInstalled) {
                 [CMEmulatorController removeMachineConfiguration:[selectedMachine path]];
+			}
         }
     }
 }
@@ -1074,14 +1072,11 @@ extern CMEmulatorController *theEmulator;
 - (void)showMachinesInFinder:(id)sender
 {
     CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
-    if ([selection status] == CMMachineInstalled)
-    {
+    if ([selection status] == CMMachineInstalled) {
         NSString *path = [CMEmulatorController pathForMachineConfigurationNamed:[selection machineId]];
         NSArray *urls = [NSArray arrayWithObject:[NSURL fileURLWithPath:path]];
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:urls];
-    }
-    else
-    {
+    } else {
         NSString *path = [[CMPreferences preferences] machineDirectory];
         [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:path]];
     }
@@ -1103,14 +1098,8 @@ extern CMEmulatorController *theEmulator;
         NSString *active = CMGetObjPref(@"machineConfiguration");
         [_machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
         {
-            BOOL matchesActive = [[obj machineId] isEqualToString:active];
-            if (!matchesActive && [obj active])
-                [obj setActive:NO];
-            else if (matchesActive)
-            {
+            if ([[obj machineId] isEqualToString:active]) {
                 [self setActiveMachine:obj];
-                if (![obj active])
-                    [obj setActive:YES];
             }
         }];
 	} else if ([keyPath isEqualToString:@"joystickDevicePort1"]) {
