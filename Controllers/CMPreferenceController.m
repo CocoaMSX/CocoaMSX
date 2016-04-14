@@ -305,6 +305,11 @@ extern CMEmulatorController *theEmulator;
 				   withIdentifier:CMGetObjPref(@"joystickDevicePort1")];
 	[self togglePeripheralTabView:peripheralTwoTabView
 				   withIdentifier:CMGetObjPref(@"joystickDevicePort2")];
+	
+	[machineTableView setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"system"
+																	   ascending:YES],
+											[NSSortDescriptor sortDescriptorWithKey:@"name"
+																	   ascending:YES]] ];
 }
 
 - (void)dealloc

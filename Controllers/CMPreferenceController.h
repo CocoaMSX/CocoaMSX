@@ -46,7 +46,8 @@
 	IBOutlet NSTabView *peripheralOneTabView;
 	IBOutlet NSTabView *peripheralTwoTabView;
 	
-    IBOutlet NSOutlineView *keyboardLayoutEditor;
+	IBOutlet NSTableView *machineTableView;
+	IBOutlet NSOutlineView *keyboardLayoutEditor;
 	
     IBOutlet NSSlider *volumeSlider;
     IBOutlet NSSlider *balanceSlider;
