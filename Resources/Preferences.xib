@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
@@ -14,6 +14,7 @@
                 <outlet property="configureJoypadTwoButton" destination="4478" id="4484"/>
                 <outlet property="contentTabView" destination="81" id="4420"/>
                 <outlet property="contrastSlider" destination="203" id="316"/>
+                <outlet property="defaultMachine" destination="f0M-in-hfb" id="9Cl-dI-hOP"/>
                 <outlet property="emulationSpeedSlider" destination="1804" id="1807"/>
                 <outlet property="gammaSlider" destination="234" id="317"/>
                 <outlet property="keyboardLayoutEditor" destination="3623" id="3845"/>
@@ -155,7 +156,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="a7i-vw-LLh">
-                                                        <rect key="frame" x="0.0" y="0.0" width="557" height="313"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="557" height="0.0"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -174,7 +175,7 @@
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
-                                                                    <tableCellView id="G4W-Jo-6Zj" customClass="CMMachineTableCellView">
+                                                                    <tableCellView identifier="machineCell" id="G4W-Jo-6Zj" customClass="CMMachineTableCellView">
                                                                         <rect key="frame" x="1" y="1" width="554" height="48"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
@@ -182,6 +183,13 @@
                                                                                 <rect key="frame" x="3" y="2" width="16" height="16"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusAvailable" id="hxV-zw-yUv"/>
+                                                                                <connections>
+                                                                                    <binding destination="G4W-Jo-6Zj" name="hidden" keyPath="objectValue.isActive" id="pWp-8O-hTr">
+                                                                                        <dictionary key="options">
+                                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                                                        </dictionary>
+                                                                                    </binding>
+                                                                                </connections>
                                                                             </imageView>
                                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="p3W-9s-pre">
                                                                                 <rect key="frame" x="25" y="28" width="528" height="17"/>
@@ -211,6 +219,13 @@
                                                                                 <rect key="frame" x="3" y="28" width="16" height="16"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon-default" id="mIx-do-jy0"/>
+                                                                                <connections>
+                                                                                    <binding destination="G4W-Jo-6Zj" name="hidden" keyPath="objectValue.isDefault" id="3iE-0K-CWz">
+                                                                                        <dictionary key="options">
+                                                                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                                                        </dictionary>
+                                                                                    </binding>
+                                                                                </connections>
                                                                             </imageView>
                                                                         </subviews>
                                                                         <connections>
@@ -228,6 +243,7 @@
                                                             <binding destination="mqW-Wf-8nz" name="content" keyPath="arrangedObjects" id="Z3S-Xq-iIf"/>
                                                             <binding destination="mqW-Wf-8nz" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="Z3S-Xq-iIf" id="w8a-3a-gDy"/>
                                                             <binding destination="mqW-Wf-8nz" name="sortDescriptors" keyPath="sortDescriptors" previousBinding="w8a-3a-gDy" id="5K4-i4-G01"/>
+                                                            <outlet property="delegate" destination="-2" id="Rzz-6g-SVZ"/>
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
@@ -287,6 +303,12 @@
                                                             <modifierMask key="keyEquivalentModifierMask"/>
                                                             <connections>
                                                                 <action selector="refreshMachineList:" target="-2" id="4006"/>
+                                                            </connections>
+                                                        </menuItem>
+                                                        <menuItem title="Default" id="f0M-in-hfb">
+                                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                                            <connections>
+                                                                <action selector="setMachineAsDefault:" target="-2" id="0SU-hj-Cf1"/>
                                                             </connections>
                                                         </menuItem>
                                                         <menuItem isSeparatorItem="YES" id="4005"/>

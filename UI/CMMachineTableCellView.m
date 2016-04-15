@@ -22,10 +22,7 @@
  */
 #import "CMMachineTableCellView.h"
 
-#import "CMEmulatorController.h"
 #import "CMMachine.h"
-
-extern CMEmulatorController *theEmulator;
 
 @implementation CMMachineTableCellView
 
@@ -45,14 +42,6 @@ extern CMEmulatorController *theEmulator;
 			[system setTextColor:[NSColor secondarySelectedControlColor]];
 		}
 	}
-}
-
-- (void) setObjectValue:(id) objectValue
-{
-	[super setObjectValue:objectValue];
-	
-	[status setHidden:![[theEmulator machineOverride] isEqualToString:[objectValue path]]];
-	[defaultIcon setHidden:![CMGetObjPref(@"machineConfiguration") isEqualToString:[objectValue path]]];
 }
 
 @end

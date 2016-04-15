@@ -165,6 +165,8 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
         _checksum = [aDecoder decodeObjectForKey:@"checksum"];
         _system = [aDecoder decodeIntegerForKey:@"system"];
         _status = [aDecoder decodeIntegerForKey:@"status"];
+		_isActive = [aDecoder decodeIntegerForKey:@"isActive"];
+		_isDefault = [aDecoder decodeIntegerForKey:@"isDefault"];
     }
     
     return self;
@@ -178,7 +180,9 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [aCoder encodeObject:_machineUrl forKey:@"machineUrl"];
     [aCoder encodeObject:_checksum forKey:@"checksum"];
     [aCoder encodeInteger:_system forKey:@"system"];
-    [aCoder encodeInteger:_status forKey:@"status"];
+	[aCoder encodeInteger:_status forKey:@"status"];
+	[aCoder encodeBool:_isActive forKey:@"isActive"];
+	[aCoder encodeBool:_isDefault forKey:@"isDefault"];
 }
 
 #pragma mark - NSCopying
@@ -194,8 +198,10 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
     [copy setChecksum:_checksum];
  
     copy->_status = _status;
-    copy->_system = _system;
-    
+	copy->_system = _system;
+	copy->_isActive = _isActive;
+	copy->_isDefault = _isDefault;
+	
     return copy;
 }
 

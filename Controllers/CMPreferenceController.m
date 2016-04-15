@@ -154,7 +154,7 @@ static NSArray<NSString *> *sharedUserDefaultsToObserve;
 
 @implementation CMPreferenceController
 {
-	NSMutableArray *_machines;
+	NSMutableArray<CMMachine *> *_machines;
 	NSArray *_channels;
 	NSString *_machineNameFilter;
 	NSInteger machineFamilyFilter;
@@ -238,18 +238,16 @@ extern CMEmulatorController *theEmulator;
     keyCaptureView = nil;
 	
     // Initialize sliders
-    NSArray *sliders = @[ brightnessSlider,
-						  contrastSlider,
-						  saturationSlider,
-						  gammaSlider,
-						  scanlineSlider,
-						  balanceSlider,
-						  volumeSlider ];
+    NSArray<NSSlider *> *sliders = @[ brightnessSlider,
+									  contrastSlider,
+									  saturationSlider,
+									  gammaSlider,
+									  scanlineSlider,
+									  balanceSlider,
+									  volumeSlider ];
     
-    [sliders enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+    [sliders enumerateObjectsUsingBlock:^(NSSlider *slider, NSUInteger idx, BOOL *stop)
     {
-        NSSlider *slider = (NSSlider*)obj;
-        
         [slider setAction:@selector(sliderValueChanged:)];
         [slider setTarget:self];
     }];
@@ -588,7 +586,7 @@ extern CMEmulatorController *theEmulator;
      {
          CMMachine *machine = [CMMachine machineWithPath:obj];
          [machine setStatus:CMMachineInstalled];
-         
+		 
          if ([[machine machineId] isEqualToString:[theEmulator machineOverride]]) {
              [self setActiveMachine:machine];
          }
@@ -626,27 +624,34 @@ extern CMEmulatorController *theEmulator;
     
     // Synchronize remaining machines
     __block NSInteger machinesUpdated = 0;
-    [[machinesArrayController content] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+	NSString *defaultConfig = CMGetObjPref(@"machineConfiguration");
+    [[machinesArrayController content] enumerateObjectsUsingBlock:^(CMMachine *m, NSUInteger idx, BOOL *stop)
     {
-        CMMachine *inController = obj;
-        CMMachine *updated = [all member:inController];
-        
-        if ([inController status] != [updated status]
-            && [inController status] != CMMachineDownloading)
+        CMMachine *updated = [all member:m];
+        if ([m status] != [updated status] && [m status] != CMMachineDownloading)
         {
             // Status has changed for one of the machines
             // Update the item in the controller
             
-            [inController setName:[updated name]];
-            [inController setPath:[updated path]];
-            [inController setMachineId:[updated machineId]];
-            [inController setMachineUrl:[updated machineUrl]];
-            [inController setChecksum:[updated checksum]];
-            [inController setSystem:[updated system]];
-            [inController setStatus:[updated status]];
+            [m setName:[updated name]];
+            [m setPath:[updated path]];
+            [m setMachineId:[updated machineId]];
+            [m setMachineUrl:[updated machineUrl]];
+            [m setChecksum:[updated checksum]];
+            [m setSystem:[updated system]];
+            [m setStatus:[updated status]];
             
             machinesUpdated++;
         }
+		
+		BOOL isActive = [[m machineId] isEqualToString:[theEmulator machineOverride]];
+		if ([m isActive] != isActive) {
+			[m setIsActive:isActive];
+		}
+		BOOL isDefault = [[m machineId] isEqualToString:defaultConfig];
+		if ([m isDefault] != isDefault) {
+			[m setIsDefault:isDefault];
+		}
     }];
     
     // If anything has changed, rearrange the objects
@@ -1074,7 +1079,7 @@ extern CMEmulatorController *theEmulator;
     CMSetIntPref(@"emulationSpeedPercentage", percentage);
 }
 
-- (void)showMachinesInFinder:(id)sender
+- (void) showMachinesInFinder:(id)sender
 {
     CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
     if ([selection status] == CMMachineInstalled) {
@@ -1085,6 +1090,14 @@ extern CMEmulatorController *theEmulator;
         NSString *path = [[CMPreferences preferences] machineDirectory];
         [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:path]];
     }
+}
+
+- (void) setMachineAsDefault:(id) sender
+{
+	CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
+	if ([selection status] == CMMachineInstalled) {
+		CMSetObjPref(@"machineConfiguration", [selection machineId]);
+	}
 }
 
 #pragma mark - KVO Notifications
@@ -1100,12 +1113,13 @@ extern CMEmulatorController *theEmulator;
         // Active machine has changed. Go through the list of machines and
         // deactivate all except the one active
         
-        NSString *active = CMGetObjPref(@"machineConfiguration");
-        [_machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+        NSString *defaultConfig = CMGetObjPref(@"machineConfiguration");
+        [_machines enumerateObjectsUsingBlock:^(CMMachine *m, NSUInteger idx, BOOL *stop)
         {
-            if ([[obj machineId] isEqualToString:active]) {
-                [self setActiveMachine:obj];
-            }
+			BOOL isDefault = [[m machineId] isEqualToString:defaultConfig];
+			if ([m isDefault] != isDefault) {
+				[m setIsDefault:isDefault];
+			}
         }];
 	} else if ([keyPath isEqualToString:@"joystickDevicePort1"]) {
 		[self togglePeripheralTabView:peripheralOneTabView
@@ -1260,6 +1274,22 @@ extern CMEmulatorController *theEmulator;
                           didEndSelector:nil
                              contextInfo:nil];
      }];
+}
+
+#pragma mark - NSTableViewDelegate
+
+- (void) tableViewSelectionDidChange:(NSNotification *) notification
+{
+	CMMachine *selection = [[machinesArrayController selectedObjects] firstObject];
+	[defaultMachine setState:[CMGetObjPref(@"machineConfiguration") isEqualToString:[selection machineId]] ? NSOnState : NSOffState];
+}
+
+- (NSView *) tableView:(NSTableView *) tableView
+	viewForTableColumn:(NSTableColumn *) tableColumn
+				   row:(NSInteger) row
+{
+	return [tableView makeViewWithIdentifier:@"machineCell"
+									   owner:nil];
 }
 
 #pragma mark - NSTabViewDelegate

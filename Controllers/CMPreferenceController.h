@@ -32,7 +32,7 @@
 @class CMKeyCaptureView;
 @class CMMachine;
 
-@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
+@interface CMPreferenceController : NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate, NSOutlineViewDataSource, NSTableViewDelegate, NSOutlineViewDelegate, MGScopeBarDelegate, CMGamepadConfigurationDelegate, CMKeyboardEventDelegate>
 {
     IBOutlet NSButton *configureJoypadOneButton;
     IBOutlet NSButton *configureJoypadTwoButton;
@@ -63,6 +63,8 @@
 
     IBOutlet NSSlider *emulationSpeedSlider;
     IBOutlet NSSearchField *machineSearchField;
+	
+	IBOutlet NSMenuItem *defaultMachine;
 }
 
 @property (nonatomic, copy) NSMutableArray *machines;
@@ -90,5 +92,6 @@
 - (IBAction) emulationSpeedSliderMoved:(id)sender;
 
 - (IBAction) launchInstance:(id) sender;
+- (IBAction) setMachineAsDefault:(id) sender;
 
 @end
