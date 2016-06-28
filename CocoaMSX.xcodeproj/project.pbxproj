@@ -287,7 +287,6 @@
 		FE17DC0216B3BD1A004ED68D /* logo-turbor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE17DBFA16B3BD1A004ED68D /* logo-turbor@2x.png */; };
 		FE17DC0516B3CFAF004ED68D /* CMMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = FE17DC0416B3CFAF004ED68D /* CMMachine.m */; };
 		FE1905241937965600CC3E08 /* CMMixerChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1905231937965600CC3E08 /* CMMixerChannel.m */; };
-		FE1A3631165623AC0083BA21 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FE1A3630165623AC0083BA21 /* icon.icns */; };
 		FE1C134F167DCF8900CE2B6B /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = FE1C134E167DCF8900CE2B6B /* About.xib */; };
 		FE1C1356167DD08E00CE2B6B /* CMAboutController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1C1355167DD08E00CE2B6B /* CMAboutController.m */; };
 		FE1C1358167DE0D200CE2B6B /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = FE1C1357167DE0D200CE2B6B /* Documents */; };
@@ -366,6 +365,7 @@
 		FEB8DFC11692402E009BE6E4 /* toolbar-keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBB1692402E009BE6E4 /* toolbar-keyboard@2x.png */; };
 		FEB8DFC21692402E009BE6E4 /* toolbar-sound.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBC1692402E009BE6E4 /* toolbar-sound.png */; };
 		FEB8DFC31692402F009BE6E4 /* toolbar-sound@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEB8DFBD1692402E009BE6E4 /* toolbar-sound@2x.png */; };
+		FEC2A41C1D21987B00A569E0 /* cocoamsx.iconset in Resources */ = {isa = PBXBuildFile; fileRef = FEC2A41B1D21987B00A569E0 /* cocoamsx.iconset */; };
 		FEC7231915FF0E3400CB508C /* CMPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC7231815FF0E3400CB508C /* CMPreferenceController.m */; };
 		FEC7232215FF133700CB508C /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = FEC7232115FF133700CB508C /* Preferences.xib */; };
 		FEC9AE1F193A947300E4725D /* rensha_led_off.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC9AE1B193A947300E4725D /* rensha_led_off.png */; };
@@ -1007,7 +1007,6 @@
 		FE17DC0416B3CFAF004ED68D /* CMMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMMachine.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FE1905221937965600CC3E08 /* CMMixerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMixerChannel.h; sourceTree = "<group>"; };
 		FE1905231937965600CC3E08 /* CMMixerChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMMixerChannel.m; sourceTree = "<group>"; };
-		FE1A3630165623AC0083BA21 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		FE1C134E167DCF8900CE2B6B /* About.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = About.xib; sourceTree = "<group>"; };
 		FE1C1354167DD08E00CE2B6B /* CMAboutController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMAboutController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FE1C1355167DD08E00CE2B6B /* CMAboutController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMAboutController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1046,7 +1045,6 @@
 		FE46C8EC16CA188E00D25801 /* icon-downloading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-downloading@2x.png"; sourceTree = "<group>"; };
 		FE46C8EF16CA1DCA00D25801 /* icon-downloading-inverse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-downloading-inverse.png"; sourceTree = "<group>"; };
 		FE46C8F016CA1DCA00D25801 /* icon-downloading-inverse@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-downloading-inverse@2x.png"; sourceTree = "<group>"; };
-		FE46C8FA16D14DBD00D25801 /* SBJson License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SBJson License.txt"; sourceTree = "<group>"; };
 		FE46C8FC16D173F400D25801 /* Sparkle License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Sparkle License.txt"; sourceTree = "<group>"; };
 		FE5458BC168C182A0002FA46 /* MGRecessedPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGRecessedPopUpButtonCell.h; sourceTree = "<group>"; };
 		FE5458BD168C182A0002FA46 /* MGRecessedPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGRecessedPopUpButtonCell.m; sourceTree = "<group>"; };
@@ -1126,6 +1124,7 @@
 		FEB8DFBB1692402E009BE6E4 /* toolbar-keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-keyboard@2x.png"; sourceTree = "<group>"; };
 		FEB8DFBC1692402E009BE6E4 /* toolbar-sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-sound.png"; sourceTree = "<group>"; };
 		FEB8DFBD1692402E009BE6E4 /* toolbar-sound@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-sound@2x.png"; sourceTree = "<group>"; };
+		FEC2A41B1D21987B00A569E0 /* cocoamsx.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; name = cocoamsx.iconset; path = ../cocoamsx.iconset; sourceTree = "<group>"; };
 		FEC7231715FF0E3400CB508C /* CMPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPreferenceController.h; sourceTree = "<group>"; };
 		FEC7231815FF0E3400CB508C /* CMPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPreferenceController.m; sourceTree = "<group>"; };
 		FEC7232115FF133700CB508C /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Preferences.xib; sourceTree = "<group>"; };
@@ -1242,7 +1241,6 @@
 		29B97314FDCFA39411CA2CEA /* aquaMSX */ = {
 			isa = PBXGroup;
 			children = (
-				FE1A3630165623AC0083BA21 /* icon.icns */,
 				FE89754B1614038D00F07D76 /* CMAppDelegate.h */,
 				FE89754C1614038D00F07D76 /* CMAppDelegate.m */,
 				FE9B86B316D457D200623DBD /* Categories */,
@@ -1264,6 +1262,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FEC2A41B1D21987B00A569E0 /* cocoamsx.iconset */,
 				FEFB43B916321F2F00EAE462 /* CocoaMSX-Info.plist */,
 				FED34F3C163F320D002FCC89 /* Defaults.plist */,
 				FEACF06B16A07B9800EEF84C /* sparkle_dsa_pub.pem */,
@@ -2129,7 +2128,6 @@
 				FE20DB94163278AD00D44ADF /* blueMSX License.txt */,
 				FEA6277A16A0CAD70048C05C /* cbios.txt */,
 				FE5458C5168C25CE0002FA46 /* MGScopeBar License.rtf */,
-				FE46C8FA16D14DBD00D25801 /* SBJson License.txt */,
 				FE46C8FC16D173F400D25801 /* Sparkle License.txt */,
 				FE20DB8E1632783200D44ADF /* AUTHORS */,
 				FE20DB8F1632783200D44ADF /* COPYING */,
@@ -2370,6 +2368,7 @@
 				FE42836315FE857400ED7CB9 /* Emulator.xib in Resources */,
 				FEC9AE1F193A947300E4725D /* rensha_led_off.png in Resources */,
 				FEC7232215FF133700CB508C /* Preferences.xib in Resources */,
+				FEC2A41C1D21987B00A569E0 /* cocoamsx.iconset in Resources */,
 				FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */,
 				FE5CDEC4192C8BE600312BB4 /* caps_led_off@2x.png in Resources */,
 				FE2CEB581622A50500E58F9A /* Databases in Resources */,
@@ -2385,7 +2384,6 @@
 				FED5C862193860E80045FE8C /* pause_led_on.png in Resources */,
 				FE17A07D1929CC96007FB866 /* fdd0_led_on.png in Resources */,
 				FEC9AE2A193AE0DF00E4725D /* cas_led_on@2x.png in Resources */,
-				FE1A3631165623AC0083BA21 /* icon.icns in Resources */,
 				FEE801581674ACD000695F38 /* CartridgeDocument.icns in Resources */,
 				FEA4548D1679B65300AAECB7 /* DiskDocument.icns in Resources */,
 				FEA454901679BAF700AAECB7 /* CassetteDocument.icns in Resources */,
