@@ -8,7 +8,7 @@ CocoaMSX
 Download
 --------
 
-[Version 1.55] [6] is the latest stable release. [View all releases] [5].
+[Version 1.56] [6] is the latest stable release. [View all releases] [4].
 
 Features
 --------
@@ -33,8 +33,7 @@ Features
 System Requirements
 -------------------
 
-Mac OS 10.7 or higher required.
-Version 1.45 (and older) will also run on OS X 10.6.
+Mac OS 10.7 or higher; versions prior to [1.45] [5] will also run on OS X 10.6.
 
 Support and Updates
 -------------------
@@ -43,8 +42,7 @@ CocoaMSX has a [dedicated wiki] [7].
 
   [1]: http://en.wikipedia.org/wiki/MSX
   [2]: http://www.bluemsx.com/
-  [4]: https://code.google.com/p/cocoa-msx/downloads/list  
-  [5]: https://github.com/pokebyte/CocoaMSX/releases
-  [6]: https://github.com/pokebyte/CocoaMSX/releases/v1.55
-  [7]: https://github.com/pokebyte/CocoaMSX/wiki
-  
+  [4]: https://github.com/CocoaMSX/CocoaMSX/releases
+  [5]: https://github.com/CocoaMSX/CocoaMSX/releases/v1.45
+  [6]: https://github.com/CocoaMSX/CocoaMSX/releases/v1.56
+  [7]: https://github.com/CocoaMSX/CocoaMSX/wiki
