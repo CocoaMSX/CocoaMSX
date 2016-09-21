@@ -33,7 +33,7 @@ Features
 System Requirements
 -------------------
 
-Mac OS 10.7 or higher; versions prior to [1.45] [5] will also run on OS X 10.6.
+Mac OS 10.7 or higher; versions [1.45] [5] and older will also run on OS X 10.6.
 
 Support and Updates
 -------------------

@@ -105,6 +105,8 @@
                     openInDirectory:(NSString*)initialDirectory
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
+- (void) startWithState:(NSString *) state;
+
 - (void) addToRecentItems:(NSString *) path;
 - (void)insertCartridgeIntoSlot:(NSInteger)slot;
 - (void)insertDiskIntoSlot:(int)slot;
@@ -402,7 +404,22 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self syncRecentDocuments];
     
     [self create];
-    [self start];
+	
+	NSString *statePath = nil;
+	if (CMGetBoolPref(@"saveStateOnExit")) {
+		NSString *stateDir = [[CMPreferences preferences] appSupportDirectory];
+		statePath = [stateDir stringByAppendingPathComponent:@"autostate.sta"];
+		
+		if (![[NSFileManager defaultManager] fileExistsAtPath:statePath]) {
+			statePath = nil;
+		}
+	}
+	
+	[self startWithState:statePath];
+	if (statePath) {
+		[[NSFileManager defaultManager] removeItemAtPath:statePath
+												   error:NULL];
+	}
 }
 
 - (CMAppDelegate*)theApp
@@ -597,28 +614,33 @@ CMEmulatorController *theEmulator = nil; // FIXME
 #endif
 }
 
-- (void)start
+- (void) start
 {
-    if ([self isInitialized])
-    {
-        if ([self isStarted])
-            [self stop];
-        
-        if ([self fileToLoadAtStartup])
-        {
-            tryLaunchUnknownFile([self properties], [[self fileToLoadAtStartup] UTF8String], YES);
-            
-            [self addToRecentItems:[self fileToLoadAtStartup]];
-            [self setFileToLoadAtStartup:nil];
-            
-            return;
-        }
-        
-        emulatorStart(NULL);
-        
-        // Pause if not focused
-        [self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
-    }
+	[self startWithState:nil];
+}
+
+- (void) startWithState:(NSString *) state
+{
+	if ([self isInitialized])
+	{
+		if ([self isStarted])
+			[self stop];
+		
+		if ([self fileToLoadAtStartup])
+		{
+			tryLaunchUnknownFile([self properties], [[self fileToLoadAtStartup] UTF8String], YES);
+			
+			[self addToRecentItems:[self fileToLoadAtStartup]];
+			[self setFileToLoadAtStartup:nil];
+			
+			return;
+		}
+		
+		emulatorStart([state UTF8String]);
+		
+		// Pause if not focused
+		[self windowKeyDidChange:[[self activeWindow] isKeyWindow]];
+	}
 }
 
 - (void)stop
@@ -628,7 +650,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         emulatorSuspend();
         emulatorStop();
     }
-    
+	
     [self setCurrentlyLoadedCaptureFilePath:nil];
     [self cleanupTemporaryCaptureFile];
     
@@ -2914,6 +2936,17 @@ void archTrap(UInt8 value)
 
 - (void)windowWillClose:(NSNotification *)notification
 {
+	if (CMGetBoolPref(@"saveStateOnExit")) {
+		if ([self isInitialized] && [self isStarted]) {
+			NSString *stateDir = [[CMPreferences preferences] appSupportDirectory];
+			NSString *statePath = [stateDir stringByAppendingPathComponent:@"autostate.sta"];
+			
+			emulatorSuspend();
+			boardSaveState([statePath UTF8String], 0);
+			// emulatorResume(); // No need to resume
+		}
+	}
+	
     [self stop];
     [self destroy];
     

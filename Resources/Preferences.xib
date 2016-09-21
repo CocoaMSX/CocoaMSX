@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CMPreferenceController">
@@ -127,8 +127,19 @@
                                                 </binding>
                                             </connections>
                                         </button>
-                                        <button id="3744">
+                                        <button misplaced="YES" id="sv4-Ft-PJb">
                                             <rect key="frame" x="272" y="417" width="270" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="Save state on exit" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="IIG-0l-KQg">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="804" name="value" keyPath="values.saveStateOnExit" id="ekQ-Yi-VMV"/>
+                                            </connections>
+                                        </button>
+                                        <button misplaced="YES" id="3744">
+                                            <rect key="frame" x="272" y="397" width="270" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Pause when another window is active" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="3745">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -166,7 +177,7 @@
                                             <rect key="frame" x="20" y="199" width="558" height="290"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="l50-mf-7h1">
-                                                <rect key="frame" x="1" y="17" width="556" height="272"/>
+                                                <rect key="frame" x="1" y="0.0" width="556" height="289"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" headerView="oMQ-mL-1i6" id="a7i-vw-LLh">
@@ -222,7 +233,6 @@
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="j6K-Yn-OU3">
                                                 <rect key="frame" x="1" y="121" width="556" height="16"/>
@@ -326,12 +336,9 @@
                                                 <action selector="performColdRebootClicked:" target="-2" id="1797"/>
                                             </connections>
                                         </button>
-                                        <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3977">
+                                        <box verticalHuggingPriority="750" boxType="separator" id="3977">
                                             <rect key="frame" x="20" y="152" width="558" height="5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                            <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <textField verticalHuggingPriority="750" id="1216">
                                             <rect key="frame" x="17" y="129" width="126" height="17"/>
@@ -701,11 +708,11 @@
                                             <rect key="frame" x="20" y="381" width="558" height="132"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="jgr-EG-h86">
-                                                <rect key="frame" x="1" y="17" width="556" height="114"/>
+                                                <rect key="frame" x="1" y="0.0" width="556" height="131"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" headerView="4126" id="4124">
-                                                        <rect key="frame" x="0.0" y="0.0" width="437" height="19"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="556" height="114"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -730,7 +737,6 @@
                                                         </tableColumns>
                                                     </tableView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="4125">
                                                 <rect key="frame" x="1" y="119" width="223" height="15"/>
@@ -851,11 +857,11 @@
                                             <rect key="frame" x="20" y="62" width="558" height="452"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="bu1-l2-shO">
-                                                <rect key="frame" x="1" y="17" width="556" height="434"/>
+                                                <rect key="frame" x="1" y="0.0" width="556" height="451"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="3625" indentationPerLevel="16" outlineTableColumn="3633" id="3623">
-                                                        <rect key="frame" x="0.0" y="0.0" width="372" height="19"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="556" height="434"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -895,7 +901,6 @@
                                                         </connections>
                                                     </outlineView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="3624">
                                                 <rect key="frame" x="1" y="177" width="358" height="16"/>
@@ -991,12 +996,9 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3882">
+                                                                                <box verticalHuggingPriority="750" boxType="separator" id="3882">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                                                                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                                    <font key="titleFont" metaFont="system"/>
                                                                                 </box>
                                                                                 <textField verticalHuggingPriority="750" id="4463">
                                                                                     <rect key="frame" x="17" y="393" width="287" height="17"/>
@@ -1067,12 +1069,9 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3901">
+                                                                                <box verticalHuggingPriority="750" boxType="separator" id="3901">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                                                                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                                    <font key="titleFont" metaFont="system"/>
                                                                                 </box>
                                                                                 <button id="3896">
                                                                                     <rect key="frame" x="18" y="394" width="444" height="18"/>
@@ -1179,12 +1178,9 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3798">
+                                                                                <box verticalHuggingPriority="750" boxType="separator" id="3798">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                                                                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                                    <font key="titleFont" metaFont="system"/>
                                                                                 </box>
                                                                                 <textField verticalHuggingPriority="750" id="4461">
                                                                                     <rect key="frame" x="17" y="393" width="312" height="17"/>
@@ -1255,12 +1251,9 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="558" height="419"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="3912">
+                                                                                <box verticalHuggingPriority="750" boxType="separator" id="3912">
                                                                                     <rect key="frame" x="20" y="416" width="518" height="5"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                                                                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                                    <font key="titleFont" metaFont="system"/>
                                                                                 </box>
                                                                                 <button id="3909">
                                                                                     <rect key="frame" x="18" y="394" width="436" height="18"/>
