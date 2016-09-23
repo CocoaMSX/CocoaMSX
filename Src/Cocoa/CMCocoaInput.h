@@ -34,8 +34,6 @@ extern NSString * const CMKeyPasteEnded;
 
 @interface CMCocoaInput : NSObject<CMGamepadEventDelegate, CMKeyboardEventDelegate>
 
-@property (nonatomic, strong) CMMSXKeyCombination *keyCombinationToAutoPress;
-
 - (void)setEmulatorHasFocus:(BOOL)focus;
 
 - (void)resetState;
