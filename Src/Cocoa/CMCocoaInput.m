@@ -47,8 +47,8 @@ NSString *const CMKeyPasteEnded   = @"com.akop.CocoaMSX.KeyPasteEnded";
 
 #define CMJoystickDeadzoneWidth 50
 
-#define CMAutoPressHoldDuration    ((UInt64) 91480000000)
-#define CMAutoPressReleaseDuration ((UInt64) 61480000000)
+#define CMAutoPressHoldDuration    ((UInt64) 40) //91480000000)
+#define CMAutoPressReleaseDuration ((UInt64) 40) //61480000000)
 
 #define CMMakeMsxKeyInfo(d, s) \
     [CMMsxKeyInfo keyInfoWithDefaultStateLabel:d shiftedStateLabel:s]
@@ -241,7 +241,7 @@ static NSArray<NSString *> *defaultsToObserve;
     NSLog(@"Pasting %ld keys", [textAsKeyCombinations count]);
 #endif
 		
-		timeOfAutoPress = boardSystemTime64();
+		timeOfAutoPress = (CFAbsoluteTimeGetCurrent() * 1000.0); //boardSystemTime64();
 		pasteIndex = 0;
 		pasteState = YES;
 		
@@ -401,7 +401,7 @@ static NSArray<NSString *> *defaultsToObserve;
     memcpy(eventMap, self->virtualCodeMap, sizeof(self->virtualCodeMap));
 	
 	if (pasteIndex < [keysToPaste count]) {
-		UInt64 now = boardSystemTime64();
+		UInt64 now = (CFAbsoluteTimeGetCurrent() * 1000.0); //boardSystemTime64();
 		UInt64 autoKeyPressInterval = now - timeOfAutoPress;
 		
 		CMMSXKeyCombination *kc = [keysToPaste objectAtIndex:pasteIndex];
