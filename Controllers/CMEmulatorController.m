@@ -162,11 +162,16 @@
 - (void)clearRecentMediaItemsInMenu:(NSMenuItem *)menuItem;
 - (void) rebuildRecentItemsMenus;
 - (void) syncRecentDocuments;
+- (void) pasteFromPasteBoard;
 
 - (BOOL)diskSizeValid:(int)size;
 - (NSString *) generateTimestampedFilenameAtPath:(NSString *)parentPath
                                         template:(NSString *)template
                                        extension:(NSString *)ext;
+
+- (void) pasteAlertDidEnd:(NSAlert *) alert
+			   returnCode:(NSInteger) returnCode
+			  contextInfo:(void *) contextInfo;
 
 @end
 
@@ -1052,6 +1057,18 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 #pragma mark - Private methods
 
+- (void) pasteFromPasteBoard
+{
+	NSPasteboard *pasteBoard  = [NSPasteboard generalPasteboard];
+	NSString *text = [pasteBoard stringForType:NSPasteboardTypeString];
+	
+	NSString *runningMachineId = [self runningMachineConfiguration];
+	NSString *layoutName = [CMMSXKeyboard layoutNameOfMachineWithIdentifier:runningMachineId];
+	
+	[[self input] pasteText:text
+				 layoutName:layoutName];
+}
+
 - (void)zoomWindowBy:(CGFloat)factor
 {
     [self setScreenSize:NSMakeSize(WIDTH_DEFAULT * factor, HEIGHT_DEFAULT * factor)
@@ -1755,15 +1772,24 @@ CMEmulatorController *theEmulator = nil; // FIXME
     return NO;
 }
 
-- (void)pasteText:(id)sender
+- (void) pasteText:(id) sender
 {
-    NSPasteboard *pasteBoard  = [NSPasteboard generalPasteboard];
-    NSString *text = [pasteBoard stringForType:NSPasteboardTypeString];
-    
-    NSString *runningMachineId = [self runningMachineConfiguration];
-    NSString *layoutName = [CMMSXKeyboard layoutNameOfMachineWithIdentifier:runningMachineId];
-    
-    [[self input] pasteText:text layoutName:layoutName];
+	if (CMGetIntPref(@"emulationSpeedPercentage") != 100) {
+		NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"Due to timing restrictions, Paste is only available when emulating at default speed.", @"")
+										 defaultButton:CMLoc(@"Set to Default", @"Alert dialog button")
+									   alternateButton:CMLoc(@"Cancel", "Alert dialog button")
+										   otherButton:nil
+							 informativeTextWithFormat:@""];
+		
+		[alert beginSheetModalForWindow:[self window]
+						  modalDelegate:self
+						 didEndSelector:@selector(pasteAlertDidEnd:returnCode:contextInfo:)
+							contextInfo:nil];
+		
+		return;
+	}
+	
+	[self pasteFromPasteBoard];
 }
 
 - (void)windowKeyDidChange:(BOOL)isKey
@@ -3045,6 +3071,18 @@ void archTrap(UInt8 value)
     emulatorSuspend();
     tapeSetCurrentPos(position);
     emulatorResume();
+}
+
+#pragma mark - NSAlert
+
+- (void) pasteAlertDidEnd:(NSAlert *) alert
+			   returnCode:(NSInteger) returnCode
+			  contextInfo:(void *) contextInfo
+{
+	if (returnCode == NSAlertDefaultReturn) {
+		CMSetIntPref(@"emulationSpeedPercentage", 100);
+		[self pasteFromPasteBoard];
+	}
 }
 
 #pragma mark - NSUserInterfaceValidation

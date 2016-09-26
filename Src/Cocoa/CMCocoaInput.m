@@ -218,7 +218,8 @@ static NSArray<NSString *> *defaultsToObserve;
         return NO; // Invalid key layout
 	}
 	
-	// FIXME: stop paste if in process
+	[self stopPasting];
+	
 #ifdef DEBUG
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 #endif
