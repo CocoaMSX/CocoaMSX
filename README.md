@@ -8,7 +8,7 @@ CocoaMSX
 Download
 --------
 
-[Version 1.56] [6] is the latest stable release. [View all releases] [4].
+[Version 1.60] [6] is the latest stable release. [View all releases] [4].
 
 Features
 --------
@@ -44,5 +44,5 @@ CocoaMSX has a [dedicated wiki] [7].
   [2]: http://www.bluemsx.com/
   [4]: https://github.com/CocoaMSX/CocoaMSX/releases
   [5]: https://github.com/CocoaMSX/CocoaMSX/releases/v1.45
-  [6]: https://github.com/CocoaMSX/CocoaMSX/releases/v1.56
+  [6]: https://github.com/CocoaMSX/CocoaMSX/releases/v1.60
   [7]: https://github.com/CocoaMSX/CocoaMSX/wiki
