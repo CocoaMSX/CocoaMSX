@@ -1,19 +1,19 @@
 CocoaMSX
 ========
 
-**CocoaMSX** is an open source [MSX] [1] emulator for OS X. 
+**CocoaMSX** is an open source [MSX](http://en.wikipedia.org/wiki/MSX) emulator for OS X. 
 
 ![Banner](http://i.imgur.com/9oarsE5.png "Screenshot")
 
 Download
 --------
 
-[Version 1.60] [6] is the latest stable release. [View all releases] [4].
+[Version 1.60](https://github.com/CocoaMSX/CocoaMSX/releases/v1.60) is the latest stable release. [View all releases](https://github.com/CocoaMSX/CocoaMSX/releases).
 
 Features
 --------
 
-* Based on [blueMSX] [2], one of the most accurate MSX emulators currently available
+* Based on [blueMSX](http://www.bluemsx.com/), one of the most accurate MSX emulators currently available
 * Built-in support for 3 virtual systems, automatic download and installation of over 200 MSX systems
 * Built-in support for cartridge (ROM) files, optional support for diskette (DSK) and cassette (CAS) files
 * Support for pasting text directly into MSX
@@ -33,16 +33,9 @@ Features
 System Requirements
 -------------------
 
-Mac OS 10.7 or higher; versions [1.45] [5] and older will also run on OS X 10.6.
+Mac OS 10.7 or higher; versions [1.45](https://github.com/CocoaMSX/CocoaMSX/releases/v1.45) and older will also run on OS X 10.6.
 
 Support and Updates
 -------------------
 
-CocoaMSX has a [dedicated wiki] [7].
-
-  [1]: http://en.wikipedia.org/wiki/MSX
-  [2]: http://www.bluemsx.com/
-  [4]: https://github.com/CocoaMSX/CocoaMSX/releases
-  [5]: https://github.com/CocoaMSX/CocoaMSX/releases/v1.45
-  [6]: https://github.com/CocoaMSX/CocoaMSX/releases/v1.60
-  [7]: https://github.com/CocoaMSX/CocoaMSX/wiki
+CocoaMSX has a [dedicated wiki](https://github.com/CocoaMSX/CocoaMSX/wiki).
