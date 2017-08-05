@@ -91,11 +91,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.60</string>
+	<string>1.61</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>23</string>
+	<string>24</string>
 	<key>CMMachineFeedURL</key>
 	<string>https://cocoamsx.com/machines.json</string>
 	<key>LSApplicationCategoryType</key>
