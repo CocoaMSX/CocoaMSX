@@ -81,8 +81,8 @@ static OSStatus audioCallback(void *inRefCon,
                   bitsPerChannel:(UInt16)bitsPerChannel
 {
     OSStatus result = noErr;
-    Component comp;
-    ComponentDescription desc;
+    AudioComponent comp;
+    AudioComponentDescription desc;
     struct AURenderCallbackStruct callback;
     AudioStreamBasicDescription requestedDesc;
     
@@ -106,12 +106,12 @@ static OSStatus audioCallback(void *inRefCon,
     desc.componentFlags = 0;
     desc.componentFlagsMask = 0;
     
-    comp = FindNextComponent(NULL, &desc); // FIXME: deprec
+    comp = AudioComponentFindNext(NULL, &desc);
     if (!comp)
         return NO;
     
     // Open & initialize the default output audio unit
-    result = OpenAComponent(comp, &outputAudioUnit); // FIXME: deprec
+    result = AudioComponentInstanceNew(comp, &outputAudioUnit);
     if (result != noErr)
         return NO;
     
@@ -200,7 +200,7 @@ static OSStatus audioCallback(void *inRefCon,
     if (result != noErr)
         success = NO;
     
-    result = CloseComponent(outputAudioUnit); // FIXME: deprec
+    result = AudioComponentInstanceDispose(outputAudioUnit);
     if (result != noErr)
         success = NO;
     
