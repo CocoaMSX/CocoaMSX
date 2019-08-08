@@ -937,12 +937,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
 	NSMenuItem *recentCartridgesB = [appDelegate recentCartridgesB];
 	NSMenuItem *recentDisksA = [appDelegate recentDisksA];
 	NSMenuItem *recentDisksB = [appDelegate recentDisksB];
+    NSMenuItem *recentSunriseHD = [appDelegate recentSunriseHD];
 	NSMenuItem *recentCassettes = [appDelegate recentCassettes];
 	
     [self clearRecentMediaItemsInMenu:recentCartridgesA];
     [self clearRecentMediaItemsInMenu:recentCartridgesB];
     [self clearRecentMediaItemsInMenu:recentDisksA];
     [self clearRecentMediaItemsInMenu:recentDisksB];
+    [self clearRecentMediaItemsInMenu:recentSunriseHD];
     [self clearRecentMediaItemsInMenu:recentCassettes];
     
     // Add new items
@@ -971,6 +973,9 @@ CMEmulatorController *theEmulator = nil; // FIXME
             [self addRecentMediaItemWithURL:obj
                                      action:@selector(insertRecentDiskB:)
                                      parent:recentDisksB];
+            [self addRecentMediaItemWithURL:obj
+                                     action:@selector(insertRecentSunriseHD:)
+                                     parent:recentSunriseHD];
         }
         else if ([openCassetteFileTypes containsObject:extension])
         {
@@ -997,6 +1002,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                         atIndex:numberOfDiskItems - 1];
         [[recentDisksB submenu] insertItem:[NSMenuItem separatorItem]
                                         atIndex:numberOfDiskItems - 1];
+        [[recentSunriseHD submenu] insertItem:[NSMenuItem separatorItem]
+                                   atIndex:numberOfDiskItems - 1];
     }
     
     int numberOfCassetteItems = [[recentCassettes submenu] numberOfItems];
@@ -2065,6 +2072,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
             mountFoldersRw:NO];
 }
 
+- (void)insertRecentSunriseHD:(id)sender
+{
+    [self insertDiskAtPath:[[sender representedObject] path]
+                      slot:18
+            mountFoldersRw:NO];
+}
+
 - (void)insertRecentCassette:(id)sender
 {
     [self insertCassetteAtPath:[[sender representedObject] path]];
@@ -2120,6 +2134,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self insertDiskIntoSlot:1];
 }
 
+- (void)insertSunriseHD:(id)sender
+{
+    [self insertDiskIntoSlot:18];
+}
+
 - (void)insertBlankDiskAsSlot1:(id)sender
 {
     [self createBlankDiskAndInsertIntoSlot:0];
@@ -2130,6 +2149,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
     [self createBlankDiskAndInsertIntoSlot:1];
 }
 
+- (void)insertBlankSunriseHD:(id)sender
+{
+    [self createBlankDiskAndInsertIntoSlot:18];
+}
+
 - (void)ejectDiskSlot1:(id)sender
 {
     [self ejectDiskFromSlot:0];
@@ -2138,6 +2162,11 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void)ejectDiskSlot2:(id)sender
 {
     [self ejectDiskFromSlot:1];
+}
+
+- (void)ejectSunriseHD:(id)sender
+{
+    [self ejectDiskFromSlot:18];
 }
 
 - (void)toggleDiskAutoReset:(id)sender

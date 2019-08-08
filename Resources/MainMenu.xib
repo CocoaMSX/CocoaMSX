@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -19,6 +19,7 @@
                 <outlet property="recentCassettes" destination="ma2-x4-3c6" id="avs-9S-nBM"/>
                 <outlet property="recentDisksA" destination="FrR-yX-mK0" id="hma-dn-n0j"/>
                 <outlet property="recentDisksB" destination="LBN-MK-euB" id="nyL-VS-h9w"/>
+                <outlet property="recentSunriseHD" destination="bKh-NG-lVG" id="j3A-e4-pE3"/>
             </connections>
         </customObject>
         <customObject id="797" customClass="SUUpdater"/>
@@ -229,6 +230,46 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="ejectDiskSlot2:" target="-1" id="1199"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Sunrise IDE HD" id="hPP-0X-vwN">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Sunrise IDE HD" id="UBt-tm-M9D">
+                                    <items>
+                                        <menuItem title="Insert..." id="o2v-If-XKg">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="insertSunriseHD:" target="-1" id="z7M-t5-PuW"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Insert Recent" id="bKh-NG-lVG">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Insert Recent" id="3pH-Gp-RNl">
+                                                <items>
+                                                    <menuItem title="Clear Recent Items" id="Xsp-OW-yn2">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="clearRecentItems:" target="-1" id="yAK-ix-xRx"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Cjg-HO-5iZ"/>
+                                        <menuItem title="New Blank Disk..." id="JYA-SO-zQc">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="insertBlankSunriseHD:" target="-1" id="302-Qb-UKL"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="WKb-4q-LQf"/>
+                                        <menuItem title="Eject" id="9Af-kT-0Wy">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="ejectSunriseHD:" target="-1" id="ORY-Yr-fXh"/>
                                             </connections>
                                         </menuItem>
                                     </items>

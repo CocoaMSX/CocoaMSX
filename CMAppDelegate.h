@@ -32,6 +32,7 @@
 @property (nonatomic, strong) IBOutlet NSMenuItem *recentCartridgesB;
 @property (nonatomic, strong) IBOutlet NSMenuItem *recentDisksA;
 @property (nonatomic, strong) IBOutlet NSMenuItem *recentDisksB;
+@property (nonatomic, strong) IBOutlet NSMenuItem *recentSunriseHD;
 @property (nonatomic, strong) IBOutlet NSMenuItem *recentCassettes;
 
 // Apple menu

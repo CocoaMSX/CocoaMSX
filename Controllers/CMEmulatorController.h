@@ -133,10 +133,13 @@ NSString * const CMKeyboardLayoutPrefKey;
 
 - (IBAction)insertDiskSlot1:(id)sender;
 - (IBAction)insertDiskSlot2:(id)sender;
+- (IBAction)insertSunriseHD:(id)sender;
 - (IBAction)ejectDiskSlot1:(id)sender;
 - (IBAction)ejectDiskSlot2:(id)sender;
+- (IBAction)ejectSunriseHD:(id)sender;
 - (IBAction)insertBlankDiskAsSlot1:(id)sender;
 - (IBAction)insertBlankDiskAsSlot2:(id)sender;
+- (IBAction)insertBlankSunriseHD:(id)sender;
 
 - (IBAction)toggleDiskAutoReset:(id)sender;
 
