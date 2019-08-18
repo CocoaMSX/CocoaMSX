@@ -270,6 +270,9 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 void keyWasToggled(void *context, IOReturn result, void *sender,
                    IOHIDValueRef value) {
     IOHIDElementRef elem = IOHIDValueGetElement(value);
+    if (IOHIDElementGetUsagePage(elem) != 0x07)
+        return;
+    
     NSInteger pressed = IOHIDValueGetIntegerValue(value);
     NSInteger scanCode = IOHIDElementGetUsage(elem);
     
