@@ -29,6 +29,7 @@ Features
 * Mixing for all six sound channels (PSG, SCC, MSX-Music, MSX-Audio, Moonsound, Keyboard)
 * Full screen support, including enhanced full screen on Lion and higher
 * Automatic updates
+* NEW - 29/9/2019 - a debugger.
 
 System Requirements
 -------------------
