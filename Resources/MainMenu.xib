@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14868" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14868"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -456,13 +456,25 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="847"/>
-                            <menuItem title="Show Status Bar" keyEquivalent="/" id="1279">
+                            <menuItem title="Show Debugger" keyEquivalent="d" id="1279">
                                 <connections>
-                                    <action selector="toggleStatusBar:" target="-1" id="1286"/>
+                                    <action selector="openDebugger:" target="795" id="y1h-f4-7vp"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show Status Bar" keyEquivalent="/" id="VFD-kM-Wwk">
+                                <connections>
+                                    <action selector="toggleStatusBar:" target="-1" id="ZsS-Xg-JYD"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Show Frame Rate" id="qRB-JS-u9P">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <binding destination="hb5-HG-Qas" name="value" keyPath="values.showFps" id="rza-4n-YLS">
+                                        <dictionary key="options">
+                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="1280"/>
                             <menuItem title="Enter Full Screen" keyEquivalent="f" id="855">
@@ -549,6 +561,8 @@
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="140" y="154"/>
         </menu>
+        <userDefaultsController representsSharedInstance="YES" id="hb5-HG-Qas"/>
     </objects>
 </document>

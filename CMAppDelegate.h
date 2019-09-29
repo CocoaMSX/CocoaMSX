@@ -39,5 +39,6 @@
 
 - (IBAction) openAbout:(id) sender;
 - (IBAction) openPreferences:(id) sender;
+- (IBAction) openDebugger:(id)sender;
 
 @end

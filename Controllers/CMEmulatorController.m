@@ -3036,10 +3036,10 @@ void archTrap(UInt8 value)
 	}
 	
 	if ([[self window] isKeyWindow]) {
-		options |= NSApplicationPresentationDisableProcessSwitching;
+		//options |= NSApplicationPresentationDisableProcessSwitching;
 		NSLog(@"EmulatorController: disabling process switching");
 	} else {
-		options &= ~NSApplicationPresentationDisableProcessSwitching;
+		//options &= ~NSApplicationPresentationDisableProcessSwitching;
 		NSLog(@"EmulatorController: enabling process switching");
 	}
 	

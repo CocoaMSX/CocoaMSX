@@ -30,7 +30,7 @@
 {
     CMMachine *machine = [self objectValue];
     
-    [controlView lockFocus];
+    //[controlView lockFocus];
     
     NSColor *textColor;
     
@@ -62,7 +62,7 @@
     [[machine systemName] drawAtPoint:NSMakePoint(cellFrame.origin.x, cellFrame.origin.y + textSize.height)
                        withAttributes:subtextAttributes];
     
-    [controlView unlockFocus];
+    //[controlView unlockFocus];
 }
 
 @end

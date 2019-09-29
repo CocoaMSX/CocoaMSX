@@ -51,6 +51,8 @@
 #include "ramMapperIo.h"
 #include "CoinDevice.h"
 
+#include "CH376s.h"
+
 void PatchZ80(void* ref, CpuRegs* cpuRegs);
 
 // Hardware
@@ -97,7 +99,9 @@ static void reset()
     deviceManagerReset();
 }
 
-static void destroy() {        
+static void destroy() {
+    ch376sDestroy ();
+    
     rtcDestroy(rtc);
 
     boardRemoveExternalDevices();
@@ -235,6 +239,8 @@ int msxCreate(Machine* machine,
     
 	ioPortRegister(0x2e, testPort, NULL, NULL);
 
+    ch376sCreate ();
+    
     sprintf(cmosName, "%s" DIR_SEPARATOR "%s.cmos", boardGetBaseDirectory(), machine->name);
     rtc = rtcCreate(machine->cmos.enable, machine->cmos.batteryBacked ? cmosName : 0);
 

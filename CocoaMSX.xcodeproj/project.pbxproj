@@ -15,6 +15,15 @@
 		6BCA7569164D7D09002CA211 /* toolbar-video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BCA7563164D7D09002CA211 /* toolbar-video@2x.png */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		AC31C67523376A1100B67336 /* breakpoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC31C67323376A1100B67336 /* breakpoints.cpp */; };
+		AC31C67723376E5E00B67336 /* CMBreakpoints.mm in Sources */ = {isa = PBXBuildFile; fileRef = AC31C67623376E5E00B67336 /* CMBreakpoints.mm */; };
+		AC3F901D2339625800DFE285 /* nextor.dsk in Resources */ = {isa = PBXBuildFile; fileRef = AC3F901C2339625800DFE285 /* nextor.dsk */; };
+		AC4397E92330BB1C00B5DAD1 /* Debugger.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC4397E82330BB1C00B5DAD1 /* Debugger.xib */; };
+		AC4397F32330D7CF00B5DAD1 /* CMDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = AC4397F22330D7CF00B5DAD1 /* CMDebugger.m */; };
+		ACE40D55233161BF00BD07E0 /* disassemble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE40D54233161BF00BD07E0 /* disassemble.cpp */; };
+		ACE40D582331626A00BD07E0 /* symbolinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE40D562331626A00BD07E0 /* symbolinfo.cpp */; };
+		ACE40D5A2331767700BD07E0 /* CMDisassemble.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACE40D592331767700BD07E0 /* CMDisassemble.mm */; };
+		ACE53F9E2324D4F200ABAA7B /* CH376s.c in Sources */ = {isa = PBXBuildFile; fileRef = ACE53F9D2324D4F200ABAA7B /* CH376s.c */; };
 		E99730EE1298B47600766C90 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99730ED1298B47600766C90 /* OpenGL.framework */; };
 		E99733681298B4B500766C90 /* Patch.c in Sources */ = {isa = PBXBuildFile; fileRef = E99731241298B4B300766C90 /* Patch.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99733691298B4B500766C90 /* Adam.c in Sources */ = {isa = PBXBuildFile; fileRef = E99731261298B4B300766C90 /* Adam.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
@@ -444,6 +453,22 @@
 		6BCA7562164D7D09002CA211 /* toolbar-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-video.png"; sourceTree = "<group>"; };
 		6BCA7563164D7D09002CA211 /* toolbar-video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-video@2x.png"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* CocoaMSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoaMSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC31C67323376A1100B67336 /* breakpoints.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = breakpoints.cpp; sourceTree = "<group>"; };
+		AC31C67423376A1100B67336 /* breakpoints.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = breakpoints.hpp; sourceTree = "<group>"; };
+		AC31C67623376E5E00B67336 /* CMBreakpoints.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CMBreakpoints.mm; sourceTree = "<group>"; };
+		AC31C67823376F8200B67336 /* CMBreakpoints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMBreakpoints.h; sourceTree = "<group>"; };
+		AC3F901C2339625800DFE285 /* nextor.dsk */ = {isa = PBXFileReference; lastKnownFileType = file; path = nextor.dsk; sourceTree = "<group>"; };
+		AC4397E82330BB1C00B5DAD1 /* Debugger.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Debugger.xib; sourceTree = "<group>"; };
+		AC4397F12330D79D00B5DAD1 /* CMDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMDebugger.h; sourceTree = "<group>"; };
+		AC4397F22330D7CF00B5DAD1 /* CMDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMDebugger.m; sourceTree = "<group>"; };
+		ACE40D53233161BF00BD07E0 /* disassemble.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = disassemble.hpp; sourceTree = "<group>"; };
+		ACE40D54233161BF00BD07E0 /* disassemble.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = disassemble.cpp; sourceTree = "<group>"; };
+		ACE40D562331626A00BD07E0 /* symbolinfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = symbolinfo.cpp; sourceTree = "<group>"; };
+		ACE40D572331626A00BD07E0 /* symbolinfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = symbolinfo.hpp; sourceTree = "<group>"; };
+		ACE40D592331767700BD07E0 /* CMDisassemble.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CMDisassemble.mm; sourceTree = "<group>"; };
+		ACE40D5B2331770500BD07E0 /* CMDisassemble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMDisassemble.h; sourceTree = "<group>"; };
+		ACE53F9C2324D34300ABAA7B /* CH376s.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CH376s.h; sourceTree = "<group>"; };
+		ACE53F9D2324D4F200ABAA7B /* CH376s.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CH376s.c; sourceTree = "<group>"; };
 		E99730ED1298B47600766C90 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		E997310F1298B4B300766C90 /* ArchBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchBitmap.h; sourceTree = "<group>"; };
 		E99731101298B4B300766C90 /* ArchCdrom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchCdrom.h; sourceTree = "<group>"; };
@@ -1254,6 +1279,7 @@
 				FE2D857A16E330F3003EFB3F /* ValueTransformers */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				AC3F901C2339625800DFE285 /* nextor.dsk */,
 				FE20DB8D1632776500D44ADF /* Documents */,
 			);
 			name = aquaMSX;
@@ -1277,6 +1303,7 @@
 				FE1C134E167DCF8900CE2B6B /* About.xib */,
 				FE05CAD0176CD17C00D6CAC0 /* ConfigureJoystick.xib */,
 				FE42836215FE857400ED7CB9 /* Emulator.xib */,
+				AC4397E82330BB1C00B5DAD1 /* Debugger.xib */,
 				FEC7232115FF133700CB508C /* Preferences.xib */,
 				FE2A2BD816240966000CCAE4 /* RepositionCassette.xib */,
 				6B36CC441644806B00B5FDB7 /* MainMenu.xib */,
@@ -1632,6 +1659,8 @@
 				E99731C01298B4B400766C90 /* WDCRC.h */,
 				E99731C11298B4B400766C90 /* Z8530.c */,
 				E99731C21298B4B400766C90 /* Z8530.h */,
+				ACE53F9C2324D34300ABAA7B /* CH376s.h */,
+				ACE53F9D2324D4F200ABAA7B /* CH376s.c */,
 			);
 			path = IoDevice;
 			sourceTree = "<group>";
@@ -2224,6 +2253,18 @@
 				FEC7231815FF0E3400CB508C /* CMPreferenceController.m */,
 				FE2A2BDB16240DB7000CCAE4 /* CMRepositionCassetteController.h */,
 				FE2A2BDC16240DB7000CCAE4 /* CMRepositionCassetteController.m */,
+				AC4397F12330D79D00B5DAD1 /* CMDebugger.h */,
+				AC4397F22330D7CF00B5DAD1 /* CMDebugger.m */,
+				ACE40D53233161BF00BD07E0 /* disassemble.hpp */,
+				ACE40D54233161BF00BD07E0 /* disassemble.cpp */,
+				ACE40D562331626A00BD07E0 /* symbolinfo.cpp */,
+				ACE40D572331626A00BD07E0 /* symbolinfo.hpp */,
+				ACE40D592331767700BD07E0 /* CMDisassemble.mm */,
+				ACE40D5B2331770500BD07E0 /* CMDisassemble.h */,
+				AC31C67323376A1100B67336 /* breakpoints.cpp */,
+				AC31C67423376A1100B67336 /* breakpoints.hpp */,
+				AC31C67623376E5E00B67336 /* CMBreakpoints.mm */,
+				AC31C67823376F8200B67336 /* CMBreakpoints.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2391,6 +2432,7 @@
 				FE1C1358167DE0D200CE2B6B /* Documents in Resources */,
 				FEC9AE22193A947300E4725D /* rensha_led_on@2x.png in Resources */,
 				FED5C86A1938629B0045FE8C /* power_led_on.png in Resources */,
+				AC3F901D2339625800DFE285 /* nextor.dsk in Resources */,
 				FE1C135C167DE41800CE2B6B /* AppIcon.png in Resources */,
 				FEC9AE27193AE0DF00E4725D /* cas_led_off.png in Resources */,
 				FED5C860193860E80045FE8C /* pause_led_off.png in Resources */,
@@ -2433,6 +2475,7 @@
 				FE46C8ED16CA188E00D25801 /* icon-downloading.png in Resources */,
 				FE46C8EE16CA188E00D25801 /* icon-downloading@2x.png in Resources */,
 				FE46C8F116CA1DCA00D25801 /* icon-downloading-inverse.png in Resources */,
+				AC4397E92330BB1C00B5DAD1 /* Debugger.xib in Resources */,
 				FE5CDEC2192C8BE600312BB4 /* caps_led_on.png in Resources */,
 				FE17A07C1929CC96007FB866 /* fdd0_led_off@2x.png in Resources */,
 				FE46C8F216CA1DCA00D25801 /* icon-downloading-inverse@2x.png in Resources */,
@@ -2494,6 +2537,7 @@
 				E997338E1298B4B500766C90 /* Disk.c in Sources */,
 				E997338F1298B4B500766C90 /* FdcAudio.c in Sources */,
 				E99733901298B4B500766C90 /* ft245.c in Sources */,
+				ACE40D582331626A00BD07E0 /* symbolinfo.cpp in Sources */,
 				E99733911298B4B500766C90 /* GameReader.cpp in Sources */,
 				E99733921298B4B500766C90 /* HarddiskIDE.c in Sources */,
 				E99733931298B4B500766C90 /* I8250.c in Sources */,
@@ -2503,8 +2547,10 @@
 				E99733971298B4B500766C90 /* JoystickIO.c in Sources */,
 				E99733981298B4B500766C90 /* Led.c in Sources */,
 				E99733991298B4B500766C90 /* MB89352.c in Sources */,
+				AC31C67723376E5E00B67336 /* CMBreakpoints.mm in Sources */,
 				E997339A1298B4B500766C90 /* Microwire93Cx6.c in Sources */,
 				E997339B1298B4B500766C90 /* MidiIO.c in Sources */,
+				ACE53F9E2324D4F200ABAA7B /* CH376s.c in Sources */,
 				E997339C1298B4B500766C90 /* MSXMidi.c in Sources */,
 				E997339D1298B4B500766C90 /* MsxPPI.c in Sources */,
 				E997339E1298B4B500766C90 /* NEC765.c in Sources */,
@@ -2525,6 +2571,7 @@
 				E99733AC1298B4B500766C90 /* WD2793.c in Sources */,
 				E99733AD1298B4B500766C90 /* wd33c93.c in Sources */,
 				E99733AE1298B4B500766C90 /* WDCRC.c in Sources */,
+				AC31C67523376A1100B67336 /* breakpoints.cpp in Sources */,
 				E99733AF1298B4B500766C90 /* Z8530.c in Sources */,
 				FE5C8DE91BA7DC7500FC5228 /* CocoaThread.m in Sources */,
 				E99733B11298B4B500766C90 /* Crc32Calc.c in Sources */,
@@ -2543,6 +2590,7 @@
 				E99733BE1298B4B500766C90 /* RomLoader.c in Sources */,
 				E99733BF1298B4B500766C90 /* romMapperA1FM.c in Sources */,
 				E99733C01298B4B500766C90 /* romMapperA1FMModem.c in Sources */,
+				ACE40D55233161BF00BD07E0 /* disassemble.cpp in Sources */,
 				E99733C11298B4B500766C90 /* romMapperArc.c in Sources */,
 				E99733C21298B4B500766C90 /* romMapperASCII16.c in Sources */,
 				E99733C31298B4B500766C90 /* romMapperASCII16nf.c in Sources */,
@@ -2580,6 +2628,8 @@
 				E99733E11298B4B500766C90 /* romMapperKonami4nf.c in Sources */,
 				E99733E21298B4B500766C90 /* romMapperKonami5.c in Sources */,
 				E99733E31298B4B500766C90 /* romMapperKonamiKeyboardMaster.c in Sources */,
+				AC4397F32330D7CF00B5DAD1 /* CMDebugger.m in Sources */,
+				ACE40D5A2331767700BD07E0 /* CMDisassemble.mm in Sources */,
 				E99733E41298B4B500766C90 /* romMapperKonamiSynth.c in Sources */,
 				E99733E51298B4B500766C90 /* romMapperKonamiWordPro.c in Sources */,
 				E99733E61298B4B500766C90 /* romMapperKorean126.c in Sources */,

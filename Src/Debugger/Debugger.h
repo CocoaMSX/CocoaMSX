@@ -28,6 +28,10 @@
 #ifndef DEBUGGER_H
 #define DEBUGGER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "MsxTypes.h"
 
 typedef struct BlueDebugger    BlueDebugger;
@@ -170,5 +174,9 @@ void debuggerTrace(const char* str);
 void debuggerSetBreakpoint(UInt16 slot, UInt16 page, UInt16 address);
 
 int debuggerIsPresent(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*DEBUGGER_H*/

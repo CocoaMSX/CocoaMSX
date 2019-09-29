@@ -243,6 +243,7 @@ void emulatorSetState(EmuState state) {
     if (state == EMU_STEP) {
         state = EMU_RUNNING;
         emuSingleStep = 1;
+        archUpdateEmuDisplay(0);
     }
     if (state == EMU_STEP_BACK) {
         EmuState oldState = state;
@@ -299,7 +300,7 @@ static int timerCallback(void* timer) {
             }
         }
 
-        if (syncMethod == P_EMU_SYNCTOVBLANKASYNC) {
+        if (syncMethod == P_EMU_SYNCTOVBLANKASYNC && emuState==EMU_RUNNING) {
             archUpdateEmuDisplay(syncMethod);
         }
 

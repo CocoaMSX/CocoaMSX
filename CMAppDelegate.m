@@ -24,6 +24,7 @@
 
 #import "CMPreferences.h"
 #import "CMAboutController.h"
+#import "CMDebugger.h"
 
 #import <IOKit/pwr_mgt/IOPMLib.h>
 
@@ -43,6 +44,7 @@
 	CMAboutController *_aboutController;
 	CMEmulatorController *_emulator;
 	CMPreferenceController *_preferenceController;
+    CMDebuggerController *_debuggerController;
 }
 
 #pragma mark - Initialization & Deallocation
@@ -368,6 +370,14 @@
 	}
 	
 	[_preferenceController showWindow:self];
+}
+
+- (IBAction)openDebugger:(id)sender {
+    if (!_debuggerController) {
+        _debuggerController = [[CMDebuggerController alloc] init];
+    }
+    
+    [_debuggerController showWindow:self];
 }
 
 @end
