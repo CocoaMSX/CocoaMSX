@@ -62,7 +62,7 @@
 
 + (NSArray<CMGamepad*> *)allGamepads;
 
-- (id)initWithHidDevice:(IOHIDDeviceRef)device;
+- (instancetype)initWithHidDevice:(IOHIDDeviceRef)device;
 
 - (void)registerForEvents;
 

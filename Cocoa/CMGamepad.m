@@ -48,16 +48,16 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 
 + (NSArray *)allGamepads
 {
-    NSUInteger usagePage = kHIDPage_GenericDesktop;
-    NSUInteger usageId = kHIDUsage_GD_GamePad;
+    const uint16_t usagePage = kHIDPage_GenericDesktop;
+    const uint16_t usageId = kHIDUsage_GD_GamePad;
     
     CFMutableDictionaryRef hidMatchDictionary = IOServiceMatching(kIOHIDDeviceKey);
     NSMutableDictionary *objcMatchDictionary = (__bridge NSMutableDictionary *) hidMatchDictionary;
     
     [objcMatchDictionary setObject:@(usagePage)
-                            forKey:[NSString stringWithUTF8String:kIOHIDDeviceUsagePageKey]];
+                            forKey:@kIOHIDDeviceUsagePageKey];
     [objcMatchDictionary setObject:@(usageId)
-                            forKey:[NSString stringWithUTF8String:kIOHIDDeviceUsageKey]];
+                            forKey:@kIOHIDDeviceUsageKey];
     
     io_iterator_t hidObjectIterator = MACH_PORT_NULL;
     NSMutableArray *gamepads = [NSMutableArray array];
