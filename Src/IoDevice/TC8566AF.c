@@ -526,7 +526,7 @@ static void tc8566afExecutionPhaseWrite(TC8566AF* tc, UInt8 value)
 	}
 }
 
-TC8566AF* tc8566afCreate()
+TC8566AF* tc8566afCreate(void)
 {
     TC8566AF* tc = malloc(sizeof(TC8566AF));
 

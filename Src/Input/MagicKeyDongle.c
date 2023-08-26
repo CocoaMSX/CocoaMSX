@@ -37,7 +37,7 @@ static UInt8 read(MagicKeyDongle* dongle) {
     return 0x3c;
 }
 
-MsxJoystickDevice* magicKeyDongleCreate()
+MsxJoystickDevice* magicKeyDongleCreate(void)
 {
     MagicKeyDongle* dongle = (MagicKeyDongle*)calloc(1, sizeof(MagicKeyDongle));
     dongle->joyDevice.read = read;

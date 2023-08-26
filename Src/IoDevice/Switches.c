@@ -44,7 +44,7 @@ void switchSetRensha(int speed)
     }
 }
 
-int  switchGetRensha()
+int  switchGetRensha(void)
 {
     return renshaSpeed;
 }
@@ -54,7 +54,7 @@ void switchSetFront(int state)
     frontSwitchState = state;
 }
 
-int switchGetFront()
+int switchGetFront(void)
 {
     return frontSwitchState;
 }
@@ -64,7 +64,7 @@ void switchSetPause(int state)
     pauseSwitchState = state;
 }
 
-int switchGetPause()
+int switchGetPause(void)
 {
     return pauseSwitchState;
 }
@@ -74,7 +74,7 @@ void switchSetAudio(int state)
     audioSwitchState = state;
 }
 
-int switchGetAudio()
+int switchGetAudio(void)
 {
     return audioSwitchState;
 }

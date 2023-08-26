@@ -1246,7 +1246,7 @@ void OpenYM2413_2::loadState()
     int i;
 
     for (i = 0; i < sizeof(reg) / sizeof(reg[0]); i++) {
-        sprintf(tag, "reg%.4d", i);
+        snprintf(tag, sizeof(tag), "reg%.4d", i);
         reg[i] = (byte)saveStateGet(state, tag, 0);
     }
 
@@ -1258,179 +1258,179 @@ void OpenYM2413_2::loadState()
     noise_seed = saveStateGet(state, "noise_seed",    0);
 
     for (i = 0; i < sizeof(patches) / sizeof(patches[0]); i++) {
-        sprintf(tag, "AM%d", i);
+        snprintf(tag, sizeof(tag), "AM%d", i);
         patches[i].AM = 0 != saveStateGet(state, tag, 0);
         
-        sprintf(tag, "PM%d", i);
+        snprintf(tag, sizeof(tag), "PM%d", i);
         patches[i].PM = 0 != saveStateGet(state, tag, 0);
         
-        sprintf(tag, "EG%d", i);
+        snprintf(tag, sizeof(tag), "EG%d", i);
         patches[i].EG = 0 != saveStateGet(state, tag, 0);
 
-        sprintf(tag, "KR%d", i);
+        snprintf(tag, sizeof(tag), "KR%d", i);
         patches[i].KR = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "ML%d", i);
+        snprintf(tag, sizeof(tag), "ML%d", i);
         patches[i].ML = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "KL%d", i);
+        snprintf(tag, sizeof(tag), "KL%d", i);
         patches[i].KL = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "TL%d", i);
+        snprintf(tag, sizeof(tag), "TL%d", i);
         patches[i].TL = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "FB%d", i);
+        snprintf(tag, sizeof(tag), "FB%d", i);
         patches[i].FB = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "WF%d", i);
+        snprintf(tag, sizeof(tag), "WF%d", i);
         patches[i].WF = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "AR%d", i);
+        snprintf(tag, sizeof(tag), "AR%d", i);
         patches[i].AR = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "DR%d", i);
+        snprintf(tag, sizeof(tag), "DR%d", i);
         patches[i].DR = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "SL%d", i);
+        snprintf(tag, sizeof(tag), "SL%d", i);
         patches[i].SL = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "RR%d", i);
+        snprintf(tag, sizeof(tag), "RR%d", i);
         patches[i].RR = (byte)saveStateGet(state, tag, 0);
     }
 
     for (i = 0; i < sizeof(ch) / sizeof(ch[0]); i++) {
-        sprintf(tag, "patch_number%d", i);
+        snprintf(tag, sizeof(tag), "patch_number%d", i);
         ch[i].patch_number = saveStateGet(state, tag, 0);
 
         ch[i].setPatch(ch[i].patch_number);
 
-        sprintf(tag, "mod.output0%d", i);
+        snprintf(tag, sizeof(tag), "mod.output0%d", i);
         ch[i].mod.output[0] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.output1%d", i);
+        snprintf(tag, sizeof(tag), "mod.output1%d", i);
         ch[i].mod.output[1] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.output2%d", i);
+        snprintf(tag, sizeof(tag), "mod.output2%d", i);
         ch[i].mod.output[2] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.output3%d", i);
+        snprintf(tag, sizeof(tag), "mod.output3%d", i);
         ch[i].mod.output[3] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.output4%d", i);
+        snprintf(tag, sizeof(tag), "mod.output4%d", i);
         ch[i].mod.output[4] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.sintblIdx%d", i);
+        snprintf(tag, sizeof(tag), "mod.sintblIdx%d", i);
         ch[i].mod.sintblIdx = saveStateGet(state, tag, 0);
 	    ch[i].mod.sintbl = waveform[ch[i].mod.sintblIdx];
         
-        sprintf(tag, "mod.type%d", i);
+        snprintf(tag, sizeof(tag), "mod.type%d", i);
         ch[i].mod.type = 0 != saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.slot_on_flag%d", i);
+        snprintf(tag, sizeof(tag), "mod.slot_on_flag%d", i);
         ch[i].mod.slot_on_flag = 0 != saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.phase%d", i);
+        snprintf(tag, sizeof(tag), "mod.phase%d", i);
         ch[i].mod.phase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.dphase%d", i);
+        snprintf(tag, sizeof(tag), "mod.dphase%d", i);
         ch[i].mod.dphase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.pgout%d", i);
+        snprintf(tag, sizeof(tag), "mod.pgout%d", i);
         ch[i].mod.pgout = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.fnum%d", i);
+        snprintf(tag, sizeof(tag), "mod.fnum%d", i);
         ch[i].mod.fnum = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.block%d", i);
+        snprintf(tag, sizeof(tag), "mod.block%d", i);
         ch[i].mod.block = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.volume%d", i);
+        snprintf(tag, sizeof(tag), "mod.volume%d", i);
         ch[i].mod.volume = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.sustine%d", i);
+        snprintf(tag, sizeof(tag), "mod.sustine%d", i);
         ch[i].mod.sustine = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.tll%d", i);
+        snprintf(tag, sizeof(tag), "mod.tll%d", i);
         ch[i].mod.tll = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.rks%d", i);
+        snprintf(tag, sizeof(tag), "mod.rks%d", i);
         ch[i].mod.rks = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.eg_mode%d", i);
+        snprintf(tag, sizeof(tag), "mod.eg_mode%d", i);
         ch[i].mod.eg_mode = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.eg_phase%d", i);
+        snprintf(tag, sizeof(tag), "mod.eg_phase%d", i);
         ch[i].mod.eg_phase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.eg_dphase%d", i);
+        snprintf(tag, sizeof(tag), "mod.eg_dphase%d", i);
         ch[i].mod.eg_dphase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "mod.egout%d", i);
+        snprintf(tag, sizeof(tag), "mod.egout%d", i);
         ch[i].mod.egout = saveStateGet(state, tag, 0);
 
 
-        sprintf(tag, "car.output0%d", i);
+        snprintf(tag, sizeof(tag), "car.output0%d", i);
         ch[i].car.output[0] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.output1%d", i);
+        snprintf(tag, sizeof(tag), "car.output1%d", i);
         ch[i].car.output[1] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.output2%d", i);
+        snprintf(tag, sizeof(tag), "car.output2%d", i);
         ch[i].car.output[2] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.output3%d", i);
+        snprintf(tag, sizeof(tag), "car.output3%d", i);
         ch[i].car.output[3] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.output4%d", i);
+        snprintf(tag, sizeof(tag), "car.output4%d", i);
         ch[i].car.output[4] = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.sintblIdx%d", i);
+        snprintf(tag, sizeof(tag), "car.sintblIdx%d", i);
         ch[i].car.sintblIdx = saveStateGet(state, tag, 0);
 	    ch[i].car.sintbl = waveform[ch[i].car.sintblIdx];
         
-        sprintf(tag, "car.type%d", i);
+        snprintf(tag, sizeof(tag), "car.type%d", i);
         ch[i].car.type = 0 != saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.slot_on_flag%d", i);
+        snprintf(tag, sizeof(tag), "car.slot_on_flag%d", i);
         ch[i].car.slot_on_flag = 0 != saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.phase%d", i);
+        snprintf(tag, sizeof(tag), "car.phase%d", i);
         ch[i].car.phase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.dphase%d", i);
+        snprintf(tag, sizeof(tag), "car.dphase%d", i);
         ch[i].car.dphase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.pgout%d", i);
+        snprintf(tag, sizeof(tag), "car.pgout%d", i);
         ch[i].car.pgout = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.fnum%d", i);
+        snprintf(tag, sizeof(tag), "car.fnum%d", i);
         ch[i].car.fnum = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.block%d", i);
+        snprintf(tag, sizeof(tag), "car.block%d", i);
         ch[i].car.block = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.volume%d", i);
+        snprintf(tag, sizeof(tag), "car.volume%d", i);
         ch[i].car.volume = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.sustine%d", i);
+        snprintf(tag, sizeof(tag), "car.sustine%d", i);
         ch[i].car.sustine = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.tll%d", i);
+        snprintf(tag, sizeof(tag), "car.tll%d", i);
         ch[i].car.tll = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.rks%d", i);
+        snprintf(tag, sizeof(tag), "car.rks%d", i);
         ch[i].car.rks = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.eg_mode%d", i);
+        snprintf(tag, sizeof(tag), "car.eg_mode%d", i);
         ch[i].car.eg_mode = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.eg_phase%d", i);
+        snprintf(tag, sizeof(tag), "car.eg_phase%d", i);
         ch[i].car.eg_phase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.eg_dphase%d", i);
+        snprintf(tag, sizeof(tag), "car.eg_dphase%d", i);
         ch[i].car.eg_dphase = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "car.egout%d", i);
+        snprintf(tag, sizeof(tag), "car.egout%d", i);
         ch[i].car.egout = saveStateGet(state, tag, 0);
     }
 
@@ -1445,7 +1445,7 @@ void OpenYM2413_2::saveState()
     int i;
 
     for (i = 0; i < sizeof(reg) / sizeof(reg[0]); i++) {
-        sprintf(tag, "reg%.4d", i);
+        snprintf(tag, sizeof(tag), "reg%.4d", i);
         saveStateSet(state, tag, reg[i]);
     }
 
@@ -1457,175 +1457,175 @@ void OpenYM2413_2::saveState()
     saveStateSet(state, "noise_seed",    noise_seed);
 
     for (i = 0; i < sizeof(patches) / sizeof(patches[0]); i++) {
-        sprintf(tag, "AM%d", i);
+        snprintf(tag, sizeof(tag), "AM%d", i);
         saveStateSet(state, tag, patches[i].AM);
         
-        sprintf(tag, "PM%d", i);
+        snprintf(tag, sizeof(tag), "PM%d", i);
         saveStateSet(state, tag, patches[i].PM);
         
-        sprintf(tag, "EG%d", i);
+        snprintf(tag, sizeof(tag), "EG%d", i);
         saveStateSet(state, tag, patches[i].EG);
 
-        sprintf(tag, "KR%d", i);
+        snprintf(tag, sizeof(tag), "KR%d", i);
         saveStateSet(state, tag, patches[i].KR);
         
-        sprintf(tag, "ML%d", i);
+        snprintf(tag, sizeof(tag), "ML%d", i);
         saveStateSet(state, tag, patches[i].ML);
         
-        sprintf(tag, "KL%d", i);
+        snprintf(tag, sizeof(tag), "KL%d", i);
         saveStateSet(state, tag, patches[i].KL);
         
-        sprintf(tag, "TL%d", i);
+        snprintf(tag, sizeof(tag), "TL%d", i);
         saveStateSet(state, tag, patches[i].TL);
         
-        sprintf(tag, "FB%d", i);
+        snprintf(tag, sizeof(tag), "FB%d", i);
         saveStateSet(state, tag, patches[i].FB);
         
-        sprintf(tag, "WF%d", i);
+        snprintf(tag, sizeof(tag), "WF%d", i);
         saveStateSet(state, tag, patches[i].WF);
         
-        sprintf(tag, "AR%d", i);
+        snprintf(tag, sizeof(tag), "AR%d", i);
         saveStateSet(state, tag, patches[i].AR);
         
-        sprintf(tag, "DR%d", i);
+        snprintf(tag, sizeof(tag), "DR%d", i);
         saveStateSet(state, tag, patches[i].DR);
         
-        sprintf(tag, "SL%d", i);
+        snprintf(tag, sizeof(tag), "SL%d", i);
         saveStateSet(state, tag, patches[i].SL);
         
-        sprintf(tag, "RR%d", i);
+        snprintf(tag, sizeof(tag), "RR%d", i);
         saveStateSet(state, tag, patches[i].RR);
     }
 
     for (i = 0; i < sizeof(ch) / sizeof(ch[0]); i++) {
-        sprintf(tag, "patch_number%d", i);
+        snprintf(tag, sizeof(tag), "patch_number%d", i);
         saveStateSet(state, tag, ch[i].patch_number);
 
-        sprintf(tag, "mod.output0%d", i);
+        snprintf(tag, sizeof(tag), "mod.output0%d", i);
         saveStateSet(state, tag, ch[i].mod.output[0]);
 
-        sprintf(tag, "mod.output1%d", i);
+        snprintf(tag, sizeof(tag), "mod.output1%d", i);
         saveStateSet(state, tag, ch[i].mod.output[1]);
 
-        sprintf(tag, "mod.output2%d", i);
+        snprintf(tag, sizeof(tag), "mod.output2%d", i);
         saveStateSet(state, tag, ch[i].mod.output[2]);
 
-        sprintf(tag, "mod.output3%d", i);
+        snprintf(tag, sizeof(tag), "mod.output3%d", i);
         saveStateSet(state, tag, ch[i].mod.output[3]);
 
-        sprintf(tag, "mod.output4%d", i);
+        snprintf(tag, sizeof(tag), "mod.output4%d", i);
         saveStateSet(state, tag, ch[i].mod.output[4]);
 
-        sprintf(tag, "mod.sintblIdx%d", i);
+        snprintf(tag, sizeof(tag), "mod.sintblIdx%d", i);
         saveStateSet(state, tag, ch[i].mod.sintblIdx);
         
-        sprintf(tag, "mod.type%d", i);
+        snprintf(tag, sizeof(tag), "mod.type%d", i);
         saveStateSet(state, tag, ch[i].mod.type);
 
-        sprintf(tag, "mod.slot_on_flag%d", i);
+        snprintf(tag, sizeof(tag), "mod.slot_on_flag%d", i);
         saveStateSet(state, tag, ch[i].mod.slot_on_flag);
 
-        sprintf(tag, "mod.phase%d", i);
+        snprintf(tag, sizeof(tag), "mod.phase%d", i);
         saveStateSet(state, tag, ch[i].mod.phase);
 
-        sprintf(tag, "mod.dphase%d", i);
+        snprintf(tag, sizeof(tag), "mod.dphase%d", i);
         saveStateSet(state, tag, ch[i].mod.dphase);
 
-        sprintf(tag, "mod.pgout%d", i);
+        snprintf(tag, sizeof(tag), "mod.pgout%d", i);
         saveStateSet(state, tag, ch[i].mod.pgout);
 
-        sprintf(tag, "mod.fnum%d", i);
+        snprintf(tag, sizeof(tag), "mod.fnum%d", i);
         saveStateSet(state, tag, ch[i].mod.fnum);
 
-        sprintf(tag, "mod.block%d", i);
+        snprintf(tag, sizeof(tag), "mod.block%d", i);
         saveStateSet(state, tag, ch[i].mod.block);
 
-        sprintf(tag, "mod.volume%d", i);
+        snprintf(tag, sizeof(tag), "mod.volume%d", i);
         saveStateSet(state, tag, ch[i].mod.volume);
 
-        sprintf(tag, "mod.sustine%d", i);
+        snprintf(tag, sizeof(tag), "mod.sustine%d", i);
         saveStateSet(state, tag, ch[i].mod.sustine);
 
-        sprintf(tag, "mod.tll%d", i);
+        snprintf(tag, sizeof(tag), "mod.tll%d", i);
         saveStateSet(state, tag, ch[i].mod.tll);
 
-        sprintf(tag, "mod.rks%d", i);
+        snprintf(tag, sizeof(tag), "mod.rks%d", i);
         saveStateSet(state, tag, ch[i].mod.rks);
 
-        sprintf(tag, "mod.eg_mode%d", i);
+        snprintf(tag, sizeof(tag), "mod.eg_mode%d", i);
         saveStateSet(state, tag, ch[i].mod.eg_mode);
 
-        sprintf(tag, "mod.eg_phase%d", i);
+        snprintf(tag, sizeof(tag), "mod.eg_phase%d", i);
         saveStateSet(state, tag, ch[i].mod.eg_phase);
 
-        sprintf(tag, "mod.eg_dphase%d", i);
+        snprintf(tag, sizeof(tag), "mod.eg_dphase%d", i);
         saveStateSet(state, tag, ch[i].mod.eg_dphase);
 
-        sprintf(tag, "mod.egout%d", i);
+        snprintf(tag, sizeof(tag), "mod.egout%d", i);
         saveStateSet(state, tag, ch[i].mod.egout);
 
 
-        sprintf(tag, "car.output0%d", i);
+        snprintf(tag, sizeof(tag), "car.output0%d", i);
         saveStateSet(state, tag, ch[i].car.output[0]);
 
-        sprintf(tag, "car.output1%d", i);
+        snprintf(tag, sizeof(tag), "car.output1%d", i);
         saveStateSet(state, tag, ch[i].car.output[1]);
 
-        sprintf(tag, "car.output2%d", i);
+        snprintf(tag, sizeof(tag), "car.output2%d", i);
         saveStateSet(state, tag, ch[i].car.output[2]);
 
-        sprintf(tag, "car.output3%d", i);
+        snprintf(tag, sizeof(tag), "car.output3%d", i);
         saveStateSet(state, tag, ch[i].car.output[3]);
 
-        sprintf(tag, "car.output4%d", i);
+        snprintf(tag, sizeof(tag), "car.output4%d", i);
         saveStateSet(state, tag, ch[i].car.output[4]);
 
-        sprintf(tag, "car.sintblIdx%d", i);
+        snprintf(tag, sizeof(tag), "car.sintblIdx%d", i);
         saveStateSet(state, tag, ch[i].car.sintblIdx);
         
-        sprintf(tag, "car.type%d", i);
+        snprintf(tag, sizeof(tag), "car.type%d", i);
         saveStateSet(state, tag, ch[i].car.type);
 
-        sprintf(tag, "car.slot_on_flag%d", i);
+        snprintf(tag, sizeof(tag), "car.slot_on_flag%d", i);
         saveStateSet(state, tag, ch[i].car.slot_on_flag);
 
-        sprintf(tag, "car.phase%d", i);
+        snprintf(tag, sizeof(tag), "car.phase%d", i);
         saveStateSet(state, tag, ch[i].car.phase);
 
-        sprintf(tag, "car.dphase%d", i);
+        snprintf(tag, sizeof(tag), "car.dphase%d", i);
         saveStateSet(state, tag, ch[i].car.dphase);
 
-        sprintf(tag, "car.pgout%d", i);
+        snprintf(tag, sizeof(tag), "car.pgout%d", i);
         saveStateSet(state, tag, ch[i].car.pgout);
 
-        sprintf(tag, "car.fnum%d", i);
+        snprintf(tag, sizeof(tag), "car.fnum%d", i);
         saveStateSet(state, tag, ch[i].car.fnum);
 
-        sprintf(tag, "car.block%d", i);
+        snprintf(tag, sizeof(tag), "car.block%d", i);
         saveStateSet(state, tag, ch[i].car.block);
 
-        sprintf(tag, "car.volume%d", i);
+        snprintf(tag, sizeof(tag), "car.volume%d", i);
         saveStateSet(state, tag, ch[i].car.volume);
 
-        sprintf(tag, "car.sustine%d", i);
+        snprintf(tag, sizeof(tag), "car.sustine%d", i);
         saveStateSet(state, tag, ch[i].car.sustine);
 
-        sprintf(tag, "car.tll%d", i);
+        snprintf(tag, sizeof(tag), "car.tll%d", i);
         saveStateSet(state, tag, ch[i].car.tll);
 
-        sprintf(tag, "car.rks%d", i);
+        snprintf(tag, sizeof(tag), "car.rks%d", i);
         saveStateSet(state, tag, ch[i].car.rks);
 
-        sprintf(tag, "car.eg_mode%d", i);
+        snprintf(tag, sizeof(tag), "car.eg_mode%d", i);
         saveStateSet(state, tag, ch[i].car.eg_mode);
 
-        sprintf(tag, "car.eg_phase%d", i);
+        snprintf(tag, sizeof(tag), "car.eg_phase%d", i);
         saveStateSet(state, tag, ch[i].car.eg_phase);
 
-        sprintf(tag, "car.eg_dphase%d", i);
+        snprintf(tag, sizeof(tag), "car.eg_dphase%d", i);
         saveStateSet(state, tag, ch[i].car.eg_dphase);
 
-        sprintf(tag, "car.egout%d", i);
+        snprintf(tag, sizeof(tag), "car.egout%d", i);
         saveStateSet(state, tag, ch[i].car.egout);
     }
 

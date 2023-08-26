@@ -169,7 +169,7 @@ static void fdcWrite(Sf7000PPI* ppi, UInt16 port, UInt8 value)
     }
 }
 
-void sf7000PPICreate()
+void sf7000PPICreate(void)
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

@@ -1999,17 +1999,17 @@ void YMF262::loadState()
     saveStateGetBuffer(state, "reg", reg, sizeof(reg));
 
     for (i = 0; i < sizeof(fn_tab) / sizeof(fn_tab[0]); i++) {
-        sprintf(tag, "fn_tab%.4d", i);
+        snprintf(tag, sizeof(tag), "fn_tab%.4d", i);
         fn_tab[i] = saveStateGet(state, tag, 0);
     }
 
     for (i = 0; i < sizeof(pan) / sizeof(pan[0]); i++) {
-        sprintf(tag, "pan%.4d", i);
+        snprintf(tag, sizeof(tag), "pan%.4d", i);
         pan[i] = saveStateGet(state, tag, 0);
     }
 
     for (i = 0; i < sizeof(chanout) / sizeof(chanout[0]); i++) {
-        sprintf(tag, "chanout%.4d", i);
+        snprintf(tag, sizeof(tag), "chanout%.4d", i);
         chanout[i] = saveStateGet(state, tag, 0);
     }
 
@@ -2042,122 +2042,122 @@ void YMF262::loadState()
     maxVolume          = (short)saveStateGet(state, "maxVolume",          0);
 
     for (int i = 0; i < 18; i++) {
-        sprintf(tag, "block_fnum%d", i);
+        snprintf(tag, sizeof(tag), "block_fnum%d", i);
         channels[i].block_fnum = saveStateGet(state, tag, 0);
         
-        sprintf(tag, "fc%d", i);
+        snprintf(tag, sizeof(tag), "fc%d", i);
         channels[i].fc = saveStateGet(state, tag, 0);
         
-        sprintf(tag, "ksl_base%d", i);
+        snprintf(tag, sizeof(tag), "ksl_base%d", i);
         channels[i].ksl_base = saveStateGet(state, tag, 0);
         
-        sprintf(tag, "kcode%d", i);
+        snprintf(tag, sizeof(tag), "kcode%d", i);
         channels[i].kcode = (byte)saveStateGet(state, tag, 0);
         
-        sprintf(tag, "extended%d", i);
+        snprintf(tag, sizeof(tag), "extended%d", i);
         channels[i].extended = (byte)saveStateGet(state, tag, 0);
         
         for (int j = 0; j < 2; j++) {
-            sprintf(tag, "ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "ar%d_%d", i, j);
             channels[i].slots[j].ar = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "dr%d_%d", i, j);
             channels[i].slots[j].dr = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "rr%d_%d", i, j);
             channels[i].slots[j].rr = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "KSR%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "KSR%d_%d", i, j);
             channels[i].slots[j].KSR = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "ksl%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "ksl%d_%d", i, j);
             channels[i].slots[j].ksl = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "ksr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "ksr%d_%d", i, j);
             channels[i].slots[j].ksr = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "mul%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "mul%d_%d", i, j);
             channels[i].slots[j].mul = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "Cnt%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "Cnt%d_%d", i, j);
             channels[i].slots[j].Cnt = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "Incr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "Incr%d_%d", i, j);
             channels[i].slots[j].Incr = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "FB%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "FB%d_%d", i, j);
             channels[i].slots[j].FB = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "op1_out%d_%d_0", i, j);
+            snprintf(tag, sizeof(tag), "op1_out%d_%d_0", i, j);
             channels[i].slots[j].op1_out[0] = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "op1_out%d_%d_1", i, j);
+            snprintf(tag, sizeof(tag), "op1_out%d_%d_1", i, j);
             channels[i].slots[j].op1_out[1] = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "CON%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "CON%d_%d", i, j);
             channels[i].slots[j].CON = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_type%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_type%d_%d", i, j);
             channels[i].slots[j].eg_type = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "state%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "state%d_%d", i, j);
             channels[i].slots[j].state = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "TL%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "TL%d_%d", i, j);
             channels[i].slots[j].TL = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "TLL%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "TLL%d_%d", i, j);
             channels[i].slots[j].TLL = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "volume%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "volume%d_%d", i, j);
             channels[i].slots[j].volume = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "sl%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "sl%d_%d", i, j);
             channels[i].slots[j].sl = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_m_ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_m_ar%d_%d", i, j);
             channels[i].slots[j].eg_m_ar = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_sh_ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sh_ar%d_%d", i, j);
             channels[i].slots[j].eg_sh_ar = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_sel_ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sel_ar%d_%d", i, j);
             channels[i].slots[j].eg_sel_ar = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_m_dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_m_dr%d_%d", i, j);
             channels[i].slots[j].eg_m_dr = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_sh_dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sh_dr%d_%d", i, j);
             channels[i].slots[j].eg_sh_dr = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_sel_dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sel_dr%d_%d", i, j);
             channels[i].slots[j].eg_sel_dr = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_m_rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_m_rr%d_%d", i, j);
             channels[i].slots[j].eg_m_rr = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_sh_rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sh_rr%d_%d", i, j);
             channels[i].slots[j].eg_sh_rr = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "eg_sel_rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sel_rr%d_%d", i, j);
             channels[i].slots[j].eg_sel_rr = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "key%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "key%d_%d", i, j);
             channels[i].slots[j].key = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "AMmask%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "AMmask%d_%d", i, j);
             channels[i].slots[j].AMmask = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "vib%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "vib%d_%d", i, j);
             channels[i].slots[j].vib = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "waveform_number%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "waveform_number%d_%d", i, j);
             channels[i].slots[j].waveform_number = (byte)saveStateGet(state, tag, 0);
             
-            sprintf(tag, "wavetable%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "wavetable%d_%d", i, j);
             channels[i].slots[j].wavetable = saveStateGet(state, tag, 0);
             
-            sprintf(tag, "connect%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "connect%d_%d", i, j);
             channels[i].slots[j].connect = saveStateGet(state, tag, 0);
         }
     }
@@ -2174,17 +2174,17 @@ void YMF262::saveState()
     saveStateSetBuffer(state, "reg", reg, sizeof(reg));
 
     for (i = 0; i < sizeof(fn_tab) / sizeof(fn_tab[0]); i++) {
-        sprintf(tag, "fn_tab%.4d", i);
+        snprintf(tag, sizeof(tag), "fn_tab%.4d", i);
         saveStateSet(state, tag, fn_tab[i]);
     }
 
     for (i = 0; i < sizeof(pan) / sizeof(pan[0]); i++) {
-        sprintf(tag, "pan%.4d", i);
+        snprintf(tag, sizeof(tag), "pan%.4d", i);
         saveStateSet(state, tag, pan[i]);
     }
 
     for (i = 0; i < sizeof(chanout) / sizeof(chanout[0]); i++) {
-        sprintf(tag, "chanout%.4d", i);
+        snprintf(tag, sizeof(tag), "chanout%.4d", i);
         saveStateSet(state, tag, chanout[i]);
     }
 
@@ -2217,122 +2217,122 @@ void YMF262::saveState()
     saveStateSet(state, "maxVolume",          maxVolume);
 
     for (int i = 0; i < 18; i++) {
-        sprintf(tag, "block_fnum%d", i);
+        snprintf(tag, sizeof(tag), "block_fnum%d", i);
         saveStateSet(state, tag, channels[i].block_fnum);
         
-        sprintf(tag, "fc%d", i);
+        snprintf(tag, sizeof(tag), "fc%d", i);
         saveStateSet(state, tag, channels[i].fc);
         
-        sprintf(tag, "ksl_base%d", i);
+        snprintf(tag, sizeof(tag), "ksl_base%d", i);
         saveStateSet(state, tag, channels[i].ksl_base);
         
-        sprintf(tag, "kcode%d", i);
+        snprintf(tag, sizeof(tag), "kcode%d", i);
         saveStateSet(state, tag, channels[i].kcode);
         
-        sprintf(tag, "extended%d", i);
+        snprintf(tag, sizeof(tag), "extended%d", i);
         saveStateSet(state, tag, channels[i].extended);
         
         for (int j = 0; j < 2; j++) {
-            sprintf(tag, "ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "ar%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].ar);
             
-            sprintf(tag, "dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "dr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].dr);
             
-            sprintf(tag, "rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "rr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].rr);
             
-            sprintf(tag, "KSR%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "KSR%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].KSR);
             
-            sprintf(tag, "ksl%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "ksl%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].ksl);
             
-            sprintf(tag, "ksr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "ksr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].ksr);
             
-            sprintf(tag, "mul%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "mul%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].mul);
             
-            sprintf(tag, "Cnt%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "Cnt%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].Cnt);
             
-            sprintf(tag, "Incr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "Incr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].Incr);
             
-            sprintf(tag, "FB%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "FB%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].FB);
             
-            sprintf(tag, "op1_out%d_%d_0", i, j);
+            snprintf(tag, sizeof(tag), "op1_out%d_%d_0", i, j);
             saveStateSet(state, tag, channels[i].slots[j].op1_out[0]);
             
-            sprintf(tag, "op1_out%d_%d_1", i, j);
+            snprintf(tag, sizeof(tag), "op1_out%d_%d_1", i, j);
             saveStateSet(state, tag, channels[i].slots[j].op1_out[1]);
             
-            sprintf(tag, "CON%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "CON%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].CON);
             
-            sprintf(tag, "eg_type%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_type%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_type);
             
-            sprintf(tag, "state%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "state%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].state);
             
-            sprintf(tag, "TL%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "TL%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].TL);
             
-            sprintf(tag, "TLL%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "TLL%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].TLL);
             
-            sprintf(tag, "volume%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "volume%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].volume);
             
-            sprintf(tag, "sl%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "sl%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].sl);
             
-            sprintf(tag, "eg_m_ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_m_ar%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_m_ar);
             
-            sprintf(tag, "eg_sh_ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sh_ar%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_sh_ar);
             
-            sprintf(tag, "eg_sel_ar%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sel_ar%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_sel_ar);
             
-            sprintf(tag, "eg_m_dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_m_dr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_m_dr);
             
-            sprintf(tag, "eg_sh_dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sh_dr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_sh_dr);
             
-            sprintf(tag, "eg_sel_dr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sel_dr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_sel_dr);
             
-            sprintf(tag, "eg_m_rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_m_rr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_m_rr);
             
-            sprintf(tag, "eg_sh_rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sh_rr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_sh_rr);
             
-            sprintf(tag, "eg_sel_rr%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "eg_sel_rr%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].eg_sel_rr);
             
-            sprintf(tag, "key%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "key%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].key);
             
-            sprintf(tag, "AMmask%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "AMmask%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].AMmask);
             
-            sprintf(tag, "vib%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "vib%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].vib);
             
-            sprintf(tag, "waveform_number%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "waveform_number%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].waveform_number);
             
-            sprintf(tag, "wavetable%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "wavetable%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].wavetable);
             
-            sprintf(tag, "connect%d_%d", i, j);
+            snprintf(tag, sizeof(tag), "connect%d_%d", i, j);
             saveStateSet(state, tag, channels[i].slots[j].connect);
         }
     }

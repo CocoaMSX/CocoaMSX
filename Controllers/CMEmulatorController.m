@@ -890,8 +890,8 @@ CMEmulatorController *theEmulator = nil; // FIXME
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSArray *recentURLs = [[NSDocumentController sharedDocumentController] recentDocumentURLs];
         @synchronized(self) {
-            [recentDocuments removeAllObjects];
-            [recentDocuments addObjectsFromArray:recentURLs];
+            [self->recentDocuments removeAllObjects];
+            [self->recentDocuments addObjectsFromArray:recentURLs];
         }
         
         NSLog(@"Added %ld recent documents to local copy", [recentURLs count]);
@@ -1453,16 +1453,14 @@ CMEmulatorController *theEmulator = nil; // FIXME
             isDirectory = NO;
         } else {
             NSString *infoText = [[error userInfo] objectForKey:NSLocalizedDescriptionKey];
-            NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Error creating disk image", @"Dialog title")
-                                             defaultButton:CMLoc(@"OK", @"")
-                                           alternateButton:nil
-                                               otherButton:nil
-                                 informativeTextWithFormat:@"%@", infoText];
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.messageText = NSLocalizedString(@"Error creating disk image", @"Dialog title");
+            alert.informativeText = infoText;
             
             [alert beginSheetModalForWindow:[self window]
-                              modalDelegate:self
-                             didEndSelector:nil
-                                contextInfo:nil];
+                          completionHandler:^(NSModalResponse returnCode) {
+                //do nothing
+            }];
             emulatorResume();
             return;
         }
@@ -3090,8 +3088,6 @@ void archTrap(UInt8 value)
              [item action] == @selector(insertDiskSlot2:) ||
              [item action] == @selector(insertRecentDiskA:) ||
              [item action] == @selector(insertRecentDiskB:) ||
-             [item action] == @selector(insertBlankDiskSlot1:) ||
-             [item action] == @selector(insertBlankDiskSlot2:) ||
              [item action] == @selector(insertBlankDiskAsSlot1:) ||
              [item action] == @selector(insertBlankDiskAsSlot2:))
     {

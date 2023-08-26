@@ -45,7 +45,7 @@ void sl811hsLoadState(SL811HS* sl)
 {
 }
 
-SL811HS* sl811hsCreate()
+SL811HS* sl811hsCreate(void)
 {
     SL811HS* sl = malloc(sizeof(SL811HS));
 

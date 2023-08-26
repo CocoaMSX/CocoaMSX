@@ -100,7 +100,7 @@ void TiXmlBase::PutString( const TIXML_STRING& str, TIXML_STRING* outString )
 			// Easy pass at non-alpha/numeric/symbol
 			// Below 32 is symbolic.
 			char buf[ 32 ];
-			sprintf( buf, "&#x%02X;", (unsigned) ( c & 0xff ) );
+			snprintf( buf, sizeof( buf ), "&#x%02X;", (unsigned) ( c & 0xff ) );
 			outString->append( buf, strlen( buf ) );
 			++i;
 		}
@@ -577,7 +577,7 @@ int TiXmlElement::QueryDoubleAttribute( const char* name, double* dval ) const
 void TiXmlElement::SetAttribute( const char * name, int val )
 {	
 	char buf[64];
-	sprintf( buf, "%d", val );
+	snprintf( buf, sizeof( buf ), "%d", val );
 	SetAttribute( name, buf );
 }
 
@@ -585,7 +585,7 @@ void TiXmlElement::SetAttribute( const char * name, int val )
 void TiXmlElement::SetDoubleAttribute( const char * name, double val )
 {	
 	char buf[128];
-	sprintf( buf, "%f", val );
+    snprintf( buf, sizeof( buf ), "%f", val );
 	SetAttribute( name, buf );
 }
 
@@ -980,14 +980,14 @@ int TiXmlAttribute::QueryDoubleValue( double* dval ) const
 void TiXmlAttribute::SetIntValue( int _value )
 {
 	char buf [64];
-	sprintf (buf, "%d", _value);
+    snprintf( buf, sizeof( buf ), "%d", _value);
 	SetValue (buf);
 }
 
 void TiXmlAttribute::SetDoubleValue( double _value )
 {
 	char buf [64];
-	sprintf (buf, "%lf", _value);
+    snprintf( buf, sizeof( buf ), "%lf", _value);
 	SetValue (buf);
 }
 

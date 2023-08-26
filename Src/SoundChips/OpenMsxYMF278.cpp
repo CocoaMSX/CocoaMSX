@@ -886,106 +886,106 @@ void YMF278::loadState()
     for (int i = 0; i < 24; i++) {
         char tag[32];
 
-        sprintf(tag, "wave%d", i);
+        snprintf(tag, sizeof(tag), "wave%d", i);
         slots[i].wave = (short)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "FN%d", i);
+        snprintf(tag, sizeof(tag), "FN%d", i);
         slots[i].FN = (short)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "OCT%d", i);
+        snprintf(tag, sizeof(tag), "OCT%d", i);
         slots[i].OCT = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "PRVB%d", i);
+        snprintf(tag, sizeof(tag), "PRVB%d", i);
         slots[i].PRVB = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "LD%d", i);
+        snprintf(tag, sizeof(tag), "LD%d", i);
         slots[i].LD = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "TL%d", i);
+        snprintf(tag, sizeof(tag), "TL%d", i);
         slots[i].TL = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "pan%d", i);
+        snprintf(tag, sizeof(tag), "pan%d", i);
         slots[i].pan = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "lfo%d", i);
+        snprintf(tag, sizeof(tag), "lfo%d", i);
         slots[i].lfo = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "vib%d", i);
+        snprintf(tag, sizeof(tag), "vib%d", i);
         slots[i].vib = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "AM%d", i);
+        snprintf(tag, sizeof(tag), "AM%d", i);
         slots[i].AM = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "AR%d", i);
+        snprintf(tag, sizeof(tag), "AR%d", i);
         slots[i].AR = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "D1R%d", i);
+        snprintf(tag, sizeof(tag), "D1R%d", i);
         slots[i].D1R = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "DL%d", i);
+        snprintf(tag, sizeof(tag), "DL%d", i);
         slots[i].DL = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "D2R%d", i);
+        snprintf(tag, sizeof(tag), "D2R%d", i);
         slots[i].D2R = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "RC%d", i);
+        snprintf(tag, sizeof(tag), "RC%d", i);
         slots[i].RC = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "RR%d", i);
+        snprintf(tag, sizeof(tag), "RR%d", i);
         slots[i].RR = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "step%d", i);
+        snprintf(tag, sizeof(tag), "step%d", i);
         slots[i].step = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "stepptr%d", i);
+        snprintf(tag, sizeof(tag), "stepptr%d", i);
         slots[i].stepptr = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "pos%d", i);
+        snprintf(tag, sizeof(tag), "pos%d", i);
         slots[i].pos = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "sample1%d", i);
+        snprintf(tag, sizeof(tag), "sample1%d", i);
         slots[i].sample1 = (short)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "sample2%d", i);
+        snprintf(tag, sizeof(tag), "sample2%d", i);
         slots[i].sample2 = (short)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "active%d", i);
+        snprintf(tag, sizeof(tag), "active%d", i);
         slots[i].active = saveStateGet(state, tag, 0) != 0;
 
-        sprintf(tag, "bits%d", i);
+        snprintf(tag, sizeof(tag), "bits%d", i);
         slots[i].bits = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "startaddr%d", i);
+        snprintf(tag, sizeof(tag), "startaddr%d", i);
         slots[i].startaddr = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "loopaddr%d", i);
+        snprintf(tag, sizeof(tag), "loopaddr%d", i);
         slots[i].loopaddr = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "endaddr%d", i);
+        snprintf(tag, sizeof(tag), "endaddr%d", i);
         slots[i].endaddr = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "state%d", i);
+        snprintf(tag, sizeof(tag), "state%d", i);
         slots[i].state = (char)saveStateGet(state, tag, 0);
 
-        sprintf(tag, "env_vol%d", i);
+        snprintf(tag, sizeof(tag), "env_vol%d", i);
         slots[i].env_vol = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "env_vol_step%d", i);
+        snprintf(tag, sizeof(tag), "env_vol_step%d", i);
         slots[i].env_vol_step = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "env_vol_lim%d", i);
+        snprintf(tag, sizeof(tag), "env_vol_lim%d", i);
         slots[i].env_vol_lim = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "lfo_active%d", i);
+        snprintf(tag, sizeof(tag), "lfo_active%d", i);
         slots[i].lfo_active = saveStateGet(state, tag, 0) != 0;
 
-        sprintf(tag, "lfo_cnt%d", i);
+        snprintf(tag, sizeof(tag), "lfo_cnt%d", i);
         slots[i].lfo_cnt = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "lfo_step%d", i);
+        snprintf(tag, sizeof(tag), "lfo_step%d", i);
         slots[i].lfo_step = saveStateGet(state, tag, 0);
 
-        sprintf(tag, "lfo_max%d", i);
+        snprintf(tag, sizeof(tag), "lfo_max%d", i);
         slots[i].lfo_max = saveStateGet(state, tag, 0);
     }
 
@@ -1023,106 +1023,106 @@ void YMF278::saveState()
     for (int i = 0; i < 24; i++) {
         char tag[32];
 
-        sprintf(tag, "wave%d", i);
+        snprintf(tag, sizeof(tag), "wave%d", i);
         saveStateSet(state, tag, slots[i].wave);
 
-        sprintf(tag, "FN%d", i);
+        snprintf(tag, sizeof(tag), "FN%d", i);
         saveStateSet(state, tag, slots[i].FN);
 
-        sprintf(tag, "OCT%d", i);
+        snprintf(tag, sizeof(tag), "OCT%d", i);
         saveStateSet(state, tag, slots[i].OCT);
 
-        sprintf(tag, "PRVB%d", i);
+        snprintf(tag, sizeof(tag), "PRVB%d", i);
         saveStateSet(state, tag, slots[i].PRVB);
 
-        sprintf(tag, "LD%d", i);
+        snprintf(tag, sizeof(tag), "LD%d", i);
         saveStateSet(state, tag, slots[i].LD);
 
-        sprintf(tag, "TL%d", i);
+        snprintf(tag, sizeof(tag), "TL%d", i);
         saveStateSet(state, tag, slots[i].TL);
 
-        sprintf(tag, "pan%d", i);
+        snprintf(tag, sizeof(tag), "pan%d", i);
         saveStateSet(state, tag, slots[i].pan);
 
-        sprintf(tag, "lfo%d", i);
+        snprintf(tag, sizeof(tag), "lfo%d", i);
         saveStateSet(state, tag, slots[i].lfo);
 
-        sprintf(tag, "vib%d", i);
+        snprintf(tag, sizeof(tag), "vib%d", i);
         saveStateSet(state, tag, slots[i].vib);
 
-        sprintf(tag, "AM%d", i);
+        snprintf(tag, sizeof(tag), "AM%d", i);
         saveStateSet(state, tag, slots[i].AM);
 
-        sprintf(tag, "AR%d", i);
+        snprintf(tag, sizeof(tag), "AR%d", i);
         saveStateSet(state, tag, slots[i].AR);
 
-        sprintf(tag, "D1R%d", i);
+        snprintf(tag, sizeof(tag), "D1R%d", i);
         saveStateSet(state, tag, slots[i].D1R);
 
-        sprintf(tag, "DL%d", i);
+        snprintf(tag, sizeof(tag), "DL%d", i);
         saveStateSet(state, tag, slots[i].DL);
 
-        sprintf(tag, "D2R%d", i);
+        snprintf(tag, sizeof(tag), "D2R%d", i);
         saveStateSet(state, tag, slots[i].D2R);
 
-        sprintf(tag, "RC%d", i);
+        snprintf(tag, sizeof(tag), "RC%d", i);
         saveStateSet(state, tag, slots[i].RC);
 
-        sprintf(tag, "RR%d", i);
+        snprintf(tag, sizeof(tag), "RR%d", i);
         saveStateSet(state, tag, slots[i].RR);
 
-        sprintf(tag, "step%d", i);
+        snprintf(tag, sizeof(tag), "step%d", i);
         saveStateSet(state, tag, slots[i].step);
 
-        sprintf(tag, "stepptr%d", i);
+        snprintf(tag, sizeof(tag), "stepptr%d", i);
         saveStateSet(state, tag, slots[i].stepptr);
 
-        sprintf(tag, "pos%d", i);
+        snprintf(tag, sizeof(tag), "pos%d", i);
         saveStateSet(state, tag, slots[i].pos);
 
-        sprintf(tag, "sample1%d", i);
+        snprintf(tag, sizeof(tag), "sample1%d", i);
         saveStateSet(state, tag, slots[i].sample1);
 
-        sprintf(tag, "sample2%d", i);
+        snprintf(tag, sizeof(tag), "sample2%d", i);
         saveStateSet(state, tag, slots[i].sample2);
 
-        sprintf(tag, "active%d", i);
+        snprintf(tag, sizeof(tag), "active%d", i);
         saveStateSet(state, tag, slots[i].active);
 
-        sprintf(tag, "bits%d", i);
+        snprintf(tag, sizeof(tag), "bits%d", i);
         saveStateSet(state, tag, slots[i].bits);
 
-        sprintf(tag, "startaddr%d", i);
+        snprintf(tag, sizeof(tag), "startaddr%d", i);
         saveStateSet(state, tag, slots[i].startaddr);
 
-        sprintf(tag, "loopaddr%d", i);
+        snprintf(tag, sizeof(tag), "loopaddr%d", i);
         saveStateSet(state, tag, slots[i].loopaddr);
 
-        sprintf(tag, "endaddr%d", i);
+        snprintf(tag, sizeof(tag), "endaddr%d", i);
         saveStateSet(state, tag, slots[i].endaddr);
 
-        sprintf(tag, "state%d", i);
+        snprintf(tag, sizeof(tag), "state%d", i);
         saveStateSet(state, tag, slots[i].state);
 
-        sprintf(tag, "env_vol%d", i);
+        snprintf(tag, sizeof(tag), "env_vol%d", i);
         saveStateSet(state, tag, slots[i].env_vol);
 
-        sprintf(tag, "env_vol_step%d", i);
+        snprintf(tag, sizeof(tag), "env_vol_step%d", i);
         saveStateSet(state, tag, slots[i].env_vol_step);
 
-        sprintf(tag, "env_vol_lim%d", i);
+        snprintf(tag, sizeof(tag), "env_vol_lim%d", i);
         saveStateSet(state, tag, slots[i].env_vol_lim);
 
-        sprintf(tag, "lfo_active%d", i);
+        snprintf(tag, sizeof(tag), "lfo_active%d", i);
         saveStateSet(state, tag, slots[i].lfo_active);
 
-        sprintf(tag, "lfo_cnt%d", i);
+        snprintf(tag, sizeof(tag), "lfo_cnt%d", i);
         saveStateSet(state, tag, slots[i].lfo_cnt);
 
-        sprintf(tag, "lfo_step%d", i);
+        snprintf(tag, sizeof(tag), "lfo_step%d", i);
         saveStateSet(state, tag, slots[i].lfo_step);
 
-        sprintf(tag, "lfo_max%d", i);
+        snprintf(tag, sizeof(tag), "lfo_max%d", i);
         saveStateSet(state, tag, slots[i].lfo_max);
     }
 

@@ -159,7 +159,7 @@ static void getDebugInfo(SramMapperS1985* rm, DbgDevice* dbgDevice)
     }
 }
 
-int sramMapperS1985Create() 
+int sramMapperS1985Create(void) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

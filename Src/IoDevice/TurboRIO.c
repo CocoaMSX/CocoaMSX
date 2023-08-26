@@ -73,7 +73,7 @@ static void getDebugInfo(TurboRIO* turboRIO, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 0, 0xa7, DBG_IO_READWRITE, read(turboRIO, 0xa7));
 }
 
-int romMapperTurboRIOCreate()
+int romMapperTurboRIOCreate(void)
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };
