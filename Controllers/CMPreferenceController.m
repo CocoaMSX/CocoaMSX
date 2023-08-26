@@ -155,7 +155,7 @@ static NSArray<NSString *> *sharedUserDefaultsToObserve;
 
 @implementation CMPreferenceController
 {
-	NSMutableArray *_machines;
+	NSMutableArray<CMMachine*> *_machines;
 	NSArray *_channels;
 	NSString *_machineNameFilter;
 	NSInteger machineFamilyFilter;
@@ -585,7 +585,7 @@ extern CMEmulatorController *theEmulator;
          
          if ([[machine machineId] isEqualToString:activeMachine])
          {
-             if (![machine active])
+             if (!machine.active)
                  [machine setActive:YES];
              [self setActiveMachine:machine];
          }
@@ -1082,15 +1082,15 @@ extern CMEmulatorController *theEmulator;
         // deactivate all except the one active
         
         NSString *active = CMGetObjPref(@"machineConfiguration");
-        [_machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+        [_machines enumerateObjectsUsingBlock:^(CMMachine *obj, NSUInteger idx, BOOL *stop)
         {
             BOOL matchesActive = [[obj machineId] isEqualToString:active];
-            if (!matchesActive && [obj active])
+            if (!matchesActive && obj.active)
                 [obj setActive:NO];
             else if (matchesActive)
             {
                 [self setActiveMachine:obj];
-                if (![obj active])
+                if (![obj isActive])
                     [obj setActive:YES];
             }
         }];
@@ -1416,15 +1416,15 @@ objectValueForTableColumn:(NSTableColumn *) tableColumn
         if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
             return [NSArray arrayWithObjects:
                     @0,
-                    @CMMsx,
-                    @CMMsx2,
-                    @CMMsx2Plus,
-                    @CMMsxTurboR, nil];
+                    @(CMMsx),
+                    @(CMMsx2),
+                    @(CMMsx2Plus),
+                    @(CMMsxTurboR), nil];
         else if (groupNumber == SCOPEBAR_GROUP_MACHINE_STATUS)
             return [NSArray arrayWithObjects:
                     @0,
-                    @CMMachineInstalled,
-                    @CMMachineDownloadable, nil];
+                    @(CMMachineInstalled),
+                    @(CMMachineDownloadable), nil];
     }
     
     return nil;

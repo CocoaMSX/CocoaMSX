@@ -32,7 +32,7 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 
 @interface CMMachine ()
 
-+ (NSInteger)systemNamed:(NSString *)systemName;
++ (CMMachineSystem)systemNamed:(NSString*)systemName;
 
 @end
 
@@ -101,15 +101,15 @@ NSString *const CMMsxTurboRMachine = @"MSX Turbo R";
 }
 
 
-+ (NSInteger)systemNamed:(NSString *)systemName
++ (CMMachineSystem)systemNamed:(NSString *)systemName
 {
     if ([systemName isEqual:@"MSX"])
         return CMMsx;
-    else if ([systemName isEqual:@"MSX2"])
+    else if ([systemName isEqual:@"MSX2"] || [systemName isEqual:CMMsx2Machine])
         return CMMsx2;
-    else if ([systemName isEqual:@"MSX2+"])
+    else if ([systemName isEqual:@"MSX2+"] || [systemName isEqual:CMMsx2PMachine])
         return CMMsx2Plus;
-    else if ([systemName isEqual:@"MSXturboR"])
+    else if ([systemName isEqual:@"MSXturboR"] || [systemName isEqual:CMMsxTurboRMachine])
         return CMMsxTurboR;
     
     return CMUnknown;
