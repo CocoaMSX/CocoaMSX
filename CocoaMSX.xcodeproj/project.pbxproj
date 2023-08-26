@@ -1983,6 +1983,7 @@
 			);
 			path = MGScopeBar;
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		FE9B86B316D457D200623DBD /* Categories */ = {
 			isa = PBXGroup;
