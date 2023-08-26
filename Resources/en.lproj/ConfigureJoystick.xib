@@ -137,12 +137,9 @@ DQ
                     <constraint firstItem="13" firstAttribute="leading" secondItem="16" secondAttribute="trailing" constant="12" symbolic="YES" id="17L-2W-ssz"/>
                     <constraint firstAttribute="trailing" secondItem="13" secondAttribute="trailing" constant="20" symbolic="YES" id="1i1-q0-fZk"/>
                     <constraint firstItem="16" firstAttribute="firstBaseline" secondItem="BLD-wX-CL8" secondAttribute="firstBaseline" id="3nf-ot-hBn"/>
-                    <constraint firstAttribute="trailing" secondItem="jFC-Qi-mc5" secondAttribute="trailing" constant="20" symbolic="YES" id="IWw-d7-uoG"/>
                     <constraint firstItem="RsH-JI-az6" firstAttribute="centerX" secondItem="2" secondAttribute="centerX" id="MuE-sq-zMZ"/>
                     <constraint firstItem="RsH-JI-az6" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="20" symbolic="YES" id="PAh-b5-d05"/>
                     <constraint firstItem="jFC-Qi-mc5" firstAttribute="top" secondItem="2" secondAttribute="top" constant="20" symbolic="YES" id="PvC-Xa-rJm"/>
-                    <constraint firstAttribute="trailing" secondItem="RsH-JI-az6" secondAttribute="trailing" constant="20" symbolic="YES" id="QVu-DT-7Qn"/>
-                    <constraint firstAttribute="trailing" secondItem="rXa-Ou-Abl" secondAttribute="trailing" constant="20" id="Upm-Aw-dCR"/>
                     <constraint firstItem="BLD-wX-CL8" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="20" symbolic="YES" id="Ymo-pw-g73"/>
                     <constraint firstItem="jFC-Qi-mc5" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="20" symbolic="YES" id="Zpa-cQ-gch"/>
                     <constraint firstItem="13" firstAttribute="width" secondItem="16" secondAttribute="width" id="ajn-jz-aOg"/>

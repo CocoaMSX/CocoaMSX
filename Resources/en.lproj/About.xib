@@ -49,6 +49,10 @@
                             </textField>
                             <imageView translatesAutoresizingMaskIntoConstraints="NO" id="27">
                                 <rect key="frame" x="20" y="37" width="256" height="256"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="256" id="G8Y-NY-9Ew"/>
+                                    <constraint firstAttribute="width" constant="256" id="gsW-iO-YiL"/>
+                                </constraints>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="AppIcon" id="28"/>
                             </imageView>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="37" customClass="CMInvisibleScrollView">
@@ -120,6 +124,7 @@
                     <constraint firstItem="23" firstAttribute="top" secondItem="5" secondAttribute="bottom" constant="20" symbolic="YES" id="AJu-8X-MfC"/>
                     <constraint firstItem="5" firstAttribute="trailing" secondItem="10" secondAttribute="trailing" id="GXq-ff-bA8"/>
                     <constraint firstAttribute="bottom" secondItem="23" secondAttribute="bottom" constant="20" symbolic="YES" id="HLl-k4-RQJ"/>
+                    <constraint firstItem="23" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2" secondAttribute="leading" constant="20" symbolic="YES" id="Tgb-j6-Z31"/>
                     <constraint firstItem="5" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="WPH-En-Leu"/>
                     <constraint firstItem="10" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="XaY-Sa-Czb"/>
                     <constraint firstItem="21" firstAttribute="leading" secondItem="23" secondAttribute="trailing" constant="12" symbolic="YES" id="YgV-2B-A74"/>
