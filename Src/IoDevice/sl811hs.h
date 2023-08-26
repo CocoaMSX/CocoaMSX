@@ -32,7 +32,7 @@
 
 typedef struct SL811HS SL811HS;
 
-SL811HS* sl811hsCreate();
+SL811HS* sl811hsCreate(void);
 void sl811hsDestroy(SL811HS* rtl);
 void sl811hsReset(SL811HS* rtl);
 

@@ -110,9 +110,9 @@ BlueDebugger* debuggerCreate(DebuggerEvent onEmulatorStart,
 
 void debuggerDestroy(BlueDebugger* debugger);
 
-DbgSnapshot*     dbgSnapshotCreate();
+DbgSnapshot*     dbgSnapshotCreate(void);
 void             dbgSnapshotDestroy(DbgSnapshot* dbgSnapshot);
-DbgState         dbgGetState();
+DbgState         dbgGetState(void);
 int              dbgSnapshotGetDeviceCount(DbgSnapshot* dbgSnapshot);
 const DbgDevice* dbgSnapshotGetDevice(DbgSnapshot* dbgSnapshot, int deviceIndex);
 
@@ -129,11 +129,11 @@ int dbgDeviceWriteMemory(DbgMemoryBlock* memoryBlock, void* data, int startAddr,
 int dbgDeviceWriteRegister(DbgRegisterBank* regBank, int regIndex, UInt32 value);
 int dbgDeviceWriteIoPort(DbgIoPorts* ioPorts, int portIndex, UInt32 value);
 
-void dbgRun();
-void dbgStop();
-void dbgPause();
-void dbgStep();
-void dbgStepBack();
+void dbgRun(void);
+void dbgStop(void);
+void dbgPause(void);
+void dbgStep(void);
+void dbgStepBack(void);
 
 void dbgSetBreakpoint(UInt16 address);
 void dbgClearBreakpoint(UInt16 address);
@@ -161,11 +161,11 @@ struct DbgDevice {
     DbgCallstack*    callstack;
 };
 
-void debuggerNotifyEmulatorStart();
-void debuggerNotifyEmulatorStop();
-void debuggerNotifyEmulatorPause();
-void debuggerNotifyEmulatorResume();
-void debuggerNotifyEmulatorReset();
+void debuggerNotifyEmulatorStart(void);
+void debuggerNotifyEmulatorStop(void);
+void debuggerNotifyEmulatorPause(void);
+void debuggerNotifyEmulatorResume(void);
+void debuggerNotifyEmulatorReset(void);
 void debuggerTrace(const char* str);
 void debuggerSetBreakpoint(UInt16 slot, UInt16 page, UInt16 address);
 

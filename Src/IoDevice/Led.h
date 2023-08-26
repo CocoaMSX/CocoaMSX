@@ -28,34 +28,36 @@
 #ifndef MSXLED_H
 #define MSXLED_H
 
-void ledSetAll(int enable);
+#include <stdbool.h>
 
-void ledSetCapslock(int enable);
-int  ledGetCapslock();
+void ledSetAll(bool enable);
 
-void ledSetKana(int enable);
-int  ledGetKana();
+void ledSetCapslock(bool enable);
+bool ledGetCapslock(void);
 
-void ledSetTurboR(int enable);
-int  ledGetTurboR();
+void ledSetKana(bool enable);
+bool ledGetKana(void);
 
-void ledSetPause(int enable);
-int  ledGetPause();
+void ledSetTurboR(bool enable);
+bool ledGetTurboR(void);
 
-void ledSetRensha(int enable);
-int  ledGetRensha();
+void ledSetPause(bool enable);
+bool ledGetPause(void);
 
-void ledSetFdd1(int enable);
-int  ledGetFdd1();
+void ledSetRensha(bool enable);
+bool ledGetRensha(void);
 
-void ledSetFdd2(int enable);
-int  ledGetFdd2();
+void ledSetFdd1(bool enable);
+bool ledGetFdd1(void);
 
-void ledSetHd(int enable);
-int  ledGetHd();
+void ledSetFdd2(bool enable);
+bool ledGetFdd2(void);
 
-void ledSetCas(int enable);
-int  ledGetCas();
+void ledSetHd(bool enable);
+bool ledGetHd(void);
+
+void ledSetCas(bool enable);
+bool ledGetCas(void);
 
 #endif
 

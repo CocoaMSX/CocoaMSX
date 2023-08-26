@@ -202,7 +202,7 @@ void rtl8019LoadState(RTL8019* rtl)
 {
 }
 
-RTL8019* rtl8019Create()
+RTL8019* rtl8019Create(void)
 {
     RTL8019* rtl = malloc(sizeof(RTL8019));
     int i;

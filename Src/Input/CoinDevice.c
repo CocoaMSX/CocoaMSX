@@ -57,7 +57,7 @@ UInt8 coinDeviceRead(CoinDevice* coinDev)
     return 1;
 }
 
-CoinDevice* coinDeviceCreate()
+CoinDevice* coinDeviceCreate(void)
 {
     DeviceCallbacks callbacks = { destroy, NULL, NULL, NULL };
     CoinDevice* coinDev = (CoinDevice*)calloc(1, sizeof(CoinDevice));

@@ -285,7 +285,7 @@ static void colecoJoyIoDestroy(void* dummy)
     deviceManagerUnregister(joyDeviceHandle);
 }
 
-static void colecoJoyIoCreate()
+static void colecoJoyIoCreate(void)
 {
     DeviceCallbacks callbacks = { colecoJoyIoDestroy,   colecoJoyIoReset, 
                                   colecoJoyIoSaveState, colecoJoyIoLoadState };
@@ -305,7 +305,7 @@ static void colecoJoyIoCreate()
     joyDeviceHandle = deviceManagerRegister(ROM_UNKNOWN, &callbacks, NULL);
 }
 
-static void reset()
+static void reset(void)
 {
     UInt32 systemTime = boardSystemTime();
 
@@ -324,7 +324,7 @@ static void reset()
     deviceManagerReset();
 }
 
-static void destroy() 
+static void destroy(void)
 {
     boardRemoveExternalDevices();
 
@@ -335,7 +335,7 @@ static void destroy()
     r800Destroy(r800);
 }
 
-static int getRefreshRate()
+static int getRefreshRate(void)
 {
     return vdpGetRefreshRate();
 }
@@ -344,7 +344,7 @@ static UInt32 getTimeTrace(int offset) {
     return r800GetTimeTrace(r800, offset);
 }
 
-static void saveState()
+static void saveState(void)
 {    
     r800SaveState(r800);
     sn76489SaveState(sn76489);
@@ -352,7 +352,7 @@ static void saveState()
     slotSaveState();
 }
 
-static void loadState()
+static void loadState(void)
 {
     r800LoadState(r800);
     boardInit(&r800->systemTime);

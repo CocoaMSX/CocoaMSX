@@ -100,7 +100,7 @@ static void reset(MsxArkanoidPad* arkPad) {
     arkPad->oldValue = 0;
 }
 
-MsxJoystickDevice* msxArkanoidPadCreate()
+MsxJoystickDevice* msxArkanoidPadCreate(void)
 {
     MsxArkanoidPad* arkPad = (MsxArkanoidPad*)calloc(1, sizeof(MsxArkanoidPad));
     arkPad->joyDevice.read       = read;

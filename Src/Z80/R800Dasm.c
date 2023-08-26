@@ -339,7 +339,7 @@ int r800OpenTrace(const char* filename)
     return traceFile != NULL;
 }
 
-void r800CloseTrace()
+void r800CloseTrace(void)
 {
     if (traceFile != NULL) {
         fclose(traceFile);

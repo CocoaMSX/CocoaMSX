@@ -154,8 +154,8 @@ typedef UInt32 SystemTime;
 ** big endian host machines.
 ******************************************************
 */
-typedef union {
-  struct { 
+typedef union _RegisterPair {
+  struct __B { 
 #ifdef __BIG_ENDIAN__
       UInt8 h;
       UInt8 l; 
@@ -174,7 +174,7 @@ typedef union {
 ** CPU registers.
 ******************************************************
 */
-typedef struct {
+typedef struct _CpuRegs {
     RegisterPair AF;
     RegisterPair BC;
     RegisterPair DE;
@@ -236,7 +236,7 @@ typedef void  (*R800TimerCb)(void*);
 ** Structure that defines the R800 core.
 ******************************************************
 */
-typedef struct
+typedef struct _R800
 {
     SystemTime    systemTime;       /* Current system time             */
     UInt32        vdpTime;          /* Time of last access to MSX vdp  */

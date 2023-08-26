@@ -79,7 +79,7 @@ static void destroy(RomMapperTurboRTimer* rm)
     theTimer = NULL;
 }
 
-void romMapperTurboRTimerSync()
+void romMapperTurboRTimerSync(void)
 {
     if (theTimer != NULL) {
         UInt32 systemTime = boardSystemTime();
@@ -111,7 +111,7 @@ static void write(RomMapperTurboRTimer* rm, UInt16 ioPort, UInt8 value)
     rm->refFrag = 0;
 }
 
-int romMapperTurboRTimerCreate() 
+int romMapperTurboRTimerCreate(void) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     RomMapperTurboRTimer* rm = malloc(sizeof(RomMapperTurboRTimer));

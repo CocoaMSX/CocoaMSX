@@ -99,7 +99,7 @@ UInt32 archGetSystemUpTime(UInt32 frequency)
     return archGetHiresTimer() / (1000 / frequency);
 }
 
-UInt32 archGetHiresTimer()
+UInt32 archGetHiresTimer(void)
 {
     if (start.tv_sec < 0)
         gettimeofday(&start, NULL);

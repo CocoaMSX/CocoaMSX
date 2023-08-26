@@ -42,7 +42,7 @@ static IoPortInfo ioSubTable[256];
 static IoPortInfo ioUnused[2];
 static int currentSubport;
 
-void ioPortReset()
+void ioPortReset(void)
 {
     memset(ioTable, 0, sizeof(ioTable));
     memset(ioSubTable, 0, sizeof(ioSubTable));

@@ -109,7 +109,7 @@ static void getDebugInfo(RomMapperOpcodeSlotManager* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 0, 0x41, DBG_IO_READWRITE, peek(rm, 0x41));
 }
 
-int romMapperOpcodeSlotManagerCreate() 
+int romMapperOpcodeSlotManagerCreate(void) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

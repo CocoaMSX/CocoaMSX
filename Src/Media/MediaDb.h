@@ -28,8 +28,9 @@
 #ifndef MEDIA_DB_H
 #define MEDIA_DB_H
 
-typedef int RomType;
-enum  {
+#include <CoreFoundation/CFBase.h>
+
+typedef CF_ENUM(int, RomType) {
     ROM_UNKNOWN     = 0,
     ROM_STANDARD    = 1,
     ROM_MSXDOS2     = 2,
@@ -215,9 +216,9 @@ MediaType* mediaDbLookup(MediaDb* mediaDb, const void *buffer, int size);
 
 void mediaDbLoad(const char* directory);
 
-void mediaDbCreateRomdb();
-void mediaDbCreateDiskdb();
-void mediaDbCreateCasdb();
+void mediaDbCreateRomdb(void);
+void mediaDbCreateDiskdb(void);
+void mediaDbCreateCasdb(void);
 
 
 MediaType* mediaDbLookupRom(const void *buffer, int size);

@@ -30,6 +30,6 @@
 
 #include "MsxTypes.h"
 
-int romMapperSonyHBI55Create();
+int romMapperSonyHBI55Create(void);
 
 #endif

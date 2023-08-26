@@ -87,7 +87,7 @@ static UInt8 read(MsxGunstick* joystick) {
     return ~state & 0x3f;
 }
 
-MsxJoystickDevice* msxGunstickCreate()
+MsxJoystickDevice* msxGunstickCreate(void)
 {
     MsxGunstick* joystick = (MsxGunstick*)calloc(1, sizeof(MsxGunstick));
     joystick->joyDevice.read   = read;

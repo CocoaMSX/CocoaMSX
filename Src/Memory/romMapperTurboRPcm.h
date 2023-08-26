@@ -30,6 +30,6 @@
 
 #include "MsxTypes.h"
 
-int romMapperTurboRPcmCreate();
+int romMapperTurboRPcmCreate(void);
 
 #endif

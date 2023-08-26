@@ -32,6 +32,7 @@
 NSString *const CMInstallStartedNotification   = @"com.akop.CocoaMSX.InstallStarted";
 NSString *const CMInstallCompletedNotification = @"com.akop.CocoaMSX.InstallCompleted";
 NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallError";
+NSString *const CMInstallErrorDomain           = @"org.akop.CocoaMSX";
 
 @interface CMMachineInstallationOperation ()
 
@@ -77,7 +78,7 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
     @catch (NSException *e)
     {
         success = NO;
-        error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+        error = [NSError errorWithDomain:CMInstallErrorDomain
                                     code:CMErrorCritical
                                 userInfo:[NSMutableDictionary dictionaryWithObject:@"Could not complete download - an unexpected error occurred."
                                                                             forKey:NSLocalizedDescriptionKey]];
@@ -109,7 +110,7 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
     {
         if (error)
         {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorDownloading
                                      userInfo:[NSMutableDictionary dictionaryWithObject:@"An error occurred during download."
                                                                                  forKey:NSLocalizedDescriptionKey]];
@@ -143,7 +144,7 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
     {
         if (error)
         {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorDownloading
                                      userInfo:[NSMutableDictionary dictionaryWithObject:@"An error occurred during download."
                                                                                  forKey:NSLocalizedDescriptionKey]];
@@ -164,7 +165,7 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
             NSLog(@"Hash verification error: computed: %@; received: %@",
                   [data md5], [machine checksum]);
 #endif
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorVerifyingHash
                                      userInfo:[NSMutableDictionary dictionaryWithObject:@"Could not verify download."
                                                                                  forKey:NSLocalizedDescriptionKey]];
@@ -183,7 +184,7 @@ NSString *const CMInstallErrorNotification     = @"com.akop.CocoaMSX.InstallErro
     {
         if (error)
         {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorWriting
                                      userInfo:[NSMutableDictionary dictionaryWithObject:@"An error occurred while writing the downloaded machine."
                                                                                  forKey:NSLocalizedDescriptionKey]];

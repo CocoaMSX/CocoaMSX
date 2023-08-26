@@ -229,21 +229,21 @@
 		E99734511298B4B500766C90 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E997330D1298B4B500766C90 /* tinyxml.cpp */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99734521298B4B500766C90 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E997330F1298B4B500766C90 /* tinyxmlerror.cpp */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99734531298B4B500766C90 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E99733101298B4B500766C90 /* tinyxmlparser.cpp */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734541298B4B500766C90 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733121298B4B500766C90 /* adler32.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734551298B4B500766C90 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733131298B4B500766C90 /* compress.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734561298B4B500766C90 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733141298B4B500766C90 /* crc32.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734571298B4B500766C90 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733171298B4B500766C90 /* deflate.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734581298B4B500766C90 /* gzio.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733191298B4B500766C90 /* gzio.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734591298B4B500766C90 /* infback.c in Sources */ = {isa = PBXBuildFile; fileRef = E997331A1298B4B500766C90 /* infback.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E997345A1298B4B500766C90 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = E997331B1298B4B500766C90 /* inffast.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E997345B1298B4B500766C90 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = E997331E1298B4B500766C90 /* inflate.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E997345C1298B4B500766C90 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733201298B4B500766C90 /* inftrees.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E997345D1298B4B500766C90 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733221298B4B500766C90 /* ioapi.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E997345F1298B4B500766C90 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733261298B4B500766C90 /* trees.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734601298B4B500766C90 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733281298B4B500766C90 /* uncompr.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734611298B4B500766C90 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733291298B4B500766C90 /* unzip.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734621298B4B500766C90 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = E997332C1298B4B500766C90 /* zip.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
-		E99734631298B4B500766C90 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = E997332F1298B4B500766C90 /* zutil.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
+		E99734541298B4B500766C90 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733121298B4B500766C90 /* adler32.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734551298B4B500766C90 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733131298B4B500766C90 /* compress.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734561298B4B500766C90 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733141298B4B500766C90 /* crc32.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734571298B4B500766C90 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733171298B4B500766C90 /* deflate.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734581298B4B500766C90 /* gzio.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733191298B4B500766C90 /* gzio.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734591298B4B500766C90 /* infback.c in Sources */ = {isa = PBXBuildFile; fileRef = E997331A1298B4B500766C90 /* infback.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E997345A1298B4B500766C90 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = E997331B1298B4B500766C90 /* inffast.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E997345B1298B4B500766C90 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = E997331E1298B4B500766C90 /* inflate.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E997345C1298B4B500766C90 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733201298B4B500766C90 /* inftrees.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E997345D1298B4B500766C90 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733221298B4B500766C90 /* ioapi.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E997345F1298B4B500766C90 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733261298B4B500766C90 /* trees.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734601298B4B500766C90 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733281298B4B500766C90 /* uncompr.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734611298B4B500766C90 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733291298B4B500766C90 /* unzip.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734621298B4B500766C90 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = E997332C1298B4B500766C90 /* zip.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
+		E99734631298B4B500766C90 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = E997332F1298B4B500766C90 /* zutil.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs -Wno-deprecated-non-prototype -Wno-strict-prototypes"; }; };
 		E99734641298B4B500766C90 /* blowfish.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733331298B4B500766C90 /* blowfish.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99734651298B4B500766C90 /* IniFileParser.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733351298B4B500766C90 /* IniFileParser.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99734661298B4B500766C90 /* IsFileExtension.c in Sources */ = {isa = PBXBuildFile; fileRef = E99733371298B4B500766C90 /* IsFileExtension.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
@@ -1138,6 +1138,7 @@
 			);
 			name = aquaMSX;
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
@@ -2530,7 +2531,6 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = cocoamsx;
 				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2543,7 +2543,6 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CocoaMSX_Prefix.pch;
@@ -2555,7 +2554,6 @@
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MARKETING_VERSION = 1.61;
 				OTHER_CFLAGS = (
 					"-DOSX",
@@ -2575,7 +2573,6 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = cocoamsx;
 				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2587,7 +2584,6 @@
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)",
 				);
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CocoaMSX_Prefix.pch;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2598,7 +2594,6 @@
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MARKETING_VERSION = 1.61;
 				OTHER_CFLAGS = (
 					"-DOSX",
@@ -2618,6 +2613,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -2638,6 +2634,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2655,7 +2652,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				"HEADER_SEARCH_PATHS[arch=*]" = SBJson.framework/Headers;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -2678,6 +2674,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -2698,6 +2695,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
@@ -2714,7 +2712,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				"HEADER_SEARCH_PATHS[arch=*]" = SBJson.framework/Headers;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_CFLAGS = (
 					"-DOSX",

@@ -58,7 +58,7 @@
                                             downloadIcon.size.width,
                                             downloadIcon.size.height)
                         fromRect:NSMakeRect(0, 0, downloadIcon.size.width, downloadIcon.size.height)
-                       operation:NSCompositeSourceOver
+                       operation:NSCompositingOperationSourceOver
                         fraction:1.0
                   respectFlipped:YES
                            hints:nil];

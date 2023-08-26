@@ -35,7 +35,7 @@ typedef struct ArrayListIterator ArrayListIterator;
 
 // Initialization & cleanup
 
-ArrayList * arrayListCreate();
+ArrayList * arrayListCreate(void);
 void        arrayListDestroy(ArrayList *list);
 
 // Manipulation

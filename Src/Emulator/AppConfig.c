@@ -46,7 +46,7 @@ typedef struct
 static AppEntry appEntries[MAX_APP_ENTRIES];
 static int      appEntryCnt = 0;
 
-void appConfigLoad()
+void appConfigLoad(void)
 {
     FILE* f;
 

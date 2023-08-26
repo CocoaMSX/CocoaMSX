@@ -189,7 +189,7 @@ void midiIoSetMidiInType(MidiType type, const char* fileName)
 
 
 
-MidiIO* ykIoCreate()
+MidiIO* ykIoCreate(void)
 {
     MidiIO* ykIo = calloc(1, sizeof(MidiIO));
 

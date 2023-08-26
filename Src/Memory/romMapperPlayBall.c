@@ -36,7 +36,7 @@
 #include <string.h>
 #include <stdio.h>
 
-typedef struct {
+typedef struct _RomMapperPlayBall {
     SamplePlayer* samplePlayer;
     int deviceHandle;
     UInt8* romData;

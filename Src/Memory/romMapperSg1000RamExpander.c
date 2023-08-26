@@ -107,8 +107,8 @@ int romMapperSg1000RamExpanderCreate(const char* filename, UInt8* romData,
 
     rm->romData = malloc(pages * 0x2000);
     memcpy(rm->romData, romData, size);
-    memset(rm->ram1, sizeof(rm->ram1), 0xff);
-    memset(rm->ram2, sizeof(rm->ram2), 0xff);
+    memset(rm->ram1, 0xff, sizeof(rm->ram1));
+    memset(rm->ram2, 0xff, sizeof(rm->ram2));
 
     rm->slot  = slot;
     rm->sslot = sslot;

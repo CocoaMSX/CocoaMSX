@@ -52,13 +52,13 @@ typedef struct {
 
 static VideoManager videoManager;
 
-void videoManagerReset() 
+void videoManagerReset(void) 
 {
     videoManager.count = 0;
     videoManager.lastHandle = 0;
 }
 
-int videoManagerGetCount() 
+int videoManagerGetCount(void)
 {
     return videoManager.count;
 }
@@ -72,7 +72,7 @@ int videoManagerIsActive(int index)
     return videoManager.di[index].frameBufer == frameBufferGetActive();
 }
 
-int videoManagerGetActive()
+int videoManagerGetActive(void)
 {
     int index;
     for (index = 0; index < videoManager.count; index++) {
@@ -199,7 +199,7 @@ void videoManagerUnregister(int handle)
 }
 
 
-void videoManagerLoadState()
+void videoManagerLoadState(void)
 {
     SaveState* state = saveStateOpenForRead("VideoManager");
     int index = saveStateGet(state, "ActiveFrameBuffer",  0);
@@ -208,7 +208,7 @@ void videoManagerLoadState()
 
 }
 
-void videoManagerSaveState()
+void videoManagerSaveState(void)
 {
     SaveState* state = saveStateOpenForWrite("VideoManager");
     saveStateSet(state, "ActiveFrameBuffer",  videoManagerGetActive());

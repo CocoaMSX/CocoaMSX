@@ -33,7 +33,7 @@
 static char* eventNames[256];
 int   eventMap[256];
 
-static void initKeyNameTable()
+static void initKeyNameTable(void)
 {
     eventNames[EC_NONE   ] = "none";
     eventNames[EC_F1     ] = "f1";
@@ -249,7 +249,7 @@ const char* inputEventCodeToString(int eventCode)
     return eventNames[eventCode];
 }
 
-void inputEventReset()
+void inputEventReset(void)
 {
     memset(eventMap, 0, sizeof(eventMap));
 }

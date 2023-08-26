@@ -35,40 +35,40 @@
 #include "AudioMixer.h"
 #include <stdio.h>
 
-typedef struct {
-    struct {
+typedef struct _BoardDeviceInfo {
+    struct _BoardDeviceCart {
         int     inserted;
         RomType type;
         char    name[512];
         char    inZipName[512];
     } carts[2];
-    struct {
+    struct _BoardDeviceDisk {
         int  inserted;
         char name[512];
         char inZipName[512];
     } disks[64];
-    struct {
+    struct _BoardDeviceTape {
         int  inserted;
         char name[512];
         char inZipName[512];
     } tapes[1];
-    struct {
+    struct _BoardDeviceVideo {
         VdpSyncMode vdpSyncMode;
     } video;
 } BoardDeviceInfo;
 
-typedef struct {
+typedef struct _BoardInfo {
     int  cartridgeCount;
     int  diskdriveCount;
     int  casetteCount;
 
     void* cpuRef;
 
-    void   (*destroy)();
-    void   (*softReset)();
-    void   (*loadState)();
-    void   (*saveState)();
-    int    (*getRefreshRate)();
+    void   (*destroy)(void);
+    void   (*softReset)(void);
+    void   (*loadState)(void);
+    void   (*saveState)(const char* stateFile);
+    int    (*getRefreshRate)(void);
     UInt8* (*getRamPage)(int);
     void   (*setDataBus)(void*, UInt8, UInt8, int);
 
@@ -96,32 +96,32 @@ int boardRun(Machine* machine,
              int reverseBufferCnt,
              int (*syncCallback)(int, int));
 
-int boardRewind();
-int boardRewindOne();
+int boardRewind(void);
+int boardRewindOne(void);
 void boardEnableSnapshots(int enable);
 
-BoardType boardGetType();
+BoardType boardGetType(void);
 
 void boardSetMachine(Machine* machine);
-void boardReset();
+void boardReset(void);
 
 void boardSetDataBus(UInt8 value, UInt8 defaultValue, int setDefault);
 
-UInt64 boardSystemTime64();
+UInt64 boardSystemTime64(void);
 
 void boardCaptureStart(const char* filename);
-void boardCaptureStop();
-int boardCaptureHasData();
-int boardCaptureIsRecording();
-int boardCaptureIsPlaying();
-int boardCaptureCompleteAmount();
+void boardCaptureStop(void);
+int boardCaptureHasData(void);
+int boardCaptureIsRecording(void);
+int boardCaptureIsPlaying(void);
+int boardCaptureCompleteAmount(void);
 
 UInt8 boardCaptureUInt8(UInt8 logId, UInt8 value);
 
 void boardSaveState(const char* stateFile, int screenshot);
 
 void boardSetFrequency(int frequency);
-int  boardGetRefreshRate();
+int  boardGetRefreshRate(void);
 
 void boardSetBreakpoint(UInt16 address);
 void boardClearBreakpoint(UInt16 address);
@@ -131,16 +131,16 @@ void   boardClearInt(UInt32 irq);
 UInt32 boardGetInt(UInt32 irq);
 
 UInt8* boardGetRamPage(int page);
-UInt32 boardGetRamSize();
-UInt32 boardGetVramSize();
+UInt32 boardGetRamSize(void);
+UInt32 boardGetVramSize(void);
 
-int boardUseRom();
-int boardUseMegaRom();
-int boardUseMegaRam();
-int boardUseFmPac();
+int boardUseRom(void);
+int boardUseMegaRom(void);
+int boardUseMegaRam(void);
+int boardUseFmPac(void);
 
 void boardSetNoSpriteLimits(int enable);
-int boardGetNoSpriteLimits();
+int boardGetNoSpriteLimits(void);
 
 RomType boardGetRomType(int cartNo);
 
@@ -148,24 +148,24 @@ typedef enum { HD_NONE, HD_SUNRISEIDE, HD_BEERIDE, HD_GIDE, HD_RSIDE,
                HD_MEGASCSI, HD_WAVESCSI, HD_GOUDASCSI, HD_NOWIND } HdType;
 HdType boardGetHdType(int hdIndex);
 
-const char* boardGetBaseDirectory();
+const char* boardGetBaseDirectory(void);
 
-Mixer* boardGetMixer();
+Mixer* boardGetMixer(void);
 
 void boardChangeCartridge(int cartNo, RomType romType, char* cart, char* cartZip);
 void boardChangeDiskette(int driveId, char* fileName, const char* fileInZipFile);
 void boardChangeCassette(int tapeId, char* name, const char* fileInZipFile);
 
-int  boardGetCassetteInserted();
+int  boardGetCassetteInserted(void);
 
 #define boardFrequency() (6 * 3579545)
 
-static UInt32 boardSystemTime() {
+static inline UInt32 boardSystemTime(void) {
     extern UInt32* boardSysTime;
     return *boardSysTime;
 }
 
-UInt64 boardSystemTime64();
+UInt64 boardSystemTime64(void);
 
 typedef void (*BoardTimerCb)(void* ref, UInt32 time);
 
@@ -180,32 +180,32 @@ UInt32 boardCalcRelativeTimeout(UInt32 timerFrequency, UInt32 nextTimeout);
 
 void   boardOnBreakpoint(UInt16 pc);
 
-int boardInsertExternalDevices();
-int boardRemoveExternalDevices();
+int boardInsertExternalDevices(void);
+int boardRemoveExternalDevices(void);
 
 // The following methods are more generic config than board specific
 // They should be moved from board.
 void boardSetDirectory(const char* dir);
 
 void boardSetFdcTimingEnable(int enable);
-int  boardGetFdcTimingEnable();
-void boardSetFdcActive();
+int  boardGetFdcTimingEnable(void);
+void boardSetFdcActive(void);
 
 void boardSetYm2413Oversampling(int value);
-int  boardGetYm2413Oversampling();
+int  boardGetYm2413Oversampling(void);
 void boardSetY8950Oversampling(int value);
-int  boardGetY8950Oversampling();
+int  boardGetY8950Oversampling(void);
 void boardSetMoonsoundOversampling(int value);
-int  boardGetMoonsoundOversampling();
+int  boardGetMoonsoundOversampling(void);
 
 void boardSetYm2413Enable(int value);
-int  boardGetYm2413Enable();
+int  boardGetYm2413Enable(void);
 void boardSetY8950Enable(int value);
-int  boardGetY8950Enable();
+int  boardGetY8950Enable(void);
 void boardSetMoonsoundEnable(int value);
-int  boardGetMoonsoundEnable();
+int  boardGetMoonsoundEnable(void);
 void boardSetVideoAutodetect(int value);
-int  boardGetVideoAutodetect();
+int  boardGetVideoAutodetect(void);
 
 void boardSetPeriodicCallback(BoardTimerCb cb, void* reference, UInt32 frequency);
 

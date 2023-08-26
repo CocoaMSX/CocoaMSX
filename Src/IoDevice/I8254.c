@@ -785,7 +785,7 @@ static void i8254out3(void* ref, int state)
 }
 
 
-void testI8254() {
+void testI8254(void) {
     i8254 = i8254Create(4000000, i8254out1, i8254out2, i8254out3, 0);
 
     i8254SetGate(i8254, I8254_COUNTER_1, 1);

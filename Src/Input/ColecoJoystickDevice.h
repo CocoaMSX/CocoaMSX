@@ -32,7 +32,7 @@
 
 // Base class for Coleco Joystick devices. 
 
-typedef struct {
+typedef struct _ColecoJoystickDevice {
     UInt16 (*read)(void*);
     void   (*write)(void*, UInt8);
     void   (*destroy)(void*);

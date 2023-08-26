@@ -164,7 +164,7 @@ static void getDebugInfo(RomMapperTurboRPcm* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 1, 0xa5, DBG_IO_READWRITE, peek(rm, 0xa5));
 }
 
-int romMapperTurboRPcmCreate() 
+int romMapperTurboRPcmCreate(void) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

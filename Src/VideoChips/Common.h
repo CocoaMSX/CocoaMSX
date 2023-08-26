@@ -79,7 +79,7 @@ static Pixel* linePtr12 = NULL;
 static Pixel* linePtrBlank = NULL;
 
 
-void RefreshLineReset()
+void RefreshLineReset(void)
 {
     linePtr0 = NULL;
     linePtr0p = NULL;

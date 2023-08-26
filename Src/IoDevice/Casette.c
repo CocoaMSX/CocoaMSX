@@ -39,12 +39,12 @@
 // PacketFileSystem.h Need to be included after all other includes
 #include "PacketFileSystem.h"
 
-static UInt8 hdrSVICAS[17] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7F};
-static UInt8 hdrFMSX98[17] = { 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x48, 0x65, 0x61, 0x64, 0x65, 0x72, 0x5f };
-static UInt8 hdrFMSXDOS[8] = { 0x1f,0xa6,0xde,0xba,0xcc,0x13,0x7d,0x74 };
-static UInt8 hdrASCII[10]  = { 0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea };
-static UInt8 hdrBINARY[10] = { 0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0 };
-static UInt8 hdrBASIC[10]  = { 0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3 };
+static const UInt8 hdrSVICAS[17] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7F};
+static const UInt8 hdrFMSX98[17] = { 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x48, 0x65, 0x61, 0x64, 0x65, 0x72, 0x5f };
+static const UInt8 hdrFMSXDOS[8] = { 0x1f,0xa6,0xde,0xba,0xcc,0x13,0x7d,0x74 };
+static const UInt8 hdrASCII[10]  = { 0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea,0xea };
+static const UInt8 hdrBINARY[10] = { 0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0,0xd0 };
+static const UInt8 hdrBASIC[10]  = { 0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3,0xd3 };
 static char   tapeBaseDir[512];
 static char   tapePosName[512];
 static char   tapeName[512];
@@ -83,7 +83,7 @@ static int ramread(void* buf, int size, int* ramPos) {
     return size;
 }
 
-void tapeLoadState() {
+void tapeLoadState(void) {
     SaveState* state = saveStateOpenForRead("tape");
 
     ramImagePos = saveStateGet(state, "ramImagePos",  0);
@@ -94,7 +94,7 @@ void tapeLoadState() {
     saveStateClose(state);
 }
 
-void tapeSaveState() {
+void tapeSaveState(void) {
     SaveState* state = saveStateOpenForWrite("tape");
 
     saveStateSet(state, "ramImagePos",  ramImagePos);
@@ -139,7 +139,7 @@ UInt8 tapeWrite(UInt8 value)
     return 0;
 }
 
-UInt8 tapeReadHeader() 
+UInt8 tapeReadHeader(void)
 {    
     if (ramImageBuffer != NULL) {
         UInt8 buf[32];
@@ -162,7 +162,7 @@ UInt8 tapeReadHeader()
     return 0;
 }
 
-UInt8 tapeWriteHeader() 
+UInt8 tapeWriteHeader(void)
 {
     if (ramImageBuffer != NULL) {
         int i;
@@ -306,7 +306,7 @@ int tapeInsert(char *name, const char *fileInZipFile)
     return ramImageBuffer != NULL;
 }
 
-int tapeIsInserted()
+bool tapeIsInserted(void)
 {
     return ramImageBuffer != NULL;
 }
@@ -373,12 +373,12 @@ int tapeSave(char *name, TapeFormat format)
     return 1;
 }
 
-TapeFormat tapeGetFormat()
+TapeFormat tapeGetFormat(void)
 {
     return tapeFormat;
 }
 
-UInt32 tapeGetLength()
+UInt32 tapeGetLength(void)
 {
     return ramImageSize;
 }
@@ -444,7 +444,7 @@ TapeContent* tapeGetContent(int* count)
     return tapeContent;
 }
 
-UInt32 tapeGetCurrentPos()
+UInt32 tapeGetCurrentPos(void)
 {
     return ramImagePos;
 }

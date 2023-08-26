@@ -121,7 +121,7 @@
 #include "romExclusion.h"
 
 
-typedef struct {
+typedef struct _CartridgeInfo {
     struct {
         int slot;
         int sslot;

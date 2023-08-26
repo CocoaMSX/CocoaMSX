@@ -32,7 +32,7 @@
 
 typedef struct NEC765 NEC765;
 
-NEC765* nec765Create();
+NEC765* nec765Create(void);
 void nec765Destroy(NEC765* fdc);
 void nec765Reset(NEC765* fdc);
 

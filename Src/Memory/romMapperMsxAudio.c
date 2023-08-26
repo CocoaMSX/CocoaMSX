@@ -144,7 +144,7 @@ void philipsMidiReset(PhilipsMidi* midi)
     boardTimerAdd(midi->timerRecv, midi->timeRecv);
 }
 
-PhilipsMidi* philipsMidiCreate()
+PhilipsMidi* philipsMidiCreate(void)
 {
     PhilipsMidi* midi = (PhilipsMidi*)calloc(1, sizeof(PhilipsMidi));
 

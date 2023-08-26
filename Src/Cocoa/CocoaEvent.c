@@ -25,7 +25,7 @@
 
 #include "ArchEvent.h"
 
-typedef struct {
+typedef struct _Event {
     void *eventSem;
     void *lockSem;
     int   state;

@@ -33,6 +33,6 @@
 
 typedef struct MagicKeyDongle MagicKeyDongle;
 
-MsxJoystickDevice* magicKeyDongleCreate();
+MsxJoystickDevice* magicKeyDongleCreate(void);
 
 #endif 

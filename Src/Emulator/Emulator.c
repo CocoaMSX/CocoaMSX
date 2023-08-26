@@ -150,7 +150,7 @@ void savelog()
 #define savelog()
 #endif
 
-static void emuCalcCpuUsage() {
+static void emuCalcCpuUsage(void) {
     static UInt32 oldSysTime = 0;
     static UInt32 oldAverage = 0;
     static UInt32 cnt = 0;
@@ -185,7 +185,7 @@ static void emuCalcCpuUsage() {
     emuTimeTotal    = 1;
 }
 
-static int emuUseSynchronousUpdate()
+static int emuUseSynchronousUpdate(void)
 {
     if (properties->emulation.syncMethod == P_EMU_SYNCIGNORE) {
         return properties->emulation.syncMethod;
@@ -201,11 +201,11 @@ static int emuUseSynchronousUpdate()
 }
 
 
-UInt32 emulatorGetCpuSpeed() {
+UInt32 emulatorGetCpuSpeed(void) {
     return emuCpuSpeed;
 }
 
-UInt32 emulatorGetCpuUsage() {
+UInt32 emulatorGetCpuUsage(void) {
     return emuCpuUsage;
 }
 
@@ -220,14 +220,14 @@ void emulatorInit(Properties* theProperties, Mixer* theMixer)
     mixer      = theMixer;
 }
 
-void emulatorExit()
+void emulatorExit(void)
 {
     properties = NULL;
     mixer      = NULL;
 }
 
 
-EmuState emulatorGetState() {
+EmuState emulatorGetState(void) {
     return emuState;
 }
 
@@ -256,7 +256,7 @@ void emulatorSetState(EmuState state) {
 }
 
 
-int emulatorGetSyncPeriod() {
+int emulatorGetSyncPeriod(void) {
 #ifdef NO_HIRES_TIMERS
     return 10;
 #else
@@ -373,7 +373,7 @@ static void emulatorPauseCb(void)
     debuggerNotifyEmulatorPause();
 }
 
-static void emulatorThread() {
+static void emulatorThread(void) {
     int frequency;
     int success = 0;
     int reversePeriod = 0;
@@ -502,7 +502,7 @@ void emulatorStart(const char* stateName) {
 #endif
 }
 
-void emulatorStop() {
+void emulatorStop(void) {
     if (emuState == EMU_STOPPED) {
         return;
     }
@@ -555,7 +555,7 @@ void emulatorSetFrequency(int logFrequency, int* frequency) {
     boardSetFrequency(emuFrequency);
 }
 
-void emulatorSuspend() {
+void emulatorSuspend(void) {
     if (emuState == EMU_RUNNING) {
         emuState = EMU_SUSPENDED;
         do {
@@ -566,7 +566,7 @@ void emulatorSuspend() {
     }
 }
 
-void emulatorResume() {
+void emulatorResume(void) {
     if (emuState == EMU_SUSPENDED) {
         emuSysTime = 0;
 
@@ -577,12 +577,12 @@ void emulatorResume() {
     }
 }
 
-int emulatorGetCurrentScreenMode()
+int emulatorGetCurrentScreenMode(void)
 {
     return lastScreenMode;
 }
 
-void emulatorRestart() {
+void emulatorRestart(void) {
     Machine* machine = machineCreate(properties->emulation.machineName, properties);
 
     emulatorStop();
@@ -592,14 +592,14 @@ void emulatorRestart() {
     }
 }
 
-void emulatorRestartSound() {
+void emulatorRestartSound(void) {
     emulatorSuspend();
     archSoundDestroy();
     archSoundCreate(mixer, 44100, properties->sound.bufSize, properties->sound.stereo ? 2 : 1);
     emulatorResume();
 }
 
-int emulatorGetCpuOverflow() {
+int emulatorGetCpuOverflow(void) {
     int overflow = emuTimeOverflow;
     emuTimeOverflow = 0;
     return overflow;
@@ -609,7 +609,7 @@ void emulatorSetMaxSpeed(int enable) {
     emuMaxSpeed = enable;
 }
 
-int  emulatorGetMaxSpeed() {
+int  emulatorGetMaxSpeed(void) {
     return emuMaxSpeed;
 }
 
@@ -624,12 +624,12 @@ void emulatorPlayReverse(int enable)
     emuPlayReverse = enable;
 }
 
-int  emulatorGetPlayReverse()
+int  emulatorGetPlayReverse(void)
 {
     return emuPlayReverse;
 }
 
-void emulatorResetMixer() {
+void emulatorResetMixer(void) {
     // Reset active indicators in mixer
     mixerIsChannelTypeActive(mixer, MIXER_CHANNEL_MOONSOUND, 1);
     mixerIsChannelTypeActive(mixer, MIXER_CHANNEL_YAMAHA_SFG, 1);
@@ -640,7 +640,7 @@ void emulatorResetMixer() {
     mixerIsChannelTypeActive(mixer, MIXER_CHANNEL_IO, 1);
 }
 
-int emulatorSyncScreen()
+int emulatorSyncScreen(void)
 {
     int rv = 0;
     emuFrameskipCounter--;
@@ -701,7 +701,7 @@ static int WaitForSync(int maxSpeed, int breakpointHit)
 
 #else
 
-int WaitReverse()
+int WaitReverse(void)
 {
     boardEnableSnapshots(0);
 

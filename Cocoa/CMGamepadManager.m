@@ -25,8 +25,8 @@
 
 #pragma mark - CMGamepadManager
 
-void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
-void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
+static void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
+static void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device);
 
 @interface CMGamepadManager ()
 
@@ -41,7 +41,7 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 	IOHIDManagerRef _hidManager;
 	NSMutableDictionary<NSNumber *, CMGamepad *> *_gamepadsByDeviceId;
 	NSMutableArray<CMGamepad *> *_allGamepads;
-	NSMutableArray *_observers;
+	NSMutableArray<id<CMGamepadEventDelegate>> *_observers;
 }
 
 + (instancetype) sharedInstance
@@ -246,14 +246,14 @@ void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHID
 
 #pragma mark - IOHID C Callbacks
 
-void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device)
+static void gamepadWasAdded(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device)
 {
     @autoreleasepool {
         [((__bridge CMGamepadManager *) inContext) deviceDidConnect:device];
     }
 }
 
-void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device)
+static void gamepadWasRemoved(void *inContext, IOReturn inResult, void *inSender, IOHIDDeviceRef device)
 {
     @autoreleasepool {
         [((__bridge CMGamepadManager *) inContext) deviceDidDisconnect:device];

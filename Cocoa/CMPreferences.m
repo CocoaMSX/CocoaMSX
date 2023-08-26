@@ -23,10 +23,11 @@
 #import "CMPreferences.h"
 
 #import "CMInputDeviceLayout.h"
+#import "CMEmulatorController.h"
 
 #import "NSString+CMExtensions.h"
 
-static NSString * const CMKeyboardLayoutPrefKey = @"msxKeyboardLayout";
+NSString * const CMKeyboardLayoutPrefKey = @"msxKeyboardLayout";
 static NSString * const CMJoystickOneLayoutPrefKey = @"msxJoystickOneLayout";
 static NSString * const CMJoystickTwoLayoutPrefKey = @"msxJoystickTwoLayout";
 

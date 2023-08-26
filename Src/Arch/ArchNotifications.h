@@ -34,33 +34,33 @@ void* archScreenCapture(ScreenCaptureType type, int* bitmapSize, int onlyBmp);
 int archScreenCaptureToFile(ScreenCaptureType type, const char *fname);
 #endif
 
-void archUpdateEmuDisplayConfig();
+void archUpdateEmuDisplayConfig(void);
 int  archUpdateEmuDisplay(int synchronous);
 
 #ifdef WII
 void archDiskQuickChangeNotify(int driveId, char* fileName, const char* fileInZipFile);
 #else
-void archDiskQuickChangeNotify();
+void archDiskQuickChangeNotify(void);
 #endif
-void archEmulationStartNotification();
-void archEmulationStopNotification();
-void archEmulationStartFailure();
+void archEmulationStartNotification(void);
+void archEmulationStopNotification(void);
+void archEmulationStartFailure(void);
 
-void archQuit();
+void archQuit(void);
 
 struct Theme;
-void archThemeSetNext();
+void archThemeSetNext(void);
 void archThemeUpdate(struct Theme* theme);
 
-void archVideoOutputChange();
-void archUpdateWindow();
-void archMinimizeMainWindow();
+void archVideoOutputChange(void);
+void archUpdateWindow(void);
+void archMinimizeMainWindow(void);
 
-int archGetFramesPerSecond();
+int archGetFramesPerSecond(void);
 
 void* archWindowCreate(struct Theme* theme, int childWindow);
-void archWindowStartMove();
-void archWindowMove();
-void archWindowEndMove();
+void archWindowStartMove(void);
+void archWindowMove(void);
+void archWindowEndMove(void);
 
 #endif

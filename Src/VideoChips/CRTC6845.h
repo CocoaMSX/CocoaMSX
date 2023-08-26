@@ -32,7 +32,7 @@
 #include "Board.h"
 #include "VideoManager.h"
 
-typedef struct
+typedef struct _Crtc6845Cursor
 {
     int     mode;
     UInt8   rasterStart;
@@ -42,13 +42,13 @@ typedef struct
     UInt32  blinkstart;
 } Crtc6845Cursor;
 
-typedef struct
+typedef struct _Crtc6845Register
 {
     UInt8    address;  // AR
     UInt8    reg[18];  // R0-R17
 } Crtc6845Register;
 
-typedef struct
+typedef struct _CRTC6845
 {
     Crtc6845Cursor   cursor;
     Crtc6845Register registers;

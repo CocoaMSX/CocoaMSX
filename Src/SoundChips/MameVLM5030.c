@@ -78,12 +78,13 @@ chirp 12-..: vokume   0   : silent
 #include "state.h"
 #include "VLM5030.h"
 #else
-typedef unsigned char  UINT8;
-typedef unsigned short UINT16;
-typedef unsigned long  UINT32;
-typedef   signed char  INT8;
-typedef   signed short INT16;
-typedef   signed long  INT32;
+#include <stdint.h>
+typedef uint8_t  UINT8;
+typedef uint16_t UINT16;
+typedef uint32_t UINT32;
+typedef int8_t  INT8;
+typedef int16_t INT16;
+typedef int32_t INT32;
 #include "MameVLM5030.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -725,7 +726,7 @@ void *vlm5030_start(int clock)
 	return chip;
 }
 
-void vlm5030_LoadState()
+void vlm5030_LoadState(void)
 {
 	struct vlm5030_info *chip = sndti_token(SOUND_VLM5030, 0);
     int i;
@@ -763,7 +764,7 @@ void vlm5030_LoadState()
     saveStateClose(state);
 }
 
-void vlm5030_SaveState()
+void vlm5030_SaveState(void)
 {
 	struct vlm5030_info *chip = sndti_token(SOUND_VLM5030, 0);
     int i;

@@ -215,7 +215,7 @@ void r800DebugCreate(R800* r800)
     r800->watchpointIoCb    = watchpointIoCb;
 }
 
-void r800DebugDestroy()
+void r800DebugDestroy(void)
 {   
     debugDeviceUnregister(dbg->debugHandle);
     free(dbg);

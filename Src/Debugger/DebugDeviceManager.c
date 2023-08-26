@@ -48,7 +48,7 @@ typedef struct {
 
 static DebugDeviceManager devManager;
 
-void debugDeviceManagerReset() 
+void debugDeviceManagerReset(void) 
 {
     devManager.count = 0;
 //    devManager.lastHandle = 0;

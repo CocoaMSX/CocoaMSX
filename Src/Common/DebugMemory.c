@@ -53,22 +53,22 @@ void dbgFree(void* ptr) {
     free(ptr);
 }
 
-void dbgEnable() {
+void dbgEnable(void) {
     memset(memInfo, 0, sizeof(memInfo));
     en = 1;
 }
 
-void dbgDisable() {
+void dbgDisable(void) {
     en = 0;
 }
 
-void dbgPrint() {
+void dbgPrint(void) {
     int i;
     printf("MEMORY DUMP:\n");
     for (i = 0; i < MAX_MEMINFO; i++) {
         if (memInfo[i].ptr != NULL) {
-            printf("%d\t%.8x : %d bytes\n", i,
-                   (int)memInfo[i].ptr, (int)memInfo[i].size);
+			printf("%d\t%.8zx : %d bytes\n", i,
+                   (size_t)memInfo[i].ptr, (int)memInfo[i].size);
         }
     }
 }

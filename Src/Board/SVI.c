@@ -235,7 +235,7 @@ static int sviLoad80Col(Machine* machine, VdpSyncMode vdpSyncMode)
     return success;
 }
 
-static void reset()
+static void reset(void)
 {
     UInt32 systemTime = boardSystemTime();
 
@@ -255,7 +255,7 @@ static void reset()
     deviceManagerReset();
 }
 
-static void destroy()
+static void destroy(void)
 {
     boardRemoveExternalDevices();
     ay8910SetIoPort(ay8910, NULL, NULL, NULL, NULL);
@@ -268,7 +268,7 @@ static void destroy()
     r800Destroy(r800);
 }
 
-static int getRefreshRate()
+static int getRefreshRate(void)
 {
     return vdpGetRefreshRate();
 }
@@ -277,7 +277,7 @@ static UInt32 getTimeTrace(int offset) {
     return r800GetTimeTrace(r800, offset);
 }
 
-static void saveState()
+static void saveState(void)
 {
     SaveState* state = saveStateOpenForWrite("svi");
 
@@ -292,7 +292,7 @@ static void saveState()
     ay8910SaveState(ay8910);
 }
 
-static void loadState()
+static void loadState(void)
 {
     SaveState* state = saveStateOpenForRead("svi");
 

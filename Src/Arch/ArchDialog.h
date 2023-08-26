@@ -31,24 +31,24 @@
 #include "Properties.h"
 
 void archShowPropertiesDialog(PropPage page);
-void archShowLanguageDialog();
-void archShowHelpDialog();
-void archShowAboutDialog();
-void archShowCassettePosDialog();
-void archShowShortcutsEditor();
-void archShowKeyboardEditor();
-void archShowMixer();
-void archShowDebugger();
-void archShowTrainer();
-void archShowMachineEditor();
+void archShowLanguageDialog(void);
+void archShowHelpDialog(void);
+void archShowAboutDialog(void);
+void archShowCassettePosDialog(void);
+void archShowShortcutsEditor(void);
+void archShowKeyboardEditor(void);
+void archShowMixer(void);
+void archShowDebugger(void);
+void archShowTrainer(void);
+void archShowMachineEditor(void);
 
-void archShowNoRomInZipDialog();
-void archShowNoDiskInZipDialog();
-void archShowNoCasInZipDialog();
-void archShowStartEmuFailDialog();
+void archShowNoRomInZipDialog(void);
+void archShowNoDiskInZipDialog(void);
+void archShowNoCasInZipDialog(void);
+void archShowStartEmuFailDialog(void);
 
-void archMaximizeWindow();
-void archMinimizeWindow();
-void archCloseWindow();
+void archMaximizeWindow(void);
+void archMinimizeWindow(void);
+void archCloseWindow(void);
 
 #endif

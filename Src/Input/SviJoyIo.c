@@ -131,7 +131,7 @@ UInt8 sviJoyIoReadTrigger(SviJoyIo* joyIo) {
     return value;
 }
 
-SviJoyIo* sviJoyIoCreate() 
+SviJoyIo* sviJoyIoCreate(void)
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     SviJoyIo* sviJoyIo = (SviJoyIo*)calloc(1, sizeof(SviJoyIo));

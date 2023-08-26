@@ -5659,7 +5659,7 @@ static void debugCbDummy(void* ref, int command, const char* data) {
 static void trapCbDummy(void* ref, UInt8 value) {
 }
 
-static void r800InitTables() {
+static void r800InitTables(void) {
     int i;
 
 	for (i = 0; i < 256; ++i) {

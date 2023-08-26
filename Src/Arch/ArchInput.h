@@ -37,17 +37,17 @@ void archMouseSetForceLock(int lock);
 void archMouseGetState(int* dx, int* dy);
 int  archMouseGetButtonState(int checkAlways);
 
-int   archPollEvent();
+int   archPollEvent(void);
 
-void  archPollInput();
+void  archPollInput(void);
 void  archKeyboardSetSelectedKey(int keyCode);
-char* archGetSelectedKey();
-char* archGetMappedKey();
+char* archGetSelectedKey(void);
+char* archGetMappedKey(void);
 UInt8 archJoystickGetState(int joystickNo);
 int   archKeyboardIsKeyConfigured(int msxKeyCode);
 int   archKeyboardIsKeySelected(int msxKeyCode);
-char* archKeyconfigSelectedKeyTitle();
-char* archKeyconfigMappedToTitle();
-char* archKeyconfigMappingSchemeTitle();
+char* archKeyconfigSelectedKeyTitle(void);
+char* archKeyconfigMappedToTitle(void);
+char* archKeyconfigMappingSchemeTitle(void);
 
 #endif

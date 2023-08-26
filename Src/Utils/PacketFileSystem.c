@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "strcmpnocase.h"
+#include "StrcmpNoCase.h"
 
 #include "blowfish.h"
 #include "authkey.h"
@@ -139,7 +139,7 @@ int pkg_load(const char* filename, char* key, int keyLen)
     return 1;
 }
 
-void pkg_unload()
+void pkg_unload(void)
 {
     if (pkg_buf != NULL) {
         free(pkg_buf);

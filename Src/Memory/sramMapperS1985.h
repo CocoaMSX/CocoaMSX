@@ -30,6 +30,6 @@
 
 #include "MsxTypes.h"
 
-int sramMapperS1985Create();
+int sramMapperS1985Create(void);
 
 #endif

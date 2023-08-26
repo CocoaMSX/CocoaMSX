@@ -42,7 +42,7 @@
 
 
 int pkg_load(const char* filename, char* key, int keyLen);
-void pkg_unload();
+void pkg_unload(void);
 
 #ifdef USE_PACKET_FS
 

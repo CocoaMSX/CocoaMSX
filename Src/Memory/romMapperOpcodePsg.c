@@ -102,7 +102,7 @@ static void getDebugInfo(RomMapperOpcodePsg* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 2, 0x52, DBG_IO_READ,  peek(rm, 0x52));
 }
 
-int romMapperOpcodePsgCreate() 
+int romMapperOpcodePsgCreate(void) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

@@ -88,7 +88,7 @@ static void getDebugInfo(RomMapperJoyrexPsg* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 0, 0xf0, DBG_IO_READWRITE, peek(rm, 0xf0));
 }
 
-int romMapperJoyrexPsgCreate() 
+int romMapperJoyrexPsgCreate(void) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

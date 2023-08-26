@@ -56,7 +56,7 @@ static ArrayListNode *arrayListCreateNode(void *object, int managed);
 static ArrayListNode *arrayListDestroyNode(ArrayListNode *node);
 static ArrayListNode *arrayListFindNodeAtIndex(const ArrayList *list, int elementAt);
 
-ArrayList *arrayListCreate()
+ArrayList *arrayListCreate(void)
 {
     ArrayList *list = (ArrayList *)malloc(sizeof(ArrayList));
     

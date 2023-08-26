@@ -31,7 +31,7 @@
 #include "MsxTypes.h"
 
 /* Constructor and destructor */
-int romMapperTurboRIOCreate();
+int romMapperTurboRIOCreate(void);
 
 #endif
 

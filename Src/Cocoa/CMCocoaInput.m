@@ -225,7 +225,7 @@ static NSArray<NSString *> *defaultsToObserve;
 #endif
     
     NSMutableArray *textAsKeyCombinations = [NSMutableArray array];
-    for (int i = 0, n = [text length]; i < n; i++) {
+    for (NSInteger i = 0, n = [text length]; i < n; i++) {
         NSString *character = [text substringWithRange:NSMakeRange(i, 1)];
         CMMSXKeyCombination *keyCombination = [keyboardLayout keyCombinationForCharacter:character];
 		if (keyCombination) {
@@ -443,7 +443,7 @@ static NSArray<NSString *> *defaultsToObserve;
     }
     
     // Don't generate a KeyDown if Command is pressed
-    if (([NSEvent modifierFlags] & NSCommandKeyMask) == 0 || !isDown)
+	if (([NSEvent modifierFlags] & NSEventModifierFlagCommand) == 0 || !isDown)
     {
         [self handleKeyEvent:[event keyCode]
                       isDown:isDown];
@@ -664,7 +664,7 @@ static NSArray<NSString *> *defaultsToObserve;
 
 extern CMEmulatorController *theEmulator;
 
-void archPollInput()
+void archPollInput(void)
 {
     @autoreleasepool
     {

@@ -193,7 +193,7 @@ void actionHarddiskRemove(int diskNo)
     archUpdateMenu(0);
 }
 
-void actionHarddiskRemoveAll()
+void actionHarddiskRemoveAll(void)
 {
     int i, j;
     int diskNo;
@@ -206,7 +206,7 @@ void actionHarddiskRemoveAll()
         //if (boardGetHdType(i) != HD_NONE) {
             for (j = 0; j < MAX_DRIVES_PER_HD; j++) {
                 diskNo = diskGetHdDriveId(i, j);
-                if (state.properties->media.disks[diskNo].fileName) {
+                if (state.properties->media.disks[diskNo].fileName[0] != 0) {
                     state.properties->media.disks[diskNo].fileName[0] = 0;
                     state.properties->media.disks[diskNo].fileNameInZip[0] = 0;
                     updateExtendedDiskName(diskNo, state.properties->media.disks[diskNo].fileName, state.properties->media.disks[diskNo].fileNameInZip);
@@ -249,81 +249,81 @@ void actionInit(Video* video, Properties* properties, Mixer* mixer)
                          properties->video.windowSize : P_VIDEO_SIZEX2;
 }
 
-void actionToggleSpriteEnable() {
+void actionToggleSpriteEnable(void) {
     vdpSetSpritesEnable(!vdpGetSpritesEnable());
 }
 
-void actionToggleNoSpriteLimits() {
+void actionToggleNoSpriteLimits(void) {
     vdpSetNoSpriteLimits(!vdpGetNoSpritesLimit());
 }
 
-void actionToggleMsxKeyboardQuirk() {
+void actionToggleMsxKeyboardQuirk(void) {
     state.properties->keyboard.enableKeyboardQuirk = !state.properties->keyboard.enableKeyboardQuirk;
 }
 
-void actionToggleMsxAudioSwitch() {
+void actionToggleMsxAudioSwitch(void) {
     state.properties->emulation.audioSwitch = !state.properties->emulation.audioSwitch;
     switchSetAudio(state.properties->emulation.audioSwitch);
 }
 
-void actionToggleFrontSwitch() {
+void actionToggleFrontSwitch(void) {
     state.properties->emulation.frontSwitch = !state.properties->emulation.frontSwitch;
     switchSetFront(state.properties->emulation.frontSwitch);
 }
 
-void actionTogglePauseSwitch() {
+void actionTogglePauseSwitch(void) {
     state.properties->emulation.pauseSwitch = !state.properties->emulation.pauseSwitch;
     switchSetPause(state.properties->emulation.pauseSwitch);
 }
 
-void actionToggleFdcTiming() {
+void actionToggleFdcTiming(void) {
     state.properties->emulation.enableFdcTiming = !state.properties->emulation.enableFdcTiming;
     boardSetFdcTimingEnable(state.properties->emulation.enableFdcTiming);
 }
 
 
-void actionToggleHorizontalStretch() {
+void actionToggleHorizontalStretch(void) {
     state.properties->video.horizontalStretch = !state.properties->video.horizontalStretch;
     videoUpdateAll(state.video, state.properties);
     archUpdateEmuDisplayConfig();
 }
 
-void actionToggleVerticalStretch() {
+void actionToggleVerticalStretch(void) {
     state.properties->video.verticalStretch = !state.properties->video.verticalStretch;
     videoUpdateAll(state.video, state.properties);
     archUpdateEmuDisplayConfig();
 }
 
-void actionToggleScanlinesEnable() {
+void actionToggleScanlinesEnable(void) {
     state.properties->video.scanlinesEnable = !state.properties->video.scanlinesEnable;
     videoUpdateAll(state.video, state.properties);
     archUpdateEmuDisplayConfig();
 }
 
-void actionToggleDeinterlaceEnable() {
+void actionToggleDeinterlaceEnable(void) {
     state.properties->video.deInterlace = !state.properties->video.deInterlace;
     videoUpdateAll(state.video, state.properties);
     archUpdateEmuDisplayConfig();
 }
 
-void actionToggleBlendFrameEnable() {
+void actionToggleBlendFrameEnable(void) {
     state.properties->video.blendFrames = !state.properties->video.blendFrames;
     videoUpdateAll(state.video, state.properties);
     archUpdateEmuDisplayConfig();
 }
 
-void actionToggleRfModulatorEnable() {
+void actionToggleRfModulatorEnable(void) {
     state.properties->video.colorSaturationEnable = !state.properties->video.colorSaturationEnable;
     videoUpdateAll(state.video, state.properties);
     archUpdateEmuDisplayConfig();
 }
 
 
-void actionQuit() {
+void actionQuit(void) {
     archQuit();
 }
 
-void actionToggleWaveCapture() {
+void actionToggleWaveCapture(void) {
     if (mixerIsLogging(state.mixer)) {
         mixerStopLog(state.mixer);
     }
@@ -333,7 +333,7 @@ void actionToggleWaveCapture() {
     archUpdateMenu(0);
 }
 
-void actionVideoCaptureLoad() {
+void actionVideoCaptureLoad(void) {
     char* filename;
 
     emulatorSuspend();
@@ -349,7 +349,7 @@ void actionVideoCaptureLoad() {
     archUpdateMenu(0);
 }
 
-void actionVideoCapturePlay() {
+void actionVideoCapturePlay(void) {
     if (emulatorGetState() != EMU_STOPPED) {
         emulatorStop();
     }
@@ -360,13 +360,13 @@ void actionVideoCapturePlay() {
     archUpdateMenu(0);
 }
 
-void actionVideoCaptureSave() {
+void actionVideoCaptureSave(void) {
     if (boardCaptureHasData()) {
         archVideoCaptureSave();
     }
 }
 
-void actionVideoCaptureStop() {
+void actionVideoCaptureStop(void) {
     if (emulatorGetState() == EMU_STOPPED) {
         return;
     }
@@ -379,7 +379,7 @@ void actionVideoCaptureStop() {
     archUpdateMenu(0);
 }
 
-void actionVideoCaptureRec() {
+void actionVideoCaptureRec(void) {
     if (emulatorGetState() == EMU_STOPPED) {
         strcpy(state.properties->filehistory.videocap, generateSaveFilename(state.properties, videoDir, videoPrefix, ".cap", 2));
         boardCaptureStart(state.properties->filehistory.videocap);
@@ -397,7 +397,7 @@ void actionVideoCaptureRec() {
     archUpdateMenu(0);
 }
 
-void actionLoadState() {
+void actionLoadState(void) {
     char* filename;
 
     emulatorSuspend();
@@ -412,7 +412,7 @@ void actionLoadState() {
     archUpdateMenu(0);
 }
 
-void actionSaveState() {
+void actionSaveState(void) {
     char* filename;
 
     if (emulatorGetState() != EMU_STOPPED) {
@@ -434,7 +434,7 @@ void actionSaveState() {
     }
 }
 
-void actionQuickLoadState() {
+void actionQuickLoadState(void) {
     if (fileExist(state.properties->filehistory.quicksave, NULL)) {
         emulatorStop();
         emulatorStart(state.properties->filehistory.quicksave);
@@ -442,7 +442,7 @@ void actionQuickLoadState() {
     archUpdateMenu(0);
 }
 
-void actionQuickSaveState() {
+void actionQuickSaveState(void) {
     if (emulatorGetState() != EMU_STOPPED) {
         emulatorSuspend();
         strcpy(state.properties->filehistory.quicksave, generateSaveFilename(state.properties, stateDir, statePrefix, ".sta", 2));
@@ -451,13 +451,13 @@ void actionQuickSaveState() {
     }
 }
 
-void actionQuickSaveStateUndo() {
+void actionQuickSaveStateUndo(void) {
     if (emulatorGetState() != EMU_STOPPED) {
         // what this does:
         // convert "c:\blah\states\blah_19.sta" to "c:\blah\states\blah_18.sta"
         // if its at "blah_00.sta" and "blah_99.sta" exists, then wrap around
         // (as quicksavestate goes from 99 -> 00)
-        if (state.properties->filehistory.quicksave && strlen(state.properties->filehistory.quicksave) > 10) {
+        if (state.properties->filehistory.quicksave[0] && strlen(state.properties->filehistory.quicksave) > 10) {
             char numstr[5], *oldstatefilename;
             int numstrtonum;
             int qslen=strlen(state.properties->filehistory.quicksave)-6; // focus on the 2 numbers before the ext
@@ -490,32 +490,32 @@ void actionQuickSaveStateUndo() {
     }
 }
 
-void actionCartInsert1() {
+void actionCartInsert1(void) {
     actionCartInsert(0);
 }
 
-void actionCartInsert2() {
+void actionCartInsert2(void) {
     actionCartInsert(1);
 }
 
-void actionToggleMouseCapture() {
+void actionToggleMouseCapture(void) {
     state.mouseLock ^= 1;
     archMouseSetForceLock(state.mouseLock);
 }
 
-void actionEmuStep() {
+void actionEmuStep(void) {
     if (emulatorGetState() == EMU_PAUSED) {
         emulatorSetState(EMU_STEP);
     }
 }
 
-void actionEmuStepBack() {
+void actionEmuStepBack(void) {
     if (emulatorGetState() == EMU_PAUSED) {
         emulatorSetState(EMU_STEP_BACK);
     }
 }
 
-void actionEmuTogglePause() {
+void actionEmuTogglePause(void) {
     if (emulatorGetState() == EMU_STOPPED) {
         emulatorStart(NULL);
     }
@@ -530,48 +530,48 @@ void actionEmuTogglePause() {
     archUpdateMenu(0);
 }
 
-void actionEmuStop() {
+void actionEmuStop(void) {
     if (emulatorGetState() != EMU_STOPPED) {
         emulatorStop();
     }
     archUpdateMenu(0);
 }
 
-void actionDiskDirInsertA() {
+void actionDiskDirInsertA(void) {
     actionDiskInsertDir(0);
 }
 
-void actionDiskDirInsertB() {
+void actionDiskDirInsertB(void) {
     actionDiskInsertDir(1);
 }
 
-void actionDiskInsertA() {
+void actionDiskInsertA(void) {
     actionDiskInsert(0);
 }
 
-void actionDiskInsertB() {
+void actionDiskInsertB(void) {
     actionDiskInsert(1);
 }
 
-void actionMaxSpeedSet() {
+void actionMaxSpeedSet(void) {
     emulatorSetMaxSpeed(1);
 }
 
-void actionMaxSpeedRelease() {
+void actionMaxSpeedRelease(void) {
     emulatorSetMaxSpeed(0);
 }
 
-void actionStartPlayReverse()
+void actionStartPlayReverse(void)
 {
     emulatorPlayReverse(1);
 }
 
-void actionStopPlayReverse()
+void actionStopPlayReverse(void)
 {
     emulatorPlayReverse(0);
 }
 
-void actionDiskQuickChange() {
+void actionDiskQuickChange(void) {
     if (*state.properties->media.disks[0].fileName) {
         if (*state.properties->media.disks[0].fileNameInZip) {
             strcpy(state.properties->media.disks[0].fileNameInZip, fileGetNext(state.properties->media.disks[0].fileNameInZip, state.properties->media.disks[0].fileName));
@@ -596,7 +596,7 @@ void actionDiskQuickChange() {
     archUpdateMenu(0);
 }
 
-void actionWindowSizeSmall() {
+void actionWindowSizeSmall(void) {
     state.windowedSize = P_VIDEO_SIZEX1;
     if (state.properties->video.windowSize != P_VIDEO_SIZEX1) {
         state.properties->video.windowSize = P_VIDEO_SIZEX1;
@@ -605,7 +605,7 @@ void actionWindowSizeSmall() {
     }
 }
 
-void actionWindowSizeNormal() {
+void actionWindowSizeNormal(void) {
     state.windowedSize = P_VIDEO_SIZEX2;
     if (state.properties->video.windowSize != P_VIDEO_SIZEX2) {
         state.properties->video.windowSize = P_VIDEO_SIZEX2;
@@ -614,7 +614,7 @@ void actionWindowSizeNormal() {
     }
 }
 
-void actionWindowSizeFullscreen() {
+void actionWindowSizeFullscreen(void) {
     if (state.properties->video.windowSize != P_VIDEO_SIZEFULLSCREEN) {
         state.properties->video.windowSize = P_VIDEO_SIZEFULLSCREEN;
         state.properties->video.windowSizeChanged = 1;
@@ -622,15 +622,15 @@ void actionWindowSizeFullscreen() {
     }
 }
 
-void actionWindowSizeMinimized() {
+void actionWindowSizeMinimized(void) {
     archMinimizeMainWindow();
 }
 
-void actionMaxSpeedToggle() {
+void actionMaxSpeedToggle(void) {
     emulatorSetMaxSpeed(emulatorGetMaxSpeed() ? 0 : 1);
 }
 
-void actionFullscreenToggle() {
+void actionFullscreenToggle(void) {
     if (state.properties->video.windowSize == P_VIDEO_SIZEFULLSCREEN) {
         if (state.windowedSize == P_VIDEO_SIZEX2) {
             actionWindowSizeNormal();
@@ -645,26 +645,26 @@ void actionFullscreenToggle() {
     archUpdateMenu(0);
 }
 
-void actionEmuSpeedNormal() {
+void actionEmuSpeedNormal(void) {
     state.properties->emulation.speed = 50;
     emulatorSetFrequency(state.properties->emulation.speed, NULL);
 }
 
-void actionEmuSpeedDecrease() {
+void actionEmuSpeedDecrease(void) {
     if (state.properties->emulation.speed > 0) {
         state.properties->emulation.speed--;
         emulatorSetFrequency(state.properties->emulation.speed, NULL);
     }
 }
 
-void actionEmuSpeedIncrease() {
+void actionEmuSpeedIncrease(void) {
     if (state.properties->emulation.speed < 100) {
         state.properties->emulation.speed++;
         emulatorSetFrequency(state.properties->emulation.speed, NULL);
     }
 }
 
-void actionCasInsert() {
+void actionCasInsert(void) {
     char* filename;
 
     emulatorSuspend();
@@ -677,7 +677,7 @@ void actionCasInsert() {
     archUpdateMenu(0);
 }
 
-void actionCasRewind() {
+void actionCasRewind(void) {
     if (emulatorGetState() != EMU_STOPPED) {
             emulatorSuspend();
         }
@@ -697,11 +697,11 @@ void actionCasRewind() {
     archUpdateMenu(0);
 }
 
-void actionCasSetPosition() {
+void actionCasSetPosition(void) {
     archShowCassettePosDialog();
 }
 
-void actionEmuResetSoft() {
+void actionEmuResetSoft(void) {
     archUpdateMenu(0);
     if (emulatorGetState() == EMU_RUNNING) {
         emulatorSuspend();
@@ -715,14 +715,14 @@ void actionEmuResetSoft() {
     archUpdateMenu(0);
 }
 
-void actionEmuResetHard() {
+void actionEmuResetHard(void) {
     archUpdateMenu(0);
     emulatorStop();
     emulatorStart(NULL);
     archUpdateMenu(0);
 }
 
-void actionEmuResetClean() {
+void actionEmuResetClean(void) {
     int i;
 
     emulatorStop();
@@ -750,15 +750,15 @@ void actionEmuResetClean() {
     archUpdateMenu(0);
 }
 
-void actionScreenCapture() {
+void actionScreenCapture(void) {
     archScreenCapture(SC_NORMAL, NULL, 0);
 }
 
-void actionScreenCaptureUnfilteredSmall() {
+void actionScreenCaptureUnfilteredSmall(void) {
     archScreenCapture(SC_SMALL, NULL, 0);
 }
 
-void actionScreenCaptureUnfilteredLarge() {
+void actionScreenCaptureUnfilteredLarge(void) {
     archScreenCapture(SC_LARGE, NULL, 0);
 }
 
@@ -796,47 +796,47 @@ void actionCartRemove(int i) {
     archUpdateMenu(0);
 }
 
-void actionCasRemove() {
+void actionCasRemove(void) {
     actionTapeRemove(0);
 }
 
-void actionDiskRemoveA() {
+void actionDiskRemoveA(void) {
     actionDiskRemove(0);
 }
 
-void actionDiskRemoveB() {
+void actionDiskRemoveB(void) {
     actionDiskRemove(1);
 }
 
-void actionCartRemove1() {
+void actionCartRemove1(void) {
     actionCartRemove(0);
 }
 
-void actionCartRemove2() {
+void actionCartRemove2(void) {
     actionCartRemove(1);
 }
 
-void actionToggleCartAutoReset() {
+void actionToggleCartAutoReset(void) {
     state.properties->cartridge.autoReset ^= 1;
     archUpdateMenu(0);
 }
 
-void actionToggleDiskAutoReset() {
+void actionToggleDiskAutoReset(void) {
     state.properties->diskdrive.autostartA ^= 1;
     archUpdateMenu(0);
 }
 
-void actionCasToggleReadonly() {
+void actionCasToggleReadonly(void) {
     state.properties->cassette.readOnly ^= 1;
     archUpdateMenu(0);
 }
 
-void actionToggleCasAutoRewind() {
+void actionToggleCasAutoRewind(void) {
     state.properties->cassette.rewindAfterInsert ^= 1;
     archUpdateMenu(0);
 }
 
-void actionCasSave() {
+void actionCasSave(void) {
     char* filename;
 
     if (*state.properties->media.tapes[0].fileName) {
@@ -872,87 +872,87 @@ void actionCasSave() {
     archUpdateMenu(0);
 }
 
-void actionPropShowEmulation() {
+void actionPropShowEmulation(void) {
     archShowPropertiesDialog(PROP_EMULATION);
 }
 
-void actionPropShowAudio() {
+void actionPropShowAudio(void) {
     archShowPropertiesDialog(PROP_SOUND);
 }
 
-void actionPropShowVideo() {
+void actionPropShowVideo(void) {
     archShowPropertiesDialog(PROP_PERFORMANCE);
 }
 
-void actionPropShowSettings() {
+void actionPropShowSettings(void) {
     archShowPropertiesDialog(PROP_SETTINGS);
 }
 
-void actionPropShowDisk() {
+void actionPropShowDisk(void) {
     archShowPropertiesDialog(PROP_DISK);
 }
 
-void actionPropShowPorts() {
+void actionPropShowPorts(void) {
     archShowPropertiesDialog(PROP_PORTS);
 }
 
-void actionPropShowEffects() {
+void actionPropShowEffects(void) {
     archShowPropertiesDialog(PROP_VIDEO);
 }
 
-void actionPropShowApearance() {
+void actionPropShowApearance(void) {
     archShowPropertiesDialog(PROP_APEARANCE);
 }
 
-void actionOptionsShowLanguage() {
+void actionOptionsShowLanguage(void) {
     archShowLanguageDialog();
 }
 
-void actionToolsShowMachineEditor() {
+void actionToolsShowMachineEditor(void) {
     archShowMachineEditor();
 }
 
-void actionToolsShowShorcutEditor() {
+void actionToolsShowShorcutEditor(void) {
     archShowShortcutsEditor();
 }
 
-void actionToolsShowKeyboardEditor() {
+void actionToolsShowKeyboardEditor(void) {
     archShowKeyboardEditor();
 }
 
-void actionToolsShowMixer() {
+void actionToolsShowMixer(void) {
     archShowMixer();
 }
 
-void actionToolsShowDebugger() {
+void actionToolsShowDebugger(void) {
     archShowDebugger();
 }
 
-void actionToolsShowTrainer() {
+void actionToolsShowTrainer(void) {
     archShowTrainer();
 }
 
-void actionHelpShowHelp() {
+void actionHelpShowHelp(void) {
     archShowHelpDialog();
 }
 
-void actionHelpShowAbout() {
+void actionHelpShowAbout(void) {
     archShowAboutDialog();
 }
 
-void actionMaximizeWindow() {
+void actionMaximizeWindow(void) {
     archMaximizeWindow();
 }
 
-void actionMinimizeWindow() {
+void actionMinimizeWindow(void) {
     archMinimizeWindow();
 }
 
-void actionCloseWindow() {
+void actionCloseWindow(void) {
     archCloseWindow();
 }
 
-void actionVolumeIncrease() {
+void actionVolumeIncrease(void) {
     state.properties->sound.masterVolume += 5;
     if (state.properties->sound.masterVolume > 100) {
         state.properties->sound.masterVolume = 100;
@@ -960,7 +960,7 @@ void actionVolumeIncrease() {
     mixerSetMasterVolume(state.mixer, state.properties->sound.masterVolume);
 }
 
-void actionVolumeDecrease() {
+void actionVolumeDecrease(void) {
     state.properties->sound.masterVolume -= 5;
     if (state.properties->sound.masterVolume < 0) {
         state.properties->sound.masterVolume = 0;
@@ -968,95 +968,95 @@ void actionVolumeDecrease() {
     mixerSetMasterVolume(state.mixer, state.properties->sound.masterVolume);
 }
  
-void actionMuteToggleMaster() {
+void actionMuteToggleMaster(void) {
     state.properties->sound.masterEnable = !state.properties->sound.masterEnable;
     mixerEnableMaster(state.mixer, state.properties->sound.masterEnable);
 }
 
-void actionMuteTogglePsg() {
+void actionMuteTogglePsg(void) {
     int channel = MIXER_CHANNEL_PSG;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteTogglePcm() {
+void actionMuteTogglePcm(void) {
     int channel = MIXER_CHANNEL_PCM;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleIo() {
+void actionMuteToggleIo(void) {
     int channel = MIXER_CHANNEL_IO;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleScc() {
+void actionMuteToggleScc(void) {
     int channel = MIXER_CHANNEL_SCC;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleKeyboard() {
+void actionMuteToggleKeyboard(void) {
     int channel = MIXER_CHANNEL_KEYBOARD;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleMsxMusic() {
+void actionMuteToggleMsxMusic(void) {
     int channel = MIXER_CHANNEL_MSXMUSIC;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleMsxAudio() {
+void actionMuteToggleMsxAudio(void) {
     int channel = MIXER_CHANNEL_MSXAUDIO;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleMoonsound() {
+void actionMuteToggleMoonsound(void) {
     int channel = MIXER_CHANNEL_MOONSOUND;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleYamahaSfg() {
+void actionMuteToggleYamahaSfg(void) {
     int channel = MIXER_CHANNEL_YAMAHA_SFG;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionMuteToggleMidi() {
+void actionMuteToggleMidi(void) {
     int channel = MIXER_CHANNEL_MIDI;
     int newEnable = !state.properties->sound.mixerChannel[channel].enable;
     state.properties->sound.mixerChannel[channel].enable = newEnable;
     mixerEnableChannelType(state.mixer, channel, newEnable);
 }
 
-void actionPrinterForceFormFeed()
+void actionPrinterForceFormFeed(void)
 {
     emulatorSuspend();
     archForceFormFeed();
     emulatorResume();
 }
 
-void actionVolumeToggleStereo() {
+void actionVolumeToggleStereo(void) {
     state.properties->sound.stereo = !state.properties->sound.stereo;
 
     emulatorRestartSound();
 }
 
-void actionNextTheme() {
+void actionNextTheme(void) {
     archThemeSetNext();
 }
 

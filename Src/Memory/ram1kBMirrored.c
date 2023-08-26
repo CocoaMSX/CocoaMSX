@@ -37,7 +37,7 @@
 #include <stdio.h>
 
 
-typedef struct {
+typedef struct _Ram1kBMirrored {
     int deviceHandle;
     int debugHandle;
     int slot;

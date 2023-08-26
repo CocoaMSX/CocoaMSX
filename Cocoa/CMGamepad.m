@@ -74,7 +74,12 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         io_object_t hidDevice;
         while ((hidDevice = IOIteratorNext(hidObjectIterator)))
         {
-            CMGamepad *gamepad = [[CMGamepad alloc] initWithHidDevice:hidDevice];
+            IOHIDDeviceRef dev = IOHIDDeviceCreate(kCFAllocatorDefault, hidDevice);
+            if (!dev) {
+                continue;
+            }
+            CMGamepad *gamepad = [[CMGamepad alloc] initWithHidDevice:dev];
+            CFRelease(dev);
             
             if ([gamepad locationId] == 0)
                 continue;
@@ -98,7 +103,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
         registeredForEvents = NO;
         hidDevice = device;
         
-        IOObjectRetain(hidDevice);
+        CFRetain(hidDevice);
         
         _vendorId = 0;
         _productId = 0;
@@ -130,7 +135,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
 {
     [self unregisterFromEvents];
     
-    IOObjectRelease(hidDevice);
+    CFRelease(hidDevice);
 }
 
 - (void)registerForEvents
@@ -152,7 +157,7 @@ static void gamepadInputValueCallback(void *context, IOReturn result, void *send
     if (registeredForEvents)
     {
         // FIXME: why does this crash the emulator?
-//        IOHIDDeviceClose(hidDevice, kIOHIDOptionsTypeNone);
+        IOHIDDeviceClose(hidDevice, kIOHIDOptionsTypeNone);
         
         registeredForEvents = NO;
         

@@ -34,7 +34,7 @@
 #include "Properties.h"
 #include "VideoRender.h"
 
-NSString * const CMKeyboardLayoutPrefKey;
+extern NSString * const CMKeyboardLayoutPrefKey;
 
 @interface CMEmulatorController : NSWindowController<NSWindowDelegate, NSUserInterfaceValidations, CMCassetteRepositionDelegate, NSOpenSavePanelDelegate, CMMsxDisplayViewDelegate>
 {

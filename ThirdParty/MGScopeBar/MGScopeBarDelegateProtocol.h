@@ -8,39 +8,44 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
-// Selection modes for the buttons within a group.
-typedef enum _MGScopeBarGroupSelectionMode {
-    MGRadioSelectionMode         = 0,	// Exactly one item in the group will be selected at a time (no more, and no less).
-    MGMultipleSelectionMode      = 1	// Any number of items in the group (including none) may be selected at a time.
-} MGScopeBarGroupSelectionMode;
+/// Selection modes for the buttons within a group.
+typedef NS_ENUM(NSInteger, MGScopeBarGroupSelectionMode) {
+	/// Exactly one item in the group will be selected at a time (no more, and no less).
+    MGRadioSelectionMode         = 0,
+	/// Any number of items in the group (including none) may be selected at a time.
+    MGMultipleSelectionMode      = 1
+};
 
 
 @class MGScopeBar;
-@protocol MGScopeBarDelegate
+@protocol MGScopeBarDelegate <NSObject>
 
 
 // Methods used to configure the scope bar.
 // Note: all groupNumber parameters are zero-based.
 
 @required
-- (int)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar;
-- (NSArray *)scopeBar:(MGScopeBar *)theScopeBar itemIdentifiersForGroup:(int)groupNumber;
-- (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber; // return nil or an empty string for no label.
-- (MGScopeBarGroupSelectionMode)scopeBar:(MGScopeBar *)theScopeBar selectionModeForGroup:(int)groupNumber;
-- (NSString *)scopeBar:(MGScopeBar *)theScopeBar titleOfItem:(id)identifier inGroup:(int)groupNumber;
+- (NSInteger)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar;
+- (nullable NSArray<NSObject<NSCopying>*> *)scopeBar:(MGScopeBar *)theScopeBar itemIdentifiersForGroup:(NSInteger)groupNumber;
+- (nullable NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(NSInteger)groupNumber; // return nil or an empty string for no label.
+- (MGScopeBarGroupSelectionMode)scopeBar:(MGScopeBar *)theScopeBar selectionModeForGroup:(NSInteger)groupNumber;
+- (nullable NSString *)scopeBar:(MGScopeBar *)theScopeBar titleOfItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber;
 
 @optional
 // If the following method is not implemented, all groups except the first will have a separator before them.
-- (BOOL)scopeBar:(MGScopeBar *)theScopeBar showSeparatorBeforeGroup:(int)groupNumber;
-- (NSImage *)scopeBar:(MGScopeBar *)theScopeBar imageForItem:(id)identifier inGroup:(int)groupNumber; // default is no image. Will be shown at 16x16.
-- (NSView *)accessoryViewForScopeBar:(MGScopeBar *)theScopeBar; // default is no accessory view.
+- (BOOL)scopeBar:(MGScopeBar *)theScopeBar showSeparatorBeforeGroup:(NSInteger)groupNumber;
+- (nullable NSImage *)scopeBar:(MGScopeBar *)theScopeBar imageForItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber; // default is no image. Will be shown at 16x16.
+- (nullable NSView *)accessoryViewForScopeBar:(MGScopeBar *)theScopeBar; // default is no accessory view.
 
 
 // Notification methods.
 
 @optional
-- (void)scopeBar:(MGScopeBar *)theScopeBar selectedStateChanged:(BOOL)selected forItem:(id)identifier inGroup:(int)groupNumber;
+- (void)scopeBar:(MGScopeBar *)theScopeBar selectedStateChanged:(BOOL)selected forItem:(NSObject< NSCopying>*)identifier inGroup:(NSInteger)groupNumber;
 
 
 @end
+
+NS_ASSUME_NONNULL_END

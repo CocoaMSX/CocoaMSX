@@ -84,7 +84,7 @@ void msxEnableCpuFreq_1_5(int enable) {
     }
 }
 
-static void reset()
+static void reset(void)
 {
     UInt32 systemTime = boardSystemTime();
 
@@ -97,7 +97,7 @@ static void reset()
     deviceManagerReset();
 }
 
-static void destroy() {        
+static void destroy(void) {
     rtcDestroy(rtc);
 
     boardRemoveExternalDevices();
@@ -113,9 +113,9 @@ static void destroy() {
     r800Destroy(r800);
 }
 
-int getPC(){return r800->regs.PC.W;}
+int getPC(void){return r800->regs.PC.W;}
 
-static int getRefreshRate()
+static int getRefreshRate(void)
 {
     return vdpGetRefreshRate();
 }
@@ -143,7 +143,7 @@ static UInt8* getRamPage(int page) {
 	return msxRam + start;
 }
     
-static void saveState()
+static void saveState(void)
 {   
     SaveState* state = saveStateOpenForWrite("msx");
 
@@ -157,7 +157,7 @@ static void saveState()
     rtcSaveState(rtc);
 }
 
-static void loadState()
+static void loadState(void)
 {
     SaveState* state = saveStateOpenForRead("msx");
 
@@ -260,7 +260,7 @@ int msxCreate(Machine* machine,
                           machine->board.type == BOARD_MSX_FORTE_II ? 1 : 2);
 
     if (machine->board.type == BOARD_MSX_FORTE_II) {
-        CoinDevice* coinDevice = coinDeviceCreate(msxPsg);
+        CoinDevice* coinDevice = coinDeviceCreate();
         msxPsgRegisterCassetteRead(msxPsg, coinDeviceRead, coinDevice);
     }
 

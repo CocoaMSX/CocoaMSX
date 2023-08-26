@@ -47,38 +47,38 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-static int spritesEnable = 1;
-static int noSpriteLimits = 0;
-static int displayEnable = 1;
-static int refreshRate   = 0;
-static int canFlipFrameBuffer = 0;
+static bool spritesEnable = 1;
+static bool noSpriteLimits = 0;
+static bool displayEnable = 1;
+static int  refreshRate   = 0;
+static int  canFlipFrameBuffer = 0;
 
-void vdpSetSpritesEnable(int enable) {
-    spritesEnable = enable ? 1 : 0;
+void vdpSetSpritesEnable(bool enable) {
+    spritesEnable = enable;
 }
 
-int vdpGetSpritesEnable() {
+bool vdpGetSpritesEnable(void) {
     return spritesEnable;
 }
 
-void vdpSetNoSpriteLimits(int enable) {
-    noSpriteLimits = enable ? 1 : 0;
+void vdpSetNoSpriteLimits(bool enable) {
+    noSpriteLimits = enable;
 }
 
-int vdpGetNoSpritesLimit() {
+bool vdpGetNoSpritesLimit(void) {
     return noSpriteLimits;
 }
 
 
-void vdpSetDisplayEnable(int enable) {
-    displayEnable = enable ? 1 : 0;
+void vdpSetDisplayEnable(bool enable) {
+    displayEnable = enable;
 }
 
-int vdpGetDisplayEnable() {
+bool vdpGetDisplayEnable(void) {
     return displayEnable;
 }
 
-int vdpGetRefreshRate() 
+int vdpGetRefreshRate(void)
 {
     return refreshRate;
 }
@@ -595,7 +595,7 @@ static void onDrawAreaStart(VDP* vdp, UInt32 time)
 static UInt32 frameStartTime;
 static int    timeDisplay;
 
-int getScreenCompletePercent() 
+int getScreenCompletePercent(void)
 {
     return 100 * (boardSystemTime() - frameStartTime) / timeDisplay;
 }
@@ -762,7 +762,7 @@ static int updateScreenMode(VDP* vdp) {
         }
         break;
     case 13:
-        vdp->RefreshLine = RefreshLineTx80; break;
+        vdp->RefreshLine = RefreshLineTx80;
         screenMode = 13;
         break;
     default:
@@ -1397,7 +1397,7 @@ static void writeRegister(VDP* vdp, UInt16 ioPort, UInt8 value)
     }
 }
 
-void vdpForceSync()
+void vdpForceSync(void)
 {
     if (theVdp != NULL) {
         sync(theVdp, boardSystemTime());

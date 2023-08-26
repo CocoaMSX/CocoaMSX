@@ -140,7 +140,7 @@ static void getDebugInfo(RomMapperS1990* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 1, 0xe5, DBG_IO_READWRITE, read(rm, 0xe5));
 }
 
-int romMapperS1990Create() 
+int romMapperS1990Create(void) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

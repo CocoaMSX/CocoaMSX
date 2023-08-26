@@ -33,7 +33,7 @@
 
 typedef struct SviJoyIo SviJoyIo;
 
-SviJoyIo* sviJoyIoCreate();
+SviJoyIo* sviJoyIoCreate(void);
 
 UInt8 sviJoyIoRead(SviJoyIo* joyIo);
 UInt8 sviJoyIoReadTrigger(SviJoyIo* joyIo);

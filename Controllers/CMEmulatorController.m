@@ -98,10 +98,10 @@
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
 - (void)showSaveFileDialogWithTitle:(NSString*)title
-                   allowedFileTypes:(NSArray*)allowedFileTypes
+                   allowedFileTypes:(NSArray<NSString*>*)allowedFileTypes
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 - (void)showSaveFileDialogWithTitle:(NSString*)title
-                   allowedFileTypes:(NSArray*)allowedFileTypes
+                   allowedFileTypes:(NSArray<NSString*>*)allowedFileTypes
                     openInDirectory:(NSString*)initialDirectory
                   completionHandler:(void (^)(NSString *file, NSString *path))handler;
 
@@ -169,10 +169,6 @@
                                         template:(NSString *)template
                                        extension:(NSString *)ext;
 
-- (void) pasteAlertDidEnd:(NSAlert *) alert
-			   returnCode:(NSInteger) returnCode
-			  contextInfo:(void *) contextInfo;
-
 @end
 
 @implementation CMEmulatorController
@@ -201,7 +197,7 @@
 	NSArray *openCassetteFileTypes;
 	NSArray *stateFileTypes;
 	NSArray *captureAudioTypes;
-	NSArray *captureGameplayTypes;
+	NSArray<NSString*> *captureGameplayTypes;
 	
 	NSArray *listOfPreferenceKeysToObserve;
 	
@@ -1155,7 +1151,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
          NSString *file = nil;
          NSString *filePath = nil;
          
-         if (result == NSFileHandlingPanelOKButton)
+         if (result == NSModalResponseOK)
          {
              file = [panel URL].path;
              filePath = panel.directoryURL.path;
@@ -1195,7 +1191,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
          NSString *file = nil;
          NSString *filePath = nil;
          
-         if (result == NSFileHandlingPanelOKButton)
+         if (result == NSModalResponseOK)
          {
              file = [dialog URL].path;
              filePath = dialog.directoryURL.path;
@@ -1234,16 +1230,16 @@ CMEmulatorController *theEmulator = nil; // FIXME
         [panel beginSheetModalForWindow:[self activeWindow]
                       completionHandler:^(NSInteger result)
          {
-             if (result == NSFileHandlingPanelOKButton)
+             if (result == NSModalResponseOK)
              {
                  [[CMPreferences preferences] setCartridgeDirectory:[[panel directoryURL] path]];
                  
                  RomType type = ROM_UNKNOWN;
                  
-                 if ([romTypeDropdown isEnabled])
+				 if ([self->romTypeDropdown isEnabled])
                  {
-                     int romTypeIndex = [romTypeDropdown indexOfItem:[romTypeDropdown selectedItem]];
-                     type = [[romTypes objectForKey:@(romTypeIndex)] intValue];
+					 NSInteger romTypeIndex = [self->romTypeDropdown indexOfItem:[self->romTypeDropdown selectedItem]];
+					 type = [[self->romTypes objectForKey:@(romTypeIndex)] intValue];
                  }
                  
                  [self insertCartridge:[[panel URL] path] slot:slot type:type];
@@ -1261,7 +1257,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     
     emulatorSuspend();
     
-    if (insertCartridge(properties, slot, [cartridge UTF8String], NULL, type, 0))
+    if (insertCartridge(properties, slot, [cartridge fileSystemRepresentation], NULL, type, 0))
     {
         [self addToRecentItems:cartridge];
     }
@@ -1308,13 +1304,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
         [panel beginSheetModalForWindow:[self activeWindow]
                       completionHandler:^(NSInteger result)
          {
-             if (result == NSFileHandlingPanelOKButton)
-             {
-                 [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
-                 [self insertDiskAtPath:[[panel URL] path]
-                                   slot:slot
-                         mountFoldersRw:[mountFolderCopyCheckbox isEnabled] && [mountFolderCopyCheckbox state] == NSOnState];
-             }
+            if (result == NSModalResponseOK)
+            {
+                [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
+                [self insertDiskAtPath:[[panel URL] path]
+                                  slot:slot
+                        mountFoldersRw:[self->mountFolderCopyCheckbox isEnabled] && [self->mountFolderCopyCheckbox state] == NSOnState];
+            }
          }];
     }
 }
@@ -1422,7 +1418,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
     emulatorSuspend();
     
     BOOL isDirectory;
-    const char *fileCstr = [path UTF8String];
+    const char *fileCstr = [path fileSystemRepresentation];
     
     [[NSFileManager defaultManager] fileExistsAtPath:path
                                          isDirectory:&isDirectory];
@@ -1453,7 +1449,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
             }
             
             path = generatedPath;
-            fileCstr = [generatedPath UTF8String];
+            fileCstr = [generatedPath fileSystemRepresentation];
             isDirectory = NO;
         } else {
             NSString *infoText = [[error userInfo] objectForKey:NSLocalizedDescriptionKey];
@@ -1515,12 +1511,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
         [panel beginSheetModalForWindow:[self activeWindow]
                       completionHandler:^(NSInteger result)
          {
-             if (result == NSFileHandlingPanelOKButton)
+             if (result == NSModalResponseOK)
              {
                  [[CMPreferences preferences] setDiskDirectory:[[panel directoryURL] path]];
                  
-                 int disketteSizeIndex = [disketteSizeDropdown indexOfItem:[disketteSizeDropdown selectedItem]];
-                 int size = [[disketteSizes objectForKey:@(disketteSizeIndex)] intValue];
+                 NSInteger disketteSizeIndex = [self->disketteSizeDropdown indexOfItem:[self->disketteSizeDropdown selectedItem]];
+                 int size = [[self->disketteSizes objectForKey:@(disketteSizeIndex)] intValue];
                  
                  NSString *path = [[panel URL] path];
                  if ([self createBlankDiskAtPath:path
@@ -1530,7 +1526,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                        slot:slot
                              mountFoldersRw:NO];
                      
-                     Class notificationCenterClass = NSClassFromString(@"NSUserNotificationCenter");
+                     Class notificationCenterClass = [NSUserNotificationCenter class];
                      if (notificationCenterClass != nil) {
                          NSString *title = NSLocalizedString(@"Disk Image Created", "");
                          NSString *infoText = [NSString stringWithFormat:NSLocalizedString(@"Created a new blank disk %@.", ""),
@@ -1566,7 +1562,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 		[panel beginSheetModalForWindow:[self activeWindow]
 					  completionHandler:^(NSInteger result)
 		 {
-			 if (result == NSFileHandlingPanelOKButton)
+             if (result == NSModalResponseOK)
 			 {
 				 NSString *imagePath = [[panel URL] path];
 				 [[NSFileManager defaultManager] createFileAtPath:imagePath
@@ -1707,7 +1703,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                fromRect:NSMakeRect((screenshot.size.width - insetSize) / 2.0,
                                                    (screenshot.size.height - insetSize) / 2.0,
                                                    insetSize, insetSize)
-                              operation:NSCompositeSourceOver
+                              operation:NSCompositingOperationSourceOver
                                fraction:1.0];
                 
                 [icon unlockFocus];
@@ -1724,7 +1720,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
                                fromRect:NSMakeRect((screenshot.size.width - iconDim) / 2.0,
                                                    (screenshot.size.height - iconDim) / 2.0,
                                                    iconDim, iconDim)
-                              operation:NSCompositeSourceOver
+                              operation:NSCompositingOperationSourceOver
                                fraction:1.0];
                 
                 [icon unlockFocus];
@@ -1775,16 +1771,17 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (void) pasteText:(id) sender
 {
 	if (CMGetIntPref(@"emulationSpeedPercentage") != 100) {
-		NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"Due to timing restrictions, Paste is only available when emulating at default speed.", @"")
-										 defaultButton:CMLoc(@"Set to Default", @"Alert dialog button")
-									   alternateButton:CMLoc(@"Cancel", "Alert dialog button")
-										   otherButton:nil
-							 informativeTextWithFormat:@""];
-		
-		[alert beginSheetModalForWindow:[self window]
-						  modalDelegate:self
-						 didEndSelector:@selector(pasteAlertDidEnd:returnCode:contextInfo:)
-							contextInfo:nil];
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = CMLoc(@"Due to timing restrictions, Paste is only available when emulating at default speed.", @"");
+		[alert addButtonWithTitle:CMLoc(@"Set to Default", @"Alert dialog button")];
+		[alert addButtonWithTitle:CMLoc(@"Cancel", "Alert dialog button")];
+		alert.alertStyle = NSAlertStyleInformational;
+		[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+			if (returnCode == NSAlertFirstButtonReturn) {
+				CMSetIntPref(@"emulationSpeedPercentage", 100);
+				[self pasteFromPasteBoard];
+			}
+		}];
 		
 		return;
 	}
@@ -1832,7 +1829,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
 - (BOOL)isInFullScreenMode
 {
     if ([self isLionFullscreenAvailable])
-        return (self.window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask;
+        return (self.window.styleMask & NSWindowStyleMaskFullScreen) == NSWindowStyleMaskFullScreen;
     else
         return [self.window.contentView isInFullScreenMode];
 }
@@ -2019,7 +2016,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
         path = [path stringByAppendingPathExtension:ext];
         
         for (int i = 2; [[NSFileManager defaultManager] fileExistsAtPath:path]; i++) {
-            path = [[parentPath stringByAppendingPathComponent:prefix] stringByAppendingFormat:@" %zd", i];
+            path = [[parentPath stringByAppendingPathComponent:prefix] stringByAppendingFormat:@" %d", i];
             path = [path stringByAppendingPathExtension:ext];
         }
     }
@@ -2397,12 +2394,12 @@ CMEmulatorController *theEmulator = nil; // FIXME
     emulatorSuspend();
     
     [self showSaveFileDialogWithTitle:CMLoc(@"Save Screenshot", @"Dialog title")
-                     allowedFileTypes:[NSArray arrayWithObjects:@"png", nil]
+                     allowedFileTypes:@[@"png"]
                     completionHandler:^(NSString *file, NSString *path)
      {
          if (file)
          {
-             NSImage *image = [screen captureScreen:YES];
+             NSImage *image = [self->screen captureScreen:YES];
              if (image && [image representations].count > 0)
              {
                  NSBitmapImageRep *rep = (NSBitmapImageRep *) [[image representations] firstObject];
@@ -2434,7 +2431,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
          {
              if (file)
              {
-                 mixerStartLog(mixer, [file UTF8String]);
+                 mixerStartLog(self->mixer, [file fileSystemRepresentation]);
                  [CMPreferences preferences].audioCaptureDirectory = path;
              }
              
@@ -2492,7 +2489,7 @@ CMEmulatorController *theEmulator = nil; // FIXME
              
              const char *recording = [file UTF8String];
              
-             strncpy(properties->filehistory.videocap, recording, PROP_MAXPATH - 1);
+			 strncpy(self->properties->filehistory.videocap, recording, PROP_MAXPATH - 1);
              
              emulatorStop();
              emulatorStart(recording);
@@ -2532,16 +2529,13 @@ CMEmulatorController *theEmulator = nil; // FIXME
                      NSString *message = [NSString stringWithFormat:CMLoc(@"An error occurred while attempting to save to \"%@\".", @""),
                                           file];
                      
-                     NSAlert *alert = [NSAlert alertWithMessageText:message
-                                                      defaultButton:CMLoc(@"OK", @"")
-                                                    alternateButton:nil
-                                                        otherButton:nil
-                                          informativeTextWithFormat:@""];
+                     NSAlert *alert = [[NSAlert alloc] init];
+                     alert.messageText = message;
                      
                      [alert beginSheetModalForWindow:[self window]
-                                       modalDelegate:self
-                                      didEndSelector:nil
-                                         contextInfo:nil];
+                                   completionHandler:^(NSModalResponse returnCode) {
+                         //Do nothing.
+                     }];
                  }
              }
              
@@ -2615,15 +2609,15 @@ CMEmulatorController *theEmulator = nil; // FIXME
 
 #pragma mark - blueMSX implementations - emulation
 
-void archEmulationStartNotification()
+void archEmulationStartNotification(void)
 {
 }
 
-void archEmulationStopNotification()
+void archEmulationStopNotification(void)
 {
 }
 
-void archEmulationStartFailure()
+void archEmulationStartFailure(void)
 {
 }
 
@@ -3071,18 +3065,6 @@ void archTrap(UInt8 value)
     emulatorSuspend();
     tapeSetCurrentPos(position);
     emulatorResume();
-}
-
-#pragma mark - NSAlert
-
-- (void) pasteAlertDidEnd:(NSAlert *) alert
-			   returnCode:(NSInteger) returnCode
-			  contextInfo:(void *) contextInfo
-{
-	if (returnCode == NSAlertDefaultReturn) {
-		CMSetIntPref(@"emulationSpeedPercentage", 100);
-		[self pasteFromPasteBoard];
-	}
 }
 
 #pragma mark - NSUserInterfaceValidation

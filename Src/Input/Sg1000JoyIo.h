@@ -32,7 +32,7 @@
 
 typedef struct Sg1000JoyIo Sg1000JoyIo;
 
-Sg1000JoyIo* sg1000JoyIoCreate();
+Sg1000JoyIo* sg1000JoyIoCreate(void);
 
 UInt16 sg1000JoyIoRead(Sg1000JoyIo* joyIo);
 

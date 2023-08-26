@@ -45,7 +45,7 @@ void midiIoSetMidiInType(MidiType type, const char* fileName);
 void midiIoSetMidiOutType(MidiType type, const char* fileName);
 
 
-MidiIO* ykIoCreate();
+MidiIO* ykIoCreate(void);
 void ykIoDestroy(MidiIO* ykIo);
 
 int ykIoGetKeyState(MidiIO* midiIo, int key);

@@ -30,6 +30,6 @@
  
 #include "MsxTypes.h"
 
-int romMapperOpcodePsgCreate();
+int romMapperOpcodePsgCreate(void);
 
 #endif

@@ -35,30 +35,30 @@
 typedef enum { EMU_RUNNING, EMU_PAUSED, EMU_STOPPED, EMU_SUSPENDED, EMU_STEP, EMU_STEP_BACK } EmuState;
 
 void emulatorInit(Properties* properties, Mixer* mixer);
-void emulatorExit();
+void emulatorExit(void);
 
 void emuEnableSynchronousUpdate(int enable);
 
 void emulatorSetFrequency(int logFrequency, int* frequency);
-void emulatorRestartSound();
-void emulatorSuspend();
-void emulatorResume();
-void emulatorDoResume();
-void emulatorRestart();
+void emulatorRestartSound(void);
+void emulatorSuspend(void);
+void emulatorResume(void);
+void emulatorDoResume(void);
+void emulatorRestart(void);
 void emulatorStart(const char* stateName);
-void emulatorStop();
+void emulatorStop(void);
 void emulatorSetMaxSpeed(int enable);
-int  emulatorGetMaxSpeed();
+int  emulatorGetMaxSpeed(void);
 void emulatorPlayReverse(int enable);
-int  emulatorGetPlayReverse();
-int emulatorGetCpuOverflow();
-int emulatorGetSyncPeriod();
-EmuState emulatorGetState();
+int  emulatorGetPlayReverse(void);
+int emulatorGetCpuOverflow(void);
+int emulatorGetSyncPeriod(void);
+EmuState emulatorGetState(void);
 void emulatorSetState(EmuState state);
-UInt32 emulatorGetCpuSpeed();
-UInt32 emulatorGetCpuUsage();
-void emulatorResetMixer();
-int emulatorGetCurrentScreenMode();
+UInt32 emulatorGetCpuSpeed(void);
+UInt32 emulatorGetCpuUsage(void);
+void emulatorResetMixer(void);
+int emulatorGetCurrentScreenMode(void);
 
 #endif
 

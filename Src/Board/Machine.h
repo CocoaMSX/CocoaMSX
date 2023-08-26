@@ -34,9 +34,10 @@
 #include "VDP.h"
 #include "AY8910.h"
 #include <stdio.h>
+#include <CoreFoundation/CFBase.h>
 
 
-typedef enum { 
+typedef CF_OPTIONS(int, BoardType) {
     BOARD_UNKNOWN       = -1, 
     BOARD_MSX           = 0x0100 + 0x00, 
     BOARD_MSX_S3527     = 0x0100 + 0x01,
@@ -51,9 +52,9 @@ typedef enum {
     BOARD_SC3000        = 0x0400 + 0x02,
     BOARD_MSX_FORTE_II  = 0x0500 + 0x00,
     BOARD_MASK          = 0xff00
-} BoardType;
+};
 
-typedef struct {
+typedef struct _SlotInfo {
     RomType romType;
     char name[512];
     char inZipName[128];
@@ -64,36 +65,36 @@ typedef struct {
     int error;
 } SlotInfo;
 
-typedef struct {
+typedef struct _Machine {
     char name[64];
-    struct {
+    struct _MachineBoard {
         BoardType type;
     } board;
-    struct {
+    struct _MachineSlot {
         int subslotted;
     } slot[4];
-    struct {
+    struct _MachineCart {
         int slot;
         int subslot;
     } cart[2];
-    struct {
+    struct _MachineVideo {
         VdpVersion vdpVersion;
         int vramSize;
     } video;
-    struct {
+    struct _MachineAudio {
         int psgstereo;
         int psgpan[3];
     } audio;
-    struct {
+    struct _MachineCMOS {
         int enable;
         int batteryBacked;
     } cmos;
-    struct {
+    struct _MachineCPU {
         int    hasR800;
         UInt32 freqZ80;
         UInt32 freqR800;
     } cpu;
-    struct {
+    struct _MachineFDC {
         int enabled;
         int count;
     } fdc;
@@ -101,7 +102,7 @@ typedef struct {
     SlotInfo slotInfo[32];
     int isZipped;
     char *zipFile;
-	struct {
+	struct _MachineCas {
 		int patchCas;
 	} cas;
 } Machine;

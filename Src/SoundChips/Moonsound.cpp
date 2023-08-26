@@ -196,14 +196,14 @@ void moonsoundLoadState(Moonsound* moonsound)
 static char* regText(int d)
 {
     static char text[5];
-    sprintf(text, "R%.2x", d);
+    snprintf(text, sizeof(text), "R%.2x", d);
     return text;
 }
 
 static char* slotRegText(int s, int r)
 {
     static char text[5];
-    sprintf(text, "S%d:%d", s, r);
+    snprintf(text, sizeof(text), "S%d:%d", s, r);
     return text;
 }
 

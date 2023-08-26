@@ -33,6 +33,6 @@
 
 typedef struct MsxTetrisDongle MsxTetrisDongle;
 
-MsxJoystickDevice* msxTetrisDongleCreate();
+MsxJoystickDevice* msxTetrisDongleCreate(void);
 
 #endif 

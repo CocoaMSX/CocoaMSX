@@ -30,6 +30,7 @@
 
 #include "MsxTypes.h"
 #include "VideoManager.h"
+#include <stdbool.h>
 
 typedef enum { VDP_V9938, VDP_V9958, VDP_TMS9929A, VDP_TMS99x8A } VdpVersion;
 typedef enum { VDP_SYNC_AUTO, VDP_SYNC_50HZ, VDP_SYNC_60HZ } VdpSyncMode; 
@@ -39,16 +40,16 @@ static const char* VdpNames[] = { "V9938", "V9958", "TMS9929A", "TMS99x8A" };
 
 void vdpCreate(VdpConnector connector, VdpVersion version, VdpSyncMode sync, int vramPages);
 
-int  vdpGetRefreshRate();
+int  vdpGetRefreshRate(void);
 
-void vdpSetSpritesEnable(int enable);
-int  vdpGetSpritesEnable();
-void vdpSetNoSpriteLimits(int enable);
-int  vdpGetNoSpritesLimit();
-void vdpSetDisplayEnable(int enable);
-int  vdpGetDisplayEnable();
+void vdpSetSpritesEnable(bool enable);
+bool vdpGetSpritesEnable(void);
+void vdpSetNoSpriteLimits(bool enable);
+bool vdpGetNoSpritesLimit(void);
+void vdpSetDisplayEnable(bool enable);
+bool vdpGetDisplayEnable(void);
 
-void vdpForceSync();
+void vdpForceSync(void);
 
 // Video DA Interface
 

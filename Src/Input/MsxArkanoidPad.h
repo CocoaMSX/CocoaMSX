@@ -33,6 +33,6 @@
 
 typedef struct MsxArkanoidPad MsxArkanoidPad;
 
-MsxJoystickDevice* msxArkanoidPadCreate();
+MsxJoystickDevice* msxArkanoidPadCreate(void);
 
 #endif 

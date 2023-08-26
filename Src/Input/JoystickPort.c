@@ -45,7 +45,7 @@ static JoystickPortType inputType[JOYSTICK_MAX_PORTS];
 
 static JoystickConfig joystickConfig;
 
-void joystickPortUpdateBoardInfo()
+void joystickPortUpdateBoardInfo(void)
 {
     int i;
     BoardType boardType = boardGetType();
@@ -109,7 +109,7 @@ void joystickPortUpdateBoardInfo()
     }
 }
 
-int joystickPortKeyboardEnabled()
+int joystickPortKeyboardEnabled(void)
 {
     return joystickConfig.keyboardEnabled;
 }
@@ -169,12 +169,12 @@ void joystickPortUpdateHandlerRegister(JoystickPortUpdateHandler fn, void* ref)
     }
 }
 
-void joystickPortUpdateHandlerUnregister()
+void joystickPortUpdateHandlerUnregister(void)
 {
     updateHandler = NULL;
 }
 
-int joystickPortGetTypeCount()
+int joystickPortGetTypeCount(void)
 {
     return JOYSTICK_PORT_MAX_COUNT;
 }

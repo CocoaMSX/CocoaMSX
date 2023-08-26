@@ -32,7 +32,7 @@
 
 // Base class for MSX Joystick devices. 
 
-typedef struct {
+typedef struct _MsxJoystickDevice {
     UInt8 (*read)(void*);
     void  (*write)(void*, UInt8);
     void  (*destroy)(void*);

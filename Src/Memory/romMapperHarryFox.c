@@ -35,7 +35,7 @@
 #include <stdio.h>
  
 
-typedef struct {
+typedef struct RomMapperHarryFox {
     int deviceHandle;
     UInt8* romData;
     int slot;

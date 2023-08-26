@@ -37,9 +37,9 @@
 #include <string.h>
 #include <stdio.h>
 
-extern int frontSwitchEnabled();
+extern int frontSwitchEnabled(void);
 
-typedef struct {
+typedef struct _SramMapperS1985 {
     int    deviceHandle;
     int    debugHandle;
     UInt8  sram[0x10];

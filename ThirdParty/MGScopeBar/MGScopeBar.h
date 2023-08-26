@@ -11,33 +11,48 @@
 
 @interface MGScopeBar : NSView {
 @private
-	IBOutlet id <MGScopeBarDelegate, NSObject> delegate; // weak ref.
-	NSMutableArray *_separatorPositions; // x-coords of separators, indexed by their group-number.
-	NSMutableArray *_groups; // groups of items.
-	NSView *_accessoryView; // weak ref since it's a subview.
-	NSMutableDictionary *_identifiers; // map of identifiers to items.
-	NSMutableArray *_selectedItems; // all selected items in all groups; see note below.
-	float _lastWidth; // previous width of view from when we last resized.
-	NSInteger _firstCollapsedGroup; // index of first group collapsed into a popup.
-	float _totalGroupsWidthForPopups; // total width needed to show all groups expanded (excluding padding and accessory).
-	float _totalGroupsWidth; // total width needed to show all groups as native-width popups (excluding padding and accessory).
-	BOOL _smartResizeEnabled; // whether to do our clever collapsing/expanding of buttons when resizing (Smart Resizing).
+    /// weak ref.
+	__weak id <MGScopeBarDelegate> delegate;
+	/// x-coords of separators, indexed by their group-number.
+	NSMutableArray *_separatorPositions;
+	/// groups of items.
+	NSMutableArray *_groups;
+	/// weak ref since it's a subview.
+	__weak NSView *_accessoryView;
+	/// map of identifiers to items.
+	NSMutableDictionary<NSObject<NSCopying>*,id> *_identifiers;
+	/// all selected items in all groups; see note below.
+	NSMutableArray<NSMutableArray<NSObject<NSCopying>*>*> *_selectedItems;
+	/// previous width of view from when we last resized.
+	CGFloat _lastWidth;
+	/// index of first group collapsed into a popup.
+	NSInteger _firstCollapsedGroup;
+	/// total width needed to show all groups expanded (excluding padding and accessory).
+	CGFloat _totalGroupsWidthForPopups;
+	/// total width needed to show all groups as native-width popups (excluding padding and accessory).
+	CGFloat _totalGroupsWidth;
+	/// whether to do our clever collapsing/expanding of buttons when resizing (Smart Resizing).
+	BOOL _smartResizeEnabled;
 }
 
-@property(unsafe_unretained) id delegate; // should implement the MGScopeBarDelegate protocol.
+/// should implement the MGScopeBarDelegate protocol.
+@property (nonatomic, weak) IBOutlet id<MGScopeBarDelegate> delegate;
 
-- (void)reloadData; // causes the scope-bar to reload all groups/items from its delegate.
-- (void)sizeToFit; // only resizes vertically to optimum height; does not affect width.
-- (void)adjustSubviews; // performs Smart Resizing if enabled. You should only need to call this yourself if you change the width of the accessoryView.
+/// causes the scope-bar to reload all groups/items from its delegate.
+- (void)reloadData;
+/// only resizes vertically to optimum height; does not affect width.
+- (void)sizeToFit;
+/// performs Smart Resizing if enabled. You should only need to call this yourself if you change the width of the accessoryView.
+- (void)adjustSubviews;
 
-// Smart Resize is the intelligent conversion of button-groups into NSPopUpButtons and vice-versa, based on available space.
-// This functionality is enabled (YES) by default. Changing this setting will automatically call -reloadData.
-- (BOOL)smartResizeEnabled;
+/// Smart Resize is the intelligent conversion of button-groups into NSPopUpButtons and vice-versa, based on available space.
+/// This functionality is enabled (YES) by default. Changing this setting will automatically call -reloadData.
+@property (nonatomic) BOOL smartResizeEnabled;
 - (void)setSmartResizeEnabled:(BOOL)enabled;
 
 // The following method must be used to manage selections in the scope-bar; do not attempt to manipulate buttons etc directly.
-- (void)setSelected:(BOOL)selected forItem:(id<NSCopying>)identifier inGroup:(int)groupNumber;
-- (NSArray *)selectedItems;
+- (void)setSelected:(BOOL)selected forItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber;
+- (NSArray<NSArray<NSObject<NSCopying>*>*> *)selectedItems;
 
 /*
  Note:	The -selectedItems method returns an array of arrays.

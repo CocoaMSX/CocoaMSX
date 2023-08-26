@@ -38,7 +38,7 @@ int archCreateDirectory(const char* pathname)
     return mkdir(pathname, 0777);
 }
 
-const char* archGetCurrentDirectory()
+const char* archGetCurrentDirectory(void)
 {
     static char buf[512];
     return getcwd(buf, sizeof(buf));

@@ -56,18 +56,18 @@
 #define GROUP_CUMULATIVE_WIDTH			@"CumulativeWidth"		// Width from left of leftmost group to right of this group (all groups fully expanded).
 
 
-@interface MGScopeBar (MGPrivateMethods)
+@interface MGScopeBar (/*MGPrivateMethods*/)
 
 - (IBAction)scopeButtonClicked:(id)sender;
-- (NSButton *)getButtonForItem:(id<NSCopying>)identifier inGroup:(int)groupNumber; // returns relevant button/menu-item
-- (void)updateSelectedState:(BOOL)selected forItem:(id<NSCopying>)identifier inGroup:(int)groupNumber informDelegate:(BOOL)inform;
-- (NSButton *)buttonForItem:(id<NSCopying>)identifier inGroup:(int)groupNumber
+- (NSButton *)getButtonForItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber; // returns relevant button/menu-item
+- (void)updateSelectedState:(BOOL)selected forItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber informDelegate:(BOOL)inform;
+- (NSButton *)buttonForItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber
 				  withTitle:(NSString *)title image:(NSImage *)image; // creates a new NSButton
-- (NSMenuItem *)menuItemForItem:(id<NSCopying>)identifier inGroup:(int)groupNumber
+- (NSMenuItem *)menuItemForItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber
 					  withTitle:(NSString *)title image:(NSImage *)image; // creates a new NSMenuitem
 - (NSPopUpButton *)popupButtonForGroup:(NSDictionary *)group;
-- (void)setControl:(NSObject *)control forIdentifier:(id<NSCopying>)identifier inGroup:(int)groupNumber;
-- (void)updateMenuTitleForGroupAtIndex:(int)groupNumber;
+- (void)setControl:(NSObject *)control forIdentifier:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber;
+- (void)updateMenuTitleForGroupAtIndex:(NSInteger)groupNumber;
 
 @end
 
@@ -128,7 +128,7 @@
 	
 	// Configure contents via delegate.
 	if (self.delegate && [delegate conformsToProtocol:@protocol(MGScopeBarDelegate)]) {
-		int numGroups = [delegate numberOfGroupsInScopeBar:self];
+		NSInteger numGroups = [delegate numberOfGroupsInScopeBar:self];
 		
 		if (numGroups > 0) {
 			_separatorPositions = [[NSMutableArray alloc] initWithCapacity:numGroups];
@@ -193,7 +193,7 @@
 				NSMutableDictionary *groupInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 												  usedIdentifiers, GROUP_IDENTIFIERS, 
 												  buttons, GROUP_BUTTONS, 
-												  [NSNumber numberWithInt:selMode], GROUP_SELECTION_MODE, 
+												  [NSNumber numberWithInteger:selMode], GROUP_SELECTION_MODE,
 												  [NSNumber numberWithBool:NO], GROUP_MENU_MODE, 
 												  [NSNumber numberWithBool:hasLabel], GROUP_HAS_LABEL, 
 												  [NSNumber numberWithBool:addSeparator], GROUP_HAS_SEPARATOR, 
@@ -205,9 +205,9 @@
 				[_selectedItems addObject:[NSMutableArray arrayWithCapacity:0]];
 				
 				// Add buttons for this group.
-				float widestButtonWidth = 0;
-				float totalButtonsWidth = 0;
-				for (id<NSCopying> itemID in identifiers) {
+				CGFloat widestButtonWidth = 0;
+				CGFloat totalButtonsWidth = 0;
+				for (NSObject<NSCopying> *itemID in identifiers) {
 					if (![usedIdentifiers containsObject:itemID]) {
 						[usedIdentifiers addObject:itemID];
 					} else {
@@ -483,7 +483,7 @@
 			//NSLog(@"Got %@ - modifying groups %@", ((narrower) ? @"narrower" : @"wider"), NSStringFromRange(changedRange));
 			NSInteger nextXCoord = NSNotFound;
 			if (adjusting) {
-				for (int i = changedRange.location; i < NSMaxRange(changedRange); i++) {
+				for (NSInteger i = changedRange.location; i < NSMaxRange(changedRange); i++) {
 					NSMutableDictionary *groupInfo = [_groups objectAtIndex:i];
 					
 					if (nextXCoord == NSNotFound) {
@@ -538,7 +538,7 @@
 						NSArray *selectedItems = [_selectedItems objectAtIndex:i];
 						for (int i = 0; i < [menuItems count]; i++) {
 							NSMenuItem *menuItem = [menuItems objectAtIndex:i];
-							id<NSCopying> itemIdentifier = [menuItem representedObject];
+							id<NSObject, NSCopying> itemIdentifier = [menuItem representedObject];
 							NSButton *button = [self buttonForItem:itemIdentifier 
 														   inGroup:[menuItem tag] 
 														 withTitle:[menuItem title] 
@@ -656,7 +656,7 @@
 }
 
 
-- (NSButton *)getButtonForItem:(id<NSCopying>)identifier inGroup:(int)groupNumber
+- (NSButton *)getButtonForItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber
 {
 	NSButton *button = nil;
 	NSArray *group = [_identifiers objectForKey:identifier];
@@ -671,7 +671,7 @@
 }
 
 
-- (NSButton *)buttonForItem:(id<NSCopying>)identifier inGroup:(int)groupNumber
+- (NSButton *)buttonForItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber
 				  withTitle:(NSString *)title image:(NSImage *)image
 {
 	NSRect ctrlRect = NSMakeRect(0, 0, 50, 20); // arbitrary size; will be resized later.
@@ -702,7 +702,7 @@
 }
 
 
-- (NSMenuItem *)menuItemForItem:(id<NSCopying>)identifier inGroup:(int)groupNumber
+- (NSMenuItem *)menuItemForItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber
 					  withTitle:(NSString *)title image:(NSImage *)image
 {
 	NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(scopeButtonClicked:) keyEquivalent:@""];
@@ -724,7 +724,7 @@
 	NSPopUpButton *popup = [[NSPopUpButton alloc] initWithFrame:popFrame pullsDown:NO];
 	
 	// Since we're not using the selected item's title, we need to specify a NSMenuItem for the title.
-	BOOL multiSelect = ([[group objectForKey:GROUP_SELECTION_MODE] intValue] == MGMultipleSelectionMode);
+	BOOL multiSelect = ([[group objectForKey:GROUP_SELECTION_MODE] integerValue] == MGMultipleSelectionMode);
 	if (multiSelect) {
 		MGRecessedPopUpButtonCell *cell = [[MGRecessedPopUpButtonCell alloc] initTextCell:@"" pullsDown:NO];
 		[popup setCell:cell];
@@ -770,7 +770,7 @@
 }
 
 
-- (void)setControl:(NSObject *)control forIdentifier:(id<NSCopying>)identifier inGroup:(int)groupNumber
+- (void)setControl:(NSObject *)control forIdentifier:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber
 {
 	if (!_identifiers) {
 		_identifiers = [[NSMutableDictionary alloc] initWithCapacity:0];
@@ -782,10 +782,10 @@
 		[_identifiers setObject:identArray forKey:identifier];
 	}
 	
-	int count = [identArray count];
+	NSInteger count = [identArray count];
 	if (groupNumber >= count) {
 		// Pad identArray with nulls if appropriate, so this control lies at index groupNumber.
-		for (int i = count; i < groupNumber; i++) {
+		for (NSInteger i = count; i < groupNumber; i++) {
 			[identArray addObject:[NSNull null]];
 		}
 		[identArray addObject:control];
@@ -795,7 +795,7 @@
 }
 
 
-- (void)updateMenuTitleForGroupAtIndex:(int)groupNumber
+- (void)updateMenuTitleForGroupAtIndex:(NSInteger)groupNumber
 {
 	// Ensure that this group's popup (if present) has the correct title,
 	// accounting for the group's selection-mode and selected item(s).
@@ -809,7 +809,7 @@
 		NSPopUpButton *popup = [group objectForKey:GROUP_POPUP_BUTTON];
 		if (popup) {
 			NSArray *groupSelection = [_selectedItems objectAtIndex:groupNumber];
-			int numSelected = [groupSelection count];
+			NSInteger numSelected = [groupSelection count];
 			if (numSelected == 0) {
 				// No items selected.
 				[popup setTitle:POPUP_TITLE_EMPTY_SELECTION];
@@ -893,8 +893,8 @@
 {
 	NSButton *button = (NSButton *)sender;
 	BOOL menuMode = [sender isKindOfClass:[NSMenuItem class]];
-	id<NSCopying> identifier = [((menuMode) ? sender : [sender cell]) representedObject];
-	int groupNumber = [sender tag];
+	id<NSObject,NSCopying> identifier = [((menuMode) ? sender : [sender cell]) representedObject];
+	NSInteger groupNumber = [sender tag];
 	BOOL nowSelected = YES;
 	if (menuMode) {
 		// MenuItem. Ensure item has appropriate state.
@@ -911,7 +911,7 @@
 #pragma mark Accessors and properties
 
 
-- (void)setSelected:(BOOL)selected forItem:(id<NSCopying>)identifier inGroup:(int)groupNumber
+- (void)setSelected:(BOOL)selected forItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber
 {
 	// Change state of other items in group appropriately, informing delegate if possible.
 	// First we find the appropriate group-info for the item's identifier.
@@ -924,7 +924,7 @@
 			NSDisableScreenUpdates();
 			
 			// We found the group which this item belongs to. Obtain selection-mode and identifiers.
-			MGScopeBarGroupSelectionMode selMode = [[group objectForKey:GROUP_SELECTION_MODE] intValue];
+			MGScopeBarGroupSelectionMode selMode = [[group objectForKey:GROUP_SELECTION_MODE] integerValue];
 			BOOL radioMode = (selMode == MGRadioSelectionMode);
 			
 			if (radioMode) {
@@ -933,7 +933,7 @@
 				
 				if (nowSelected) {
 					// Before selecting this item, we first need to deselect any other selected items in this group.
-					for (id<NSCopying> selectedIdentifier in groupSelections) {
+					for (id<NSObject,NSCopying> selectedIdentifier in groupSelections) {
 						// Reselect the just-deselected item without informing the delegate, since nothing really changed.
 						[self updateSelectedState:NO forItem:selectedIdentifier inGroup:groupNumber informDelegate:NO];
 					}
@@ -960,7 +960,7 @@
 }
 
 
-- (void)updateSelectedState:(BOOL)selected forItem:(id<NSCopying>)identifier inGroup:(int)groupNumber informDelegate:(BOOL)inform
+- (void)updateSelectedState:(BOOL)selected forItem:(NSObject<NSCopying>*)identifier inGroup:(NSInteger)groupNumber informDelegate:(BOOL)inform
 {
 	// This method simply updates the selected state of the item's control, maintains selectedItems, and informs the delegate.
 	// All management of dependencies (such as deselecting other selected items in a radio-selection-mode group) is performed 
@@ -1002,10 +1002,8 @@
 }
 
 
-- (id)delegate
-{
-    return delegate;
-}
+@synthesize delegate;
+
 
 - (void)setDelegate:(id)newDelegate
 {
@@ -1016,10 +1014,7 @@
 }
 
 
-- (BOOL)smartResizeEnabled
-{
-	return _smartResizeEnabled;
-}
+@synthesize smartResizeEnabled=_smartResizeEnabled;
 
 
 - (void)setSmartResizeEnabled:(BOOL)enabled

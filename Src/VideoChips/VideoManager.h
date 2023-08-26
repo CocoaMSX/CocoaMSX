@@ -30,31 +30,32 @@
 
 #include "MsxTypes.h"
 #include "FrameBuffer.h"
+#include <CoreFoundation/CFBase.h>
 
-typedef struct {
+typedef struct _VideoCallbacks {
     void (*enable)(void*);
     void (*disable)(void*);
 } VideoCallbacks;
 
-typedef enum {
+typedef CF_OPTIONS(unsigned, VideoMode) {
     VIDEO_INTERNAL = 1,
     VIDEO_MIX      = 2,
     VIDEO_EXTERNAL = 4,
     VIDEO_NONE     = 8,
     VIDEO_MASK_ALL = VIDEO_INTERNAL | VIDEO_MIX | VIDEO_EXTERNAL | VIDEO_NONE
-} VideoMode;
+};
 
-int videoManagerGetCount();
-int videoManagerGetActive();
+int videoManagerGetCount(void);
+int videoManagerGetActive(void);
 void videoManagerSetActive(int index);
 void videoManagerSetMode(int index, VideoMode videoMode, VideoMode modeMask);
 int videoManagerIsActive(int index);
 char* videoManagerGetName(int index);
 
-void videoManagerReset();
+void videoManagerReset(void);
 
-void videoManagerLoadState();
-void videoManagerSaveState();
+void videoManagerLoadState(void);
+void videoManagerSaveState(void);
 
 int videoManagerRegister(const char* name, FrameBufferData* frameBuffer, 
                         VideoCallbacks* callbacks, void* ref);

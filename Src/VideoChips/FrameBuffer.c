@@ -65,16 +65,16 @@ static FrameBuffer* mixFrameInterlace(FrameBuffer* d, FrameBuffer* a, FrameBuffe
 static void frameBufferSuperimpose(FrameBuffer* a);
 static void frameBufferExternal(FrameBuffer* a);
 static void frameBufferBlack(FrameBuffer* a);
-extern int getScreenCompletePercent();
+extern int getScreenCompletePercent(void);
 
-static void waitSem() {
+static void waitSem(void) {
     if (semaphore == NULL) {
         semaphore = archSemaphoreCreate(1);
     }
     archSemaphoreWait(semaphore, -1);
 }
 
-static void signalSem() {
+static void signalSem(void) {
     archSemaphoreSignal(semaphore);
 }
 
@@ -167,7 +167,7 @@ static FrameBuffer* frameBufferFlipViewFrame4(int mixFrames)
 }
 
 
-static FrameBuffer* frameBufferFlipDrawFrame1()
+static FrameBuffer* frameBufferFlipDrawFrame1(void)
 {
     if (currentBuffer == NULL) {
         return NULL;
@@ -175,7 +175,7 @@ static FrameBuffer* frameBufferFlipDrawFrame1()
     return currentBuffer->frame;
 }
 
-static FrameBuffer* frameBufferFlipDrawFrame2()
+static FrameBuffer* frameBufferFlipDrawFrame2(void)
 {
     FrameBuffer* frame;
 
@@ -190,7 +190,7 @@ static FrameBuffer* frameBufferFlipDrawFrame2()
     return frame;
 }
 
-static FrameBuffer* frameBufferFlipDrawFrame3()
+static FrameBuffer* frameBufferFlipDrawFrame3(void)
 {
     FrameBuffer* frame;
 
@@ -210,7 +210,7 @@ static FrameBuffer* frameBufferFlipDrawFrame3()
 }
 
 
-static FrameBuffer* frameBufferFlipDrawFrame4()
+static FrameBuffer* frameBufferFlipDrawFrame4(void)
 {
     FrameBuffer* frame;
     int drawFrame = currentBuffer->drawFrame;
@@ -239,7 +239,7 @@ static FrameBuffer* frameBufferFlipDrawFrame4()
 
 
 
-FrameBuffer* frameBufferGetViewFrame()
+FrameBuffer* frameBufferGetViewFrame(void)
 {
     return currentBuffer ? currentBuffer->frame + currentBuffer->viewFrame : NULL;
 }
@@ -249,12 +249,12 @@ void frameBufferSetScanline(int scanline)
     curScanline = scanline;
 }
 
-int frameBufferGetScanline()
+int frameBufferGetScanline(void)
 {
     return curScanline;
 }
 
-FrameBuffer* frameBufferGetDrawFrame()
+FrameBuffer* frameBufferGetDrawFrame(void)
 {
     FrameBuffer* frameBuffer;
 
@@ -317,7 +317,7 @@ FrameBuffer* frameBufferFlipViewFrame(int mixFrames)
     return frameBuffer;
 }
 
-FrameBuffer* frameBufferFlipDrawFrame()
+FrameBuffer* frameBufferFlipDrawFrame(void)
 {
     FrameBuffer* frameBuffer;
 
@@ -437,12 +437,12 @@ void frameBufferSetMixMode(FrameBufferMixMode mode,  FrameBufferMixMode mask)
     mixMask = mask;
 }
 
-FrameBufferData* frameBufferGetActive()
+FrameBufferData* frameBufferGetActive(void)
 {
     return currentBuffer;
 }
 
-FrameBuffer* frameBufferGetWhiteNoiseFrame()
+FrameBuffer* frameBufferGetWhiteNoiseFrame(void)
 {
     static FrameBuffer* frameBuffer = NULL;
     UInt16 colors[32];
@@ -472,7 +472,7 @@ FrameBuffer* frameBufferGetWhiteNoiseFrame()
     return frameBuffer;
 }
 
-void frameBufferClearDeinterlace()
+void frameBufferClearDeinterlace(void)
 {
     if (deintBuffer != NULL) {
         void* buf = deintBuffer;
@@ -637,7 +637,7 @@ static FrameBuffer* mixFrameInterlace(FrameBuffer* d, FrameBuffer* a, FrameBuffe
     return d;
 }
 
-static UInt16* getBlackImage()
+static UInt16* getBlackImage(void)
 {
     static UInt16* blackImage = NULL;
 
