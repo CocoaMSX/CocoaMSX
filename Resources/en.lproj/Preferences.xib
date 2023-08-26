@@ -207,7 +207,7 @@
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn editable="NO" width="488.0703125" minWidth="40" maxWidth="1000" id="Vuz-ha-p8t">
+                                                            <tableColumn editable="NO" width="459.0703125" minWidth="40" maxWidth="1000" id="Vuz-ha-p8t">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="System">
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
