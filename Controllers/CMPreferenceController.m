@@ -481,7 +481,7 @@ extern CMEmulatorController *theEmulator;
     {
         if (error)
         {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorDownloading
                                      userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"An error occurred while attempting to download available machines.", @"")
                                                                                  forKey:NSLocalizedDescriptionKey]];
@@ -503,7 +503,7 @@ extern CMEmulatorController *theEmulator;
     {
         if (error)
         {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorParsingJson
                                      userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"An error occurred while reading the list of downloadable machines.", @"")
                                                                                  forKey:NSLocalizedDescriptionKey]];
