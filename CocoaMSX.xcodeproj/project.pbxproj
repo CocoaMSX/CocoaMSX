@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		553B24AA2A9BF424004009FE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 553B24AC2A9BF424004009FE /* Localizable.strings */; };
 		559B26B82A99E99800231EC0 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 559B26B72A99E99800231EC0 /* Media.xcassets */; };
 		559B26BA2A9AA1C000231EC0 /* RepositionCassette.xib in Resources */ = {isa = PBXBuildFile; fileRef = 559B26BC2A9AA1C000231EC0 /* RepositionCassette.xib */; };
 		559B26BD2A9AA1CF00231EC0 /* ConfigureJoystick.xib in Resources */ = {isa = PBXBuildFile; fileRef = 559B26BF2A9AA1CF00231EC0 /* ConfigureJoystick.xib */; };
@@ -318,7 +319,6 @@
 		FE9C6A27161A446B00513A6D /* CMEmulatorController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C6A26161A446B00513A6D /* CMEmulatorController.m */; };
 		FE9C6A2C161AAD3B00513A6D /* CMCocoaMouse.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9C6A2B161AAD3B00513A6D /* CMCocoaMouse.m */; };
 		FE9D27AA161EDB2600ADFB0F /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */; };
-		FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FEA01B361620C7720066FDD8 /* Localizable.strings */; };
 		FEA6E8A416EB0A2800A580CF /* CMMSXKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA6E8A316EB0A2800A580CF /* CMMSXKeyboard.m */; };
 		FEA74EFD16FC14B60033E2DE /* Data in Resources */ = {isa = PBXBuildFile; fileRef = FEA74EFC16FC14B60033E2DE /* Data */; };
 		FEAAF3EF167283C500D371CD /* CMInputDeviceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FEAAF3EE167283C500D371CD /* CMInputDeviceLayout.m */; };
@@ -371,6 +371,7 @@
 		256AC3F00F4B6AF500CF3369 /* CocoaMSX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaMSX_Prefix.pch; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		553B24AB2A9BF424004009FE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		559B26B72A99E99800231EC0 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		559B26B92A99EACF00231EC0 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		559B26BB2A9AA1C000231EC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RepositionCassette.xib; sourceTree = "<group>"; };
@@ -1010,7 +1011,6 @@
 		FE9C6A2A161AAD3B00513A6D /* CMCocoaMouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMCocoaMouse.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FE9C6A2B161AAD3B00513A6D /* CMCocoaMouse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CMCocoaMouse.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FE9D27A9161EDB2600ADFB0F /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
-		FEA01B361620C7720066FDD8 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		FEA0A23D1610F8CF0032DD50 /* CMCocoaTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CMCocoaTimer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FEA6277A16A0CAD70048C05C /* cbios.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cbios.txt; sourceTree = "<group>"; };
 		FEA6E8A216EB0A2800A580CF /* CMMSXKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMMSXKeyboard.h; sourceTree = "<group>"; };
@@ -1151,7 +1151,7 @@
 				FE1C1357167DE0D200CE2B6B /* Documents */,
 				FE2CEB551622A50500E58F9A /* Databases */,
 				FE2CEB571622A50500E58F9A /* Machines */,
-				FEA01B361620C7720066FDD8 /* Localizable.strings */,
+				553B24AC2A9BF424004009FE /* Localizable.strings */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				559B26C22A9AA1D700231EC0 /* About.xib */,
 				559B26BF2A9AA1CF00231EC0 /* ConfigureJoystick.xib */,
@@ -2171,7 +2171,7 @@
 				559B26C62A9AA1EF00231EC0 /* Emulator.xib in Resources */,
 				559B26C92A9AA1FF00231EC0 /* Preferences.xib in Resources */,
 				FEC2A41C1D21987B00A569E0 /* cocoamsx.iconset in Resources */,
-				FEA01B371620C7720066FDD8 /* Localizable.strings in Resources */,
+				553B24AA2A9BF424004009FE /* Localizable.strings in Resources */,
 				FE2CEB581622A50500E58F9A /* Databases in Resources */,
 				FE2CEB5A1622A50500E58F9A /* Machines in Resources */,
 				559B26BA2A9AA1C000231EC0 /* RepositionCassette.xib in Resources */,
@@ -2524,6 +2524,14 @@
 				559B26B92A99EACF00231EC0 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		553B24AC2A9BF424004009FE /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				553B24AB2A9BF424004009FE /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		559B26BC2A9AA1C000231EC0 /* RepositionCassette.xib */ = {
