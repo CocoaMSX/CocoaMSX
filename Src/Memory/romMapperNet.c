@@ -171,7 +171,7 @@ static void ym2148Reset(YM2148* midi)
     boardTimerAdd(midi->timerRecv, midi->timeRecv);
 }
 
-static YM2148* ym2148Create()
+static YM2148* ym2148Create(void)
 {
     YM2148* midi = (YM2148*)calloc(1, sizeof(YM2148));
 

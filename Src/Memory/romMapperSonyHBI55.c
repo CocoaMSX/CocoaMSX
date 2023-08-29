@@ -182,7 +182,7 @@ static void getDebugInfo(SonyHBI55* rm, DbgDevice* dbgDevice)
     dbgIoPortsAddPort(ioPorts, 3, 0xb3, DBG_IO_READWRITE, i8255Peek(rm->i8255, 0xb3));
 }
 
-int romMapperSonyHBI55Create()
+int romMapperSonyHBI55Create(void)
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

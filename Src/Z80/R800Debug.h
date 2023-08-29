@@ -38,6 +38,6 @@
 typedef struct R800Debug R800Debug;
 
 void r800DebugCreate(R800* r800);
-void r800DebugDestroy();
+void r800DebugDestroy(void);
 
 #endif

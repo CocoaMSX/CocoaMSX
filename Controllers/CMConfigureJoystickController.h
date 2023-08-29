@@ -27,7 +27,7 @@
 
 @class CMGamepadConfiguration;
 
-@protocol CMGamepadConfigurationDelegate
+@protocol CMGamepadConfigurationDelegate <NSObject>
 
 @required
 - (void) gamepadConfigurationDidComplete:(CMGamepadConfiguration *) configuration;
@@ -41,7 +41,7 @@
 	IBOutlet NSTextField *infoLabel;
 }
 
-@property (nonatomic, weak) id delegate;
+@property (nonatomic, weak) id<CMGamepadConfigurationDelegate> delegate;
 
 - (void) configureGamepadId:(NSInteger) gamepadId
 	  existingConfiguration:(CMGamepadConfiguration *) existing;

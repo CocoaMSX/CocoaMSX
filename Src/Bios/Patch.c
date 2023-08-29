@@ -116,7 +116,7 @@ static void tapoof(void* ref, CpuRegs* cpu);
 static void tapout(void* ref, CpuRegs* cpu);
 static void casout(void* ref, CpuRegs* cpu);
 
-void vdpCmdFlushAll();
+extern void vdpCmdFlushAll(void);
 
 void PatchReset(BoardType boardType) {
     patchEnabled = 0;

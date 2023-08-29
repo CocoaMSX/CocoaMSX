@@ -33,6 +33,6 @@
 
 typedef struct MsxAsciiLaser MsxAsciiLaser;
 
-MsxJoystickDevice* msxAsciiLaserCreate();
+MsxJoystickDevice* msxAsciiLaserCreate(void);
 
 #endif 

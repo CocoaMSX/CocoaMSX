@@ -564,7 +564,7 @@ static void nec765ExecutionPhaseWrite(NEC765* fdc, UInt8 value)
 	}
 }
 
-NEC765* nec765Create()
+NEC765* nec765Create(void)
 {
     NEC765* fdc = malloc(sizeof(NEC765));
 

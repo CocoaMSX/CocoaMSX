@@ -109,7 +109,7 @@ static UInt8 read(MsxAsciiLaser* joystick) {
     return state;
 }
 
-MsxJoystickDevice* msxAsciiLaserCreate()
+MsxJoystickDevice* msxAsciiLaserCreate(void)
 {
     MsxAsciiLaser* joystick = (MsxAsciiLaser*)calloc(1, sizeof(MsxAsciiLaser));
     joystick->joyDevice.read   = read;

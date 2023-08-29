@@ -64,10 +64,10 @@ typedef void (*MixerSetSampleRateCallback)(void*, UInt32);
 typedef Int32 (*MixerWriteCallback)(void*, Int16*, UInt32);
 
 /* Constructor and destructor */
-Mixer* mixerCreate();
+Mixer* mixerCreate(void);
 void mixerDestroy(Mixer* mixer);
 
-Mixer* mixerGetGlobalMixer();
+Mixer* mixerGetGlobalMixer(void);
 
 Int32 mixerGetMasterVolume(Mixer* mixer, int leftRight);
 void mixerSetMasterVolume(Mixer* mixer, Int32 volume);

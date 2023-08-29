@@ -29,8 +29,8 @@
 
 #define CMJoypadNone 0
 
-extern NSString * const CMKeyPasteStarted;
-extern NSString * const CMKeyPasteEnded;
+extern NSNotificationName const CMKeyPasteStarted;
+extern NSNotificationName const CMKeyPasteEnded;
 
 @interface CMCocoaInput : NSObject<CMGamepadEventDelegate, CMKeyboardEventDelegate>
 
@@ -41,7 +41,6 @@ extern NSString * const CMKeyPasteEnded;
 - (BOOL)pasteText:(NSString *)text
        layoutName:(NSString *)layoutName;
 
-- (void)resetState;
 - (void)releaseAllKeys;
 
 @end

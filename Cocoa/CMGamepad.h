@@ -23,9 +23,35 @@
 #import <Foundation/Foundation.h>
 #import <IOKit/hid/IOHIDLib.h>
 
+@class CMGamepad;
+@class CMGamepadEventData;
+@protocol CMGamepadEventDelegate <NSObject>
+
+@optional
+- (void)gamepadDidConnect:(CMGamepad *)gamepad;
+- (void)gamepadDidDisconnect:(CMGamepad *)gamepad;
+
+- (void)gamepad:(CMGamepad *)gamepad
+       xChanged:(NSInteger)newValue
+         center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData;
+- (void)gamepad:(CMGamepad *)gamepad
+       yChanged:(NSInteger)newValue
+         center:(NSInteger)center
+      eventData:(CMGamepadEventData *)eventData;
+
+- (void)gamepad:(CMGamepad *)gamepad
+     buttonDown:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData;
+- (void)gamepad:(CMGamepad *)gamepad
+       buttonUp:(NSInteger)index
+      eventData:(CMGamepadEventData *)eventData;
+
+@end
+
 @interface CMGamepad : NSObject
 
-@property (nonatomic, weak) id delegate;
+@property (nonatomic, weak) id<CMGamepadEventDelegate> delegate;
 @property (nonatomic, assign) NSInteger gamepadId;
 @property (nonatomic, assign) NSUInteger index;
 
@@ -34,9 +60,9 @@
 @property (nonatomic, readonly) NSInteger productId;
 @property (nonatomic, readonly) NSString *name;
 
-+ (NSArray *)allGamepads;
++ (NSArray<CMGamepad*> *)allGamepads;
 
-- (id)initWithHidDevice:(IOHIDDeviceRef)device;
+- (instancetype)initWithHidDevice:(IOHIDDeviceRef)device;
 
 - (void)registerForEvents;
 

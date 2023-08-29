@@ -206,7 +206,7 @@ enum {
 
 #define MAX_HISTORY 30
 
-typedef struct {
+typedef struct _EmulationProperties {
     char statsDefDir[PROP_MAXPATH];
     char machineName[PROP_MAXPATH];
     char shortcutProfile[PROP_MAXPATH];
@@ -230,7 +230,7 @@ typedef struct {
 	int  enableCasPatch;
 } EmulationProperties;
 
-typedef struct {
+typedef struct _D3DProperties {
 		int linearFiltering;
 		int extendBorderColor;
 		int forceHighRes;
@@ -244,7 +244,7 @@ typedef struct {
 		int cropBottom;
 } D3DProperties;
 
-typedef struct {
+typedef struct _VideoProperties {
     int monitorColor;
     int monitorType;
     int windowSize;
@@ -254,7 +254,7 @@ typedef struct {
     int windowY;
     int driver;
     int frameSkip;
-    struct {
+    struct _VideoPropertiesFullscreen {
         int width;
         int height;
         int bitDepth;
@@ -305,19 +305,19 @@ enum {
 
 
 
-typedef struct {
+typedef struct _VideoInProperties {
     int disabled;
     int inputIndex;
     char inputName[256];
 } VideoInProperties;
 
-typedef struct {
+typedef struct _MixerChannel{
     int enable;
     int volume;
     int pan;
 } MixerChannel;
 
-typedef struct {
+typedef struct _SoundChip {
     int enableY8950;
     int enableYM2413;
     int enableMoonsound;
@@ -327,7 +327,7 @@ typedef struct {
     int moonsoundOversampling;
 } SoundChip;
 
-typedef struct {
+typedef struct _SoundProperties {
     int  driver;
     int  bufSize;
     int  stabilizeDSoundTiming;
@@ -359,22 +359,22 @@ typedef struct {
     } MidiOut;
 } SoundProperties;
 
-typedef struct {
+typedef struct _JoystickGeneric {
 	int POV0isAxes;
 } JoystickGeneric;
 
-typedef struct {
+typedef struct _JoystickProperties {
     char type[64];
     int  typeId;
     int  autofire;
 }  JoystickProperties;
 
-typedef struct {
+typedef struct _KeyboardProperties {
     char configFile[PROP_MAXPATH];
     int enableKeyboardQuirk;
 } KeyboardProperties;
 
-typedef struct {
+typedef struct _FileProperties {
     char fileName[PROP_MAXPATH];
     char fileNameInZip[PROP_MAXPATH];
     char directory[PROP_MAXPATH];
@@ -382,13 +382,13 @@ typedef struct {
     int  type;
 } FileProperties;
 
-typedef struct {
+typedef struct _Media {
     FileProperties carts[PROP_MAX_CARTS];
     FileProperties disks[PROP_MAX_DISKS];
     FileProperties tapes[PROP_MAX_TAPES];
 } Media;
 
-typedef struct {
+typedef struct _NoWindProperties {
     int enableDos2;
     int enablePhantomDrives;
     int enableOtherDiskRoms;
@@ -396,7 +396,7 @@ typedef struct {
     int ignoreBootFlag;
 } NoWindProperties;
 
-typedef struct {
+typedef struct _CartridgeProperties{
     RomType defaultType;
     char    defDir[PROP_MAXPATH];
     char    defDirSEGA[PROP_MAXPATH];
@@ -406,7 +406,7 @@ typedef struct {
     int     quickStartDrive;
 } CartridgeProperties;
 
-typedef struct {
+typedef struct _DiskdriveProperties {
     char defDir[PROP_MAXPATH];
     char defHdDir[PROP_MAXPATH];
     int  autostartA;
@@ -415,14 +415,14 @@ typedef struct {
     int  cdromDrive;
 } DiskdriveProperties;
 
-typedef struct {
+typedef struct _CassetteProperties{
     char defDir[PROP_MAXPATH];
     int showCustomFiles;
     int readOnly;
     int rewindAfterInsert;
 } CassetteProperties;
 
-typedef struct {
+typedef struct _FileHistory {
 #ifndef NO_FILE_HISTORY
     int     count;
     char    cartridge[2][MAX_HISTORY][PROP_MAXPATH];
@@ -434,21 +434,21 @@ typedef struct {
     char    videocap[PROP_MAXPATH];
 } FileHistory;
 
-typedef struct {
-    struct {
+typedef struct _PortProperties {
+    struct _PortLPTProperties {
         int  type;
         int  emulation;
         char name[256];
         char portName[PROP_MAXPATH];
         char fileName[PROP_MAXPATH];
     } Lpt;
-    struct {
+    struct _PortCOMProperties{
         int  type;
         char name[256];
         char portName[PROP_MAXPATH];
         char fileName[PROP_MAXPATH];
     } Com;
-    struct {
+    struct _PortETHProperties{
         int disabled;
         int ethIndex;
         char macAddress[64];
@@ -457,7 +457,7 @@ typedef struct {
 
 #define DLG_MAX_ID 32
 
-typedef struct {
+typedef struct _Settings {
     char language[64];
 
     int portable;
@@ -503,6 +503,6 @@ void propDestroy(Properties* pProperties);
 
 void propertiesSetDirectory(const char* defDir, const char* altDir);
 
-Properties* propGetGlobalProperties();
+Properties* propGetGlobalProperties(void);
 
 #endif

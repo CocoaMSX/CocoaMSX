@@ -48,13 +48,13 @@ typedef struct {
 
 static DeviceManager deviceManager;
 
-void deviceManagerCreate() {
+void deviceManagerCreate(void) {
     deviceManager.count = 0;
     deviceManager.lastHandle = 0;
     deviceManager.shutDown = 0;
 }
 
-void deviceManagerDestroy()
+void deviceManagerDestroy(void)
 {
     int i;
 
@@ -67,7 +67,7 @@ void deviceManagerDestroy()
     }
 }
 
-void deviceManagerReset()
+void deviceManagerReset(void)
 {
     int i;
     for (i = 0; i < deviceManager.count; i++) {
@@ -77,7 +77,7 @@ void deviceManagerReset()
     }
 }
 
-void deviceManagerLoadState()
+void deviceManagerLoadState(void)
 {
     int i;
     for (i = 0; i < deviceManager.count; i++) {
@@ -87,7 +87,7 @@ void deviceManagerLoadState()
     }
 }
 
-void deviceManagerSaveState()
+void deviceManagerSaveState(void)
 {
     int i;
     for (i = 0; i < deviceManager.count; i++) {

@@ -30,7 +30,7 @@
 
 #include "MsxTypes.h"
 
-int romMapperTurboRTimerCreate();
-void romMapperTurboRTimerSync();
+int romMapperTurboRTimerCreate(void);
+void romMapperTurboRTimerSync(void);
 
 #endif

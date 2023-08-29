@@ -121,7 +121,7 @@ UInt16 sg1000JoyIoRead(Sg1000JoyIo* joyIo)
     return state;
 }
 
-Sg1000JoyIo* sg1000JoyIoCreate() 
+Sg1000JoyIo* sg1000JoyIoCreate(void) 
 {
     DeviceCallbacks callbacks = { destroy, reset, saveState, loadState };
     Sg1000JoyIo* sg1000JoyIo = (Sg1000JoyIo*)calloc(1, sizeof(Sg1000JoyIo));

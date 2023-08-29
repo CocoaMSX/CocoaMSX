@@ -32,7 +32,7 @@ struct CocoaThread {
 
 static void *pThreadCallback(void *data);
 
-void * archThreadCreate(void (* entryPoint)(), int priority)
+void * archThreadCreate(void (* entryPoint)(void), int priority)
 {
     struct CocoaThread *ct = calloc(1, sizeof(struct CocoaThread));
     if (ct != NULL) {
@@ -64,7 +64,7 @@ void archThreadSleep(int milliseconds)
 
 static void* pThreadCallback(void *data)
 {
-    void (* entryPoint)() = data;
+    void (* entryPoint)(void) = data;
     
     @autoreleasepool
     {

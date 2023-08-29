@@ -30,7 +30,7 @@
 
 #include "MsxTypes.h"
 
-void appConfigLoad();
+void appConfigLoad(void);
 
 int appConfigGetInt(const char* key, int defVal);
 

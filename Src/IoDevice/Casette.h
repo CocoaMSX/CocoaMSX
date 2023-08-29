@@ -29,12 +29,13 @@
 #define CASSETTE_H
 
 #include "MsxTypes.h"
+#include <stdbool.h>
 
 typedef enum { TAPE_ASCII = 0, TAPE_BINARY, TAPE_BASIC, TAPE_CUSTOM } TapeContentType;
 
 typedef enum { TAPE_UNKNOWN = 0, TAPE_FMSXDOS, TAPE_FMSX98AT, TAPE_SVICAS, TAPE_WAV  } TapeFormat;
 
-typedef struct {
+typedef struct _TapeContent {
     int             pos;
     TapeContentType type;
     char            fileName[8];
@@ -42,21 +43,21 @@ typedef struct {
 
 void   tapeSetDirectory(char* baseDir, char* prefix);
 int    tapeInsert(char *name, const char *fileInZipFile);
-int    tapeIsInserted();
+bool   tapeIsInserted(void);
 int    tapeSave(char *name, TapeFormat format);
-void tapeLoadState();
-void tapeSaveState();
+void tapeLoadState(void);
+void tapeSaveState(void);
 void tapeRewindNextInsert(void);
-UInt32 tapeGetLength();
-UInt32 tapeGetCurrentPos();
+UInt32 tapeGetLength(void);
+UInt32 tapeGetCurrentPos(void);
 void   tapeSetCurrentPos(int pos);
 TapeContent* tapeGetContent(int* count);
-TapeFormat   tapeGetFormat();
+TapeFormat   tapeGetFormat(void);
 void tapeSetReadOnly(int readOnly);
 
 UInt8 tapeWrite(UInt8 value);
 UInt8 tapeRead(UInt8* value);
-UInt8 tapeReadHeader();
-UInt8 tapeWriteHeader();
+UInt8 tapeReadHeader(void);
+UInt8 tapeWriteHeader(void);
 
 #endif

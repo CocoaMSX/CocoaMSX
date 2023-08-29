@@ -30,6 +30,6 @@
 
 #include "MsxTypes.h"
 
-int romMapperNms8280VideoDaCreate();
+int romMapperNms8280VideoDaCreate(void);
 
 #endif

@@ -44,7 +44,7 @@ void ioPortRegisterSub(int subport, IoPortRead read, IoPortWrite write, void* re
 void ioPortUnregisterSub(int subport);
 int ioPortCheckSub(int subport);
 
-void  ioPortReset();
+void  ioPortReset(void);
 UInt8 ioPortRead(void* ref, UInt16 port);
 void  ioPortWrite(void* ref, UInt16 port, UInt8 value);
 

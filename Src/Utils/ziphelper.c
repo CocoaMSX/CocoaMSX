@@ -112,7 +112,7 @@ void memZipFileSystemCreate(int maxFiles)
     memZipFiles = (MemZipFile**) calloc(memZipFileCount, sizeof(MemZipFile*));
 }
 
-void memZipFileSystemDestroy()
+void memZipFileSystemDestroy(void)
 {
     int i;
 

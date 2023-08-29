@@ -32,7 +32,7 @@
 void r800ExecuteTrace(R800* r800, UInt32 endTime);
 
 int r800OpenTrace(const char* filename);
-void r800CloseTrace();
+void r800CloseTrace(void);
 
 int r800Dasm(R800* r800, UInt16 PC, char* dest);
 

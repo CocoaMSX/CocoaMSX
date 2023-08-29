@@ -80,9 +80,7 @@
 - (void)awakeFromNib
 {
     [self.window setAcceptsMouseMovedEvents:YES];
-    if ([self respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)]) {
-        [self setWantsBestResolutionOpenGLSurface:YES];
-    }
+    [self setWantsBestResolutionOpenGLSurface:YES];
     
     [[NSUserDefaults standardUserDefaults] addObserver:self
                                             forKeyPath:@"videoScanlineAmount"
@@ -224,6 +222,8 @@
     glMatrixMode(GL_MODELVIEW);
     
     glClear(GL_COLOR_BUFFER_BIT);
+	
+	[super reshape];
 }
 
 - (void) cancelOperation:(id) sender
@@ -437,7 +437,7 @@ int archUpdateEmuDisplay(int syncMode)
     return 1;
 }
 
-void archUpdateWindow()
+void archUpdateWindow(void)
 {
 }
 
@@ -475,7 +475,7 @@ void archUpdateWindow()
     videoDestroy(copy);
     
     // Mirror the byte order
-    for (int i = width * height - 1; i >= 0; i--)
+    for (NSInteger i = width * height - 1; i >= 0; i--)
     {
         UInt8 r = rawBitmapBuffer[i] & 0xff;
         UInt8 g = (rawBitmapBuffer[i] & 0xff00) >> 8;

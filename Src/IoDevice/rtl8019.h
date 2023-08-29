@@ -32,7 +32,7 @@
 
 typedef struct RTL8019 RTL8019;
 
-RTL8019* rtl8019Create();
+RTL8019* rtl8019Create(void);
 void rtl8019Destroy(RTL8019* rtl);
 void rtl8019Reset(RTL8019* rtl);
 

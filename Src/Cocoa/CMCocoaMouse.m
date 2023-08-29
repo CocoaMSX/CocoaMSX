@@ -280,7 +280,7 @@
     {
         BOOL isCursorLockedAtStartOfEvent = isCursorLocked;
         
-        if ((([theEvent modifierFlags] & NSCommandKeyMask) != 0)
+		if ((([theEvent modifierFlags] & NSEventModifierFlagCommand) != 0)
 			&& isCursorLockedAtStartOfEvent)
         {
 			[self unlockCursor];
@@ -331,7 +331,7 @@ int archMouseGetButtonState(int checkAlways)
 {
     @autoreleasepool
     {
-        return theEmulator.mouse.buttonState;
+        return (int)theEmulator.mouse.buttonState;
     }
 }
 

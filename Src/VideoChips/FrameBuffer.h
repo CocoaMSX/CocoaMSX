@@ -69,17 +69,17 @@ typedef enum {
 
 void frameBufferSetFrameCount(int frameCount);
 
-FrameBuffer* frameBufferGetViewFrame();
-FrameBuffer* frameBufferGetDrawFrame();
+FrameBuffer* frameBufferGetViewFrame(void);
+FrameBuffer* frameBufferGetDrawFrame(void);
 FrameBuffer* frameBufferFlipViewFrame(int mixFrames);
-FrameBuffer* frameBufferFlipDrawFrame();
+FrameBuffer* frameBufferFlipDrawFrame(void);
 
 void frameBufferSetScanline(int scanline);
-int frameBufferGetScanline();
+int frameBufferGetScanline(void);
 
-FrameBuffer* frameBufferGetWhiteNoiseFrame();
+FrameBuffer* frameBufferGetWhiteNoiseFrame(void);
 FrameBuffer* frameBufferDeinterlace(FrameBuffer* frameBuffer);
-void frameBufferClearDeinterlace();
+void frameBufferClearDeinterlace(void);
 
 FrameBufferData* frameBufferDataCreate(int maxWidth, int maxHeight, int defaultHorizZoom);
 void frameBufferDataDestroy(FrameBufferData* frameData);
@@ -87,7 +87,7 @@ void frameBufferDataDestroy(FrameBufferData* frameData);
 void frameBufferSetActive(FrameBufferData* frameData);
 void frameBufferSetMixMode(FrameBufferMixMode mode, FrameBufferMixMode mask);
 
-FrameBufferData* frameBufferGetActive();
+FrameBufferData* frameBufferGetActive(void);
 
 void frameBufferSetBlendFrames(int blendFrames);
 

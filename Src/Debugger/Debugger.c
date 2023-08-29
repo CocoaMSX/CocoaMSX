@@ -116,7 +116,7 @@ int debuggerCheckVramAccess(void)
     return debuggerVramAccessEnable > 0;
 }
 
-void debuggerNotifyEmulatorStart()
+void debuggerNotifyEmulatorStart(void)
 {
     int i;
     
@@ -129,7 +129,7 @@ void debuggerNotifyEmulatorStart()
     }
 }
 
-void debuggerNotifyEmulatorStop()
+void debuggerNotifyEmulatorStop(void)
 {
     int i;
 
@@ -142,7 +142,7 @@ void debuggerNotifyEmulatorStop()
     }
 }
 
-void debuggerNotifyEmulatorPause()
+void debuggerNotifyEmulatorPause(void)
 {
     int i;
     
@@ -155,7 +155,7 @@ void debuggerNotifyEmulatorPause()
     }
 }
 
-void debuggerNotifyEmulatorResume()
+void debuggerNotifyEmulatorResume(void)
 {
     int i;
     
@@ -168,7 +168,7 @@ void debuggerNotifyEmulatorResume()
     }
 }
 
-void debuggerNotifyEmulatorReset()
+void debuggerNotifyEmulatorReset(void)
 {
     int i;
     
@@ -203,7 +203,7 @@ void debuggerSetBreakpoint(UInt16 slot, UInt16 page, UInt16 address)
     }
 }
 
-DbgSnapshot* dbgSnapshotCreate() 
+DbgSnapshot* dbgSnapshotCreate(void)
 {
     DbgSnapshot* dbgSnapshot;
     
@@ -257,7 +257,7 @@ void dbgSnapshotDestroy(DbgSnapshot* dbgSnapshot)
     free(dbgSnapshot);
 }
 
-DbgState dbgGetState()
+DbgState dbgGetState(void)
 {
     return dbgState;
 }
@@ -327,33 +327,33 @@ const DbgIoPorts* dbgDeviceGetIoPorts(DbgDevice* dbgDevice, int index)
     return dbgDevice->ioPorts[index];
 }
 
-void dbgRun()
+void dbgRun(void)
 {
     if (emulatorGetState() != EMU_RUNNING) {
         actionEmuTogglePause();
     }
 }
 
-void dbgStop()
+void dbgStop(void)
 {
     emulatorStop();
 }
 
-void dbgPause()
+void dbgPause(void)
 {
     if (emulatorGetState() == EMU_RUNNING) {
         actionEmuTogglePause();
     }
 }
 
-void dbgStep()
+void dbgStep(void)
 {
     if (emulatorGetState() == EMU_PAUSED) {
         actionEmuStep();
     }
 }
 
-void dbgStepBack()
+void dbgStepBack(void)
 {
     if (emulatorGetState() == EMU_PAUSED) {
         actionEmuStepBack();

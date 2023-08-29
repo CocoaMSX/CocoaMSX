@@ -69,7 +69,7 @@ struct Video {
     int invertRGB;
 };
 
-Video* videoCreate();
+Video* videoCreate(void);
 Video *videoCopy(const Video *original);
 
 void videoDestroy(Video* video);

@@ -50,10 +50,10 @@ typedef enum {
 typedef void (*JoystickPortUpdateHandler)(void*, int, JoystickPortType);
 
 // Machine dependent config methods that probably belongs somewhere else...
-void joystickPortUpdateBoardInfo();
-int  joystickPortKeyboardEnabled();
+void joystickPortUpdateBoardInfo(void);
+int  joystickPortKeyboardEnabled(void);
 
-int joystickPortGetTypeCount();
+int joystickPortGetTypeCount(void);
 
 void joystickPortSetType(int port, JoystickPortType type);
 JoystickPortType joystickPortGetType(int port);
@@ -64,6 +64,6 @@ JoystickPortType joystickPortNameToType(int port, char* name, int translate);
 char* joystickPortTypeToName(int port, int translate);
 
 void joystickPortUpdateHandlerRegister(JoystickPortUpdateHandler fn, void* ref);
-void joystickPortUpdateHandlerUnregister();
+void joystickPortUpdateHandlerUnregister(void);
 
 #endif // JOYSTICK_PORT_H

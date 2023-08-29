@@ -39,7 +39,7 @@ void verifyFileHistory(char* history, RomType* historyType);
 void updateFileHistory(char* history, RomType* historyType, char* filename, RomType romType);
 #endif
 
-int tempStateExists();
+int tempStateExists(void);
 int fileExist(char* filename, char* zipFile);
 char* fileGetNext(char* filename, char* zipFile);
 void setExtendedRomName(int drive, const char* name);

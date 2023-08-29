@@ -153,7 +153,7 @@ static void reset(MsxMouse* mouse) {
     mouse->oldValue = 0;
 }
 
-MsxJoystickDevice* msxMouseCreate()
+MsxJoystickDevice* msxMouseCreate(void)
 {
     MsxMouse* mouse = (MsxMouse*)calloc(1, sizeof(MsxMouse));
     mouse->joyDevice.read       = read;

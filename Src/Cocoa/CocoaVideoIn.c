@@ -28,5 +28,5 @@
 #include "ArchVideoIn.h"
 #include <stdlib.h>
 
-int archVideoInIsVideoConnected() { return 0; }
+int archVideoInIsVideoConnected(void) { return 0; }
 UInt16* archVideoInBufferGet(int width, int height) { return NULL; }

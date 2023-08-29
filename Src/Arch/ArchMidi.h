@@ -35,7 +35,7 @@ typedef struct ArchMidi ArchMidi;
 typedef void (*ArchMidiInCb)(void*, UInt8*, UInt32);
 
 void archMidiEnable(int enable);
-int  archMidiGetNoteOn();
+int  archMidiGetNoteOn(void);
 void archMidiUpdateVolume(int left, int right);
 
 void archMidiLoadState(void);

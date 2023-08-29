@@ -142,7 +142,7 @@ static void getDebugInfo(RamMapperIo* rm, DbgDevice* dbgDevice)
     }
 }
 
-int ramMapperIoCreate() 
+int ramMapperIoCreate(void) 
 {
     RamMapperIo* rm;
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };

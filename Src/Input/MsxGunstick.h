@@ -33,6 +33,6 @@
 
 typedef struct MsxGunstick MsxGunstick;
 
-MsxJoystickDevice* msxGunstickCreate();
+MsxJoystickDevice* msxGunstickCreate(void);
 
 #endif 

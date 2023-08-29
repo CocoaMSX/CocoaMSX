@@ -37,9 +37,9 @@
 #include <string.h>
 #include <stdio.h>
 
-extern int frontSwitchEnabled();
+extern int frontSwitchEnabled(void);
 
-typedef struct {
+typedef struct _SramMapperS1985 {
     int    deviceHandle;
     int    debugHandle;
     UInt8  sram[0x10];
@@ -159,7 +159,7 @@ static void getDebugInfo(SramMapperS1985* rm, DbgDevice* dbgDevice)
     }
 }
 
-int sramMapperS1985Create() 
+int sramMapperS1985Create(void) 
 {
     DeviceCallbacks callbacks = { destroy, NULL, saveState, loadState };
     DebugCallbacks dbgCallbacks = { getDebugInfo, NULL, NULL, NULL };

@@ -32,7 +32,7 @@
 
 typedef void* GrHandle;
 
-int gameReaderSupported();
+int gameReaderSupported(void);
 
 GrHandle* gameReaderCreate(int slot);
 void gameReaderDestroy(GrHandle* grHandle);

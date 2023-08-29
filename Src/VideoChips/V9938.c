@@ -1233,7 +1233,7 @@ void vdpCmdFlush(VdpCmdState* vdpCmd)
 **      Flushes current VDP command on all created engines.
 **************************************************************
 */
-void vdpCmdFlushAll() 
+void vdpCmdFlushAll(void) 
 {
     if (vdpCmdGlobal) {
         vdpCmdFlush(vdpCmdGlobal);

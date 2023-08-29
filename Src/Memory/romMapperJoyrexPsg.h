@@ -30,6 +30,6 @@
  
 #include "MsxTypes.h"
 
-int romMapperJoyrexPsgCreate();
+int romMapperJoyrexPsgCreate(void);
 
 #endif

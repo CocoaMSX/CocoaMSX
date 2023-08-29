@@ -30,6 +30,6 @@
  
 #include "MsxTypes.h"
 
-int romMapperOpcodeSlotManagerCreate();
+int romMapperOpcodeSlotManagerCreate(void);
 
 #endif

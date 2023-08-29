@@ -30,7 +30,7 @@
 
 #include "MsxTypes.h"
 
-void inputEventReset();
+void inputEventReset(void);
 
 int inputEventStringToCode(const char* eventName);
 const char* inputEventCodeToString(int eventCode);

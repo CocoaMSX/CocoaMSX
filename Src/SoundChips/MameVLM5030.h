@@ -11,8 +11,8 @@ void vlm5030_update_callback(stream_sample_t *_buffer, int length);
 
 void *vlm5030_start(int clock);
 
-void vlm5030_LoadState();
-void vlm5030_SaveState();
+void vlm5030_LoadState(void);
+void vlm5030_SaveState(void);
 
 
 struct VLM5030interface

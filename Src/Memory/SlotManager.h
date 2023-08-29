@@ -36,13 +36,13 @@ typedef void  (*SlotWrite)(void*, UInt16, UInt8);
 typedef void  (*SlotEject)(void*);
 
 
-void slotManagerCreate();
-void slotManagerDestroy();
+void slotManagerCreate(void);
+void slotManagerDestroy(void);
 
-void slotManagerReset();
+void slotManagerReset(void);
 
-void slotLoadState();
-void slotSaveState();
+void slotLoadState(void);
+void slotSaveState(void);
 
 void slotWrite(void* ref, UInt16 address, UInt8 value);
 UInt8 slotRead(void* ref, UInt16 address);
@@ -55,7 +55,7 @@ void slotUnregister(int slot, int sslot, int startpage);
 void slotRemove(int slot, int sslot);
 
 void slotRegisterWrite0(SlotWrite writeCb, void* ref);
-void slotUnregisterWrite0();
+void slotUnregisterWrite0(void);
 
 void slotSetRamSlot(int slot, int psl);
 int slotGetRamSlot(int page);

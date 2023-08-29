@@ -339,12 +339,12 @@ static void updateVolumes(Mixer* mixer)
 
 static Mixer* globalMixer = NULL;
 
-Mixer* mixerGetGlobalMixer()
+Mixer* mixerGetGlobalMixer(void)
 {
     return globalMixer;
 }
 
-Mixer* mixerCreate()
+Mixer* mixerCreate(void)
 {
     Mixer* mixer = (Mixer*)calloc(1, sizeof(Mixer));
 

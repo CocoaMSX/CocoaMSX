@@ -31,7 +31,7 @@
 #include "MsxTypes.h"
 #include "Debugger.h"
 
-typedef struct {
+typedef struct _DebugCallbacks {
     void (*getDebugInfo)(void* ref, DbgDevice* dbgDevice);
     int (*writeMemory)(void* ref, char* name, void* data, int start, int size);
     int (*writeRegister)(void* ref, char* name, int reg, UInt32 value);
@@ -41,7 +41,7 @@ typedef struct {
 typedef UInt8 (*WatchpointReadMemCallback)(void*, int);
 
 
-void debugDeviceManagerReset();
+void debugDeviceManagerReset(void);
 
 int debugDeviceRegister(DbgDeviceType type, const char* name, DebugCallbacks* callbacks, void* ref);
 void debugDeviceUnregister(int handle);

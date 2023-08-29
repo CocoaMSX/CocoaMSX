@@ -141,7 +141,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
     case kHIDUsage_KeyboardEscape:              return 0x35;
     case kHIDUsage_KeyboardDeleteOrBackspace:
         // When the Function key is held down, simulate Forward Delete
-        if ((modifierFlags & NSFunctionKeyMask) != 0)
+        if ((modifierFlags & NSEventModifierFlagFunction) != 0)
             return 0x75;
         else
             return 0x33;

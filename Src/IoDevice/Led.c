@@ -27,18 +27,18 @@
 */
 #include "Led.h"
 
-static int ledCapslock = 0;
-static int ledKana     = 0;
-static int ledTurboR   = 0;
-static int ledPause    = 0;
-static int ledRensha   = 0;
-static int ledFdd1     = 0;
-static int ledFdd2     = 0;
-static int ledHd       = 0;
-static int ledCas      = 0;
+static bool ledCapslock = false;
+static bool ledKana     = false;
+static bool ledTurboR   = false;
+static bool ledPause    = false;
+static bool ledRensha   = false;
+static bool ledFdd1     = false;
+static bool ledFdd2     = false;
+static bool ledHd       = false;
+static bool ledCas      = false;
 
-void ledSetAll(int enable) {
-    enable = enable ? 1 : 0;
+void ledSetAll(bool enable) {
+    enable = enable ? true : false;
     
     ledCapslock = enable;
     ledKana     = enable;
@@ -51,75 +51,75 @@ void ledSetAll(int enable) {
     ledCas      = enable;
 }
 
-void ledSetCapslock(int enable) {
-    ledCapslock = enable ? 1 : 0;
+void ledSetCapslock(bool enable) {
+    ledCapslock = enable ? true : false;
 }
 
-int ledGetCapslock() {
+bool ledGetCapslock(void) {
     return ledCapslock;
 }
 
-void ledSetKana(int enable) {
-    ledKana = enable ? 1 : 0;
+void ledSetKana(bool enable) {
+    ledKana = enable ? true : false;
 }
 
-int ledGetKana() {
+bool ledGetKana(void) {
     return ledKana;
 }
 
-void ledSetTurboR(int enable) {
-    ledTurboR = enable ? 1 : 0;
+void ledSetTurboR(bool enable) {
+    ledTurboR = enable ? true : false;
 }
 
-int ledGetTurboR() {
+bool ledGetTurboR(void) {
     return ledTurboR;
 }
 
-void ledSetPause(int enable) {
-    ledPause = enable ? 1 : 0;
+void ledSetPause(bool enable) {
+    ledPause = enable ? true : false;
 }
 
-int ledGetPause() {
+bool ledGetPause(void) {
     return ledPause;
 }
 
-void ledSetRensha(int enable) {
-    ledRensha = enable ? 1 : 0;
+void ledSetRensha(bool enable) {
+    ledRensha = enable ? true : false;
 }
 
-int ledGetRensha() {
+bool ledGetRensha(void) {
     return ledRensha;
 }
 
-void ledSetFdd1(int enable) {
-    ledFdd1 = enable ? 1 : 0;
+void ledSetFdd1(bool enable) {
+    ledFdd1 = enable ? true : false;
 }
 
-int ledGetFdd1() {
+bool ledGetFdd1(void) {
     return ledFdd1;
 }
 
-void ledSetFdd2(int enable) {
-    ledFdd2 = enable ? 1 : 0;
+void ledSetFdd2(bool enable) {
+    ledFdd2 = enable ? true : false;
 }
 
-int ledGetFdd2() {
+bool ledGetFdd2(void) {
     return ledFdd2;
 }
 
-void ledSetHd(int enable) {
-    ledHd = enable ? 1 : 0;
+void ledSetHd(bool enable) {
+    ledHd = enable ? true : false;
 }
 
-int ledGetHd() {
+bool ledGetHd(void) {
     return ledHd;
 }
 
-void ledSetCas(int enable) {
-    ledCas = enable ? 1 : 0;
+void ledSetCas(bool enable) {
+    ledCas = enable ? true : false;
 }
 
-int ledGetCas() {
+bool ledGetCas(void) {
     return ledCas;
 }
 

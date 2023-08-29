@@ -31,7 +31,7 @@
 #define ARCH_GLOB_DIRS  1
 #define ARCH_GLOB_FILES 2
 
-typedef struct {
+typedef struct _ArchGlob {
     int count;
     char **pathVector;
 } ArchGlob;

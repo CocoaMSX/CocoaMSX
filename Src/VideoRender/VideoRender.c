@@ -2324,7 +2324,7 @@ static void scale2x_2x2_16(FrameBuffer* frame, void* pDestination, int dstPitch,
 **
 ******************************************************************************
 */
-Video* videoCreate() 
+Video* videoCreate(void) 
 {
     Video* pVideo = (Video*)calloc(1, sizeof(Video));
 

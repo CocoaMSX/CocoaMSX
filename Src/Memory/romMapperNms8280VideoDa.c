@@ -86,7 +86,7 @@ static void destroy(RomMapperNms8280VideoDa* rm)
     free(rm);
 }
 
-int romMapperNms8280VideoDaCreate() 
+int romMapperNms8280VideoDaCreate(void) 
 {
     DeviceCallbacks callbacks   = { destroy, NULL, NULL, NULL };
     VdpDaCallbacks  daCallbacks = { daStart, NULL, daRead };

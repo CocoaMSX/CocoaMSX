@@ -69,7 +69,7 @@ static void reset(MsxTetrisDongle* tetrisDongle) {
     tetrisDongle->state = 0x3f;
 }
 
-MsxJoystickDevice* msxTetrisDongleCreate()
+MsxJoystickDevice* msxTetrisDongleCreate(void)
 {
     MsxTetrisDongle* tetrisDongle = (MsxTetrisDongle*)calloc(1, sizeof(MsxTetrisDongle));
     tetrisDongle->joyDevice.read      = read;

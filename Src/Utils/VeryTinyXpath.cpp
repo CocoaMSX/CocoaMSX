@@ -195,7 +195,7 @@ extern "C" void vtXpathSetInt(VtXpath* xpath, int value, int numLevels, const ch
     va_end(marker);
 
     char buf[16];
-    sprintf(buf, "%d", value);
+    snprintf(buf, sizeof(buf), "%d", value);
 
     vtXpathSetStringFromPath(xpath, pathVector, buf);
 }

@@ -26,30 +26,6 @@
 #import "CMGamepad.h"
 #import "CMGamepadEventData.h"
 
-@protocol CMGamepadEventDelegate
-
-@optional
-- (void)gamepadDidConnect:(CMGamepad *)gamepad;
-- (void)gamepadDidDisconnect:(CMGamepad *)gamepad;
-
-- (void)gamepad:(CMGamepad *)gamepad
-       xChanged:(NSInteger)newValue
-         center:(NSInteger)center
-      eventData:(CMGamepadEventData *)eventData;
-- (void)gamepad:(CMGamepad *)gamepad
-       yChanged:(NSInteger)newValue
-         center:(NSInteger)center
-      eventData:(CMGamepadEventData *)eventData;
-
-- (void)gamepad:(CMGamepad *)gamepad
-     buttonDown:(NSInteger)index
-      eventData:(CMGamepadEventData *)eventData;
-- (void)gamepad:(CMGamepad *)gamepad
-       buttonUp:(NSInteger)index
-      eventData:(CMGamepadEventData *)eventData;
-
-@end
-
 @interface CMGamepadManager : NSObject<CMGamepadEventDelegate>
 
 + (instancetype) sharedInstance;

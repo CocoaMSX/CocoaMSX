@@ -32,7 +32,7 @@
 
 typedef struct CoinDevice CoinDevice;
 
-CoinDevice* coinDeviceCreate();
+CoinDevice* coinDeviceCreate(void);
 UInt8 coinDeviceRead(CoinDevice* coinDev);
 
 #endif 

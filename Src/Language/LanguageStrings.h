@@ -28,7 +28,7 @@
 #ifndef LANGUAGE_STRINGS_H
 #define LANGUAGE_STRINGS_H
 
-typedef struct {
+typedef struct _LanguageStrings {
     //----------------------
     // Language lines
     //----------------------

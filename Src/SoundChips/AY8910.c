@@ -478,7 +478,7 @@ static Int32* ay8910Sync(void* ref, UInt32 count)
  
         /* Calculate envelope volume */
         envVolume = (Int16)((ay8910->envPhase >> 23) & 0x1f);
-        if (((ay8910->envPhase >> 27) & (ay8910->envShape + 1) ^ (~ay8910->envShape >> 1)) & 2) {
+        if ((((ay8910->envPhase >> 27) & (ay8910->envShape + 1)) ^ (~ay8910->envShape >> 1)) & 2) {
             envVolume ^= 0x1f;
         }
 

@@ -32,7 +32,7 @@
 
 // Base class for SVI Joystick devices. 
 
-typedef struct {
+typedef struct _SviJoystickDevice {
     UInt8 (*read)(void*);
     UInt8 (*readTrigger)(void*);
     void  (*write)(void*, UInt8);

@@ -28,23 +28,23 @@
 #include "ArchNotifications.h"
 #include <stdlib.h>
 
-void archUpdateEmuDisplayConfig() {}
+void archUpdateEmuDisplayConfig(void) {}
 
-void archDiskQuickChangeNotify() {}
+void archDiskQuickChangeNotify(void) {}
 
-void archQuit() {}
+void archQuit(void) {}
 
-void archThemeSetNext() {}
+void archThemeSetNext(void) {}
 void archThemeUpdate(struct Theme* theme) {}
 
-void archVideoOutputChange() {}
-void archMinimizeMainWindow() {}
+void archVideoOutputChange(void) {}
+void archMinimizeMainWindow(void) {}
 
-int archGetFramesPerSecond() { return 60; }
+int archGetFramesPerSecond(void) { return 60; }
 
 void* archWindowCreate(struct Theme* theme, int childWindow) { return NULL; }
-void archWindowStartMove() {}
-void archWindowMove() {}
-void archWindowEndMove() {}
+void archWindowStartMove(void) {}
+void archWindowMove(void) {}
+void archWindowEndMove(void) {}
 
-void archVideoCaptureSave() {}
+void archVideoCaptureSave(void) {}

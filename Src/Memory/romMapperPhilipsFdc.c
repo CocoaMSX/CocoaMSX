@@ -37,7 +37,7 @@
 #include <stdio.h>
 
 
-typedef struct {
+typedef struct RomMapperPhilipsFdc {
     int deviceHandle;
     UInt8* romData;
     WD2793* fdc;

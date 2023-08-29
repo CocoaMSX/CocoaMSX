@@ -42,7 +42,7 @@ enum {
     READ_ROM
 };
 
-typedef struct {
+typedef struct RomMapperPanasonic {
     int deviceHandle;
     UInt8* romData;
     UInt8* sram;
@@ -61,7 +61,7 @@ typedef struct {
     int    startPage;
 } RomMapperPanasonic;
 
-extern void panasonicSramDestroy();
+extern void panasonicSramDestroy(void);
 extern void panasonicSramCreate(UInt8* sram, UInt32 size);
 
 static UInt8 emptyRam[0x2000];

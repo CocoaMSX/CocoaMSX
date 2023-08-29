@@ -392,7 +392,7 @@ void archSoundCreate(Mixer* mixer, UInt32 sampleRate, UInt32 bufferSize, Int16 c
     }
 }
 
-void archSoundDestroy()
+void archSoundDestroy(void)
 {
     @autoreleasepool
     {
@@ -400,7 +400,7 @@ void archSoundDestroy()
     }
 }
 
-void archSoundResume()
+void archSoundResume(void)
 {
     @autoreleasepool
     {
@@ -408,7 +408,7 @@ void archSoundResume()
     }
 }
 
-void archSoundSuspend()
+void archSoundSuspend(void)
 {
     @autoreleasepool
     {

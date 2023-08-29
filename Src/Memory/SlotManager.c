@@ -170,7 +170,7 @@ void slotRegisterWrite0(SlotWrite writeCb, void* ref)
     slotAddr0.ref   = ref;
 }
 
-void slotUnregisterWrite0() {
+void slotUnregisterWrite0(void) {
     if (!initialized) {
         return;
     }
@@ -247,7 +247,7 @@ void slotSetSubslotted(int slot, int subslotted)
     pslot[slot].subslotted = subslotted;
 }
 
-void slotManagerReset() 
+void slotManagerReset(void)
 {
     int page;
 
@@ -264,7 +264,7 @@ void slotManagerReset()
     }
 }
 
-void slotManagerCreate()
+void slotManagerCreate(void)
 {
     int slot;
     int sslot;
@@ -287,7 +287,7 @@ void slotManagerCreate()
     initialized = 1;
 }
 
-void slotManagerDestroy() 
+void slotManagerDestroy(void)
 {
     initialized = 0;
 }
@@ -414,7 +414,7 @@ void slotWrite(void* ref, UInt16 address, UInt8 value)
     }
 }
 
-void slotSaveState()
+void slotSaveState(void)
 {
     SaveState* state;
     char tag[32];
@@ -443,7 +443,7 @@ void slotSaveState()
     saveStateClose(state);
 }
 
-void slotLoadState()
+void slotLoadState(void)
 {
     SaveState* state;
     char tag[32];

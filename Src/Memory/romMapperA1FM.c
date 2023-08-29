@@ -89,7 +89,7 @@ void panasonicSramCreate(UInt8* sram, UInt32 size)
     panasonicSramMask = size - 1;
 }
 
-void panasonicSramDestroy()
+void panasonicSramDestroy(void)
 {
     panasonicSramMask = 0;
 }

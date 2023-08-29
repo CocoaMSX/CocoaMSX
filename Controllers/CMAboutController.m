@@ -89,11 +89,13 @@
 
 - (void)awakeFromNib
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"AboutContent"
-                                                     ofType:@"rtf"
-                                                inDirectory:@"Documents"];
-    scrollingTextTemplate = [[NSMutableAttributedString alloc] initWithPath:path
-                                                         documentAttributes:NULL];
+    NSURL *path = [[NSBundle mainBundle] URLForResource:@"AboutContent"
+											 withExtension:@"rtf"
+											  subdirectory:@"Documents"];
+    scrollingTextTemplate = [[NSMutableAttributedString alloc] initWithURL:path
+																   options:@{}
+														documentAttributes:nil
+																	 error:NULL];
     
     scrollingTextLeadIn = [[NSMutableAttributedString alloc] init];
     

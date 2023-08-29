@@ -33,6 +33,6 @@
 
 typedef struct MsxMouse MsxMouse;
 
-MsxJoystickDevice* msxMouseCreate();
+MsxJoystickDevice* msxMouseCreate(void);
 
 #endif 

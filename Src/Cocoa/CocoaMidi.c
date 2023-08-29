@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 void archMidiEnable(int enable) {}
-int  archMidiGetNoteOn() { return 0; }
+int  archMidiGetNoteOn(void) { return 0; }
 void archMidiUpdateVolume(int left, int right) {}
 void archMidiLoadState(void) {}
 void archMidiSaveState(void) {}

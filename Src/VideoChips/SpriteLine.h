@@ -30,7 +30,7 @@
 
 
 
-typedef struct {
+typedef struct _SpriteAttribute {
     int horizontalPos;
     int color;
     UInt16 pattern;

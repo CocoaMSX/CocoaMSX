@@ -155,7 +155,7 @@ static NSArray<NSString *> *sharedUserDefaultsToObserve;
 
 @implementation CMPreferenceController
 {
-	NSMutableArray *_machines;
+	NSMutableArray<CMMachine*> *_machines;
 	NSArray *_channels;
 	NSString *_machineNameFilter;
 	NSInteger machineFamilyFilter;
@@ -356,7 +356,7 @@ extern CMEmulatorController *theEmulator;
 
 - (void)performBlockOnMainThread:(void(^)(void))block
 {
-    if (dispatch_get_current_queue() == dispatch_get_main_queue())
+    if ([NSThread isMainThread])
     {
         block();
     }
@@ -444,16 +444,12 @@ extern CMEmulatorController *theEmulator;
                                        
                                        [self performBlockOnMainThread:^
                                         {
-                                            NSAlert *alert = [NSAlert alertWithMessageText:[error localizedDescription]
-                                                                             defaultButton:CMLoc(@"OK", @"")
-                                                                           alternateButton:nil
-                                                                               otherButton:nil
-                                                                 informativeTextWithFormat:@""];
+                                            NSAlert *alert = [NSAlert alertWithError:error];
                                             
                                             [alert beginSheetModalForWindow:[self window]
-                                                              modalDelegate:self
-                                                             didEndSelector:nil
-                                                                contextInfo:nil];
+                                                          completionHandler:^(NSModalResponse returnCode) {
+                                                //do nothing
+                                            }];
                                         }];
                                    }
                                }];
@@ -485,7 +481,7 @@ extern CMEmulatorController *theEmulator;
     {
         if (error)
         {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorDownloading
                                      userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"An error occurred while attempting to download available machines.", @"")
                                                                                  forKey:NSLocalizedDescriptionKey]];
@@ -507,7 +503,7 @@ extern CMEmulatorController *theEmulator;
     {
         if (error)
         {
-            *error = [NSError errorWithDomain:@"org.akop.CocoaMSX"
+            *error = [NSError errorWithDomain:CMInstallErrorDomain
                                          code:CMErrorParsingJson
                                      userInfo:[NSMutableDictionary dictionaryWithObject:CMLoc(@"An error occurred while reading the list of downloadable machines.", @"")
                                                                                  forKey:NSLocalizedDescriptionKey]];
@@ -589,7 +585,7 @@ extern CMEmulatorController *theEmulator;
          
          if ([[machine machineId] isEqualToString:activeMachine])
          {
-             if (![machine active])
+             if (!machine.active)
                  [machine setActive:YES];
              [self setActiveMachine:machine];
          }
@@ -705,8 +701,8 @@ extern CMEmulatorController *theEmulator;
     NSArray *categoriesInSortedOrder = @[@"TypewriterKeys", @"SpecialKeys", @"ModifierKeys", @"FunctionKeys", @"CursorKeys", @"NumericPad", @"Joystick" ];
     NSArray *sortedCategories = [unsortedCategories sortedArrayUsingComparator:^NSComparisonResult(id a, id b)
                                 {
-                                    int orderIndexA = [categoriesInSortedOrder indexOfObject:[a categoryName]];
-                                    int orderIndexB = [categoriesInSortedOrder indexOfObject:[b categoryName]];
+                                    NSInteger orderIndexA = [categoriesInSortedOrder indexOfObject:[a categoryName]];
+		NSInteger orderIndexB = [categoriesInSortedOrder indexOfObject:[b categoryName]];
                                     
                                     return orderIndexA - orderIndexB;
                                 }];
@@ -839,16 +835,18 @@ extern CMEmulatorController *theEmulator;
     if ([selection status] == CMMachineInstalled)
     {
         NSString *message = [NSString stringWithFormat:CMLoc(@"Are you sure you want to remove \"%1$@\"?", @"Remove machine configuration prompt"), [selection name]];
-        NSAlert *alert = [NSAlert alertWithMessageText:message
-                                         defaultButton:CMLoc(@"No", @"")
-                                       alternateButton:nil
-                                           otherButton:CMLoc(@"Yes", @"")
-                             informativeTextWithFormat:@""];
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = message;
+        [alert addButtonWithTitle:CMLoc(@"No", @"")];
+        NSButton *desButton = [alert addButtonWithTitle:CMLoc(@"Yes", @"")];
+        if (@available(macOS 11.0, *)) {
+            desButton.hasDestructiveAction = YES;
+        }
         
         [alert beginSheetModalForWindow:[self window]
-                          modalDelegate:self
-                         didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-                            contextInfo:(void *)ALERT_REMOVE_SYSTEM];
+                      completionHandler:^(NSModalResponse returnCode) {
+            [self alertDidEnd:alert returnCode:returnCode contextInfo:ALERT_REMOVE_SYSTEM];
+        }];
     }
 }
 
@@ -858,16 +856,12 @@ extern CMEmulatorController *theEmulator;
 	if (gp) {
 		[self configureJoypad:[gp gamepadId]];
 	} else {
-		NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port", @"")
-										 defaultButton:CMLoc(@"OK", @"")
-									   alternateButton:nil
-										   otherButton:nil
-							 informativeTextWithFormat:@""];
-		
-		[alert beginSheetModalForWindow:[self window]
-						  modalDelegate:self
-						 didEndSelector:nil
-							contextInfo:nil];
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = CMLoc(@"No devices are currently connected on this port", @"");
+		[alert addButtonWithTitle:CMLoc(@"OK", @"")];
+		[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+			//Do nothing
+		}];
 	}
 }
 
@@ -877,16 +871,12 @@ extern CMEmulatorController *theEmulator;
 	if (gp) {
 		[self configureJoypad:[gp gamepadId]];
 	} else {
-		NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"No devices are currently connected on this port", @"")
-										 defaultButton:CMLoc(@"OK", @"")
-									   alternateButton:nil
-										   otherButton:nil
-							 informativeTextWithFormat:@""];
-		
-		[alert beginSheetModalForWindow:[self window]
-						  modalDelegate:self
-						 didEndSelector:nil
-							contextInfo:nil];
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = CMLoc(@"No devices are currently connected on this port", @"");
+		[alert addButtonWithTitle:CMLoc(@"OK", @"")];
+		[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+			//Do nothing
+		}];
 	}
 }
 
@@ -1008,16 +998,16 @@ extern CMEmulatorController *theEmulator;
 
 - (void)alertDidEnd:(NSAlert *)alert
          returnCode:(NSInteger)returnCode
-        contextInfo:(void *)contextInfo
+        contextInfo:(int)contextInfo
 {
     if ((int)contextInfo == ALERT_RESTART_SYSTEM)
     {
-        if (returnCode == NSAlertOtherReturn)
+        if (returnCode == NSAlertSecondButtonReturn)
             [theEmulator performColdReboot];
     }
     else if ((int)contextInfo == ALERT_REMOVE_SYSTEM)
     {
-        if (returnCode == NSAlertOtherReturn)
+        if (returnCode == NSAlertSecondButtonReturn)
         {
             CMMachine *selectedMachine = [[machinesArrayController selectedObjects] firstObject];
             if ([selectedMachine status] == CMMachineInstalled)
@@ -1028,16 +1018,16 @@ extern CMEmulatorController *theEmulator;
 
 - (void)performColdRebootClicked:(id)sender
 {
-    NSAlert *alert = [NSAlert alertWithMessageText:CMLoc(@"Restart the system? You will lose all changes.", @"")
-                                     defaultButton:CMLoc(@"No", @"")
-                                   alternateButton:nil
-                                       otherButton:CMLoc(@"Yes", @"")
-                         informativeTextWithFormat:@""];
-    
-    [alert beginSheetModalForWindow:self.window
-                      modalDelegate:self
-                     didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-                        contextInfo:(void *)ALERT_RESTART_SYSTEM];
+	NSAlert *alert = [[NSAlert alloc] init];
+	[alert addButtonWithTitle:CMLoc(@"No", @"")];
+	NSButton *desButton = [alert addButtonWithTitle:CMLoc(@"Yes", @"")];
+	if (@available(macOS 11.0, *)) {
+		desButton.hasDestructiveAction = YES;
+	}
+	alert.messageText = CMLoc(@"Restart the system? You will lose all changes.", @"");
+	[alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
+		[self alertDidEnd:alert returnCode:returnCode contextInfo:ALERT_RESTART_SYSTEM];
+	}];
 }
 
 - (void)emulationSpeedSliderMoved:(id)sender
@@ -1092,15 +1082,15 @@ extern CMEmulatorController *theEmulator;
         // deactivate all except the one active
         
         NSString *active = CMGetObjPref(@"machineConfiguration");
-        [_machines enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+        [_machines enumerateObjectsUsingBlock:^(CMMachine *obj, NSUInteger idx, BOOL *stop)
         {
             BOOL matchesActive = [[obj machineId] isEqualToString:active];
-            if (!matchesActive && [obj active])
+            if (!matchesActive && obj.active)
                 [obj setActive:NO];
             else if (matchesActive)
             {
                 [self setActiveMachine:obj];
-                if (![obj active])
+                if (![obj isActive])
                     [obj setActive:YES];
             }
         }];
@@ -1124,9 +1114,9 @@ extern CMEmulatorController *theEmulator;
 - (void) keyDown:(NSEvent *) theEvent
 {
 	NSString *chars = [theEvent charactersIgnoringModifiers];
-	if (([theEvent modifierFlags] & NSCommandKeyMask) && [chars isEqualToString:@"{"]) {
+	if (([theEvent modifierFlags] & NSEventModifierFlagCommand) && [chars isEqualToString:@"{"]) {
 		NSArray<NSToolbarItem *> *items = [toolbar visibleItems];
-		__block int selected = -1;
+		__block NSInteger selected = -1;
 		[items enumerateObjectsUsingBlock:^(NSToolbarItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
 			if ([[item itemIdentifier] isEqualToString:[toolbar selectedItemIdentifier]]) {
 				selected = idx;
@@ -1143,9 +1133,9 @@ extern CMEmulatorController *theEmulator;
 			[toolbar setSelectedItemIdentifier:nextId];
 			CMSetObjPref(@"selectedPreferencesTab", nextId);
 		}
-	} else if (([theEvent modifierFlags] & NSCommandKeyMask) && [chars isEqualToString:@"}"]) {
+	} else if (([theEvent modifierFlags] & NSEventModifierFlagCommand) && [chars isEqualToString:@"}"]) {
 		NSArray<NSToolbarItem *> *items = [toolbar visibleItems];
-		__block int selected = -1;
+		__block NSInteger selected = -1;
 		[items enumerateObjectsUsingBlock:^(NSToolbarItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
 			if ([[item itemIdentifier] isEqualToString:[toolbar selectedItemIdentifier]]) {
 				selected = idx;
@@ -1246,16 +1236,12 @@ extern CMEmulatorController *theEmulator;
     
     [self performBlockOnMainThread:^
      {
-         NSAlert *alert = [NSAlert alertWithMessageText:[error localizedDescription]
-                                          defaultButton:CMLoc(@"OK", @"")
-                                        alternateButton:nil
-                                            otherButton:nil
-                              informativeTextWithFormat:@""];
+         NSAlert *alert = [NSAlert alertWithError:error];
          
          [alert beginSheetModalForWindow:[self window]
-                           modalDelegate:self
-                          didEndSelector:nil
-                             contextInfo:nil];
+                       completionHandler:^(NSModalResponse returnCode) {
+             //Do nothing.
+         }];
      }];
 }
 
@@ -1399,7 +1385,7 @@ objectValueForTableColumn:(NSTableColumn *) tableColumn
     return nil;
 }
 
-- (int)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar
+- (NSInteger)numberOfGroupsInScopeBar:(MGScopeBar *)theScopeBar
 {
     if (theScopeBar == keyboardScopeBar)
         return 2;
@@ -1410,7 +1396,7 @@ objectValueForTableColumn:(NSTableColumn *) tableColumn
     return 1;
 }
 
-- (NSArray *)scopeBar:(MGScopeBar *)theScopeBar itemIdentifiersForGroup:(int)groupNumber
+- (NSArray *)scopeBar:(MGScopeBar *)theScopeBar itemIdentifiersForGroup:(NSInteger)groupNumber
 {
     if (theScopeBar == keyboardScopeBar)
     {
@@ -1430,21 +1416,21 @@ objectValueForTableColumn:(NSTableColumn *) tableColumn
         if (groupNumber == SCOPEBAR_GROUP_MACHINE_FAMILY)
             return [NSArray arrayWithObjects:
                     @0,
-                    @CMMsx,
-                    @CMMsx2,
-                    @CMMsx2Plus,
-                    @CMMsxTurboR, nil];
+                    @(CMMsx),
+                    @(CMMsx2),
+                    @(CMMsx2Plus),
+                    @(CMMsxTurboR), nil];
         else if (groupNumber == SCOPEBAR_GROUP_MACHINE_STATUS)
             return [NSArray arrayWithObjects:
                     @0,
-                    @CMMachineInstalled,
-                    @CMMachineDownloadable, nil];
+                    @(CMMachineInstalled),
+                    @(CMMachineDownloadable), nil];
     }
     
     return nil;
 }
 
-- (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(int)groupNumber
+- (NSString *)scopeBar:(MGScopeBar *)theScopeBar labelForGroup:(NSInteger)groupNumber
 {
     if (theScopeBar == keyboardScopeBar)
     {
@@ -1455,12 +1441,12 @@ objectValueForTableColumn:(NSTableColumn *) tableColumn
     return nil;
 }
 
-- (MGScopeBarGroupSelectionMode)scopeBar:(MGScopeBar *)theScopeBar selectionModeForGroup:(int)groupNumber
+- (MGScopeBarGroupSelectionMode)scopeBar:(MGScopeBar *)theScopeBar selectionModeForGroup:(NSInteger)groupNumber
 {
     return MGRadioSelectionMode;
 }
 
-- (NSString *)scopeBar:(MGScopeBar *)theScopeBar titleOfItem:(id)identifier inGroup:(int)groupNumber
+- (NSString *)scopeBar:(MGScopeBar *)theScopeBar titleOfItem:(id)identifier inGroup:(NSInteger)groupNumber
 {
     if (theScopeBar == keyboardScopeBar)
     {
@@ -1509,7 +1495,7 @@ objectValueForTableColumn:(NSTableColumn *) tableColumn
     return nil;
 }
 
-- (void)scopeBar:(MGScopeBar *)theScopeBar selectedStateChanged:(BOOL)selected forItem:(id)identifier inGroup:(int)groupNumber
+- (void)scopeBar:(MGScopeBar *)theScopeBar selectedStateChanged:(BOOL)selected forItem:(id)identifier inGroup:(NSInteger)groupNumber
 {
     if (theScopeBar == keyboardScopeBar)
     {

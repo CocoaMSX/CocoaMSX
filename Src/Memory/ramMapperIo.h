@@ -32,7 +32,7 @@
 
 typedef void  (*MemIoWrite)(void*, UInt16, UInt8);
 
-int ramMapperIoCreate();
+int ramMapperIoCreate(void);
 
 int ramMapperIoAdd(int size, MemIoWrite write, void* ref);
 void ramMapperIoRemove(int handle);

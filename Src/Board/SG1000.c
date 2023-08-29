@@ -116,7 +116,7 @@ static void sg1000IoPortDestroy(void* dummy)
 	ioPortUnregister(0xdd);
 }
 
-static void sg1000IoPortCreate()
+static void sg1000IoPortCreate(void)
 {
     DeviceCallbacks callbacks = { sg1000IoPortDestroy, NULL, NULL, NULL };
 	int i;
@@ -133,7 +133,7 @@ static void sg1000IoPortCreate()
 
 // -----------------------------------------------------
 
-static void reset()
+static void reset(void)
 {
     UInt32 systemTime = boardSystemTime();
 
@@ -152,7 +152,7 @@ static void reset()
     deviceManagerReset();
 }
 
-static void destroy() 
+static void destroy(void)
 {    
     boardRemoveExternalDevices();
     sn76489Destroy(sn76489);
@@ -162,7 +162,7 @@ static void destroy()
     r800Destroy(r800);
 }
 
-static int getRefreshRate()
+static int getRefreshRate(void)
 {
     return vdpGetRefreshRate();
 }
@@ -171,7 +171,7 @@ static UInt32 getTimeTrace(int offset) {
     return r800GetTimeTrace(r800, offset);
 }
 
-static void saveState()
+static void saveState(void)
 {    
     r800SaveState(r800);
     deviceManagerSaveState();
@@ -179,7 +179,7 @@ static void saveState()
     sn76489SaveState(sn76489);
 }
 
-static void loadState()
+static void loadState(void)
 {
     r800LoadState(r800);
     boardInit(&r800->systemTime);

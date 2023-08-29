@@ -54,9 +54,9 @@
                                             encoding:NSASCIIStringEncoding];
         posTime = tapeContent->pos;
         posTimeReadable = [NSString stringWithFormat:CMLoc(@"%dh %02dm %02ds", @"Time format (h:mm:ss)"),
-                    posTime / 3600,
-                    (posTime / 60) % 60,
-                    posTime % 60];
+                    (int)(posTime / 3600),
+                    (int)((posTime / 60) % 60),
+                    (int)(posTime % 60)];
     }
     
     return self;

@@ -32,8 +32,8 @@
 
 void archEthGetMacAddress(UInt8* macAddress);
 
-void archEthCreate();
-void archEthDestroy();
+void archEthCreate(void);
+void archEthDestroy(void);
 
 int archEthSendPacket(UInt8* buffer, UInt32 length);
 int archEthRecvPacket(UInt8** buffer, UInt32* length);

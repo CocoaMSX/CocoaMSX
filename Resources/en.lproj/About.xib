@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21701"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="CMAboutController">
+            <connections>
+                <outlet property="appNameField" destination="6" id="36"/>
+                <outlet property="scrollingTextView" destination="38" id="42"/>
+                <outlet property="textScrollView" destination="37" id="43"/>
+                <outlet property="versionNumberField" destination="8" id="35"/>
+                <outlet property="window" destination="1" id="4"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="About CocoaMSX" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" animationBehavior="default" id="1">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <rect key="contentRect" x="196" y="240" width="550" height="390"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <view key="contentView" id="2">
+                <rect key="frame" x="0.0" y="0.0" width="550" height="390"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="5" customClass="CMWhitePanelView">
+                        <rect key="frame" x="0.0" y="60" width="550" height="330"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6">
+                                <rect key="frame" x="281" y="272" width="232" height="38"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="228" id="CJF-EU-Ocz"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="The Owls" id="7">
+                                    <font key="font" metaFont="systemBold" size="32"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8">
+                                <rect key="frame" x="281" y="257" width="232" height="14"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="are not what they seem" id="9">
+                                    <font key="font" metaFont="smallSystemBold"/>
+                                    <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <imageView translatesAutoresizingMaskIntoConstraints="NO" id="27">
+                                <rect key="frame" x="20" y="37" width="256" height="256"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="256" id="G8Y-NY-9Ew"/>
+                                    <constraint firstAttribute="width" constant="256" id="gsW-iO-YiL"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="AppIcon" id="28"/>
+                            </imageView>
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="37" customClass="CMInvisibleScrollView">
+                                <rect key="frame" x="283" y="20" width="247" height="229"/>
+                                <clipView key="contentView" drawsBackground="NO" id="iEi-h1-sK1">
+                                    <rect key="frame" x="0.0" y="0.0" width="247" height="229"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView editable="NO" selectable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" spellingCorrection="YES" smartInsertDelete="YES" id="38">
+                                            <rect key="frame" x="0.0" y="0.0" width="247" height="229"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <size key="minSize" width="247" height="229"/>
+                                            <size key="maxSize" width="463" height="10000000"/>
+                                            <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="39">
+                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="40">
+                                    <rect key="frame" x="234" y="0.0" width="15" height="200"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="37" secondAttribute="trailing" constant="20" symbolic="YES" id="9IE-Mn-Uaf"/>
+                            <constraint firstItem="6" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="Cv6-tV-i2O"/>
+                            <constraint firstItem="27" firstAttribute="leading" secondItem="5" secondAttribute="leading" constant="20" symbolic="YES" id="Dmd-d6-OLf"/>
+                            <constraint firstItem="6" firstAttribute="top" secondItem="5" secondAttribute="top" constant="20" symbolic="YES" id="JBw-LM-zeg"/>
+                            <constraint firstItem="8" firstAttribute="top" secondItem="5" secondAttribute="top" constant="59" id="N4W-bm-eXo"/>
+                            <constraint firstItem="8" firstAttribute="leading" secondItem="37" secondAttribute="leading" id="UHZ-xQ-lZS"/>
+                            <constraint firstAttribute="bottom" secondItem="37" secondAttribute="bottom" constant="20" symbolic="YES" id="WOP-wA-GwN"/>
+                            <constraint firstItem="6" firstAttribute="trailing" secondItem="8" secondAttribute="trailing" id="ccw-XR-Hzg"/>
+                            <constraint firstItem="27" firstAttribute="centerY" secondItem="5" secondAttribute="centerY" id="hUK-a9-n4i"/>
+                            <constraint firstItem="6" firstAttribute="leading" secondItem="27" secondAttribute="trailing" constant="7" id="j3A-Vg-jQT"/>
+                            <constraint firstItem="37" firstAttribute="top" secondItem="8" secondAttribute="bottom" constant="8" symbolic="YES" id="ya2-8b-u14"/>
+                        </constraints>
+                    </customView>
+                    <box autoresizesSubviews="NO" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="10">
+                        <rect key="frame" x="0.0" y="58" width="550" height="5"/>
+                    </box>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="21">
+                        <rect key="frame" x="411" y="13" width="126" height="32"/>
+                        <buttonCell key="cell" type="push" title="License Details" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="22">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="showLicense:" target="-2" id="26"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="23">
+                        <rect key="frame" x="271" y="13" width="142" height="32"/>
+                        <buttonCell key="cell" type="push" title="Additional Credits" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="24">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="showAuthors:" target="-2" id="25"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="23" firstAttribute="top" secondItem="5" secondAttribute="bottom" constant="20" symbolic="YES" id="AJu-8X-MfC"/>
+                    <constraint firstItem="5" firstAttribute="trailing" secondItem="10" secondAttribute="trailing" id="GXq-ff-bA8"/>
+                    <constraint firstAttribute="bottom" secondItem="23" secondAttribute="bottom" constant="20" symbolic="YES" id="HLl-k4-RQJ"/>
+                    <constraint firstItem="23" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2" secondAttribute="leading" constant="20" symbolic="YES" id="Tgb-j6-Z31"/>
+                    <constraint firstItem="5" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="WPH-En-Leu"/>
+                    <constraint firstItem="10" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="XaY-Sa-Czb"/>
+                    <constraint firstItem="21" firstAttribute="leading" secondItem="23" secondAttribute="trailing" constant="12" symbolic="YES" id="YgV-2B-A74"/>
+                    <constraint firstItem="10" firstAttribute="bottom" secondItem="5" secondAttribute="bottom" id="avo-uc-5fX"/>
+                    <constraint firstItem="23" firstAttribute="baseline" secondItem="21" secondAttribute="baseline" id="e1D-C8-uJ2"/>
+                    <constraint firstItem="5" firstAttribute="top" secondItem="2" secondAttribute="top" id="esS-TV-vkd"/>
+                    <constraint firstAttribute="trailing" secondItem="10" secondAttribute="trailing" id="p20-9f-Jrc"/>
+                    <constraint firstAttribute="trailing" secondItem="21" secondAttribute="trailing" constant="20" symbolic="YES" id="tmv-G5-TMV"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="44"/>
+            </connections>
+            <point key="canvasLocation" x="48" y="-46"/>
+        </window>
+    </objects>
+    <resources>
+        <image name="AppIcon" width="256" height="256"/>
+    </resources>
+</document>

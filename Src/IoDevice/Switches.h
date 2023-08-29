@@ -29,16 +29,16 @@
 #define SWITCHES_H
 
 void switchSetRensha(int speed);
-int  switchGetRensha();
+int  switchGetRensha(void);
 
 void switchSetFront(int state);
-int  switchGetFront();
+int  switchGetFront(void);
 
 void switchSetPause(int state);
-int  switchGetPause();
+int  switchGetPause(void);
 
 void switchSetAudio(int state);
-int  switchGetAudio();
+int  switchGetAudio(void);
 
 #endif
 

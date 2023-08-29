@@ -90,7 +90,7 @@ static int     useFmPac;
 static RomType currentRomType[2];
 
 static BoardType boardLoadState(void);
-static void boardUpdateDisketteInfo();
+static void boardUpdateDisketteInfo(void);
 
 static char saveStateVersion[32] = "blueMSX - state  v 8";
 
@@ -99,7 +99,7 @@ static void*        periodicRef;
 static UInt32       periodicInterval;
 static BoardTimer*  periodicTimer;
 
-void boardTimerCleanup();
+void boardTimerCleanup(void);
 
 #define HIRES_CYCLES_PER_LORES_CYCLE (UInt64)100000
 #define boardFrequency64() (HIRES_CYCLES_PER_LORES_CYCLE * boardFrequency())
@@ -170,8 +170,7 @@ static void rleEncAdd(UInt8 index, UInt8 value)
     }
 }
 
-static int rleEncGetLength()
-{
+static int rleEncGetLength(void) {
     return rleIdx + 1;
 }
 
@@ -199,7 +198,7 @@ static UInt8 rleEncGet(UInt8 index)
     return value;
 }
 
-static int rleEncEof()
+static int rleEncEof(void)
 {
     return rleIdx > rleDataSize;
 }
@@ -228,19 +227,19 @@ typedef struct Capture {
 
 static Capture cap;
 
-int boardCaptureHasData() {
+int boardCaptureHasData(void) {
     return cap.endTime != 0 || cap.endTime64 != 0 || boardCaptureIsRecording();
 }
 
-int boardCaptureIsRecording() {
+int boardCaptureIsRecording(void) {
     return cap.state == CAPTURE_REC;
 }
 
-int  boardCaptureIsPlaying() {
+int  boardCaptureIsPlaying(void) {
     return cap.state == CAPTURE_PLAY;
 }
 
-int boardCaptureCompleteAmount() {
+int boardCaptureCompleteAmount(void) {
     UInt64 length = (cap.endTime64 - cap.startTime64) / 1000;
     UInt64 current = (boardSysTime64 - cap.startTime64) / 1000;
     // Return complete if almost complete
@@ -253,7 +252,7 @@ int boardCaptureCompleteAmount() {
     return (int)(1000 * current / length);
 }
 
-extern void actionEmuTogglePause();
+extern void actionEmuTogglePause(void);
 
 static void boardTimerCb(void* dummy, UInt32 time)
 {
@@ -281,7 +280,7 @@ static void boardTimerCb(void* dummy, UInt32 time)
     }
 }
 
-void boardCaptureInit()
+void boardCaptureInit(void)
 {
     cap.timer = boardTimerCreate(boardTimerCb, NULL);
     if (cap.state == CAPTURE_REC) {
@@ -289,7 +288,7 @@ void boardCaptureInit()
     }
 }
 
-void boardCaptureDestroy()
+void boardCaptureDestroy(void)
 {
     boardCaptureStop();
 
@@ -339,7 +338,7 @@ void boardCaptureStart(const char* filename) {
     cap.startTime64 = boardSystemTime64();
 }
 
-void boardCaptureStop() {
+void boardCaptureStop(void) {
     boardTimerRemove(cap.timer);
 
     if (cap.state == CAPTURE_REC) {
@@ -396,7 +395,7 @@ UInt8 boardCaptureUInt8(UInt8 logId, UInt8 value) {
     return value;
 }
 
-static void boardCaptureSaveState()
+static void boardCaptureSaveState(void)
 {
     if (cap.state == CAPTURE_REC) {
         SaveState* state = saveStateOpenForWrite("capture");
@@ -424,7 +423,7 @@ static void boardCaptureSaveState()
     }
 }
 
-static void boardCaptureLoadState()
+static void boardCaptureLoadState(void)
 {
     int version;
 
@@ -471,7 +470,7 @@ static void boardCaptureLoadState()
 //------------------------------------------------------
 
 
-int boardGetNoSpriteLimits() {
+int boardGetNoSpriteLimits(void) {
     return vdpGetNoSpritesLimit();
 }
 
@@ -484,7 +483,7 @@ RomType boardGetRomType(int cartNo)
     return currentRomType[cartNo];
 }
 
-int boardGetFdcTimingEnable() {
+int boardGetFdcTimingEnable(void) {
     return fdcTimingEnable;
 }
 
@@ -492,7 +491,7 @@ void boardSetFdcTimingEnable(int enable) {
     fdcTimingEnable = enable;
 }
 
-void boardSetFdcActive() {
+void boardSetFdcActive(void) {
     if (!fdcTimingEnable) {
         boardTimerAdd(fdcTimer, boardSystemTime() + (UInt32)((UInt64)500 * boardFrequency() / 1000));
         fdcActive = 1;
@@ -576,7 +575,7 @@ void boardOnBreakpoint(UInt16 pc)
     doSync(boardSystemTime(), 1);
 }
 
-int boardInsertExternalDevices()
+int boardInsertExternalDevices(void)
 {
     int i;
     for (i = 0; i < 2; i++) {
@@ -601,7 +600,7 @@ int boardInsertExternalDevices()
     return 1;
 }
 
-int boardRemoveExternalDevices()
+int boardRemoveExternalDevices(void)
 {
      boardChangeDiskette(0, NULL, NULL);
      boardChangeDiskette(1, NULL, NULL);
@@ -616,7 +615,7 @@ static void onBreakpointSync(void* ref, UInt32 time) {
     doSync(time, 1);
 }
 
-int boardRewindOne() {
+int boardRewindOne(void) {
     UInt32 rewindTime;
     if (stateFrequency <= 0) {
         return 0;
@@ -630,7 +629,7 @@ int boardRewindOne() {
     return 1;
 }
 
-int boardRewind()
+int boardRewind(void)
 {
     char stateFile[8];
 
@@ -832,12 +831,12 @@ int boardRun(Machine* machine,
     return success;
 }
 
-BoardType boardGetType()
+BoardType boardGetType(void)
 {
     return boardType & BOARD_MASK;
 }
 
-Mixer* boardGetMixer()
+Mixer* boardGetMixer(void)
 {
     return boardMixer;
 }
@@ -899,7 +898,7 @@ void boardSetMachine(Machine* machine)
     joystickPortUpdateBoardInfo();
 }
 
-void boardReset()
+void boardReset(void)
 {
     if (boardRunning) {
         boardInfo.softReset();
@@ -1075,7 +1074,7 @@ void boardSetFrequency(int frequency)
 	mixerSetBoardFrequency(frequency);
 }
 
-int boardGetRefreshRate()
+int boardGetRefreshRate(void)
 {
     if (boardRunning) {
         return boardInfo.getRefreshRate();
@@ -1110,32 +1109,32 @@ UInt8* boardGetRamPage(int page)
     return boardInfo.getRamPage(page);
 }
 
-UInt32 boardGetRamSize()
+UInt32 boardGetRamSize(void)
 {
     return boardRamSize;
 }
 
-UInt32 boardGetVramSize()
+UInt32 boardGetVramSize(void)
 {
     return boardVramSize;
 }
 
-int boardUseRom()
+int boardUseRom(void)
 {
     return useRom;
 }
 
-int boardUseMegaRom()
+int boardUseMegaRom(void)
 {
     return useMegaRom;
 }
 
-int boardUseMegaRam()
+int boardUseMegaRam(void)
 {
     return useMegaRam;
 }
 
-int boardUseFmPac()
+int boardUseFmPac(void)
 {
     return useFmPac;
 }
@@ -1219,7 +1218,7 @@ void boardChangeCartridge(int cartNo, RomType romType, char* cart, char* cartZip
     }
 }
 
-static void boardUpdateDisketteInfo()
+static void boardUpdateDisketteInfo(void)
 {
     int i;
     for (i = 0; i < MAXDRIVES; i++) {
@@ -1281,7 +1280,7 @@ void boardChangeCassette(int tapeId, char* name, const char* fileInZipFile)
     tapeInsert(name, fileInZipFile);
 }
 
-int boardGetCassetteInserted()
+int boardGetCassetteInserted(void)
 {
     return tapeIsInserted();
 }
@@ -1397,7 +1396,7 @@ void boardTimerRemove(BoardTimer* timer)
     timer->prev = timer;
 }
 
-void boardTimerCleanup()
+void boardTimerCleanup(void)
 {
     while (timerList->next != timerList) {
         boardTimerRemove(timerList->next);
@@ -1430,7 +1429,7 @@ void boardTimerCheckTimeout(void* dummy)
     boardInfo.setCpuTimeout(boardInfo.cpuRef, timerList->next->timeout);
 }
 
-UInt64 boardSystemTime64() {
+UInt64 boardSystemTime64(void) {
     UInt32 currentTime = boardSystemTime();
     boardSysTime64 += HIRES_CYCLES_PER_LORES_CYCLE * (currentTime - oldTime);
     oldTime = currentTime;
@@ -1469,19 +1468,19 @@ static int enableY8950           = 1;
 static int enableMoonsound       = 1;
 static int videoAutodetect       = 1;
 
-const char* boardGetBaseDirectory() {
+const char* boardGetBaseDirectory(void) {
     return baseDirectory;
 }
 
 void boardSetDirectory(const char* dir) {
-    strcpy(baseDirectory, dir);
+    strncpy(baseDirectory, dir, sizeof(baseDirectory));
 }
 
 void boardSetYm2413Oversampling(int value) {
     oversamplingYM2413 = value;
 }
 
-int boardGetYm2413Oversampling() {
+int boardGetYm2413Oversampling(void) {
     return oversamplingYM2413;
 }
 
@@ -1489,7 +1488,7 @@ void boardSetY8950Oversampling(int value) {
     oversamplingY8950 = value;
 }
 
-int boardGetY8950Oversampling() {
+int boardGetY8950Oversampling(void) {
     return oversamplingY8950;
 }
 
@@ -1497,7 +1496,7 @@ void boardSetMoonsoundOversampling(int value) {
     oversamplingMoonsound = value;
 }
 
-int boardGetMoonsoundOversampling() {
+int boardGetMoonsoundOversampling(void) {
     return oversamplingMoonsound;
 }
 
@@ -1505,7 +1504,7 @@ void boardSetYm2413Enable(int value) {
     enableYM2413 = value;
 }
 
-int boardGetYm2413Enable() {
+int boardGetYm2413Enable(void) {
     return enableYM2413;
 }
 
@@ -1513,7 +1512,7 @@ void boardSetY8950Enable(int value) {
     enableY8950 = value;
 }
 
-int boardGetY8950Enable() {
+int boardGetY8950Enable(void) {
     return enableY8950;
 }
 
@@ -1521,7 +1520,7 @@ void boardSetMoonsoundEnable(int value) {
     enableMoonsound = value;
 }
 
-int boardGetMoonsoundEnable() {
+int boardGetMoonsoundEnable(void) {
     return enableMoonsound;
 }
 
@@ -1529,6 +1528,6 @@ void boardSetVideoAutodetect(int value) {
     videoAutodetect = value;
 }
 
-int  boardGetVideoAutodetect() {
+int  boardGetVideoAutodetect(void) {
     return videoAutodetect;
 }

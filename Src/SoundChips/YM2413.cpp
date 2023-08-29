@@ -134,7 +134,7 @@ static Int32* ym2413Sync(void* ref, UInt32 count)
 static char* regText(int d)
 {
     static char text[5];
-    sprintf(text, "R%.2x", d);
+    snprintf(text, sizeof(text), "R%.2x", d);
     return text;
 }
 

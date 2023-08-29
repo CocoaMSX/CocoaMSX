@@ -22,29 +22,30 @@
  */
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, CMMachineInstallationError)
+extern NSErrorDomain const CMInstallErrorDomain;
+typedef NS_ERROR_ENUM(CMInstallErrorDomain, CMMachineInstallationError)
 {
-    CMErrorDownloading    = 100,
-    CMErrorWriting        = 101,
-    CMErrorExecutingUnzip = 102,
-    CMErrorUnzipping      = 103,
-    CMErrorDeleting       = 104,
-    CMErrorVerifyingHash  = 105,
-    CMErrorParsingJson    = 106,
-    CMErrorCritical       = 107,
+    CMErrorDownloading NS_SWIFT_NAME(downloading)       = 100,
+    CMErrorWriting NS_SWIFT_NAME(writing)               = 101,
+    CMErrorExecutingUnzip NS_SWIFT_NAME(executingUnzip) = 102,
+    CMErrorUnzipping NS_SWIFT_NAME(unzipping)           = 103,
+    CMErrorDeleting NS_SWIFT_NAME(deleting)             = 104,
+    CMErrorVerifyingHash NS_SWIFT_NAME(verifyingHash)   = 105,
+    CMErrorParsingJson NS_SWIFT_NAME(parsingJson)       = 106,
+    CMErrorCritical NS_SWIFT_NAME(critical)             = 107,
 };
 
-extern NSString * const CMInstallStartedNotification;
-extern NSString * const CMInstallCompletedNotification;
-extern NSString * const CMInstallErrorNotification;
+extern NSNotificationName const CMInstallStartedNotification;
+extern NSNotificationName const CMInstallCompletedNotification;
+extern NSNotificationName const CMInstallErrorNotification;
 
 @class CMMachine;
 
 @interface CMMachineInstallationOperation : NSOperation
 
-+ (CMMachineInstallationOperation *)installationOperationWithMachine:(CMMachine *)machine;
++ (instancetype)installationOperationWithMachine:(CMMachine *)machine;
 
-- (id)initWithMachine:(CMMachine *)machine;
+- (instancetype)initWithMachine:(CMMachine *)machine;
 
 @property (nonatomic, strong) CMMachine *machine;
 

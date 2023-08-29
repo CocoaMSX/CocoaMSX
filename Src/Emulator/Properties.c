@@ -1044,7 +1044,7 @@ void propSave(Properties* properties)
 
 static Properties* globalProperties = NULL;
 
-Properties* propGetGlobalProperties()
+Properties* propGetGlobalProperties(void)
 {
     return globalProperties;
 }

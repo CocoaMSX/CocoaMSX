@@ -32,7 +32,7 @@
 
 typedef struct TC8566AF TC8566AF;
 
-TC8566AF* tc8566afCreate();
+TC8566AF* tc8566afCreate(void);
 void tc8566afDestroy(TC8566AF* tc);
 void tc8566afReset(TC8566AF* tc);
 UInt8 tc8566afReadRegister(TC8566AF* tc, UInt8 reg);

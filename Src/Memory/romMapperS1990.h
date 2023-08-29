@@ -30,6 +30,6 @@
 
 #include "MsxTypes.h"
 
-int romMapperS1990Create();
+int romMapperS1990Create(void);
 
 #endif

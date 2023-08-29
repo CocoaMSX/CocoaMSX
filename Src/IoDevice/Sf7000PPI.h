@@ -30,7 +30,7 @@
 
 #include "MsxTypes.h"
 
-void sf7000PPICreate();
+void sf7000PPICreate(void);
 
 #endif
 
