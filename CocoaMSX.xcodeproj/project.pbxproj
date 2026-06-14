@@ -2807,7 +2807,7 @@
 				INFOPLIST_FILE = "CocoaMSX-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = (
 					"-DOSX",
 					"-DDEBUG",
@@ -2842,7 +2842,7 @@
 				INFOPLIST_FILE = "CocoaMSX-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = (
 					"-DOSX",
 					"-DFINAL",
@@ -2872,8 +2872,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				"HEADER_SEARCH_PATHS[arch=*]" = SBJson.framework/Headers;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-DOSX",
@@ -2887,6 +2886,7 @@
 					"-DNO_ASM",
 					"-DDEBUG",
 					"-DOSX",
+					"-Wno-c++11-narrowing",
 				);
 				SDKROOT = macosx;
 			};
@@ -2905,8 +2905,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				"HEADER_SEARCH_PATHS[arch=*]" = SBJson.framework/Headers;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = (
 					"-DOSX",
 					"-DFINAL",
@@ -2919,6 +2918,7 @@
 					"-DNO_ASM",
 					"-DFINAL",
 					"-DOSX",
+					"-Wno-c++11-narrowing",
 				);
 				SDKROOT = macosx;
 			};

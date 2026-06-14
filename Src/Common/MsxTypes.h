@@ -45,7 +45,7 @@ extern "C" {
 
 /* Define double type for different targets
  */
-#if defined(__x86_64__) || defined(__i386__) || defined _WIN32
+#if defined(__x86_64__) || defined(__i386__) || defined(__aarch64__) || defined(__arm64__) || defined _WIN32
 typedef double DoubleT;
 #else
 typedef float DoubleT;
