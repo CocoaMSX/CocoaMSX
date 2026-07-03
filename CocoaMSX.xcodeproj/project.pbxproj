@@ -28,6 +28,7 @@
 		E99733711298B4B500766C90 /* DebugMemory.c in Sources */ = {isa = PBXBuildFile; fileRef = E99731391298B4B300766C90 /* DebugMemory.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99733721298B4B500766C90 /* DebugDeviceManager.c in Sources */ = {isa = PBXBuildFile; fileRef = E997313C1298B4B300766C90 /* DebugDeviceManager.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99733731298B4B500766C90 /* Debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = E997313E1298B4B300766C90 /* Debugger.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
+		DA57ACE10000000000000002 /* disasmtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = DA57ACE10000000000000001 /* disasmtrace.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99733741298B4B500766C90 /* Actions.c in Sources */ = {isa = PBXBuildFile; fileRef = E99731411298B4B300766C90 /* Actions.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99733751298B4B500766C90 /* AppConfig.c in Sources */ = {isa = PBXBuildFile; fileRef = E99731431298B4B300766C90 /* AppConfig.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
 		E99733761298B4B500766C90 /* CommandLine.c in Sources */ = {isa = PBXBuildFile; fileRef = E99731451298B4B300766C90 /* CommandLine.c */; settings = {COMPILER_FLAGS = "-Wno-incompatible-pointer-types -Wno-unused-variable -Wno-pointer-sign -Wno-switch -Wno-missing-declarations -Wno-varargs"; }; };
@@ -488,6 +489,8 @@
 		E997313C1298B4B300766C90 /* DebugDeviceManager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DebugDeviceManager.c; sourceTree = "<group>"; };
 		E997313D1298B4B300766C90 /* DebugDeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugDeviceManager.h; sourceTree = "<group>"; };
 		E997313E1298B4B300766C90 /* Debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Debugger.c; sourceTree = "<group>"; };
+		DA57ACE10000000000000001 /* disasmtrace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = disasmtrace.c; sourceTree = "<group>"; };
+		DA57ACE10000000000000003 /* disasmtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disasmtrace.h; sourceTree = "<group>"; };
 		E997313F1298B4B300766C90 /* Debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debugger.h; sourceTree = "<group>"; };
 		E99731411298B4B300766C90 /* Actions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Actions.c; sourceTree = "<group>"; };
 		E99731421298B4B300766C90 /* Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Actions.h; sourceTree = "<group>"; };
@@ -1481,6 +1484,8 @@
 				E997313C1298B4B300766C90 /* DebugDeviceManager.c */,
 				E997313D1298B4B300766C90 /* DebugDeviceManager.h */,
 				E997313E1298B4B300766C90 /* Debugger.c */,
+				DA57ACE10000000000000001 /* disasmtrace.c */,
+				DA57ACE10000000000000003 /* disasmtrace.h */,
 				E997313F1298B4B300766C90 /* Debugger.h */,
 			);
 			path = Debugger;
@@ -2462,6 +2467,7 @@
 				E99733711298B4B500766C90 /* DebugMemory.c in Sources */,
 				E99733721298B4B500766C90 /* DebugDeviceManager.c in Sources */,
 				E99733731298B4B500766C90 /* Debugger.c in Sources */,
+				DA57ACE10000000000000002 /* disasmtrace.c in Sources */,
 				E99733741298B4B500766C90 /* Actions.c in Sources */,
 				FEE02D94193C3F4C004585C1 /* romMapperSvi328RsIDE.c in Sources */,
 				E99733751298B4B500766C90 /* AppConfig.c in Sources */,

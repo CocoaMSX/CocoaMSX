@@ -31,7 +31,7 @@
 */
 
 #include "R800.h"
-#include "disasmtrace.h"
+#include "../Debugger/disasmtrace.h"
 #include <stdlib.h>
 #include <stdio.h>
 

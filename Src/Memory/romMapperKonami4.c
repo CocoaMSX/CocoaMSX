@@ -26,7 +26,7 @@
 ******************************************************************************
 */
 #include "romMapperKonami4.h"
-#include "disasmtrace.h"
+#include "../Debugger/disasmtrace.h"
 #include "MediaDb.h"
 #include "SlotManager.h"
 #include "DeviceManager.h"
