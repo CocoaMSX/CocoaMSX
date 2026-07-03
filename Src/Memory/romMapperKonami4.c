@@ -26,6 +26,7 @@
 ******************************************************************************
 */
 #include "romMapperKonami4.h"
+#include "disasmtrace.h"
 #include "MediaDb.h"
 #include "SlotManager.h"
 #include "DeviceManager.h"
@@ -106,6 +107,8 @@ static void write(RomMapperKonami4* rm, UInt16 address, UInt8 value)
         rm->romMapper[bank] = value;
         
         slotMapPage(rm->slot, rm->sslot, rm->startPage + bank, bankData, 1, 0);
+
+        disasmTraceBank(bank, value);
     }
 }
 

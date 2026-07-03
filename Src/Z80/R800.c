@@ -31,6 +31,7 @@
 */
 
 #include "R800.h"
+#include "disasmtrace.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -197,6 +198,8 @@ static void writeMem(R800* r800, UInt16 address, UInt8 value) {
     delayMem(r800);
     r800->cachePage = 0xffff;
     r800->writeMemory(r800->ref, address, value);
+
+    disasmTraceWrite(r800->regs.PC.W, address, value);
 
 #ifdef ENABLE_WATCHPOINTS
     if (r800->watchpointMemCb != NULL) {
@@ -6067,6 +6070,8 @@ void r800Execute(R800* r800) {
             }
         }
 #endif
+
+        disasmTraceExec(r800->regs.PC.W);
 
         executeInstruction(r800, readOpcode(r800, r800->regs.PC.W++));
 
