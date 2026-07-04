@@ -21,6 +21,7 @@
  ******************************************************************************
  */
 #include <OpenGL/gl.h>
+#include <OpenGL/CGLRenderers.h>
 #include <time.h>
 
 #import "CMMsxDisplayView.h"
@@ -79,6 +80,28 @@
 
 - (void)awakeFromNib
 {
+    // Optional workaround: Apple's Metal-backed OpenGL shim (AppleMetalOpenGLRenderer
+    // -> AGXMetal) segfaults during immediate-mode draws on some Apple Silicon GPUs.
+    // Setting COCOAMSX_SOFTWARE_GL forces Apple's generic (software) GL renderer, which
+    // never touches AGXMetal. Slower, but stable - useful for headless/tracing runs.
+    if (getenv("COCOAMSX_SOFTWARE_GL")) {
+        NSOpenGLPixelFormatAttribute attrs[] = {
+            NSOpenGLPFARendererID, (NSOpenGLPixelFormatAttribute)kCGLRendererGenericFloatID,
+            NSOpenGLPFADoubleBuffer,
+            NSOpenGLPFAColorSize, 24,
+            NSOpenGLPFAAlphaSize, 8,
+            NSOpenGLPFADepthSize, 32,
+            0
+        };
+        // Only replace the pixel format; let NSOpenGLView create its own context
+        // lazily so that -prepareOpenGL still runs (it allocates the screen buffers
+        // and texture). Setting the context manually here would skip that.
+        NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+        if (pf) {
+            [self setPixelFormat:pf];
+        }
+    }
+
     [self.window setAcceptsMouseMovedEvents:YES];
     if ([self respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)]) {
         [self setWantsBestResolutionOpenGLSurface:YES];
