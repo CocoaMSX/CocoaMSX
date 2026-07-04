@@ -32,8 +32,13 @@
 
 #ifdef DISASMTRACE
 #import "CMKeyboardManager.h"
-// Defined in Src/Debugger/disasmtrace.c; F9 requests a RAM state snapshot.
+// Defined in Src/Debugger/disasmtrace.c.  F9 = one snapshot; F8 = toggle
+// periodic auto-snapshot (with an on-screen indicator).
 void disasmTraceRequestSnapshot(void);
+void disasmTraceToggleAutoSnap(void);
+int  disasmTraceAutoSnapActive(void);
+void disasmTraceAutoSnapTick(void);
+#define CM_VK_F8 0x64  // macOS virtual key code for F8
 #define CM_VK_F9 0x65  // macOS virtual key code for F9
 #endif
 
@@ -171,6 +176,10 @@ void disasmTraceRequestSnapshot(void);
     unsigned short kc = [theEvent keyCode];
     if (kc == CM_VK_F9) {
         disasmTraceRequestSnapshot();
+        return;
+    }
+    if (kc == CM_VK_F8) {
+        if (![theEvent isARepeat]) disasmTraceToggleAutoSnap();
         return;
     }
     if (![theEvent isARepeat])
@@ -463,8 +472,28 @@ void disasmTraceRequestSnapshot(void);
     glVertex3f(backingSize.width + offset, backingSize.height, 0.0);
     glTexCoord2f(0.0, currentScreen->textureCoord.y);
     glVertex3f(-offset, backingSize.height, 0.0);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+#ifdef DISASMTRACE
+    // One auto-snapshot per rendered frame while recording, plus a blinking red
+    // square in the top-left corner as the "recording" indicator.
+    disasmTraceAutoSnapTick();
+    if (disasmTraceAutoSnapActive()) {
+        static unsigned blink = 0;
+        if ((++blink % 40) < 24) {
+            const GLfloat sz = 18.0f, m = 12.0f;
+            glColor3f(1.0f, 0.15f, 0.1f);
+            glBegin(GL_QUADS);
+            glVertex3f(m,      m,      0.0f);
+            glVertex3f(m + sz, m,      0.0f);
+            glVertex3f(m + sz, m + sz, 0.0f);
+            glVertex3f(m,      m + sz, 0.0f);
+            glEnd();
+            glColor3f(1.0f, 1.0f, 1.0f);
+        }
+    }
+#endif
     
     [nsContext flushBuffer];
     

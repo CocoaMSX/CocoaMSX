@@ -68,6 +68,14 @@ void disasmTraceDoSnapshot(void* ref, DisasmReadFn rd);
 #define disasmTraceSnapshotIfPending(ref, rd) \
     do { if (disasmTraceSnapPending) disasmTraceDoSnapshot((ref), (rd)); } while (0)
 
+/* Auto-snapshot: a UI hotkey toggles periodic captures (one every N rendered
+   frames, N = DISASM_SNAP_EVERY, default 1).  disasmTraceAutoSnapTick() is
+   called once per rendered frame; disasmTraceAutoSnapActive() drives an
+   on-screen "recording" indicator. */
+void disasmTraceToggleAutoSnap(void);
+int  disasmTraceAutoSnapActive(void);
+void disasmTraceAutoSnapTick(void);
+
 #else /* !DISASMTRACE : compile to nothing */
 
 #define disasmTraceBank(page, seg)             ((void)0)
@@ -75,6 +83,9 @@ void disasmTraceDoSnapshot(void* ref, DisasmReadFn rd);
 #define disasmTraceWrite(pc, addr, value)      ((void)0)
 #define disasmTraceRequestSnapshot()           ((void)0)
 #define disasmTraceSnapshotIfPending(ref, rd)  ((void)0)
+#define disasmTraceToggleAutoSnap()            ((void)0)
+#define disasmTraceAutoSnapActive()            (0)
+#define disasmTraceAutoSnapTick()              ((void)0)
 
 #endif /* DISASMTRACE */
 

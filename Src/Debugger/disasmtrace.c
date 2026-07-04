@@ -139,6 +139,38 @@ void disasmTraceRequestSnapshot(void)
     disasmTraceSnapPending = 1;
 }
 
+/* --- auto-snapshot (F8): periodic capture, one every dt_autoDiv frames ------ */
+static int dt_autoSnap = 0;
+static int dt_autoDiv  = 1;
+static int dt_autoCnt  = 0;
+
+void disasmTraceToggleAutoSnap(void)
+{
+    dt_autoSnap = !dt_autoSnap;
+    if (dt_autoSnap) {
+        const char* env = getenv("DISASM_SNAP_EVERY");
+        int n = env ? atoi(env) : 0;
+        dt_autoDiv = n > 0 ? n : 1;
+        dt_autoCnt = 0;
+    }
+    fprintf(stderr, "[disasmtrace] auto-snapshot %s (every %d frame(s))\n",
+            dt_autoSnap ? "ON" : "OFF", dt_autoDiv);
+}
+
+int disasmTraceAutoSnapActive(void)
+{
+    return dt_autoSnap;
+}
+
+void disasmTraceAutoSnapTick(void)
+{
+    if (!dt_autoSnap) return;
+    if (++dt_autoCnt >= dt_autoDiv) {
+        dt_autoCnt = 0;
+        disasmTraceSnapPending = 1;   /* taken at the next opcode fetch */
+    }
+}
+
 void disasmTraceDoSnapshot(void* ref, DisasmReadFn rd)
 {
     UInt32 addr;
