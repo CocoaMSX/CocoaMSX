@@ -29,6 +29,14 @@ static int      dt_bank[4] = { 0, 1, 2, 3 };
 static UInt16   dt_lastPc  = 0xffff;
 static int      dt_lastValid = 0;
 
+/* --- snapshot state (independent of the master trace switch) --------------- */
+int             disasmTraceSnapPending = 0;
+static FILE*    dt_snapFile = NULL;
+static int      dt_snapInit = 0;
+static int      dt_snapSeq  = 0;
+static UInt16   dt_snapLo   = 0xc000;
+static UInt16   dt_snapHi   = 0xdfff;
+
 /* Parse "lo-hi,lo-hi,..." (hex) into `out`; returns the count. */
 static int dtParseRanges(const char* s, DtRange* out, int max)
 {
@@ -107,6 +115,62 @@ void disasmTraceExec(UInt16 pc)
     seg = dtSegOf(pc);
     if (seg < 0) fprintf(dt_log, "X --:%04x\n", pc);
     else         fprintf(dt_log, "X %02x:%04x\n", seg & 0xff, pc);
+}
+
+/* Lazily open the snapshot file and parse its RAM window. Independent of the
+   DISASM_TRACE master switch so snapshots work even with tracing off. */
+static void dtSnapSetup(void)
+{
+    const char* env;
+    unsigned lo, hi;
+    dt_snapInit = 1;
+
+    env = getenv("DISASM_SNAP_RANGE");
+    if (env != NULL && sscanf(env, "%x-%x", &lo, &hi) == 2 && hi >= lo) {
+        dt_snapLo = (UInt16)lo;
+        dt_snapHi = (UInt16)hi;
+    }
+    env = getenv("DISASM_SNAP");
+    dt_snapFile = fopen(env && env[0] ? env : "/tmp/disasmsnap.bin", "wb");
+}
+
+void disasmTraceRequestSnapshot(void)
+{
+    disasmTraceSnapPending = 1;
+}
+
+void disasmTraceDoSnapshot(void* ref, DisasmReadFn rd)
+{
+    UInt32 addr;
+    UInt16 len;
+
+    disasmTraceSnapPending = 0;
+    if (!dt_snapInit) dtSnapSetup();
+    if (dt_snapFile == NULL || rd == NULL) return;
+
+    len = (UInt16)(dt_snapHi - dt_snapLo + 1);
+
+    /* record header: 'S', seq(u32 LE), base(u16 LE), len(u16 LE) */
+    fputc('S', dt_snapFile);
+    fputc( dt_snapSeq        & 0xff, dt_snapFile);
+    fputc((dt_snapSeq >> 8)  & 0xff, dt_snapFile);
+    fputc((dt_snapSeq >> 16) & 0xff, dt_snapFile);
+    fputc((dt_snapSeq >> 24) & 0xff, dt_snapFile);
+    fputc( dt_snapLo & 0xff, dt_snapFile);
+    fputc((dt_snapLo >> 8) & 0xff, dt_snapFile);
+    fputc( len & 0xff, dt_snapFile);
+    fputc((len >> 8) & 0xff, dt_snapFile);
+
+    for (addr = dt_snapLo; addr <= dt_snapHi; addr++)
+        fputc(rd(ref, (UInt16)addr), dt_snapFile);
+
+    fflush(dt_snapFile);
+    if (dt_log)
+        fprintf(dt_log, "# snapshot %d: %04x-%04x (%u bytes)\n",
+                dt_snapSeq, dt_snapLo, dt_snapHi, (unsigned)len);
+    fprintf(stderr, "[disasmtrace] snapshot %d captured (%04x-%04x)\n",
+            dt_snapSeq, dt_snapLo, dt_snapHi);
+    dt_snapSeq++;
 }
 
 void disasmTraceWrite(UInt16 pc, UInt16 addr, UInt8 value)

@@ -30,6 +30,13 @@
 #import "CMFrameCounter.h"
 #import "CMPreferences.h"
 
+#ifdef DISASMTRACE
+#import "CMKeyboardManager.h"
+// Defined in Src/Debugger/disasmtrace.c; F9 requests a RAM state snapshot.
+void disasmTraceRequestSnapshot(void);
+#define CM_VK_F9 0x65  // macOS virtual key code for F9
+#endif
+
 #include "Properties.h"
 #include "VideoRender.h"
 #include "FrameBuffer.h"
@@ -146,6 +153,51 @@
 {
     return YES;
 }
+
+#ifdef DISASMTRACE
+// DISASMTRACE builds capture keys through the responder chain (see
+// CMKeyboardManager: IOHIDManager is disabled there) so the traced .app needs
+// no Input Monitoring permission - which would otherwise be revoked on every
+// ad-hoc rebuild. F9 is intercepted as the tracer's "capture state" hotkey.
+
+- (void)viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    [[self window] makeFirstResponder:self];
+}
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+    unsigned short kc = [theEvent keyCode];
+    if (kc == CM_VK_F9) {
+        disasmTraceRequestSnapshot();
+        return;
+    }
+    if (![theEvent isARepeat])
+        [[CMKeyboardManager sharedInstance] injectKeyCode:kc isDown:YES];
+}
+
+- (void)keyUp:(NSEvent *)theEvent
+{
+    [[CMKeyboardManager sharedInstance] injectKeyCode:[theEvent keyCode] isDown:NO];
+}
+
+- (void)flagsChanged:(NSEvent *)theEvent
+{
+    unsigned short kc = [theEvent keyCode];
+    NSEventModifierFlags flags = [theEvent modifierFlags];
+    BOOL down;
+    switch (kc) {
+        case 56: case 60: down = (flags & NSEventModifierFlagShift)   != 0; break; // shift L/R
+        case 59: case 62: down = (flags & NSEventModifierFlagControl) != 0; break; // control L/R
+        case 58: case 61: down = (flags & NSEventModifierFlagOption)  != 0; break; // option L/R
+        case 55: case 54: down = (flags & NSEventModifierFlagCommand) != 0; break; // command L/R
+        case 57:          down = (flags & NSEventModifierFlagCapsLock) != 0; break; // caps lock
+        default: return;
+    }
+    [[CMKeyboardManager sharedInstance] injectKeyCode:kc isDown:down];
+}
+#endif
 
 - (void)prepareOpenGL
 {

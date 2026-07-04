@@ -40,4 +40,10 @@
 - (void)addObserver:(id<CMKeyboardEventDelegate>)observer;
 - (void)removeObserver:(id<CMKeyboardEventDelegate>)observer;
 
+// Inject a key change from an AppKit responder (NSEvent.keyCode is already the
+// macOS virtual key code that observers expect). Used by the DISASMTRACE build,
+// which drives input through the responder chain instead of IOHIDManager so it
+// needs no Input Monitoring permission.
+- (void)injectKeyCode:(NSInteger)keyCode isDown:(BOOL)isDown;
+
 @end

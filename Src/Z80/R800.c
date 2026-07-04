@@ -6072,6 +6072,7 @@ void r800Execute(R800* r800) {
 #endif
 
         disasmTraceExec(r800->regs.PC.W);
+        disasmTraceSnapshotIfPending(r800->ref, r800->readMemory);
 
         executeInstruction(r800, readOpcode(r800, r800->regs.PC.W++));
 

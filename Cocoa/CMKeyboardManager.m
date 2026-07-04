@@ -57,6 +57,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
         observerLock = [[NSObject alloc] init];
         observers = [[NSMutableArray alloc] init];
         
+#ifndef DISASMTRACE
         // Init keyboard hid management
         keyboardHidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
         
@@ -81,6 +82,7 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 
         IOHIDManagerScheduleWithRunLoop(keyboardHidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
         IOHIDManagerOpen(keyboardHidManager, kIOHIDOptionsTypeNone);
+#endif
     }
     
     return self;
@@ -88,9 +90,11 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
 
 - (void)dealloc
 {
-    IOHIDManagerClose(keyboardHidManager, kIOHIDOptionsTypeNone);
-    IOHIDManagerUnscheduleFromRunLoop(keyboardHidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    CFRelease(keyboardHidManager);
+    if (keyboardHidManager) {
+        IOHIDManagerClose(keyboardHidManager, kIOHIDOptionsTypeNone);
+        IOHIDManagerUnscheduleFromRunLoop(keyboardHidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+        CFRelease(keyboardHidManager);
+    }
 }
 
 // Adapted from https://github.com/LaurentGomila/SFML/
@@ -236,6 +240,26 @@ void keyWasToggled(void *context, IOReturn result, void *sender, IOHIDValueRef v
     [event setScanCode:scanCode];
     [event setKeyCode:[self scanCodeToKeyCode:scanCode
                                 modifierFlags:[NSEvent modifierFlags]]];
+
+    @synchronized (observerLock)
+    {
+        [observers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+         {
+             [obj keyStateChanged:event
+                           isDown:isDown];
+         }];
+    }
+}
+
+- (void)injectKeyCode:(NSInteger)keyCode isDown:(BOOL)isDown
+{
+    CMKeyEventData *event = [[CMKeyEventData alloc] init];
+
+    // From an NSEvent, keyCode is already the macOS virtual key code that the
+    // IOHID path derives via scanCodeToKeyCode:. The gameplay consumer
+    // (CMCocoaInput) uses only -keyCode, so scanCode can mirror it.
+    [event setScanCode:keyCode];
+    [event setKeyCode:keyCode];
 
     @synchronized (observerLock)
     {
